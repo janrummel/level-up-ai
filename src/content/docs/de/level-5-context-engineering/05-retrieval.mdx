@@ -1,0 +1,342 @@
+---
+title: "Challenge 5.4: Retrieval (RAG)"
+description: "Lade externes Wissen dynamisch in den Prompt, um Halluzinationen zu verhindern und quellenbasierte Antworten zu ermoeglichen."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+Was passiert, wenn Du ein LLM nach aktuellen Nachrichten fragst? Woher weiss es, ob seine Antwort stimmt?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  Q["User-Frage"] --> R["Externe Quelle<br/>durchsuchen"]
+  subgraph HIER["Du bist HIER: Retrieval"]
+    R --> F["Relevante Daten<br/>finden"]
+    F --> P["In Prompt einfuegen<br/>&lt;background-data&gt;"]
+  end
+  P --> LLM["LLM antwortet"]
+  LLM --> A["Quellenbasierte<br/>Antwort"]
+  Q -.-> NOPE["Ohne RAG:<br/>Halluzination"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style Q fill:#4A90D9,color:#fff
+  style R fill:#4A90D9,color:#fff
+  style F fill:#4A90D9,color:#fff
+  style P fill:#27AE60,color:#fff
+  style LLM fill:#27AE60,color:#fff
+  style A fill:#E67E22,color:#fff
+  style NOPE fill:#E74C3C,color:#fff
+```
+
+Das Diagramm zeigt den RAG-Datenfluss: Eine User-Frage wird nicht direkt ans LLM geschickt — zuerst werden relevante Daten aus einer externen Quelle geladen und im `<background-data>`-Tag in den Prompt eingefuegt. Ohne diesen Schritt (gestrichelte Linie) droht Halluzination.
+
+So sieht der `<background-data>`-Tag im vollstaendigen Prompt Template aus:
+
+```xml
+<task-context>
+Du bist ein Assistent, der Fragen zu Webseiten beantwortet.
+</task-context>
+
+<background-data>                          <!-- ← HIER kommen die externen Daten rein -->
+  <url>https://example.com</url>
+  <content>
+  [Geladener Inhalt der Webseite]
+  </content>
+</background-data>
+
+<rules>
+- Nutze nur die bereitgestellten Daten zur Beantwortung.
+- Wenn die Frage nicht beantwortbar ist, sage das ehrlich.
+</rules>
+
+<the-ask>
+Beantworte die Frage basierend auf den Daten.
+</the-ask>
+
+<output-format>
+Antwort mit Quellenangabe.
+</output-format>
+```
+
+## WHY
+
+**Ohne RAG:** Ein LLM hat ein festes Trainingsdatum. Es kennt keine aktuellen Ereignisse, keine internen Firmendaten, keine spezifischen Webseiten. Wenn Du es trotzdem danach fragst, wird es halluzinieren — eine plausibel klingende, aber falsche Antwort generieren. Die Antwort ist nicht verifizierbar.
+
+**Mit RAG:** Du laedt die relevanten Daten vorher und gibst sie als Kontext mit. Das LLM antwortet basierend auf echten Quellen. Die Antwort ist verifizierbar, aktuell und mit Quellenangabe versehen. Halluzinationen werden drastisch reduziert.
+
+## WALKTHROUGH
+
+### Schicht 1: Das RAG-Prinzip (Retrieve, Augment, Generate)
+
+RAG steht fuer **Retrieval-Augmented Generation** und besteht aus drei Schritten:
+
+1. **Retrieve:** Relevante Daten aus einer externen Quelle laden
+2. **Augment:** Die Daten in den Prompt einfuegen (als `<background-data>`)
+3. **Generate:** Das LLM antwortet basierend auf dem angereicherten Kontext
+
+```typescript
+// Schritt 1: RETRIEVE — Daten aus einer Quelle laden
+const content = loadContent('https://docs.example.com/api');  // ← Retrieve
+
+// Schritt 2: AUGMENT — Daten in den Prompt einfuegen
+const prompt = `
+<background-data>
+  <url>https://docs.example.com/api</url>
+  <content>${content}</content>                                // ← Augment
+</background-data>
+`;
+
+// Schritt 3: GENERATE — LLM antwortet mit Kontext
+const result = await generateText({                            // ← Generate
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt,
+});
+```
+
+Das Prinzip ist einfach: Gib dem LLM die Daten, die es braucht — bevor es antwortet.
+
+### Schicht 2: Datenquellen-Tabelle
+
+Die Daten fuer RAG koennen aus verschiedenen Quellen kommen:
+
+| Quelle | Beispiel | Typischer Einsatz |
+|--------|----------|-------------------|
+| Web Scraping | Tavily, Firecrawl | Aktuelle Webinhalte |
+| Vector Database | Pinecone, Chroma, pgvector | Eigene Dokumente (Embeddings) |
+| SQL/API | Eigene DB, REST API | Strukturierte Unternehmensdaten |
+| Dateisystem | `fs.readFileSync()` | Lokale Dateien, Konfigurationen |
+
+In dieser Challenge nutzen wir simulierten Content — das Prompt-Pattern bleibt aber dasselbe, egal woher die Daten kommen.
+
+### Schicht 3: Integration ins Prompt Template — background-data
+
+Geladene Daten gehoeren in den `<background-data>`-Abschnitt — also in die **Mitte** des Prompts. Innerhalb von `<background-data>` strukturierst Du die Daten mit `<url>` und `<content>` Tags:
+
+```typescript
+const sourceUrl = 'https://www.aihero.dev/';
+const websiteContent = '...geladener Inhalt...';
+
+const prompt = `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+<background-data>
+  <url>${sourceUrl}</url>                    // ← Quellenangabe: woher kommen die Daten?
+  <content>
+  ${websiteContent}                          // ← Die eigentlichen Daten
+  </content>
+</background-data>
+
+<rules>
+- Use the content of the website to answer the question.
+- Use quotes from the content.
+- If the question is not answerable from the content, say so honestly.
+</rules>
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided data.
+</the-ask>
+
+<output-format>
+Return the answer in paragraphs. Include quotes from the source material.
+</output-format>
+`;
+```
+
+Die `<url>`-Tag ist wichtig: Sie ermoeglicht dem LLM, die Quelle in der Antwort zu zitieren. Das macht die Antwort verifizierbar.
+
+### Schicht 4: Die kritische Regel — Halluzinationen verhindern
+
+Die wichtigste Zeile in jedem RAG-Prompt steht in `<rules>`:
+
+```xml
+<rules>
+- Use only the provided data to answer the question.
+- If the question is not answerable from the provided data,
+  say "I can only answer questions based on the provided content."
+</rules>
+```
+
+Ohne diese Regel versucht das LLM trotzdem zu antworten — mit seinem Trainingswissen, nicht mit den bereitgestellten Daten. Das fuehrt zu Halluzinationen, die besonders gefaehrlich sind, weil sie plausibel klingen und in einem Kontext erscheinen, der quellenbasierte Antworten erwarten laesst.
+
+**Tipp:** Formuliere die Regel positiv und konkret. Nicht "Halluziniere nicht", sondern "Sage ehrlich, wenn die Frage nicht beantwortbar ist."
+
+## TRY
+
+**Aufgabe:** Baue ein System, das Website-Content laedt und Fragen dazu beantwortet. Nutze den simulierten Content unten. Ergaenze den Prompt um `<background-data>`, `<rules>` und `<output-format>`.
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// Simulierter Web-Content (in Production: fetch, Tavily, etc.)
+const websiteContent = `
+AI Hero is an educational platform created by Matt Pocock,
+known for Total TypeScript. The platform teaches AI engineering
+skills including the Vercel AI SDK, prompt engineering, and
+building production-ready AI applications. Guillermo Rauch,
+CEO of Vercel, said: "Matt is one of the best educators in
+the TypeScript ecosystem."
+`;
+
+const question = 'What did Guillermo Rauch say about Matt Pocock?';
+const sourceUrl = 'https://www.aihero.dev/';
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+// TODO: Fuege <background-data> ein mit:
+//   - <url> Tag fuer die Quellenangabe
+//   - <content> Tag fuer den geladenen Inhalt
+
+// TODO: Fuege <rules> ein:
+//   - Nur die bereitgestellten Daten verwenden
+//   - Zitate aus dem Quellmaterial nutzen
+//   - Ehrlich sagen wenn etwas nicht beantwortbar ist
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided website content.
+</the-ask>
+
+// TODO: Fuege <output-format> ein:
+//   - Antwort in Absaetzen
+//   - Quellenangabe einschliessen
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Checkliste:**
+- [ ] `<background-data>` enthaelt den geladenen Content mit `<url>`-Tag
+- [ ] `<rules>` definiert: nur bereitgestellte Daten verwenden
+- [ ] `<rules>` definiert: ehrlich sagen wenn nicht beantwortbar
+- [ ] `<output-format>` definiert das Antwort-Format
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const websiteContent = `
+AI Hero is an educational platform created by Matt Pocock,
+known for Total TypeScript. The platform teaches AI engineering
+skills including the Vercel AI SDK, prompt engineering, and
+building production-ready AI applications. Guillermo Rauch,
+CEO of Vercel, said: "Matt is one of the best educators in
+the TypeScript ecosystem."
+`;
+
+const question = 'What did Guillermo Rauch say about Matt Pocock?';
+const sourceUrl = 'https://www.aihero.dev/';
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+<background-data>
+  <url>${sourceUrl}</url>
+  <content>
+  ${websiteContent}
+  </content>
+</background-data>
+
+<rules>
+- Use the content of the website to answer the question.
+- If the question is not related to the content of the website,
+  say "I can only answer questions based on the provided content."
+- Use quotes from the content of the website to support your answer.
+- Do not use any knowledge outside the provided content.
+</rules>
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided website content.
+</the-ask>
+
+<output-format>
+Return the answer in paragraphs. Include direct quotes from the source
+material where relevant. Cite the source URL.
+</output-format>
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Erklaerung:** Die geladenen Daten stehen in `<background-data>` mit klarer Quellenangabe (`<url>`). Die `<rules>` definieren explizit, dass nur die bereitgestellten Daten verwendet werden duerfen und das LLM ehrlich sein soll, wenn die Frage nicht beantwortbar ist. Das `<output-format>` verlangt Absaetze und Quellenangaben — so wird die Antwort verifizierbar.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Config["PromptConfig<br/>(5.1)"] --> BSP["buildSystemPrompt()"]
+  XML["XML Struktur<br/>(5.2)"] --> BSP
+  Exemplars["Exemplars<br/>(5.3)"] --> BSP
+  Data["Externe Daten<br/>(5.4)"] --> BSP
+  BSP --> Call["generateText()"]
+  Call --> Output["Quellenbasierte<br/>Antwort"]
+  style Config fill:#4A90D9,color:#fff
+  style XML fill:#4A90D9,color:#fff
+  style Exemplars fill:#4A90D9,color:#fff
+  style Data fill:#4A90D9,color:#fff
+  style BSP fill:#27AE60,color:#fff
+  style Call fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+**Uebung:** Baue jetzt ein vollstaendiges RAG-System das Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + Retrieval (5.4) kombiniert. Erstelle eine Funktion `buildRAGPrompt` die alle vier Konzepte vereint.
+
+Konkret:
+1. Erstelle ein `RAGConfig`-Interface das `PromptConfig` um `sourceUrl`, `content` und `exemplars` erweitert
+2. In `buildRAGPrompt()`: Baue den Prompt mit `<task-context>`, `<background-data>` (mit `<url>` und `<content>`), `<examples>` und `<rules>`
+3. Die `<rules>` muessen die Anti-Halluzinations-Regel enthalten
+4. Nutze die Exemplars, um das Antwort-Format zu demonstrieren
+
+**Optional Stretch Goal:** Fuege Unterstuetzung fuer mehrere Quellen hinzu — `<background-data>` mit mehreren `<url>`/`<content>`-Paaren. Nutze ein Array von Quellen im Config.
+
+## Weiter denken: Von statischem Content zu Vector Search
+
+Diese Challenge nutzt statischen Content. In Production wuerdest Du:
+1. **Dokumente in Chunks aufteilen** (z.B. 500 Tokens pro Chunk)
+2. **Embeddings erstellen** (z.B. mit `text-embedding-3-small`)
+3. **In einer Vector DB speichern** (Pinecone, Chroma, pgvector)
+4. **Zur Laufzeit die relevantesten Chunks suchen** und in den Prompt einfuegen
+
+Das Prompt-Pattern bleibt dasselbe — nur der Retrieve-Schritt wird komplexer.
+
+## Quellen
+
+- [Anthropic: RAG Overview](https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation)
+- [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)
+- [ai-hero-dev Exercise 05.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.04-retrieval)

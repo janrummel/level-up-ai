@@ -1,0 +1,242 @@
+---
+title: "Challenge 3.1: Tool Calling"
+description: "Gib Deinem LLM Werkzeuge — mit tool(), Zod Schemas und execute verwandelst Du einen Chatbot in einen Agenten, der handeln kann."
+sidebar:
+  order: 2
+---
+
+## THINK
+
+Was wenn ein LLM nicht nur Text generieren, sondern auch Aktionen ausfuehren koennte — z.B. das Wetter abfragen, eine Berechnung durchfuehren oder eine Datenbank abfragen?
+
+## OVERVIEW
+
+```mermaid
+sequenceDiagram
+  participant User as User
+  participant LLM as LLM
+  participant Tool as Weather API
+
+  User->>LLM: "Wie ist das Wetter in Berlin?"
+  rect rgba(230, 126, 34, 0.1)
+    Note over LLM,Tool: Du bist HIER: Tool Calling
+    LLM->>Tool: tool call: getWeather({ location: "Berlin" })
+    Tool-->>LLM: { temperature: 22, condition: "sunny" }
+  end
+  LLM-->>User: "In Berlin sind es 22 Grad und sonnig."
+```
+
+Das LLM erkennt, dass es das Wetter nicht aus eigenem Wissen beantworten kann. Es generiert einen **Tool Call** — eine strukturierte Anfrage an eine Funktion. Die Funktion wird ausgefuehrt, das Ergebnis geht zurueck ans LLM, und das LLM formuliert daraus eine natuerliche Antwort.
+
+## WHY
+
+**Ohne Tools:** Das LLM kann nur reden, nicht handeln. Es hat kein aktuelles Wissen, kann nicht rechnen, nicht auf Datenbanken zugreifen. Jede Frage nach aktuellen Daten wird mit einer Halluzination oder "Das weiss ich nicht" beantwortet.
+
+**Mit Tools:** Das LLM wird zum Agenten. Es erkennt, welche Funktion es braucht, ruft sie mit den richtigen Parametern auf und verarbeitet das Ergebnis. Es kann jetzt Wetter abfragen, rechnen, Dateien lesen — alles, wofuer Du ein Tool definierst.
+
+## WALKTHROUGH
+
+### Schicht 1: Ein Tool definieren mit `tool()`
+
+Ein Tool hat drei Teile: eine Beschreibung (damit das LLM weiss, wann es das Tool nutzen soll), ein Input-Schema (damit das LLM weiss, welche Parameter es schicken muss) und eine Execute-Funktion (die die eigentliche Arbeit macht):
+
+```typescript
+import { tool } from 'ai';
+import { z } from 'zod';
+
+const weatherTool = tool({
+  description: 'Get the weather in a location',          // ← Wann soll das LLM dieses Tool nutzen?
+  inputSchema: z.object({                                 // ← Welche Parameter braucht es?
+    location: z.string().describe('The city name'),       // ← .describe() hilft dem LLM
+  }),
+  execute: async ({ location }) => ({                     // ← Was passiert bei Aufruf?
+    location,
+    temperature: 22,
+    condition: 'sunny',
+  }),
+});
+```
+
+Drei kritische Details:
+- **`description`** beeinflusst, ob das LLM das Tool waehlt. Je praeziser, desto besser.
+- **`.describe()`** an Zod-Feldern erklaert dem LLM, was der Parameter bedeutet.
+- **`execute`** ist async — Du kannst echte API-Calls, Datenbankabfragen oder beliebigen Code ausfuehren.
+
+### Schicht 2: Tool mit generateText nutzen
+
+Tools werden als Objekt an `generateText` uebergeben. Die Keys sind die Tool-Namen, die das LLM sieht:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: {                                                // ← Tools als Objekt
+    weather: weatherTool,                                 // ← Key = Tool-Name fuer das LLM
+  },
+  prompt: 'Wie ist das Wetter in Berlin?',
+});
+
+console.log(result.text);
+// → "In Berlin sind es aktuell 22 Grad und es ist sonnig."
+```
+
+Das LLM entscheidet selbststaendig, ob es ein Tool nutzt. Bei der Frage "Wie ist das Wetter?" erkennt es, dass es `weather` aufrufen muss. Bei "Was ist TypeScript?" wuerde es direkt antworten.
+
+### Schicht 3: Tool Choice — Steuerung der Tool-Nutzung
+
+Mit `toolChoice` steuerst Du, wie das LLM mit Tools umgeht:
+
+```typescript
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: { weather: weatherTool },
+  toolChoice: 'auto',                                    // ← LLM entscheidet (default)
+  prompt: 'Wie ist das Wetter in Berlin?',
+});
+```
+
+| toolChoice | Verhalten |
+|------------|-----------|
+| `'auto'` | LLM entscheidet selbst ob ein Tool noetig ist (default) |
+| `'required'` | LLM MUSS mindestens ein Tool nutzen |
+| `'none'` | Keine Tools — LLM antwortet nur mit Text |
+| `{ type: 'tool', toolName: 'weather' }` | Erzwingt ein bestimmtes Tool |
+
+### Schicht 4: Tool Calls und Tool Results im Result
+
+Nach der Ausfuehrung findest Du alle Tool Calls und ihre Ergebnisse im Result-Objekt:
+
+```typescript
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: { weather: weatherTool },
+  prompt: 'Wie ist das Wetter in Berlin?',
+});
+
+// Tool Calls des letzten Schritts
+for (const toolCall of result.toolCalls) {
+  console.log('Tool:', toolCall.toolName);                // → "weather"
+  console.log('Args:', toolCall.args);                    // → { location: "Berlin" }
+}
+
+// Tool Results des letzten Schritts
+for (const toolResult of result.toolResults) {
+  console.log('Result:', toolResult.result);              // → { location: "Berlin", temperature: 22, ... }
+}
+```
+
+`result.toolCalls` und `result.toolResults` enthalten die Daten des letzten Schritts. Fuer Multi-Step Szenarien (kommt in Challenge 3.3) nutzt Du `result.steps`.
+
+## TRY
+
+**Aufgabe:** Baue ein Calculator-Tool mit drei Operationen (add, subtract, multiply) und nutze es mit `generateText`.
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+// TODO 1: Definiere ein Calculator-Tool
+// - description: Beschreibung die dem LLM erklaert, wann es den Rechner nutzen soll
+// - inputSchema mit:
+//   - operation: z.enum(['add', 'subtract', 'multiply']).describe(...)
+//   - a: z.number().describe('First number')
+//   - b: z.number().describe('Second number')
+// - execute: Fuehrt die Berechnung aus und gibt das Ergebnis zurueck
+
+// TODO 2: Nutze das Tool mit generateText
+// - model: anthropic('claude-sonnet-4-5-20250514')
+// - tools: { calculator: calculatorTool }
+// - prompt: 'Was ist 42 mal 17?'
+
+// TODO 3: Logge result.text, result.toolCalls und result.toolResults
+```
+
+**Checkliste:**
+- [ ] Calculator-Tool mit `tool()` definiert
+- [ ] Zod-Schema mit `operation`, `a` und `b` — alle mit `.describe()`
+- [ ] `execute` fuehrt die richtige Operation aus (switch/case oder if/else)
+- [ ] Tool mit `generateText` integriert
+- [ ] `result.text` zeigt die natuerliche Antwort des LLM
+- [ ] `result.toolCalls` zeigt den Tool-Aufruf
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const calculatorTool = tool({
+  description: 'Perform a math calculation with two numbers',
+  inputSchema: z.object({
+    operation: z.enum(['add', 'subtract', 'multiply']).describe('The math operation to perform'),
+    a: z.number().describe('The first number'),
+    b: z.number().describe('The second number'),
+  }),
+  execute: async ({ operation, a, b }) => {
+    switch (operation) {
+      case 'add':
+        return { operation, a, b, result: a + b };
+      case 'subtract':
+        return { operation, a, b, result: a - b };
+      case 'multiply':
+        return { operation, a, b, result: a * b };
+    }
+  },
+});
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: { calculator: calculatorTool },
+  prompt: 'Was ist 42 mal 17?',
+});
+
+console.log('Antwort:', result.text);
+console.log('Tool Calls:', result.toolCalls);
+console.log('Tool Results:', result.toolResults);
+```
+
+**Erklaerung:** Das LLM erkennt die Rechenaufgabe, ruft `calculator` mit `{ operation: 'multiply', a: 42, b: 17 }` auf, bekommt `{ result: 714 }` zurueck und formuliert daraus eine natuerliche Antwort wie "42 mal 17 ist 714."
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  System["System Prompt<br/>(1.6)"] --> GT
+  Prompt["User Prompt"] --> GT
+  subgraph "Tool Calling (3.1)"
+    GT["generateText()"] --> TC["Tool Call?"]
+    TC -->|Ja| Exec["execute()"]
+    Exec --> Result["Tool Result"]
+    Result --> GT
+    TC -->|Nein| Text["result.text"]
+  end
+  style System fill:#4A90D9,color:#fff
+  style Prompt fill:#4A90D9,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style TC fill:#27AE60,color:#fff
+  style Exec fill:#27AE60,color:#fff
+  style Result fill:#E67E22,color:#fff
+  style Text fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere ein Tool mit einem System Prompt aus Challenge 1.6. Gib dem LLM eine Rolle und ein Tool gleichzeitig.
+
+1. Definiere einen System Prompt: "Du bist ein freundlicher Mathe-Tutor. Erklaere jeden Rechenweg Schritt fuer Schritt."
+2. Nutze das Calculator-Tool aus der TRY-Uebung
+3. Stelle eine Rechenaufgabe — das LLM soll das Tool nutzen UND den Rechenweg erklaeren
+4. Vergleiche: Wie aendert sich die Antwort mit vs. ohne System Prompt?
+
+**Optional Stretch Goal:** Definiere ein zweites Tool (`unitConverter`), das Einheiten umrechnet (z.B. km in Meilen). Gib dem LLM beide Tools und stelle eine Frage, die beides erfordert: "Ich fahre 100 km — wie viele Meilen sind das und wie lange dauert es bei 60 km/h?"
+
+## Quellen
+
+- [Vercel AI SDK: Tools and Tool Calling](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling)
+- [Vercel AI SDK: tool() API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool)
+- [ai-hero-dev Exercise 03.01](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/03-agents-and-tools/03.01-tool-calling)

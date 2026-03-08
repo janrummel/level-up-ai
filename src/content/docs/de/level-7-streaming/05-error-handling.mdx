@@ -1,0 +1,323 @@
+---
+title: "Challenge 7.4: Error Handling"
+description: "Fange Fehler im Stream ab — von Provider-Ausfaellen bis zu unbekannten Tools. Graceful Degradation statt weisse Seite."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+Was passiert in Deiner App, wenn der LLM-Provider mitten im Stream einen Fehler wirft? Der User hat schon die halbe Antwort gelesen — und dann? Weisse Seite? Abbruch ohne Erklaerung? Oder eine hilfreiche Fehlermeldung?
+
+## OVERVIEW
+
+```mermaid
+graph TD
+  Start["streamText()"] --> Stream{"Stream laeuft"}
+
+  Stream -->|Erfolg| Finish["finish Event<br/>Alles gut"]
+  Stream -->|Fehler| Error["Error Event"]
+
+  subgraph HIER["Du bist HIER: Error Handling"]
+    Error --> OnError["onError Callback"]
+    OnError --> UserMsg["User-freundliche<br/>Fehlermeldung"]
+    OnError --> Log["Error Logging"]
+    OnError --> Retry["Retry?"]
+  end
+
+  Retry -->|Ja| Start
+  Retry -->|Nein| Fallback["Fallback-Antwort"]
+
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style Start fill:#4A90D9,color:#fff
+  style Stream fill:#27AE60,color:#fff
+  style Finish fill:#27AE60,color:#fff
+  style Error fill:#E74C3C,color:#fff
+  style OnError fill:#E67E22,color:#fff
+  style UserMsg fill:#E67E22,color:#fff
+  style Log fill:#E67E22,color:#fff
+  style Retry fill:#E67E22,color:#fff
+  style Fallback fill:#E67E22,color:#fff
+```
+
+Fehler passieren: Provider-Timeouts, Rate Limits, unbekannte Tools, Netzwerkabbrueche. Mit Error Handling faengst Du diese Fehler ab und gibst dem User eine sinnvolle Rueckmeldung, statt die App crashen zu lassen.
+
+## WHY
+
+**Ohne Error Handling:** Deine App crasht, wenn der Provider einen Fehler wirft. Der User sieht eine weisse Seite, eine kryptische Fehlermeldung oder die halbe Antwort bricht einfach ab. In Production ist das inakzeptabel — User verlieren Vertrauen und Daten gehen verloren.
+
+**Mit Error Handling:** Fehler werden abgefangen und in verstaendliche Meldungen uebersetzt. Der User weiss, was passiert ist, und kann es nochmal versuchen. Dein Logging erfasst den Fehler fuer Debugging. Und mit Retry-Strategien kann Deine App bestimmte Fehler sogar selbst loesen.
+
+## WALKTHROUGH
+
+### Schicht 1: onError in streamText
+
+Die einfachste Form: Der `onError` Callback in `streamText` wird aufgerufen, wenn waehrend der Generierung ein Fehler auftritt:
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere Error Handling.',
+  onError({ error }) {                                // ← Wird bei jedem Fehler aufgerufen
+    console.error('Stream-Fehler:', error);
+    // Hier: Logging, Alerting, Metriken
+  },
+});
+```
+
+`onError` wird aufgerufen bei:
+- **Provider-Fehlern:** API nicht erreichbar, Rate Limit, Authentication
+- **Stream-Fehlern:** Verbindungsabbruch, Timeout
+- **Tool-Fehlern:** Tool wirft Exception (ab Level 3)
+
+Wichtig: `onError` verhindert nicht, dass der Fehler zum User durchschlaegt. Es ist ein Hook fuer Logging und Monitoring — nicht fuer User-Facing Error Messages.
+
+### Schicht 2: onError in toUIMessageStreamResponse
+
+Fuer Web-APIs kontrollierst Du mit `onError` in `toUIMessageStreamResponse`, welche Fehlermeldung der Client sieht:
+
+```typescript
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const result = streamText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    messages,
+    onError({ error }) {
+      // Server-seitiges Logging
+      console.error('[Stream Error]', error);
+    },
+  });
+
+  return result.toUIMessageStreamResponse({
+    onError(error) {                                  // ← Kontrolliert Client-Fehlermeldung
+      // WICHTIG: Gibt den String zurueck, den der Client sieht
+      // Keine internen Details leaken!
+      return 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut.';
+    },
+  });
+}
+```
+
+Die Trennung ist entscheidend:
+- **`onError` in `streamText`**: Server-Seite. Logge den vollen Fehler fuer Debugging.
+- **`onError` in `toUIMessageStreamResponse`**: Client-Seite. Gib eine kurze, verstaendliche Meldung zurueck.
+
+### Schicht 3: Spezifische Fehlertypen behandeln
+
+Das AI SDK exportiert typisierte Error-Klassen. Du kannst Fehler gezielt unterscheiden:
+
+```typescript
+import { streamText, NoSuchToolError } from 'ai';
+
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  messages,
+  tools: { /* ... */ },
+  onError({ error }) {
+    if (NoSuchToolError.isInstance(error)) {           // ← Typisierte Pruefung
+      console.error(`Unbekanntes Tool: ${error.toolName}`);
+      console.error(`Verfuegbare Tools: ${error.availableToolNames.join(', ')}`);
+    } else {
+      console.error('Unbekannter Fehler:', error);
+    }
+  },
+});
+
+return result.toUIMessageStreamResponse({
+  onError(error) {
+    if (NoSuchToolError.isInstance(error)) {
+      return `Das Tool "${error.toolName}" existiert nicht. Verfuegbar: ${error.availableToolNames.join(', ')}`;
+    }
+    return 'Ein unerwarteter Fehler ist aufgetreten.';
+  },
+});
+```
+
+Wichtige Error-Typen im AI SDK:
+
+| Error-Klasse | Wann | Nuetzliche Properties |
+|-------------|------|----------------------|
+| `NoSuchToolError` | LLM ruft ein Tool auf, das nicht existiert | `toolName`, `availableToolNames` |
+| `InvalidToolArgumentsError` | Tool-Argumente matchen nicht das Schema | `toolName`, `toolArgs` |
+| `APICallError` | Provider-API antwortet mit Fehler | `statusCode`, `message` |
+
+### Schicht 4: Retry-Strategie
+
+Fuer transiente Fehler (Netzwerk, Rate Limits) kannst Du einen Retry-Wrapper bauen:
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+async function streamWithRetry(
+  params: Parameters<typeof streamText>[0],
+  maxRetries = 3,
+) {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = streamText({
+        ...params,
+        onError({ error }) {
+          console.error(`Versuch ${attempt}/${maxRetries} fehlgeschlagen:`, error);
+          throw error;                                // ← Re-throw fuer Retry-Loop
+        },
+      });
+
+      // Stream testen: Ersten Chunk lesen
+      const reader = result.textStream.getReader();
+      const { value, done } = await reader.read();
+      reader.releaseLock();
+
+      if (!done && value) {
+        return result;                                // ← Erfolg: Stream zurueckgeben
+      }
+    } catch (error) {
+      lastError = error;
+
+      if (attempt < maxRetries) {
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000); // Exponential Backoff
+        console.log(`Warte ${delay}ms vor Versuch ${attempt + 1}...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw new Error(`Alle ${maxRetries} Versuche fehlgeschlagen: ${lastError}`);
+}
+```
+
+Die Retry-Strategie nutzt **Exponential Backoff**: 1s, 2s, 4s, ... Das gibt dem Provider Zeit, sich zu erholen (z.B. nach Rate Limiting).
+
+### Schicht 5: Try/Catch um den Stream-Consumer
+
+Vergiss nicht: Fehler koennen auch beim Konsumieren des Streams auftreten. Wrap den `for await` Loop in einen try/catch:
+
+```typescript
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere Error Handling.',
+});
+
+try {
+  for await (const chunk of result.textStream) {
+    process.stdout.write(chunk);
+  }
+  console.log('\n--- Stream erfolgreich beendet ---');
+} catch (error) {
+  console.error('\n--- Stream abgebrochen ---');
+  console.error('Fehler:', error);
+  // Fallback: Gespeicherte Antwort zeigen, User informieren, etc.
+  console.log('Die Antwort konnte nicht vollstaendig geladen werden.');
+}
+```
+
+## TRY
+
+**Aufgabe:** Simuliere einen Fehler und fange ihn mit `onError` ab. Zeige eine User-freundliche Meldung.
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO 1: Starte streamText mit einem absichtlich falschen Modellnamen
+// const result = streamText({
+//   model: anthropic('claude-nonexistent-model'),
+//   prompt: 'Dieser Call wird fehlschlagen.',
+//   onError({ error }) {
+//     // TODO 2: Logge den Fehler serverseitig
+//   },
+// });
+
+// TODO 3: Konsumiere den Stream in einem try/catch
+// try {
+//   for await (const chunk of result.textStream) {
+//     process.stdout.write(chunk);
+//   }
+// } catch (error) {
+//   // TODO 4: Zeige eine User-freundliche Fehlermeldung
+// }
+```
+
+**Checkliste:**
+- [ ] `streamText` mit einem ungueltigem Modell aufgerufen (oder anderem Fehler-Trigger)
+- [ ] `onError` Callback implementiert mit Server-seitigem Logging
+- [ ] `for await` Loop in try/catch gewrapped
+- [ ] User-freundliche Fehlermeldung im catch-Block
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+console.log('Starte Stream mit absichtlichem Fehler...\n');
+
+const result = streamText({
+  model: anthropic('claude-nonexistent-model-99'),
+  prompt: 'Dieser Call wird fehlschlagen.',
+  onError({ error }) {
+    console.error('[Server Log] Stream-Fehler aufgetreten:');
+    console.error('[Server Log]', error);
+  },
+});
+
+try {
+  for await (const chunk of result.textStream) {
+    process.stdout.write(chunk);
+  }
+} catch (error) {
+  console.log('\n--- Fehler abgefangen ---');
+  console.log('Dem User anzeigen: "Die Antwort konnte nicht geladen werden. Bitte versuche es in einigen Sekunden erneut."');
+
+  // In einer echten App:
+  // - User-freundliche Meldung in der UI anzeigen
+  // - Retry-Button anbieten
+  // - Fehler an Error-Tracking senden (Sentry, etc.)
+}
+```
+
+**Erklaerung:** Der ungueltige Modellname fuehrt zu einem API-Fehler. `onError` loggt den Fehler serverseitig (mit allen Details fuer Debugging). Der try/catch um den Stream-Consumer faengt den Fehler ab und zeigt eine verstaendliche Meldung. In Production wuerdest Du hier eine UI-Komponente rendern statt `console.log`.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  ST["streamText()<br/>(1.4)"] --> Transform["smoothStream()<br/>(7.3)"]
+  Transform --> ErrorCheck{"Fehler?"}
+  ErrorCheck -->|Nein| UI["Frontend"]
+  ErrorCheck -->|Ja| Handler["onError<br/>(7.4)"]
+  Handler --> UserMsg["User-Meldung"]
+  Handler --> Retry["Retry mit<br/>Backoff"]
+  style ST fill:#4A90D9,color:#fff
+  style Transform fill:#27AE60,color:#fff
+  style ErrorCheck fill:#27AE60,color:#fff
+  style UI fill:#E67E22,color:#fff
+  style Handler fill:#E74C3C,color:#fff
+  style UserMsg fill:#E74C3C,color:#fff
+  style Retry fill:#E74C3C,color:#fff
+```
+
+**Uebung:** Kombiniere Error Handling mit Stream Transforms. Baue einen Stream, der:
+
+1. `smoothStream()` als Transform nutzt
+2. Einen Custom Transform hat, der prueoft ob ein Chunk ein bestimmtes "verbotenes" Muster enthaelt (z.B. "FEHLER_SIMULATION") und in dem Fall einen Error wirft
+3. `onError` loggt den Fehler serverseitig
+4. Ein try/catch um den Stream-Consumer zeigt eine User-freundliche Meldung
+
+**Optional Stretch Goal:** Implementiere `streamWithRetry` mit Exponential Backoff. Provoziere einen Fehler (z.B. mit einem falschen API-Key) und beobachte, wie die Retry-Logik 3 Versuche unternimmt, bevor sie aufgibt. Logge jeden Versuch mit Timestamp.
+
+## Quellen
+
+- [Vercel AI SDK: Error Handling](https://ai-sdk.dev/docs/ai-sdk-core/error-handling)
+- [Vercel AI SDK: streamText — onError](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#onerror)
+- [Vercel AI SDK: Error Types](https://ai-sdk.dev/docs/reference/ai-sdk-errors)
+- [ai-hero-dev Exercise 07.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.04-error-handling)

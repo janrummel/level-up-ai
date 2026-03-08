@@ -1,0 +1,323 @@
+---
+title: "Challenge 3.4: MCP"
+description: "Verbinde Dein LLM mit externen Diensten ueber ein standardisiertes Protokoll — MCP Client, Transport Types und Tool-Integration."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+Wie verbindest Du Dein LLM mit externen Diensten — ohne fuer jeden eine eigene Integration zu bauen? Was waere, wenn es ein standardisiertes Protokoll gaebe, das jeder Tool-Server spricht?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  App["AI App"] --> Client["MCP Client"]
+  Client --> Protocol["MCP Protocol"]
+  Protocol --> Server1["MCP Server:<br/>Dateien"]
+  Protocol --> Server2["MCP Server:<br/>Datenbank"]
+  Protocol --> Server3["MCP Server:<br/>Web API"]
+  Server1 --> FS["Filesystem"]
+  Server2 --> DB["PostgreSQL"]
+  Server3 --> API["REST API"]
+
+  subgraph HIER["Du bist HIER: MCP"]
+    Client
+    Protocol
+  end
+
+  style App fill:#4A90D9,color:#fff
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style Client fill:#27AE60,color:#fff
+  style Protocol fill:#27AE60,color:#fff
+  style Server1 fill:#27AE60,color:#fff
+  style Server2 fill:#27AE60,color:#fff
+  style Server3 fill:#27AE60,color:#fff
+  style FS fill:#E67E22,color:#fff
+  style DB fill:#E67E22,color:#fff
+  style API fill:#E67E22,color:#fff
+```
+
+**MCP** (Model Context Protocol) ist ein offenes Protokoll, das die Kommunikation zwischen AI-Anwendungen und Tool-Servern standardisiert. Ein MCP Client in Deiner App verbindet sich mit beliebig vielen MCP Servern — jeder Server stellt Tools bereit, die Dein LLM nutzen kann.
+
+## WHY
+
+**Ohne MCP:** Fuer jeden externen Dienst baust Du eine eigene Integration. Eigene `tool()`-Definition, eigene API-Anbindung, eigene Fehlerbehandlung. Bei 10 Diensten hast Du 10 verschiedene Integrationen zu pflegen. Nicht standardisiert, nicht austauschbar.
+
+**Mit MCP:** Ein Protokoll fuer alle Tools. Du verbindest Dich mit einem MCP Server und bekommst automatisch alle seine Tools — mit Beschreibungen, Schemas, fertig zur Nutzung. Server wechseln? Transport aendern? Ein Konfigurationswechsel, kein Code-Umbau.
+
+## WALKTHROUGH
+
+### Schicht 1: MCP Client erstellen
+
+Der MCP Client ist die Bruecke zwischen Deiner App und einem MCP Server. Du erstellst ihn mit `createMCPClient`:
+
+```typescript
+import { createMCPClient } from '@ai-sdk/mcp';
+
+const client = await createMCPClient({
+  transport: {
+    type: 'http',                                        // ← Transport-Typ
+    url: 'https://my-mcp-server.com/mcp',               // ← Server-URL
+  },
+});
+```
+
+`createMCPClient` ist async — es stellt die Verbindung zum Server her und handelt die Capabilities aus. Der Client weiss danach, welche Tools der Server anbietet.
+
+### Schicht 2: Transport-Optionen
+
+MCP unterstuetzt verschiedene Transports fuer verschiedene Szenarien:
+
+| Transport | Einsatz | Beispiel |
+|-----------|---------|----------|
+| **HTTP (Streamable)** | Remote Server, Production | Cloud-gehosteter MCP Server |
+| **SSE** | Alternative zu HTTP | Server-Sent Events basiert |
+| **stdio** | Lokale Server, Development | Lokaler Prozess (Node.js, Python) |
+
+**HTTP** — fuer Remote-Server in Production:
+
+```typescript
+const client = await createMCPClient({
+  transport: {
+    type: 'http',
+    url: 'https://my-mcp-server.com/mcp',
+    headers: {                                           // ← Optional: Auth-Header
+      Authorization: 'Bearer my-api-key',
+    },
+  },
+});
+```
+
+**stdio** — fuer lokale Server waehrend der Entwicklung:
+
+```typescript
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+
+const client = await createMCPClient({
+  transport: new StdioClientTransport({
+    command: 'node',                                     // ← Befehl zum Starten des Servers
+    args: ['my-mcp-server.js'],                          // ← Argumente
+  }),
+});
+```
+
+stdio startet den MCP Server als lokalen Kindprozess. Kommunikation laeuft ueber stdin/stdout. Ideal fuer Development und Testen.
+
+### Schicht 3: MCP Tools laden und nutzen
+
+`client.tools()` gibt Dir alle Tools des Servers als Objekt zurueck — fertig fuer `generateText`:
+
+```typescript
+import { createMCPClient } from '@ai-sdk/mcp';
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const client = await createMCPClient({
+  transport: {
+    type: 'http',
+    url: 'https://my-mcp-server.com/mcp',
+  },
+});
+
+// Alle Tools des Servers laden
+const tools = await client.tools();                      // ← Gibt { toolName: tool, ... } zurueck
+
+console.log('Verfuegbare Tools:', Object.keys(tools));
+
+// Tools direkt mit generateText nutzen
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools,                                                 // ← MCP Tools wie lokale Tools nutzen
+  prompt: 'Wie ist das Wetter in Berlin?',
+});
+
+console.log(result.text);
+
+// Wichtig: Client am Ende schliessen
+await client.close();
+```
+
+`client.tools()` gibt ein Objekt zurueck, das genau das Format hat, das `generateText` erwartet. Du kannst MCP Tools und lokale Tools auch mischen:
+
+```typescript
+const mcpTools = await client.tools();
+const allTools = {
+  ...mcpTools,                                           // ← MCP Tools
+  calculator: calculatorTool,                            // ← Lokales Tool
+};
+```
+
+### Schicht 4: Typisierte Tools mit Schemas
+
+Standardmaessig sind MCP Tools untypisiert — die Schemas kommen vom Server. Du kannst aber eigene Zod-Schemas angeben fuer volle TypeScript-Typsicherheit:
+
+```typescript
+import { z } from 'zod';
+
+const tools = await client.tools({
+  schemas: {
+    'get-weather': {                                     // ← Tool-Name vom Server
+      inputSchema: z.object({
+        location: z.string(),
+      }),
+      outputSchema: z.object({                           // ← Optional: Typisiertes Output
+        temperature: z.number(),
+        condition: z.string(),
+      }),
+    },
+  },
+});
+
+// Jetzt sind Input und Output typisiert
+```
+
+Die Schemas ueberschreiben die Server-Schemas nicht — sie fuegen TypeScript-Typen hinzu. Wenn der Server ein anderes Schema hat, bekommst Du zur Laufzeit einen Fehler.
+
+### Schicht 5: Client Lifecycle
+
+Der MCP Client haelt eine Verbindung offen. Du musst ihn am Ende schliessen:
+
+```typescript
+const client = await createMCPClient({
+  transport: { type: 'http', url: 'https://server.com/mcp' },
+});
+
+try {
+  const tools = await client.tools();
+  const result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    tools,
+    prompt: 'Hallo!',
+  });
+  console.log(result.text);
+} finally {
+  await client.close();                                  // ← Immer schliessen!
+}
+```
+
+Alternativ in `onFinish` beim Streaming:
+
+```typescript
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: await client.tools(),
+  prompt: 'Hallo!',
+  onFinish: async () => {
+    await client.close();                                // ← Nach Stream-Ende schliessen
+  },
+});
+```
+
+## TRY
+
+**Aufgabe:** Erstelle einen MCP Client mit stdio Transport, lade die verfuegbaren Tools und nutze sie mit `generateText`.
+
+```typescript
+import { createMCPClient } from '@ai-sdk/mcp';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO 1: Erstelle einen MCP Client mit stdio Transport
+// - command: 'npx'
+// - args: ['-y', '@modelcontextprotocol/server-everything']
+//   (ein Demo-Server der verschiedene Test-Tools bereitstellt)
+
+// TODO 2: Lade die verfuegbaren Tools mit client.tools()
+// TODO 3: Logge die Tool-Namen: Object.keys(tools)
+
+// TODO 4: Nutze die Tools mit generateText
+// - model: anthropic('claude-sonnet-4-5-20250514')
+// - tools: die geladenen MCP Tools
+// - prompt: Eine Frage die zu den verfuegbaren Tools passt
+
+// TODO 5: Logge result.text und result.toolCalls
+// TODO 6: Schliesse den Client mit client.close()
+```
+
+**Checkliste:**
+- [ ] MCP Client mit stdio Transport erstellt
+- [ ] `client.tools()` aufgerufen
+- [ ] Verfuegbare Tool-Namen geloggt
+- [ ] Tools mit `generateText` genutzt
+- [ ] Client am Ende geschlossen
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { createMCPClient } from '@ai-sdk/mcp';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const client = await createMCPClient({
+  transport: new StdioClientTransport({
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/server-everything'],
+  }),
+});
+
+try {
+  const tools = await client.tools();
+  console.log('Verfuegbare Tools:', Object.keys(tools));
+
+  const result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    tools,
+    prompt: 'Use the echo tool to say "Hello from MCP!"',
+  });
+
+  console.log('\nAntwort:', result.text);
+  console.log('Tool Calls:', result.toolCalls);
+} finally {
+  await client.close();
+}
+```
+
+**Erklaerung:** Der `@modelcontextprotocol/server-everything` ist ein offizieller Demo-Server, der verschiedene Test-Tools bereitstellt (echo, add, etc.). Der stdio Transport startet ihn als lokalen Kindprozess. `client.tools()` laedt automatisch alle verfuegbaren Tools mit ihren Beschreibungen und Schemas. Nach der Nutzung wird der Client — und damit der Kindprozess — sauber geschlossen.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Prompt["Prompt"] --> GT["generateText()"]
+  GT --> Loop{"Tool Loop<br/>(3.3)"}
+  Loop -->|MCP Tool| MCP["MCP Client<br/>(3.4)"]
+  Loop -->|Lokal| Local["Lokales Tool<br/>(3.1)"]
+  MCP --> Server["MCP Server"]
+  Server --> MCP
+  MCP --> Loop
+  Local --> Loop
+  Loop -->|Fertig| Text["Antwort"]
+  style Prompt fill:#4A90D9,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Loop fill:#27AE60,color:#fff
+  style MCP fill:#27AE60,color:#fff
+  style Local fill:#27AE60,color:#fff
+  style Server fill:#E67E22,color:#fff
+  style Text fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere MCP Tools mit dem Agentic Loop aus Challenge 3.3. Nutze MCP Tools als Teil eines Multi-Step Agent.
+
+1. Erstelle einen MCP Client (stdio mit dem Demo-Server)
+2. Lade die MCP Tools
+3. Fuege ein lokales `calculatorTool` hinzu (aus Challenge 3.1)
+4. Nutze `generateText` mit `stopWhen: stepCountIs(3)` und allen Tools
+5. Prompt: "Use the echo tool to repeat 'Hello', then calculate 42 * 17."
+6. Logge den Agent-Verlauf: Welche Tools (MCP vs. lokal) wurden in welchem Schritt genutzt?
+7. Schliesse den Client am Ende
+
+**Optional Stretch Goal:** Erstelle zwei MCP Clients (z.B. zwei verschiedene Server oder den gleichen Server zweimal) und merge ihre Tools in ein gemeinsames Tool-Objekt. Teste, ob der Agent Tools von beiden Servern nutzen kann.
+
+## Quellen
+
+- [Vercel AI SDK: MCP Tools](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools)
+- [Model Context Protocol: Specification](https://modelcontextprotocol.io)
+- [Model Context Protocol: Server Everything (Demo)](https://github.com/modelcontextprotocol/servers/tree/main/src/everything)
+- [ai-hero-dev Exercise 03.05](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/03-agents-and-tools/03.05-mcp)

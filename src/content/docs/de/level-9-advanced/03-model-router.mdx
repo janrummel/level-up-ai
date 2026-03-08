@@ -1,0 +1,317 @@
+---
+title: "Challenge 9.2: Model Router"
+description: "Waehle automatisch das richtige Modell fuer jede Aufgabe — guenstig fuer Einfaches, stark fuer Komplexes, spezialisiert fuer Code."
+sidebar:
+  order: 3
+---
+
+## THINK
+
+Wuerdest Du fuer die Frage "Wie spaet ist es?" dasselbe Modell nutzen wie fuer "Analysiere diesen 500-Zeilen Code und finde den Performance-Bug"? Was kostet es, wenn Du immer das teuerste Modell nimmst?
+
+## OVERVIEW
+
+```mermaid
+graph TD
+  Input["User Input"] --> Analyze{"Input<br/>analysieren"}
+  Analyze -->|Einfach| Flash["Flash-Modell<br/>(guenstig)"]
+  Analyze -->|Komplex| Pro["Pro-Modell<br/>(teuer)"]
+  Analyze -->|Code| Code["Code-Modell<br/>(spezialisiert)"]
+  Flash --> Output["Output"]
+  Pro --> Output
+  Code --> Output
+  style Input fill:#4A90D9,color:#fff
+  style Analyze fill:#27AE60,color:#fff
+  style Flash fill:#27AE60,color:#fff
+  style Pro fill:#E67E22,color:#fff
+  style Code fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+Der Input wird analysiert und klassifiziert. Einfache Aufgaben gehen an ein schnelles, guenstiges Flash-Modell. Komplexe Aufgaben an ein starkes Pro-Modell. Code-Aufgaben an ein spezialisiertes Code-Modell. Ergebnis: optimales Preis-Leistungs-Verhaeltnis.
+
+## WHY
+
+**Ohne Model Routing:** Du nutzt ein teures Modell fuer alles. Einfache Fragen wie "Was ist TypeScript?" kosten genauso viel wie komplexe Analysen. Bei 10.000 Requests pro Tag summieren sich die Kosten schnell. Oder Du nutzt ein billiges Modell fuer alles — dann leidet die Qualitaet bei komplexen Aufgaben.
+
+**Mit Model Routing:** Jede Aufgabe bekommt das passende Modell. 80% der Anfragen sind einfach und gehen an das Flash-Modell (Faktor 10-50x guenstiger). 20% sind komplex und bekommen das Pro-Modell. Ergebnis: gleiche Qualitaet, drastisch niedrigere Kosten.
+
+## WALKTHROUGH
+
+### Schicht 1: Einfacher Router nach Aufgabentyp
+
+Die einfachste Variante — eine Funktion die anhand des Aufgabentyps das Modell waehlt:
+
+```typescript
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
+
+function selectModel(task: 'simple' | 'complex' | 'code') {
+  switch (task) {
+    case 'simple':
+      return google('gemini-2.5-flash-lite');          // ← Guenstig + schnell
+    case 'complex':
+      return anthropic('claude-opus-4-6');              // ← Teuer + stark
+    case 'code':
+      return anthropic('claude-sonnet-4-5-20250514');   // ← Gutes Preis-Leistungs-Verhaeltnis fuer Code
+  }
+}
+
+// Nutzung
+const result = await generateText({
+  model: selectModel('simple'),
+  prompt: 'Was ist TypeScript?',
+});
+console.log(result.text);
+```
+
+Der Aufrufer entscheidet explizit, welcher Typ vorliegt. Einfach, aber limitiert — der Mensch muss klassifizieren.
+
+### Schicht 2: Dynamisches Routing nach Input-Laenge
+
+Statt manueller Klassifikation: automatisch anhand der Token-Anzahl entscheiden:
+
+```typescript
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
+
+function estimateTokens(text: string): number {
+  return Math.ceil(text.split(/\s+/).length * 1.3);    // ← Grobe Schaetzung: Woerter * 1.3
+}
+
+function selectByComplexity(input: string) {
+  const tokens = estimateTokens(input);
+  console.log(`Geschaetzte Tokens: ${tokens}`);
+
+  if (tokens < 50) {
+    console.log('Route: Flash (einfache Anfrage)');
+    return google('gemini-2.5-flash-lite');             // ← Kurze Anfragen = einfach
+  }
+  if (tokens < 200) {
+    console.log('Route: Sonnet (mittlere Anfrage)');
+    return anthropic('claude-sonnet-4-5-20250514');     // ← Mittlere Anfragen = Standard
+  }
+  console.log('Route: Opus (komplexe Anfrage)');
+  return anthropic('claude-opus-4-6');                  // ← Lange Anfragen = komplex
+}
+
+// Test
+const simpleResult = await generateText({
+  model: selectByComplexity('Was ist TypeScript?'),
+  prompt: 'Was ist TypeScript?',
+});
+console.log(simpleResult.text);
+```
+
+Token-basiertes Routing ist ein guter erster Schritt — lange Prompts deuten oft auf komplexe Aufgaben hin. Aber Laenge allein ist kein perfekter Proxy fuer Komplexitaet.
+
+### Schicht 3: LLM-basiertes Routing
+
+Die cleverste Variante — ein kleines, schnelles Modell klassifiziert die Aufgabe, und das Ergebnis bestimmt das Modell:
+
+```typescript
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { generateText, Output } from 'ai';
+import { z } from 'zod';
+
+// Schritt 1: Klassifikation mit einem kleinen Modell
+async function classifyTask(input: string) {
+  const result = await generateText({
+    model: google('gemini-2.5-flash-lite'),             // ← Kleines Modell fuer Klassifikation
+    system: `Klassifiziere die folgende Aufgabe in eine Kategorie.
+- "simple": Einfache Fragen, Definitionen, kurze Antworten
+- "complex": Analyse, Vergleich, Argumentation, kreatives Schreiben
+- "code": Code schreiben, debuggen, reviewen, erklaeren`,
+    prompt: input,
+    experimental_output: Output.enum(['simple', 'complex', 'code']),  // ← Aus Level 1.5
+  });
+  return result.experimental_output;
+}
+
+// Schritt 2: Modell basierend auf Klassifikation waehlen
+function selectByClassification(classification: 'simple' | 'complex' | 'code') {
+  switch (classification) {
+    case 'simple':  return google('gemini-2.5-flash-lite');
+    case 'complex': return anthropic('claude-opus-4-6');
+    case 'code':    return anthropic('claude-sonnet-4-5-20250514');
+  }
+}
+
+// Schritt 3: Routing-Pipeline
+async function routedGenerate(input: string) {
+  const taskType = await classifyTask(input);           // ← LLM klassifiziert
+  console.log(`Klassifikation: ${taskType}`);
+
+  const model = selectByClassification(taskType);       // ← Modell wird gewaehlt
+  const result = await generateText({ model, prompt: input });
+
+  console.log(`Tokens: ${result.usage.totalTokens}`);
+  return result.text;
+}
+
+// Test
+const answer = await routedGenerate(
+  'Vergleiche die Vor- und Nachteile von REST vs. GraphQL fuer eine Microservices-Architektur.',
+);
+console.log(answer);
+```
+
+Zwei LLM-Calls statt einem — aber der erste (Klassifikation) ist extrem guenstig und schnell. Die Kosten fuer die Klassifikation sind vernachlaessigbar im Vergleich zur Ersparnis, wenn 80% der Anfragen ans Flash-Modell gehen.
+
+### Schicht 4: Kostenvergleich
+
+Was bringt Model Routing konkret? Eine Uebersicht der Modellkosten (Stand Anfang 2026):
+
+| Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) | Staerke |
+|--------|----------------------|------------------------|---------|
+| Gemini 2.5 Flash Lite | ~$0.075 | ~$0.30 | Einfache Aufgaben |
+| Claude Sonnet 4.5 | ~$3.00 | ~$15.00 | Allround |
+| Claude Opus 4.6 | ~$15.00 | ~$75.00 | Komplexe Analyse |
+
+**Rechenbeispiel:** 10.000 Anfragen pro Tag, durchschnittlich 500 Input + 1.000 Output Tokens.
+
+- **Ohne Routing** (alles Opus): ~$900/Tag
+- **Mit Routing** (80% Flash, 15% Sonnet, 5% Opus): ~$55/Tag
+
+Das ist eine Ersparnis von ueber 90% — bei vergleichbarer Qualitaet, weil die einfachen Anfragen kein Opus brauchen.
+
+## TRY
+
+**Aufgabe:** Baue einen Model Router der Input klassifiziert und zum passenden Modell routet.
+
+```typescript
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { generateText, Output } from 'ai';
+import { z } from 'zod';
+
+// TODO 1: Implementiere classifyTask(input: string)
+//   - Nutze ein kleines Modell (gemini-2.5-flash-lite)
+//   - Klassifiziere in 'simple', 'complex' oder 'code'
+//   - Nutze Output.enum fuer typsichere Ausgabe
+
+// TODO 2: Implementiere selectModel(classification)
+//   - 'simple'  → google('gemini-2.5-flash-lite')
+//   - 'complex' → anthropic('claude-opus-4-6')
+//   - 'code'    → anthropic('claude-sonnet-4-5-20250514')
+
+// TODO 3: Baue eine routedGenerate-Funktion die:
+//   - Erst klassifiziert
+//   - Dann das passende Modell aufruft
+//   - Den Token-Verbrauch loggt
+
+// TODO 4: Teste mit diesen Inputs:
+//   - 'Was ist eine Variable?'                    (→ simple)
+//   - 'Vergleiche SQL vs. NoSQL Datenbanken'      (→ complex)
+//   - 'Schreibe eine Funktion die Arrays sortiert' (→ code)
+```
+
+**Checkliste:**
+- [ ] Klassifikation mit kleinem Modell implementiert
+- [ ] `Output.enum` fuer typsichere Klassifikation genutzt
+- [ ] Drei verschiedene Modelle je nach Aufgabentyp
+- [ ] Token-Verbrauch wird geloggt
+- [ ] Korrekte Zuordnung bei den drei Test-Inputs
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { generateText, Output } from 'ai';
+import { z } from 'zod';
+
+async function classifyTask(input: string) {
+  const result = await generateText({
+    model: google('gemini-2.5-flash-lite'),
+    system: `Klassifiziere die Aufgabe:
+- "simple": Definitionen, kurze Fragen, Fakten
+- "complex": Analyse, Vergleich, Argumentation
+- "code": Code schreiben, debuggen, erklaeren`,
+    prompt: input,
+    experimental_output: Output.enum(['simple', 'complex', 'code']),
+  });
+  return result.experimental_output;
+}
+
+function selectModel(classification: 'simple' | 'complex' | 'code') {
+  const models = {
+    simple: google('gemini-2.5-flash-lite'),
+    complex: anthropic('claude-opus-4-6'),
+    code: anthropic('claude-sonnet-4-5-20250514'),
+  };
+  return models[classification];
+}
+
+async function routedGenerate(input: string) {
+  // Klassifikation
+  const taskType = await classifyTask(input);
+  console.log(`Klassifikation: ${taskType}`);
+
+  // Routing
+  const model = selectModel(taskType);
+  const result = await generateText({ model, prompt: input });
+
+  console.log(`Tokens: ${result.usage.totalTokens}`);
+  return { text: result.text, taskType, tokens: result.usage.totalTokens };
+}
+
+// Tests
+const testInputs = [
+  'Was ist eine Variable?',
+  'Vergleiche SQL vs. NoSQL Datenbanken fuer eine E-Commerce-Plattform',
+  'Schreibe eine TypeScript-Funktion die ein Array von Zahlen sortiert',
+];
+
+for (const input of testInputs) {
+  console.log(`\n--- Input: "${input}" ---`);
+  const result = await routedGenerate(input);
+  console.log(`Antwort: ${result.text.slice(0, 100)}...`);
+}
+```
+
+**Erklaerung:** Zwei LLM-Calls pro Anfrage — der erste (Klassifikation) kostet nahezu nichts mit Flash Lite. Der zweite Call geht an das passende Modell. Die `Output.enum`-Funktion aus Level 1.5 garantiert, dass die Klassifikation immer einer der drei erlaubten Werte ist.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Input["User Input"] --> Router["Model<br/>Router (9.2)"]
+  Router --> Model["Gewahltes<br/>Modell"]
+  Model --> Result["Result"]
+  Result --> Track["Usage<br/>Tracking (2.2)"]
+  Track --> Log["Cost Log"]
+  style Input fill:#4A90D9,color:#fff
+  style Router fill:#27AE60,color:#fff
+  style Model fill:#27AE60,color:#fff
+  style Result fill:#E67E22,color:#fff
+  style Track fill:#27AE60,color:#fff
+  style Log fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere den Model Router mit Usage Tracking aus Level 2.2. Baue ein System das:
+
+1. **Klassifiziert** — jede Anfrage wird als `simple`, `complex` oder `code` eingestuft
+2. **Routet** — das passende Modell wird gewaehlt
+3. **Trackt** — Token-Verbrauch und geschaetzte Kosten werden pro Anfrage geloggt
+4. **Vergleicht** — nach 10 Anfragen: Wie viel haettest Du mit "alles Opus" bezahlt vs. mit Routing?
+
+Berechne die geschaetzten Kosten mit diesen Raten (vereinfacht):
+- Flash Lite: $0.0004 pro 1K Tokens
+- Sonnet: $0.009 pro 1K Tokens
+- Opus: $0.045 pro 1K Tokens
+
+**Optional Stretch Goal:** Fuege einen Fallback hinzu — wenn das gewahlte Modell einen Error zurueckgibt (z.B. Rate Limit), eskaliere automatisch zum naechstgroesseren Modell.
+
+## Quellen
+
+- [Vercel AI SDK: Providers and Models](https://ai-sdk.dev/docs/foundations/providers-and-models)
+- [Anthropic: Models Overview](https://docs.anthropic.com/en/docs/about-claude/models)
+- [Google AI: Gemini Models](https://ai.google.dev/gemini-api/docs/models)
+- [ai-hero-dev Exercise 09.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/09-production-patterns/09.02-model-router)

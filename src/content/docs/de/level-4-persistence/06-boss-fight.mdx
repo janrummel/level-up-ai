@@ -1,0 +1,163 @@
+---
+title: "Boss Fight: Persistenter Chat mit Reload"
+description: "Kombiniere alle vier Bausteine aus Level 4 in einem Chat-System mit vollstaendigem Persistence-Cycle: ID generieren, Messages validieren, speichern, laden und nach Reload fortsetzen."
+sidebar:
+  order: 6
+---
+
+## Das Szenario
+
+Du baust ein **Chat-System mit vollstaendigem Persistence-Cycle** — ein Programm, das eine Chat-ID generiert, Nachrichten validiert, nach jedem LLM-Call speichert und nach einem simulierten Reload den Verlauf laedt und das Gespraech nahtlos fortsetzt.
+
+Dein System soll sich so verhalten:
+
+```
+--- Neuer Chat gestartet: a1b2c3d4... ---
+
+[Request 1] User: Was ist TypeScript?
+[Validation] OK
+[Saved] 2 messages
+Assistant: TypeScript ist eine typisierte Erweiterung von JavaScript...
+
+[Request 2] User: Nenne 3 Vorteile.
+[Validation] OK
+[Saved] 4 messages
+Assistant: 1. Statische Typen fangen Fehler frueh ab...
+
+--- Simulierter Reload ---
+
+[Loaded] 4 messages fuer Chat a1b2c3d4...
+
+[Request 3] User: Welchen Vorteil findest Du am wichtigsten?
+[Validation] OK
+[Saved] 6 messages
+Assistant: Basierend auf unserer Diskussion ueber TypeScript...
+
+--- Ungueltige Nachricht ---
+
+[Request 4] Invalid: role "admin" not allowed
+[Blocked] Message nicht gespeichert.
+```
+
+Dieses Projekt kombiniert alle vier Bausteine aus Level 4:
+
+```mermaid
+graph LR
+  ID["Chat ID<br/>(4.2)"] --> Val["Validation<br/>(4.4)"]
+  Val -->|valid| Load["Load History"]
+  Val -->|invalid| Err["Error"]
+  Load --> GT["generateText()"]
+  GT --> OF["onFinish<br/>(4.1)"]
+  OF --> Save["Persistence<br/>(4.3)"]
+  Save --> DB[("Database")]
+  DB --> Load
+  style ID fill:#4A90D9,color:#fff
+  style Val fill:#27AE60,color:#fff
+  style Load fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style OF fill:#E67E22,color:#fff
+  style Save fill:#E67E22,color:#fff
+  style DB fill:#E67E22,color:#fff
+  style Err fill:#E74C3C,color:#fff
+```
+
+## Anforderungen
+
+1. **Chat ID generieren** (Challenge 4.2) — Beim Start wird eine UUID generiert. Alle Messages gehoeren zu dieser ID.
+2. **Message Validation** (Challenge 4.4) — Jeder Request wird vor der Verarbeitung gegen ein Zod Schema validiert. Ungueltige Messages werden abgelehnt und nicht gespeichert.
+3. **onFinish Callback** (Challenge 4.1) — Im `onFinish` werden die neuen Messages (User + Assistant) automatisch gespeichert und der Token-Verbrauch geloggt.
+4. **Persistence** (Challenge 4.3) — Messages werden in einer In-Memory "DB" (Map) gespeichert. Nach einem simulierten Reload wird der Verlauf geladen und der Chat fortgesetzt.
+5. **Simulierter Reload** — Zwischen den Requests wird ein "Reload" simuliert: Die Laufzeitvariablen werden zurueckgesetzt, nur die "DB" bleibt. Der Chat muss trotzdem nahtlos weitergehen.
+6. **Token-Tracking** — Der `onFinish` Callback loggt den Token-Verbrauch pro Request.
+7. **Fehlerfall testen** — Mindestens ein ungueltiger Request wird gesendet und korrekt abgelehnt.
+8. **Vollstaendiger Verlauf** — Nach allen Requests zeigt ein Log den kompletten Chat-Verlauf mit Rollen und Message-Previews.
+
+## Starter-Code
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+// --- Datenbank (simuliert) ---
+// TODO: Map als In-Memory DB
+
+// --- Schemas ---
+// TODO: Zod Schema fuer Messages und Chat-Requests
+
+// --- DB-Funktionen ---
+// TODO: saveMessages(chatId, messages)
+// TODO: loadMessages(chatId)
+
+// --- Validation ---
+// TODO: validate(body) — gibt { success, data?, error? } zurueck
+
+// --- Chat-Funktion ---
+// TODO: chat(chatId, userMessage) — der vollstaendige Cycle:
+//   1. Validate
+//   2. Load history
+//   3. generateText mit onFinish (Save + Token-Log)
+//   4. Return result
+
+// --- Ausfuehrung ---
+
+// Phase 1: Neuer Chat
+// TODO: Chat ID generieren
+// TODO: Erste Nachricht senden
+// TODO: Zweite Nachricht senden
+
+// Phase 2: Simulierter Reload
+// TODO: Laufzeitvariablen zuruecksetzen (nur DB bleibt)
+// TODO: Verlauf laden und loggen
+// TODO: Dritte Nachricht senden (Chat geht weiter)
+
+// Phase 3: Fehlerfall
+// TODO: Ungueltigen Request senden (z.B. role: "admin")
+// TODO: Sicherstellen, dass er abgelehnt wird
+
+// Phase 4: Verlauf anzeigen
+// TODO: Alle Messages des Chats loggen
+```
+
+## Bewertungskriterien
+
+Dein Boss Fight ist bestanden, wenn:
+
+- [ ] Eine Chat ID wird beim Start generiert und fuer alle Requests verwendet
+- [ ] Jeder Request wird vor der Verarbeitung gegen ein Zod Schema validiert
+- [ ] Ungueltige Messages werden abgelehnt und nicht in der DB gespeichert
+- [ ] `onFinish` speichert Messages automatisch nach jeder Completion
+- [ ] `onFinish` loggt den Token-Verbrauch pro Request
+- [ ] Nach einem simulierten "Reload" wird der Verlauf korrekt geladen
+- [ ] Der Chat setzt nach dem Reload nahtlos fort (LLM bezieht sich auf fruehere Messages)
+- [ ] Am Ende zeigt ein Log den vollstaendigen Verlauf mit allen Messages
+
+## Hinweise
+
+<details>
+<summary>Hinweis 1: Den Reload simulieren</summary>
+
+Du brauchst keinen echten Server-Neustart. Erstelle einfach eine neue Variable fuer den Verlauf (`let currentHistory = []`) und setze sie auf leer. Dann lade den Verlauf mit `loadMessages(chatId)` neu aus der Map. Das simuliert, was bei einem echten Reload passiert: Der Arbeitsspeicher ist leer, aber die DB hat die Daten.
+
+</details>
+
+<details>
+<summary>Hinweis 2: Validation und Chat-Funktion trennen</summary>
+
+Baue die Validation als separate Funktion, nicht direkt in der Chat-Logik. Deine `chat(chatId, userMessage)`-Funktion sollte zuerst `validate()` aufrufen. Wenn die Validation fehlschlaegt, gibt die Funktion frueh zurueck — ohne DB-Zugriff und ohne LLM-Call. So ist klar: Nur validierte Messages erreichen `generateText`.
+
+</details>
+
+<details>
+<summary>Hinweis 3: Messages-Array richtig aufbauen</summary>
+
+Beim Fortsetzen nach dem Reload muss das Messages-Array alle bisherigen Messages enthalten — nicht nur die neue. Lade den Verlauf mit `loadMessages(chatId)`, haenge die neue User-Message an, und uebergib das gesamte Array an `generateText`. Im `onFinish` speicherst Du dann das komplette Array (inklusive der neuen Assistant-Antwort) zurueck in die DB.
+
+</details>
+
+## Quellen
+
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [Zod: Documentation](https://zod.dev)
+- [ai-hero-dev Exercises 04.01-04.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)

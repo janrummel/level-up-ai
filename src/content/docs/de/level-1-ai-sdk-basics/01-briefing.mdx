@@ -1,0 +1,93 @@
+---
+title: "Level 1: AI SDK Basics — Briefing"
+description: "Dein Einstieg in die AI-Entwicklung mit dem Vercel AI SDK — von der Installation bis zum ersten generierten Text."
+sidebar:
+  order: 1
+---
+
+## TL;DR
+
+> Das AI SDK ist Dein Werkzeugkasten fuer AI-Anwendungen. In diesem Level lernst Du die Grundlagen: Text generieren, streamen, strukturierte Ausgaben und System Prompts. Eine API fuer alle Provider — Anthropic, OpenAI, Google und 20+ weitere.
+
+## Skill Tree
+
+```mermaid
+graph LR
+  subgraph HIER["Aktuelles Level"]
+    L1["Level 1: AI SDK Basics"]
+  end
+  subgraph "Gesperrt"
+    L2["Level 2: LLM Fundamentals"]
+    L3["Level 3: Agents & MCP"]
+    L4["Level 4: Persistence"]
+    L5["Level 5: Context Engineering"]
+    L6["Level 6: Evals"]
+    L7["Level 7: Streaming"]
+    L8["Level 8: Workflows"]
+    L9["Level 9: Advanced Patterns"]
+  end
+  L1 -.-> L2
+  L2 -.-> L3
+  L3 -.-> L4
+  L4 -.-> L5
+  L5 -.-> L6
+  L6 -.-> L7
+  L7 -.-> L8
+  L8 -.-> L9
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style L1 fill:#E67E22,color:#fff
+  style L2 fill:#95a5a6,color:#fff
+  style L3 fill:#95a5a6,color:#fff
+  style L4 fill:#95a5a6,color:#fff
+  style L5 fill:#95a5a6,color:#fff
+  style L6 fill:#95a5a6,color:#fff
+  style L7 fill:#95a5a6,color:#fff
+  style L8 fill:#95a5a6,color:#fff
+  style L9 fill:#95a5a6,color:#fff
+```
+
+## Was Du lernst
+
+- **Was das AI SDK ist und wie es aufgebaut ist** — drei Bibliotheken, ein einheitliches Interface
+- **Wie Du ein LLM-Modell auswaehlst und konfigurierst** — Provider-System, Modell-Instanzen, Provider wechseln
+- **Text generieren mit `generateText`** — das Result-Objekt, Usage Tracking, Finish Reason
+- **Text streamen mit `streamText`** — Echtzeit-Ausgabe, Stream Events, `textStream`
+- **Strukturierte Ausgaben mit `Output.object` und Zod** — typisierte JSON-Antworten statt Freitext
+- **System Prompts fuer Rollenverhalten** — dem LLM eine Identitaet und Regeln geben
+
+## Warum das wichtig ist
+
+Jede AI-Anwendung baut auf diesen Grundlagen auf. Ohne sie bist Du auf Copy-Paste aus ChatGPT angewiesen und kannst AI nicht programmatisch in Deine Projekte einbauen.
+
+Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provider hat eine andere API, andere Typen, andere Fehlerbehandlung. Das AI SDK loest das — eine einheitliche API fuer alle Provider. Du lernst sie hier von Grund auf.
+
+## Voraussetzungen
+
+- **Node.js 18+** und **npm** oder **pnpm** installiert
+- **TypeScript Grundkenntnisse** — Typen, Interfaces, async/await
+- **Erfahrung mit ChatGPT oder aehnlichem** — Du weisst, was ein LLM ist und was es kann
+- **Ein API-Key** fuer mindestens einen Provider (Anthropic, OpenAI oder Google)
+
+> **Skip-Hinweis:** Du nutzt das AI SDK bereits taeglich und kennst `generateText`, `streamText` und `Output.object`? Spring direkt zur [Boss Fight](/de/level-1-ai-sdk-basics/08-boss-fight/) und teste Dein Wissen.
+
+## Challenges
+
+| # | Challenge | Konzept |
+|---|-----------|---------|
+| 1.1 | [Was ist das AI SDK?](/de/level-1-ai-sdk-basics/02-what-is-ai-sdk/) | SDK Architektur, drei Bibliotheken, erster API-Call |
+| 1.2 | [Dein erstes Modell](/de/level-1-ai-sdk-basics/03-choosing-your-model/) | Provider-System, Modell-Auswahl, Provider wechseln |
+| 1.3 | [Text generieren](/de/level-1-ai-sdk-basics/04-generating-text/) | `generateText` API, Result-Objekt, Usage Tracking |
+| 1.4 | [Text streamen](/de/level-1-ai-sdk-basics/05-streaming-text/) | `streamText`, `textStream`, Echtzeit-Ausgabe |
+| 1.5 | [Strukturierte Ausgabe](/de/level-1-ai-sdk-basics/06-structured-output/) | `Output.object`, `Output.array`, Zod Schemas |
+| 1.6 | [System Prompts](/de/level-1-ai-sdk-basics/07-system-prompts/) | `system` Parameter, Rollenverhalten, Tone Setting |
+
+## Boss Fight
+
+Baue einen **CLI-Chat**: Ein Terminal-Programm, das Text mit `streamText` in Echtzeit ausgibt und auf Anfrage strukturierte JSON-Ausgabe mit `Output.object` liefert. Du kombinierst alle sechs Bausteine dieses Levels in einem Projekt.
+
+## Quellen fuer dieses Level
+
+- [Vercel AI SDK: Introduction](https://ai-sdk.dev/docs/introduction)
+- [Vercel AI SDK: Providers and Models](https://ai-sdk.dev/docs/foundations/providers-and-models)
+- [Vercel Blog: AI SDK 6](https://vercel.com/blog/ai-sdk-6)
+- [ai-hero-dev Exercises 01.01-01.13](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/01-ai-sdk-basics)

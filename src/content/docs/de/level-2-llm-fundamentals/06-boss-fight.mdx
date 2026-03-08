@@ -1,0 +1,149 @@
+---
+title: "Boss Fight: Token-Budget-Rechner"
+description: "Kombiniere alle vier Bausteine aus Level 2 — Tokens, Usage Tracking, Context Window und Prompt Caching — in einem Token-Budget-Rechner."
+sidebar:
+  order: 6
+---
+
+## Das Szenario
+
+Du baust einen **Token-Budget-Rechner** — ein Tool, das vor jedem LLM-Call prueft, ob der Request ins Budget passt. Der Rechner kombiniert alle vier Bausteine aus Level 2: Token-Counting, Kostenberechnung, Context-Window-Check und Cache-Tracking.
+
+Dein Tool soll sich so anfuehlen:
+
+```
+[Budget Check] System: ~580 Tokens | User: ~15 Tokens | Output-Reserve: 4096
+[Budget Check] Gesamt: ~4691 / 200000 Tokens (2.3%)
+[Budget Check] Status: OK
+
+[Cost] Call 1: $0.001245 (Cache: MISS)
+[Cost] Call 2: $0.000387 (Cache: HIT — 69% guenstiger)
+[Cost] Call 3: $0.000391 (Cache: HIT — 69% guenstiger)
+
+[Session] 3 Calls | 892 Tokens | $0.002023 | Cache-Hit-Rate: 66.7%
+```
+
+Dieses Projekt verbindet alle vier Bausteine:
+
+```mermaid
+graph LR
+  Input["System + User<br/>Prompt"] --> Count["Token<br/>Counting<br/>(2.1)"]
+  Count --> Check["Context Window<br/>Check<br/>(2.3)"]
+  Check -->|Passt| GT["generateText()"]
+  Check -->|Zu gross| Truncate["Truncation"]
+  Truncate --> GT
+  GT --> Usage["Usage<br/>Tracking<br/>(2.2)"]
+  Usage --> Cache["Cache<br/>Tracking<br/>(2.4)"]
+  Cache --> Report["Session<br/>Report"]
+  style Input fill:#4A90D9,color:#fff
+  style Count fill:#27AE60,color:#fff
+  style Check fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Truncate fill:#E67E22,color:#fff
+  style Usage fill:#E67E22,color:#fff
+  style Cache fill:#E67E22,color:#fff
+  style Report fill:#E67E22,color:#fff
+```
+
+## Anforderungen
+
+1. **Token-Counting** (Challenge 2.1) — Implementiere `estimateTokens(text)`, das die ungefaehre Token-Anzahl eines Textes berechnet. Nutze die Faustregel (1 Token ≈ 3.5 Zeichen).
+
+2. **Context-Window-Check** (Challenge 2.3) — Vor jedem Call: Berechne System Prompt + User Prompt + Output-Reserve. Pruefe gegen das Context-Window-Limit des Modells. Wenn >90%: Warnung. Wenn >100%: Abbruch mit Fehlermeldung.
+
+3. **Kostenberechnung** (Challenge 2.2) — Nach jedem Call: Lies `result.usage` aus und berechne die Kosten basierend auf der Modell-Preisliste. Tracke Input- und Output-Kosten separat.
+
+4. **Cache-Tracking** (Challenge 2.4) — Tracke ueber mehrere Calls, ob der System Prompt gecacht wird. Berechne die Cache-Hit-Rate und die theoretische Ersparnis gegenueber "kein Caching".
+
+5. **Session Report** — Nach allen Calls: Zeige eine Zusammenfassung mit Gesamtzahl der Calls, Token-Verbrauch, Kosten und Cache-Hit-Rate.
+
+## Starter-Code
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO: Definiere ModelPricing Interface und PRICING-Tabelle
+
+// TODO: Implementiere estimateTokens(text: string): number
+
+// TODO: Implementiere checkContextWindow(systemPrompt, userPrompt, modelContextWindow, outputReserve)
+//   - Berechne geschaetzte Tokens fuer System + User + Reserve
+//   - Return: { totalEstimate, utilization, status: 'ok' | 'warning' | 'error' }
+
+// TODO: Implementiere calculateCost(usage, modelId)
+//   - Berechne Input- und Output-Kosten separat
+//   - Return: { inputCost, outputCost, totalCost }
+
+// TODO: Definiere Session-Tracking Variablen
+// let session = { calls: 0, totalTokens: 0, totalCost: 0, cacheHits: 0 };
+
+// TODO: Implementiere budgetedGenerate(systemPrompt, userPrompt, modelId)
+//   - 1. Context-Window-Check
+//   - 2. generateText-Call
+//   - 3. Kosten berechnen
+//   - 4. Cache-Status tracken
+//   - 5. Session-Variablen aktualisieren
+//   - 6. Return: result + cost + cacheStatus
+
+// TODO: Definiere einen langen System Prompt (>1024 Tokens)
+
+// TODO: Fuehre 3+ Calls mit demselben System Prompt aus
+
+// TODO: Zeige den Session Report
+```
+
+## Bewertungskriterien
+
+Dein Boss Fight ist bestanden, wenn:
+
+- [ ] `estimateTokens` berechnet die ungefaehre Token-Anzahl eines Textes
+- [ ] Vor jedem Call wird geprueft, ob der Input ins Context Window passt
+- [ ] Bei >90% Context-Window-Auslastung wird eine Warnung ausgegeben
+- [ ] Kosten werden nach jedem Call basierend auf `result.usage` berechnet
+- [ ] Input- und Output-Kosten werden separat ausgewiesen
+- [ ] Cache-Hit/Miss wird pro Call geloggt
+- [ ] Die Cache-Hit-Rate wird ueber die Session berechnet
+- [ ] Ein finaler Session Report zeigt: Calls, Tokens, Kosten, Cache-Hit-Rate
+
+## Hinweise
+
+<details>
+<summary>Hinweis 1: Token-Schaetzung verbessern</summary>
+
+Die einfachste Variante ist `Math.ceil(text.length / 3.5)`. Fuer bessere Genauigkeit kannst Du unterschiedliche Faktoren fuer verschiedene Textarten verwenden: Code hat mehr Sonderzeichen (eigene Tokens), deutscher Text braucht mehr Tokens als englischer. Eine gewichtete Schaetzung koennte Woerter zaehlen und pro Wort 1.3 Tokens annehmen.
+
+</details>
+
+<details>
+<summary>Hinweis 2: Cache-Erkennung</summary>
+
+Anthropic unterstuetzt automatisches Prompt Caching. Der Cache-Status laesst sich am einfachsten indirekt erkennen: Wenn der zweite Call mit identischem System Prompt guenstigere effektive Kosten hat, wurde der Cache getroffen. Alternativ kannst Du einfach tracken: Erster Call = Cache Miss (Write), Folge-Calls mit identischem Prefix = Cache Hit (Read).
+
+</details>
+
+<details>
+<summary>Hinweis 3: Session-Tracking-Struktur</summary>
+
+Ein einfaches Objekt reicht fuer das Session-Tracking:
+
+```typescript
+interface SessionStats {
+  calls: number;
+  totalTokens: number;
+  totalCost: number;
+  cacheHits: number;
+  cacheMisses: number;
+}
+```
+
+Aktualisiere es im `onFinish`-Callback oder nach jedem `generateText`-Call. Die Cache-Hit-Rate ist `cacheHits / (cacheHits + cacheMisses) * 100`.
+
+</details>
+
+## Quellen
+
+- [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Anthropic: Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting)
+- [Anthropic: Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
+- [Anthropic: Pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)

@@ -1,0 +1,586 @@
+---
+title: "Challenge 8.4: Breaking the Loop"
+description: "Verhindere Endlosschleifen in Agent-Loops — Max-Iterations, Timeout, Cost Guard und Quality Check fuer kontrollierten Abbruch."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+Was passiert wenn Dein Agent in einer Endlosschleife haengt — z.B. weil kein Tool das richtige Ergebnis liefert und das LLM immer wieder dieselbe Suche startet?
+
+## OVERVIEW
+
+```mermaid
+graph TD
+  Loop["Agent Loop<br/>laeuft"] --> Checks{"Break Conditions"}
+  Checks -->|"Messages > 50"| MaxIter["Max Iterations"]
+  Checks -->|"Zeit > 30s"| Timeout["Timeout"]
+  Checks -->|"Tokens > Budget"| Cost["Cost Guard"]
+  Checks -->|"Qualitaet OK"| Quality["Quality Check"]
+  MaxIter --> Break["Break + Partial Result"]
+  Timeout --> Break
+  Cost --> Break
+  Quality --> Return["Return Ergebnis"]
+  subgraph HIER["Du bist HIER: Breaking the Loop"]
+    Checks
+    MaxIter
+    Timeout
+    Cost
+    Quality
+  end
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style Loop fill:#27AE60,color:#fff
+  style Checks fill:#27AE60,color:#fff
+  style MaxIter fill:#E74C3C,color:#fff
+  style Timeout fill:#E74C3C,color:#fff
+  style Cost fill:#E74C3C,color:#fff
+  style Quality fill:#27AE60,color:#fff
+  style Break fill:#E74C3C,color:#fff
+  style Return fill:#E67E22,color:#fff
+```
+
+Vier Break Conditions schuetzen Deinen Agent-Loop vor unkontrolliertem Verhalten: Max-Iterations verhindert endlose Schleifen, Timeout stoppt nach einer definierten Zeit, Cost Guard begrenzt den Token-Verbrauch und Quality Check beendet den Loop, wenn das Ergebnis gut genug ist.
+
+## WHY
+
+**Ohne Break Conditions:** Endlosschleifen, explodierende Kosten, haengende App. Das LLM ruft immer wieder dasselbe Tool auf, verbraucht hunderte Tokens pro Iteration und laeuft Minuten lang — waehrend der User wartet. Im schlimmsten Fall: eine API-Rechnung ueber hunderte Dollar fuer einen einzigen fehlgelaufenen Loop.
+
+**Mit Break Conditions:** Kontrollierter Abbruch. Nach maximal 50 Messages, 30 Sekunden oder 10.000 Tokens ist Schluss — egal was das LLM macht. Du bekommst das beste bisherige Ergebnis (Partial Result) statt gar nichts. Und Dein Budget ist geschuetzt.
+
+## WALKTHROUGH
+
+### Schicht 1: Max Iterations
+
+Die einfachste Break Condition — zaehle die Messages oder Iterationen:
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const MAX_ITERATIONS = 10;
+const MAX_MESSAGES = 50;
+
+const searchTool = tool({
+  description: 'Search for information',
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }) => ({
+    results: [`Ergebnisse fuer "${query}"...`],
+  }),
+});
+
+const messages: Array<any> = [
+  { role: 'user', content: 'Recherchiere Edge Computing ausfuehrlich.' },
+];
+
+let done = false;
+let iterations = 0;
+let bestResult = '';
+
+while (!done) {
+  iterations++;
+
+  const result = await generateText({
+    model,
+    tools: { search: searchTool },
+    messages,
+  });
+
+  // Bestes bisheriges Ergebnis speichern
+  if (result.text) {
+    bestResult = result.text;
+  }
+
+  // Break Condition 1: Max Iterations
+  if (iterations >= MAX_ITERATIONS) {
+    console.log(`Max Iterations (${MAX_ITERATIONS}) erreicht. Abbruch.`);
+    done = true;
+    break;
+  }
+
+  // Break Condition 2: Max Messages (verhindert zu grossen Context)
+  if (messages.length > MAX_MESSAGES) {
+    console.log(`Max Messages (${MAX_MESSAGES}) erreicht. Abbruch.`);
+    done = true;
+    break;
+  }
+
+  if (result.finishReason === 'stop') {
+    done = true;
+    bestResult = result.text;
+  } else {
+    messages.push(...result.response.messages);
+  }
+}
+
+// Partial Result zurueckgeben
+console.log('--- Ergebnis ---');
+console.log(bestResult || 'Kein Ergebnis generiert.');
+console.log(`Iterationen: ${iterations}, Messages: ${messages.length}`);
+```
+
+Wichtig: `bestResult` speichert das beste bisherige Ergebnis. Wenn der Loop wegen Max Iterations abbricht, hast Du trotzdem einen Output — kein leeres Ergebnis.
+
+### Schicht 2: Timeout mit AbortController
+
+Fuer zeitkritische Anwendungen — der Loop muss innerhalb einer bestimmten Zeit fertig werden:
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const TIMEOUT_MS = 30_000; // 30 Sekunden
+
+const searchTool = tool({
+  description: 'Search for information',
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }) => ({
+    results: [`Ergebnisse fuer "${query}"...`],
+  }),
+});
+
+const messages: Array<any> = [
+  { role: 'user', content: 'Recherchiere Edge Computing ausfuehrlich.' },
+];
+
+let done = false;
+let bestResult = '';
+const startTime = Date.now();
+
+// AbortController fuer sauberen Abbruch
+const controller = new AbortController();
+const timeout = setTimeout(() => {
+  controller.abort();
+}, TIMEOUT_MS);
+
+try {
+  while (!done) {
+    // Timeout pruefen vor jedem Call
+    if (Date.now() - startTime > TIMEOUT_MS) {
+      console.log(`Timeout (${TIMEOUT_MS}ms) erreicht. Abbruch.`);
+      break;
+    }
+
+    const result = await generateText({
+      model,
+      tools: { search: searchTool },
+      messages,
+      abortSignal: controller.signal,           // ← AbortSignal an generateText
+    });
+
+    if (result.text) {
+      bestResult = result.text;
+    }
+
+    if (result.finishReason === 'stop') {
+      done = true;
+    } else {
+      messages.push(...result.response.messages);
+    }
+  }
+} catch (error) {
+  if ((error as Error).name === 'AbortError') {
+    console.log('Abgebrochen durch Timeout.');
+  } else {
+    throw error;
+  }
+} finally {
+  clearTimeout(timeout);                        // ← Timeout aufräumen
+}
+
+const duration = Date.now() - startTime;
+console.log(`Ergebnis: ${bestResult.slice(0, 200)}...`);
+console.log(`Dauer: ${duration}ms`);
+```
+
+`abortSignal: controller.signal` uebergibt das Signal an `generateText`. Wenn der Timeout zuschlaegt, wird der aktuelle API-Call abgebrochen. Der try/catch faengt den `AbortError` ab, und im `finally`-Block raumen wir den Timeout auf.
+
+### Schicht 3: Cost Guard
+
+Tracke den Token-Verbrauch und stoppe, wenn das Budget erschoepft ist:
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const MAX_TOKENS = 10_000;
+
+const searchTool = tool({
+  description: 'Search for information',
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }) => ({
+    results: [`Ergebnisse fuer "${query}"...`],
+  }),
+});
+
+const messages: Array<any> = [
+  { role: 'user', content: 'Recherchiere Edge Computing.' },
+];
+
+let done = false;
+let totalTokens = 0;
+let bestResult = '';
+
+while (!done) {
+  const result = await generateText({
+    model,
+    tools: { search: searchTool },
+    messages,
+  });
+
+  // Tokens tracken
+  totalTokens += result.usage.totalTokens;
+
+  if (result.text) {
+    bestResult = result.text;
+  }
+
+  // Cost Guard: Token-Budget pruefen
+  if (totalTokens > MAX_TOKENS) {
+    console.log(`Token-Budget (${MAX_TOKENS}) ueberschritten: ${totalTokens} Tokens. Abbruch.`);
+    done = true;
+    break;
+  }
+
+  if (result.finishReason === 'stop') {
+    done = true;
+  } else {
+    messages.push(...result.response.messages);
+  }
+}
+
+console.log(`Ergebnis: ${bestResult.slice(0, 200)}...`);
+console.log(`Tokens verbraucht: ${totalTokens} / ${MAX_TOKENS}`);
+```
+
+Der Cost Guard ist besonders wichtig in Production. Ein einzelner `generateText`-Call verbraucht vielleicht 500 Tokens. Aber ein Loop mit 20 Iterationen? 10.000 Tokens. Ohne Budget-Limit kann das teuer werden.
+
+### Schicht 4: Alle Safeguards kombiniert
+
+In Production kombinierst Du alle Break Conditions:
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+// Konfigurierbare Limits
+const LIMITS = {
+  maxIterations: 10,
+  maxMessages: 50,
+  maxTokens: 10_000,
+  timeoutMs: 30_000,
+};
+
+const searchTool = tool({
+  description: 'Search for information',
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }) => ({
+    results: [`Ergebnisse fuer "${query}"...`],
+  }),
+});
+
+type BreakReason = 'complete' | 'max-iterations' | 'max-messages' | 'max-tokens' | 'timeout' | 'error';
+
+async function robustAgentLoop(prompt: string) {
+  const messages: Array<any> = [{ role: 'user', content: prompt }];
+  let iterations = 0;
+  let totalTokens = 0;
+  let bestResult = '';
+  let breakReason: BreakReason = 'complete';
+  const startTime = Date.now();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), LIMITS.timeoutMs);
+
+  try {
+    while (true) {
+      iterations++;
+
+      // Pre-Check: Limits pruefen BEVOR der naechste Call startet
+      if (iterations > LIMITS.maxIterations) {
+        breakReason = 'max-iterations';
+        break;
+      }
+      if (messages.length > LIMITS.maxMessages) {
+        breakReason = 'max-messages';
+        break;
+      }
+      if (totalTokens > LIMITS.maxTokens) {
+        breakReason = 'max-tokens';
+        break;
+      }
+      if (Date.now() - startTime > LIMITS.timeoutMs) {
+        breakReason = 'timeout';
+        break;
+      }
+
+      const result = await generateText({
+        model,
+        tools: { search: searchTool },
+        messages,
+        abortSignal: controller.signal,
+      });
+
+      totalTokens += result.usage.totalTokens;
+
+      if (result.text) {
+        bestResult = result.text;
+      }
+
+      if (result.finishReason === 'stop') {
+        breakReason = 'complete';
+        break;
+      }
+
+      messages.push(...result.response.messages);
+    }
+  } catch (error) {
+    if ((error as Error).name === 'AbortError') {
+      breakReason = 'timeout';
+    } else {
+      breakReason = 'error';
+      console.error('Unerwarteter Fehler:', error);
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  return {
+    result: bestResult,
+    breakReason,
+    stats: {
+      iterations,
+      totalTokens,
+      durationMs: Date.now() - startTime,
+      messageCount: messages.length,
+    },
+  };
+}
+
+// Ausfuehren
+const output = await robustAgentLoop('Recherchiere Edge Computing ausfuehrlich.');
+
+console.log('--- Ergebnis ---');
+console.log(output.result.slice(0, 300));
+console.log('\n--- Abbruchgrund ---');
+console.log(output.breakReason);
+console.log('\n--- Statistik ---');
+console.log(JSON.stringify(output.stats, null, 2));
+```
+
+Die Funktion gibt immer ein Ergebnis zurueck — inklusive `breakReason`. Der Caller weiss, ob der Agent fertig wurde (`complete`) oder ob ein Limit gegriffen hat. Das ist wichtig fuer Monitoring und Debugging.
+
+## TRY
+
+**Aufgabe:** Erweitere den Custom Loop aus Challenge 8.3 mit einem Timeout und einem Max-Iterations Guard.
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+// TODO 1: Definiere LIMITS (maxIterations: 5, timeoutMs: 30000)
+
+// TODO 2: Definiere search-Tool und save-Tool
+
+// TODO 3: Initialisiere messages, state, startTime, AbortController
+
+// TODO 4: Implementiere den Loop mit ALLEN Safeguards:
+//   - Max Iterations pruefen
+//   - Timeout pruefen
+//   - abortSignal an generateText uebergeben
+//   - try/catch fuer AbortError
+//   - bestResult speichern
+
+// TODO 5: Gib das Ergebnis mit breakReason und Statistik zurueck
+```
+
+**Checkliste:**
+- [ ] Max-Iterations Guard implementiert (Loop bricht nach N Iterationen ab)
+- [ ] Timeout mit `AbortController` und `setTimeout` implementiert
+- [ ] `abortSignal` wird an `generateText` uebergeben
+- [ ] `AbortError` wird im catch-Block abgefangen
+- [ ] `bestResult` wird bei jedem Text-Ergebnis aktualisiert
+- [ ] `breakReason` gibt an, warum der Loop beendet wurde
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+const LIMITS = {
+  maxIterations: 5,
+  timeoutMs: 30_000,
+};
+
+const searchTool = tool({
+  description: 'Search for information on a topic',
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }) => ({
+    results: [`Fakten zu "${query}": Wichtige Entwicklungen...`],
+  }),
+});
+
+const saveTool = tool({
+  description: 'Save the final research result',
+  inputSchema: z.object({ content: z.string() }),
+  execute: async ({ content }) => ({ saved: true }),
+});
+
+type BreakReason = 'complete' | 'save-complete' | 'max-iterations' | 'timeout' | 'error';
+
+async function guardedLoop(prompt: string) {
+  const messages: Array<any> = [{ role: 'user', content: prompt }];
+  let iterations = 0;
+  let totalTokens = 0;
+  let bestResult = '';
+  let breakReason: BreakReason = 'complete';
+  const startTime = Date.now();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), LIMITS.timeoutMs);
+
+  try {
+    while (true) {
+      iterations++;
+
+      // Guard: Max Iterations
+      if (iterations > LIMITS.maxIterations) {
+        breakReason = 'max-iterations';
+        console.log(`Max Iterations (${LIMITS.maxIterations}) erreicht.`);
+        break;
+      }
+
+      // Guard: Timeout (zusaetzlich zum AbortController)
+      if (Date.now() - startTime > LIMITS.timeoutMs) {
+        breakReason = 'timeout';
+        console.log(`Timeout (${LIMITS.timeoutMs}ms) erreicht.`);
+        break;
+      }
+
+      const result = await generateText({
+        model,
+        tools: { search: searchTool, save: saveTool },
+        messages,
+        abortSignal: controller.signal,
+      });
+
+      totalTokens += result.usage.totalTokens;
+
+      if (result.text) {
+        bestResult = result.text;
+      }
+
+      // Pruefe ob save-Tool aufgerufen wurde
+      for (const tr of result.toolResults) {
+        if (tr.toolName === 'save' && tr.result.saved) {
+          breakReason = 'save-complete';
+          console.log('Save-Tool erfolgreich. Loop beendet.');
+          break;
+        }
+      }
+      if (breakReason === 'save-complete') break;
+
+      if (result.finishReason === 'stop') {
+        breakReason = 'complete';
+        bestResult = result.text;
+        break;
+      }
+
+      messages.push(...result.response.messages);
+      console.log(`Iteration ${iterations}: ${totalTokens} Tokens, ${messages.length} Messages`);
+    }
+  } catch (error) {
+    if ((error as Error).name === 'AbortError') {
+      breakReason = 'timeout';
+      console.log('Abbruch durch AbortController.');
+    } else {
+      breakReason = 'error';
+      console.error('Fehler:', error);
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  return {
+    result: bestResult,
+    breakReason,
+    stats: {
+      iterations,
+      totalTokens,
+      durationMs: Date.now() - startTime,
+    },
+  };
+}
+
+const output = await guardedLoop(
+  'Recherchiere Edge Computing. Nutze search fuer Recherche, dann save um das Ergebnis zu speichern.',
+);
+
+console.log('\n--- Ergebnis ---');
+console.log(output.result || 'Kein Ergebnis.');
+console.log(`Abbruchgrund: ${output.breakReason}`);
+console.log(`Stats: ${JSON.stringify(output.stats)}`);
+```
+
+**Erklaerung:** Zwei Safeguards schuetzen den Loop: Max Iterations (pre-check vor jedem Call) und Timeout (via `AbortController` + manueller Check). Der Loop gibt immer ein Ergebnis zurueck — auch bei Abbruch. Der `breakReason` zeigt an, ob der Agent fertig wurde oder ein Limit gegriffen hat.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph TD
+  User["User Prompt"] --> Loop
+  subgraph Loop["Robust Agent Loop"]
+    GT["generateText()"]
+    Guards{"Break Conditions<br/>(8.4)"}
+    State["State Tracking<br/>(8.3)"]
+    GT --> Guards
+    Guards -->|"Weiter"| State
+    State --> GT
+  end
+  Guards -->|"Abbruch"| Partial["Partial Result<br/>+ breakReason"]
+  Guards -->|"Fertig"| Final["Final Result"]
+  style User fill:#4A90D9,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Guards fill:#27AE60,color:#fff
+  style State fill:#27AE60,color:#fff
+  style Partial fill:#E74C3C,color:#fff
+  style Final fill:#E67E22,color:#fff
+```
+
+**Uebung:** Baue einen robusten Agenten mit ALLEN Safeguards. Kombiniere:
+
+1. **Max Iterations** (8.4) — maximal 10 Iterationen
+2. **Timeout** (8.4) — maximal 30 Sekunden
+3. **Cost Guard** (8.4) — maximal 5.000 Tokens
+4. **Quality Check** (8.3) — ein `checkQuality`-Tool, das den Loop beendet wenn `score >= 70`
+5. **Progress Streaming** (8.2) — nach jeder Iteration ein Data Part mit Iteration, Tokens und aktuellem Guard-Status
+
+Der Agent soll recherchieren, die Qualitaet pruefen und abbrechen, sobald eine der fuenf Bedingungen erfuellt ist. Das Ergebnis enthaelt immer `breakReason` und `stats`.
+
+**Optional Stretch Goal:** Fuege ein "Budget Warning" Data Part hinzu, das gesendet wird, wenn 80% des Token-Budgets verbraucht sind. Das Frontend kann dann eine gelbe Warnung anzeigen, bevor der Cost Guard greift.
+
+## Quellen
+
+- [Vercel AI SDK: Building Agents](https://ai-sdk.dev/docs/agents/building-agents)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [MDN: AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
+- [ai-hero-dev Exercise 08.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/08-workflows/08.04-breaking-the-loop)

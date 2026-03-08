@@ -1,0 +1,358 @@
+---
+title: "Challenge 8.2: Streaming to Frontend"
+description: "Streame Workflow-Fortschritt in Echtzeit ans Frontend — Custom Data Parts fuer Step-Updates, kombiniert mit dem LLM-Text-Stream."
+sidebar:
+  order: 3
+---
+
+## THINK
+
+Wenn ein Workflow 3 Schritte hat und jeder Schritt 5-10 Sekunden dauert — wie zeigst Du dem User den Fortschritt, nicht nur das Endergebnis?
+
+## OVERVIEW
+
+```mermaid
+sequenceDiagram
+  participant UI as Frontend
+  participant API as Workflow API
+  participant LLM as LLM Provider
+
+  UI->>API: POST /api/pipeline
+  API->>LLM: Step 1: Research
+
+  rect rgba(230, 126, 34, 0.1)
+    Note over API,UI: Custom Data Parts
+    API-->>UI: data: { step: 1, label: "Recherche..." }
+    LLM-->>API: research result
+    API-->>UI: data: { step: 1, status: "done" }
+  end
+
+  API->>LLM: Step 2: Summarize
+  rect rgba(39, 174, 96, 0.1)
+    API-->>UI: data: { step: 2, label: "Zusammenfassung..." }
+    LLM-->>API: summary result
+    API-->>UI: data: { step: 2, status: "done" }
+  end
+
+  API->>LLM: Step 3: Format
+  rect rgba(74, 144, 217, 0.1)
+    API-->>UI: data: { step: 3, label: "Formatierung..." }
+    LLM-->>API: formatted result
+
+    subgraph HIER["Du bist HIER"]
+      Note over UI: UI zeigt Fortschritt<br/>+ finalen Text
+    end
+  end
+
+  API-->>UI: text-stream: formatted result
+
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+```
+
+Statt 30 Sekunden Stille bekommt der User nach jedem Step ein Update. Die ersten zwei Steps laufen im Hintergrund (nur Fortschritt), der dritte Step streamt den Text direkt ins UI.
+
+## WHY
+
+**Ohne Progress-Streaming:** User wartet 30 Sekunden auf schwarzen Bildschirm. Keine Rueckmeldung, ob etwas passiert. User drueckt Reload, startet die Pipeline nochmal, verdoppelt die Kosten.
+
+**Mit Progress-Streaming:** Echtzeit-Updates pro Step. "Recherche laeuft..." → "Zusammenfassung..." → "Formatierung..." → Text erscheint. Der User sieht, dass etwas passiert, und weiss wo im Prozess die Pipeline steht.
+
+## WALKTHROUGH
+
+### Schicht 1: createDataStream fuer Workflow-Fortschritt
+
+In Level 7.1 hast Du `createDataStream` und `writeData` kennengelernt. Jetzt nutzen wir sie, um Workflow-Steps zu tracken:
+
+```typescript
+import { createDataStream, generateText, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+export async function POST(req: Request) {
+  const { topic } = await req.json();
+
+  const dataStream = createDataStream({
+    async execute(dataStream) {
+      // Step 1: Research
+      dataStream.writeData({ step: 1, total: 3, label: 'Recherche laeuft...' });
+
+      const research = await generateText({
+        model,
+        system: 'Du bist ein Research-Assistent. Sammle Fakten zum Thema.',
+        prompt: `Recherchiere: ${topic}`,
+      });
+
+      dataStream.writeData({ step: 1, total: 3, status: 'done' });
+
+      // Step 2: Summarize
+      dataStream.writeData({ step: 2, total: 3, label: 'Zusammenfassung...' });
+
+      const summary = await generateText({
+        model,
+        system: 'Fasse die Informationen in 5 Kernaussagen zusammen.',
+        prompt: research.text,
+      });
+
+      dataStream.writeData({ step: 2, total: 3, status: 'done' });
+
+      // Step 3: Format — diesen Step streamen wir als Text
+      dataStream.writeData({ step: 3, total: 3, label: 'Formatierung...' });
+
+      const result = streamText({                           // ← streamText statt generateText
+        model,
+        system: 'Formatiere als professionelle E-Mail.',
+        prompt: summary.text,
+        onFinish() {
+          dataStream.writeData({ step: 3, total: 3, status: 'done' });
+        },
+      });
+
+      result.mergeIntoDataStream(dataStream);               // ← Text-Stream einfuegen
+    },
+  });
+
+  return dataStream.toDataStreamResponse();
+}
+```
+
+Der entscheidende Trick: Die ersten zwei Steps nutzen `generateText` (wir brauchen das Ergebnis als String fuer den naechsten Step). Der letzte Step nutzt `streamText` + `mergeIntoDataStream`, damit der User den finalen Text in Echtzeit sieht.
+
+### Schicht 2: Frontend-Konsum
+
+Im Frontend konsumierst Du die Data Parts wie in Level 7.1 — ueber den `data`-Array von `useChat`:
+
+```typescript
+'use client';
+import { useChat } from '@ai-sdk/react';
+
+export function PipelineUI() {
+  const { messages, input, handleInputChange, handleSubmit, data, isLoading } = useChat({
+    api: '/api/pipeline',
+  });
+
+  // Aktuellen Fortschritt aus Data Parts extrahieren
+  const progressParts = data?.filter((d: any) => d.step !== undefined) ?? [];
+  const currentStep = progressParts.at(-1);
+
+  return (
+    <div>
+      {/* Fortschrittsanzeige */}
+      {isLoading && currentStep && (
+        <div className="progress">
+          <div className="steps">
+            {[1, 2, 3].map((step) => {
+              const stepData = progressParts.filter((d: any) => d.step === step);
+              const isDone = stepData.some((d: any) => d.status === 'done');
+              const isActive = currentStep.step === step && !isDone;
+              return (
+                <div
+                  key={step}
+                  className={`step ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}`}
+                >
+                  Step {step}: {isDone ? 'Fertig' : isActive ? currentStep.label : 'Ausstehend'}
+                </div>
+              );
+            })}
+          </div>
+          <div>Schritt {currentStep.step} von {currentStep.total}</div>
+        </div>
+      )}
+
+      {/* Messages */}
+      {messages.map((m) => (
+        <div key={m.id}>
+          <strong>{m.role}:</strong> {m.content}
+        </div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input value={input} onChange={handleInputChange} placeholder="Thema eingeben..." />
+      </form>
+    </div>
+  );
+}
+```
+
+### Schicht 3: CLI-Variante ohne Frontend
+
+Fuer CLI-Tests ohne Next.js kannst Du den Data Stream direkt konsumieren:
+
+```typescript
+import { createDataStream, generateText, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+const dataStream = createDataStream({
+  async execute(dataStream) {
+    // Step 1
+    dataStream.writeData({ step: 1, label: 'Recherche...' });
+    const research = await generateText({
+      model,
+      system: 'Recherchiere Fakten zum Thema.',
+      prompt: 'Recherchiere: Edge Computing',
+    });
+    dataStream.writeData({ step: 1, status: 'done' });
+
+    // Step 2
+    dataStream.writeData({ step: 2, label: 'Zusammenfassung...' });
+    const summary = await generateText({
+      model,
+      system: 'Fasse in 3 Saetzen zusammen.',
+      prompt: research.text,
+    });
+    dataStream.writeData({ step: 2, status: 'done' });
+
+    // Step 3: Als Text streamen
+    dataStream.writeData({ step: 3, label: 'Formatierung...' });
+    const result = streamText({
+      model,
+      system: 'Formatiere als kurze E-Mail.',
+      prompt: summary.text,
+      onFinish() {
+        dataStream.writeData({ step: 3, status: 'done' });
+      },
+    });
+    result.mergeIntoDataStream(dataStream);
+  },
+});
+
+// Stream im Terminal lesen
+const reader = dataStream.toDataStream().getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  process.stdout.write(decoder.decode(value));
+}
+```
+
+Im Terminal siehst Du die Data Parts als JSON-Zeilen und den gestreamten Text — alles in einem Stream, in der richtigen Reihenfolge.
+
+## TRY
+
+**Aufgabe:** Erweitere die 3-Step Pipeline aus Challenge 8.1 mit Fortschritts-Streaming. Sende vor und nach jedem Step ein Custom Data Part.
+
+```typescript
+import { createDataStream, generateText, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+// TODO 1: Erstelle einen dataStream mit createDataStream
+
+// TODO 2: In der execute-Funktion:
+//   - Sende ein Data Part { step: 1, label: 'Recherche...' }
+//   - Fuehre Step 1 (Research) mit generateText aus
+//   - Sende ein Data Part { step: 1, status: 'done' }
+
+// TODO 3: Wiederhole fuer Step 2 (Summarize)
+
+// TODO 4: Fuer Step 3 (Translate):
+//   - Nutze streamText statt generateText
+//   - Merge den Stream mit mergeIntoDataStream
+
+// TODO 5: Konsumiere den Stream im Terminal
+```
+
+**Checkliste:**
+- [ ] `createDataStream` erstellt mit `execute` Callback
+- [ ] Vor jedem Step wird ein Data Part mit Label gesendet
+- [ ] Nach jedem Step wird ein Data Part mit Status "done" gesendet
+- [ ] Step 1 und 2 nutzen `generateText`, Step 3 nutzt `streamText`
+- [ ] Der letzte Step wird mit `mergeIntoDataStream` in den Data Stream eingefuegt
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { createDataStream, generateText, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const topic = 'Kuenstliche Intelligenz in der Medizin';
+
+const dataStream = createDataStream({
+  async execute(dataStream) {
+    // Step 1: Research
+    dataStream.writeData({ step: 1, total: 3, label: 'Recherche laeuft...' });
+    const research = await generateText({
+      model,
+      system: 'Du bist ein Research-Assistent. Sammle Fakten und aktuelle Entwicklungen zum Thema.',
+      prompt: `Recherchiere: ${topic}`,
+    });
+    dataStream.writeData({ step: 1, total: 3, status: 'done', tokens: research.usage.totalTokens });
+
+    // Step 2: Summarize
+    dataStream.writeData({ step: 2, total: 3, label: 'Zusammenfassung...' });
+    const summary = await generateText({
+      model,
+      system: 'Fasse die folgenden Informationen in exakt 5 Kernaussagen zusammen.',
+      prompt: `Fasse zusammen:\n\n${research.text}`,
+    });
+    dataStream.writeData({ step: 2, total: 3, status: 'done', tokens: summary.usage.totalTokens });
+
+    // Step 3: Translate (gestreamt)
+    dataStream.writeData({ step: 3, total: 3, label: 'Uebersetzung...' });
+    const result = streamText({
+      model,
+      system: 'Translate the following German text to English. Keep the professional tone.',
+      prompt: `Translate:\n\n${summary.text}`,
+      onFinish({ usage }) {
+        dataStream.writeData({ step: 3, total: 3, status: 'done', tokens: usage.totalTokens });
+      },
+    });
+    result.mergeIntoDataStream(dataStream);
+  },
+});
+
+// Stream im Terminal lesen
+const reader = dataStream.toDataStream().getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  process.stdout.write(decoder.decode(value));
+}
+
+console.log('\n--- Pipeline beendet ---');
+```
+
+**Erklaerung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts (JSON-Zeilen) vor und nach jedem Step. `streamText` + `mergeIntoDataStream` fuegt den Text-Stream des letzten Steps ein. Der User sieht: Fortschritts-Updates fuer Step 1 und 2, dann den gestreamten Text von Step 3 — alles in Echtzeit.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Topic["Topic"] --> Pipeline["3-Step Pipeline<br/>(8.1)"]
+  Pipeline --> DS["createDataStream()<br/>(7.1)"]
+  DS --> Progress["Progress Data Parts<br/>(8.2)"]
+  DS --> Text["streamText()<br/>(7.1)"]
+  Progress --> UI["Frontend"]
+  Text --> UI
+  style Topic fill:#4A90D9,color:#fff
+  style Pipeline fill:#27AE60,color:#fff
+  style DS fill:#27AE60,color:#fff
+  style Progress fill:#E67E22,color:#fff
+  style Text fill:#E67E22,color:#fff
+  style UI fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere Workflow-Streaming mit `smoothStream` aus Level 7.3. Fuer den letzten Step (der den Text streamt):
+
+1. Nutze `experimental_transform: smoothStream()` in `streamText` fuer fluessigere Textausgabe
+2. Sende zusaetzlich zu den Step-Updates ein Data Part mit der Gesamtdauer: `{ type: 'stats', durationMs: Date.now() - startTime }`
+3. Sende ein Data Part mit dem Gesamt-Token-Verbrauch aller drei Steps
+
+**Optional Stretch Goal:** Baue die Pipeline als Next.js API Route und konsumiere sie mit `useChat`. Zeige einen visuellen Fortschrittsbalken mit drei Segmenten, die sich nacheinander gruen faerben.
+
+## Quellen
+
+- [Vercel AI SDK: Data Streams](https://ai-sdk.dev/docs/ai-sdk-core/data-streams)
+- [Vercel AI SDK: createDataStream API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-data-stream)
+- [ai-hero-dev Exercise 08.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/08-workflows/08.02-streaming-to-frontend)

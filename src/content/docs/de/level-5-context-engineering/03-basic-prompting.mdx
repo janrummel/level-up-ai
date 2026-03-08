@@ -1,0 +1,306 @@
+---
+title: "Challenge 5.2: Basic Prompting"
+description: "Verwandle vage Prompts in klare, strukturierte Anweisungen mit dem Anthropic Prompt Template."
+sidebar:
+  order: 3
+---
+
+## THINK
+
+Was ist der Unterschied zwischen "Fasse das zusammen" und einem Prompt mit klarer Rolle, Kontext und Formatvorgabe?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph "Ohne Struktur"
+    VP["Vager Prompt<br/>'Fasse zusammen'"] --> LLM1["LLM"]
+    LLM1 --> BAD["Unvorhersehbar<br/>Mal Liste, mal Absatz"]
+  end
+  subgraph HIER["Du bist HIER: Basic Prompting"]
+    subgraph "Mit XML Tags"
+      TC2["&lt;task-context&gt;"] --> SP["Strukturierter<br/>Prompt"]
+      R2["&lt;rules&gt;"] --> SP
+      TA2["&lt;the-ask&gt;"] --> SP
+      OF2["&lt;output-format&gt;"] --> SP
+      SP --> LLM2["LLM"]
+      LLM2 --> GOOD["Konsistent<br/>Reproduzierbar"]
+    end
+  end
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style VP fill:#E74C3C,color:#fff
+  style BAD fill:#E74C3C,color:#fff
+  style TC2 fill:#27AE60,color:#fff
+  style R2 fill:#27AE60,color:#fff
+  style TA2 fill:#27AE60,color:#fff
+  style OF2 fill:#27AE60,color:#fff
+  style SP fill:#27AE60,color:#fff
+  style LLM1 fill:#27AE60,color:#fff
+  style LLM2 fill:#27AE60,color:#fff
+  style GOOD fill:#E67E22,color:#fff
+```
+
+Links: Ein vager Prompt fuehrt zu unvorhersehbaren Ergebnissen. Rechts: Ein strukturierter Prompt mit XML Tags liefert konsistente, reproduzierbare Ausgaben.
+
+## WHY
+
+**Ohne Struktur:** Jedes Mal eine andere Qualitaet. Das LLM weiss nicht, welches Format Du willst, wie lang die Antwort sein soll oder welche Rolle es hat. Mal bekommst Du eine Liste mit 10 Punkten, mal einen Absatz, mal eine Frage zurueck. Keine Kontrolle, keine Reproduzierbarkeit.
+
+**Mit XML Tags:** Der Prompt wird in klar getrennte Abschnitte unterteilt. Das LLM weiss genau, was seine Aufgabe ist, welche Regeln gelten und wie die Ausgabe aussehen soll. Die Ergebnisse sind reproduzierbar, messbar und iterierbar.
+
+## WALKTHROUGH
+
+### Schicht 1: Die XML Tag Struktur
+
+Das Anthropic Prompt Template nutzt XML Tags, um verschiedene Prompt-Abschnitte klar zu trennen. Jeder Tag hat eine bestimmte Aufgabe:
+
+```xml
+<task-context>
+Wer ist das LLM? Was ist seine Aufgabe?
+Steht am ANFANG — hoher Einfluss auf das Gesamtverhalten.
+</task-context>
+
+<background-data>
+Dokumente, Kontext, Hintergrundinformationen.
+Steht in der MITTE — hier kommen die Daten rein.
+</background-data>
+
+<rules>
+Detaillierte Anweisungen und Einschraenkungen.
+Steht in der MITTE.
+</rules>
+
+<the-ask>
+Die eigentliche Frage oder Aufgabe.
+Steht am ENDE — hoher Einfluss auf die konkrete Ausfuehrung.
+</the-ask>
+
+<output-format>
+Wie soll die Antwort formatiert sein?
+Steht am ENDE — kontrolliert die Ausgabe.
+</output-format>
+```
+
+Warum diese Reihenfolge? LLMs gewichten den Anfang und das Ende eines Prompts staerker als die Mitte. Kritische Anweisungen gehoeren deshalb an die Raender.
+
+### Schicht 2: Jedes Tag erklaert mit Beispiel
+
+Nehmen wir ein konkretes Szenario: Du willst einen **Chat Title Generator** bauen. Gegeben eine Konversation, soll das LLM einen kurzen Titel erzeugen.
+
+**`<task-context>`** — Definiert die Rolle und den Rahmen:
+
+```xml
+<task-context>
+You are a helpful assistant that generates titles for conversations.
+</task-context>
+```
+
+**`<rules>`** — Definiert konkrete Einschraenkungen:
+
+```xml
+<rules>
+Find the most concise title that captures the essence of the conversation.
+Titles should be at most 30 characters.
+Titles should be formatted in title case.
+Do not provide a period at the end.
+</rules>
+```
+
+**`<the-ask>`** — Die eigentliche Aufgabe:
+
+```xml
+<the-ask>
+Generate a title for the conversation.
+</the-ask>
+```
+
+**`<output-format>`** — Kontrolliert die Ausgabe:
+
+```xml
+<output-format>
+Return only the title. No additional text, no explanation, no quotes.
+</output-format>
+```
+
+### Schicht 3: Einen schlechten Prompt in einen guten umwandeln
+
+**Vorher** — vager Prompt ohne Struktur:
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const INPUT = `Do some research on induction hobs and how I can replace
+a 100cm wide AGA cooker with an induction range cooker.
+Which is the cheapest, which is the best?`;
+
+// Schlecht: Das LLM weiss nicht, was fuer ein Titel, wie lang, welches Format
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `Generate me a title: ${INPUT}`,
+});
+```
+
+**Nachher** — strukturierter Prompt mit XML Tags:
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const INPUT = `Do some research on induction hobs and how I can replace
+a 100cm wide AGA cooker with an induction range cooker.
+Which is the cheapest, which is the best?`;
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a helpful assistant that generates titles for conversations.
+</task-context>
+
+<conversation-history>
+${INPUT}
+</conversation-history>
+
+<rules>
+Find the most concise title that captures the essence of the conversation.
+Titles should be at most 30 characters.
+Titles should be formatted in title case.
+Do not provide a period at the end.
+</rules>
+
+<the-ask>
+Generate a title for the conversation.
+</the-ask>
+
+<output-format>
+Return only the title. No additional text, no explanation, no quotes.
+</output-format>
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+Der Unterschied: Der strukturierte Prompt hat klare Abschnitte. Das LLM weiss, dass es ein Titel-Generator ist (`task-context`), wie der Titel aussehen soll (`rules`), was es tun soll (`the-ask`) und was es zurueckgeben soll (`output-format`). Das Ergebnis ist reproduzierbar — derselbe Prompt liefert konsistent kurze Titel in Title Case.
+
+## TRY
+
+**Aufgabe:** Nimm den schlechten Prompt unten und strukturiere ihn mit XML Tags. Ziel: Das LLM soll einen Artikel in genau 3 Saetzen zusammenfassen.
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const ARTICLE = `TypeScript 5.8 introduces several improvements to type
+inference and control flow analysis. The new release includes support for
+granular checks on branches in return expressions, allowing the compiler
+to better narrow types. Additionally, the release adds support for
+requiring return type annotations via the new --isolatedDeclarations
+flag, making it easier to generate declaration files from source code
+without type-checking.`;
+
+// TODO: Strukturiere diesen Prompt mit XML Tags
+// Der schlechte Prompt:
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `Fasse den Text zusammen: ${ARTICLE}`,
+});
+
+// TODO: Ersetze den Prompt oben durch einen strukturierten Prompt mit:
+// 1. <task-context> — Definiere die Rolle (z.B. technischer Redakteur)
+// 2. <rules> — Definiere Einschraenkungen (genau 3 Saetze, Deutsch, keine Wertung)
+// 3. <the-ask> — Was genau soll das LLM tun?
+// 4. <output-format> — Nur die Zusammenfassung, kein zusaetzlicher Text
+
+console.log(result.text);
+```
+
+**Checkliste:**
+- [ ] Prompt nutzt mindestens 3 XML Tags
+- [ ] `<task-context>` definiert die Rolle
+- [ ] `<rules>` definiert Einschraenkungen
+- [ ] `<output-format>` definiert das erwartete Format
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const ARTICLE = `TypeScript 5.8 introduces several improvements to type
+inference and control flow analysis. The new release includes support for
+granular checks on branches in return expressions, allowing the compiler
+to better narrow types. Additionally, the release adds support for
+requiring return type annotations via the new --isolatedDeclarations
+flag, making it easier to generate declaration files from source code
+without type-checking.`;
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+Du bist ein technischer Redakteur, der Artikel fuer Entwickler zusammenfasst.
+</task-context>
+
+<background-data>
+${ARTICLE}
+</background-data>
+
+<rules>
+- Fasse den Artikel in genau 3 Saetzen zusammen
+- Schreibe auf Deutsch
+- Bleibe sachlich, keine Wertung
+- Verwende die korrekten Fachbegriffe aus dem Original
+</rules>
+
+<the-ask>
+Fasse den obenstehenden Artikel zusammen.
+</the-ask>
+
+<output-format>
+Gib nur die Zusammenfassung zurueck. Keine Ueberschrift, keine Einleitung,
+keine zusaetzliche Erklaerung.
+</output-format>
+  `.trim(),
+});
+
+console.log(result.text);
+```
+
+**Erklaerung:** Der Prompt definiert eine klare Rolle (`technischer Redakteur`), stellt den Artikel als `<background-data>` bereit, setzt konkrete Regeln (3 Saetze, Deutsch, sachlich) und kontrolliert das Ausgabeformat. Das LLM weiss genau, was erwartet wird.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Config["PromptConfig"] --> BSP["buildSystemPrompt()"]
+  Input["User Input"] --> Prompt["Strukturierter Prompt<br/>mit XML Tags"]
+  BSP --> Call["generateText()"]
+  Prompt --> Call
+  Call --> Output["Konsistenter Output"]
+  style Config fill:#4A90D9,color:#fff
+  style Input fill:#4A90D9,color:#fff
+  style BSP fill:#27AE60,color:#fff
+  style Prompt fill:#27AE60,color:#fff
+  style Call fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere den strukturierten Prompt mit dem Template aus Challenge 5.1. Baue eine `buildPrompt`-Funktion, die beides vereint:
+
+1. Nutze `buildSystemPrompt()` aus Challenge 5.1 fuer den `system`-Parameter
+2. Baue eine `buildUserPrompt(input: string): string`-Funktion, die den User-Input in XML Tags verpackt (`<background-data>`, `<the-ask>`, `<output-format>`)
+3. Rufe `generateText` mit beiden zusammen auf
+
+**Optional Stretch Goal:** Mache die Regeln (`<rules>`) konfigurierbar — fuege sie als Parameter zur `buildPrompt`-Funktion hinzu.
+
+## Quellen
+
+- [Anthropic: Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering)
+- [ai-hero-dev Exercise 05.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.02-basic-prompting)

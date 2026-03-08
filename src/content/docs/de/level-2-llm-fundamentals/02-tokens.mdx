@@ -1,0 +1,210 @@
+---
+title: "Challenge 2.1: Tokens"
+description: "Verstehe wie LLMs Text in Tokens zerlegen — Subword Units, Token IDs und warum Deutsch mehr Tokens braucht als Englisch."
+sidebar:
+  order: 2
+---
+
+## THINK
+
+Liest ein LLM Woerter wie Du — oder sieht es etwas ganz anderes?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph HIER["Du bist HIER: Tokenisierung"]
+    Text["'Hallo Welt'"] --> Tokenizer["Tokenizer"]
+    Tokenizer --> IDs["[39756, 96480]"]
+    IDs --> LLM["LLM"]
+    LLM --> OutIDs["[15339, 1917]"]
+    OutIDs --> Detokenizer["Detokenizer"]
+  end
+  Detokenizer --> Output["'Hello World'"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style Text fill:#4A90D9,color:#fff
+  style Tokenizer fill:#27AE60,color:#fff
+  style IDs fill:#27AE60,color:#fff
+  style LLM fill:#27AE60,color:#fff
+  style OutIDs fill:#27AE60,color:#fff
+  style Detokenizer fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+Ein LLM liest keinen Text. Es arbeitet mit Token IDs — Zahlen, die fuer Textfragmente (Subword Units) stehen. Der Tokenizer zerlegt Deinen Input in diese Fragmente, das LLM verarbeitet die IDs und der Detokenizer setzt die Ausgabe-IDs wieder zu lesbarem Text zusammen.
+
+## WHY
+
+**Ohne Token-Verstaendnis:** Deine Kosten sind unvorhersehbar. Du wunderst Dich, warum ein deutscher Prompt 40% mehr kostet als ein englischer. Du ueberschreitest das Context Window und bekommst kryptische Fehler. Du kannst nicht einschaetzen, ob Dein Prompt noch ins Budget passt.
+
+**Mit Token-Verstaendnis:** Du kannst Kosten vorhersagen, bevor Du den API-Call machst. Du verstehst, warum Sprachen unterschiedlich viele Tokens brauchen. Du kannst Deine Prompts optimieren und weisst genau, wie viel Platz im Context Window noch frei ist.
+
+## WALKTHROUGH
+
+### Schicht 1: Was sind Tokens?
+
+Tokens sind keine Woerter und keine Buchstaben — sie sind **Subword Units**. Der Tokenizer zerlegt Text in die haeufigsten Zeichenkombinationen seiner Trainingsdaten:
+
+```
+Eingabe:  "JavaScript ist fantastisch"
+Tokens:   ["Java", "Script", " ist", " fant", "astisch"]
+Anzahl:   5 Tokens
+```
+
+Haeufige Woerter wie "the" oder "ist" sind oft ein einzelner Token. Seltene Woerter werden in mehrere Teile zerlegt. Das ist der Grund, warum ein LLM kein Woerterbuch hat, sondern einen Tokenizer.
+
+### Schicht 2: Die Faustregel — 1 Token in Zahlen
+
+Fuer schnelle Schaetzungen:
+
+| Sprache | Faustregel | Beispiel |
+|---------|-----------|----------|
+| Englisch | 1 Token ≈ 4 Zeichen | "Hello World" ≈ 3 Tokens |
+| Deutsch | 1 Token ≈ 3 Zeichen | "Hallo Welt" ≈ 4 Tokens |
+| Code | variabel | Klammern, Operatoren oft eigene Tokens |
+
+Warum braucht Deutsch mehr Tokens? Deutsche Woerter sind im Durchschnitt laenger (Zusammensetzungen wie "Datenbankverbindung") und kommen seltener in den englisch-lastigen Trainingsdaten vor. Der Tokenizer muss sie in mehr Subword Units zerlegen.
+
+### Schicht 3: Token-Counting mit dem AI SDK
+
+Das AI SDK gibt Dir Token-Zahlen ueber `result.usage` zurueck — automatisch bei jedem Call:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere was Tokens sind — in einem Satz.',
+});
+
+console.log(result.usage);
+// → {
+//     promptTokens: 18,       ← Tokens im Input (system + prompt)
+//     completionTokens: 42,   ← Tokens im Output (generierter Text)
+//     totalTokens: 60          ← Summe
+//   }
+```
+
+`promptTokens` sind die Tokens, die Du zum LLM schickst. `completionTokens` sind die Tokens, die das LLM generiert. Beide zusammen ergeben `totalTokens` — und beide kosten Geld, aber zu unterschiedlichen Preisen.
+
+### Schicht 4: Input- vs. Output-Tokens — unterschiedliche Preise
+
+Die meisten Provider berechnen Input und Output unterschiedlich:
+
+| Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) |
+|--------|----------------------|------------------------|
+| Claude Sonnet 4 | $3.00 | $15.00 |
+| GPT-4o | $2.50 | $10.00 |
+| Gemini 2.5 Flash | $0.15 | $0.60 |
+
+Output-Tokens sind 3-5x teurer als Input-Tokens. Das bedeutet: Ein Prompt, der das LLM zu langen Antworten animiert, kostet ueberproportional mehr. Kurze, praezise Anweisungen ("Antworte in maximal 3 Saetzen") sparen echtes Geld.
+
+## TRY
+
+**Aufgabe:** Zaehle Tokens fuer verschiedene Texte und vergleiche Deutsch vs. Englisch.
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO 1: Generiere eine kurze Antwort auf einen deutschen Prompt
+// const resultDE = await generateText({
+//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   prompt: 'Erklaere in 2 Saetzen, was eine Datenbank ist.',
+// });
+
+// TODO 2: Generiere eine kurze Antwort auf denselben Prompt auf Englisch
+// const resultEN = await generateText({
+//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   prompt: 'Explain in 2 sentences what a database is.',
+// });
+
+// TODO 3: Vergleiche die Token-Zahlen
+// console.log('--- Deutsch ---');
+// console.log('Prompt Tokens:', resultDE.usage.promptTokens);
+// console.log('Completion Tokens:', resultDE.usage.completionTokens);
+// console.log('Total Tokens:', resultDE.usage.totalTokens);
+
+// console.log('--- English ---');
+// console.log('Prompt Tokens:', resultEN.usage.promptTokens);
+// console.log('Completion Tokens:', resultEN.usage.completionTokens);
+// console.log('Total Tokens:', resultEN.usage.totalTokens);
+
+// TODO 4: Berechne den Unterschied in Prozent
+// const diff = ((resultDE.usage.totalTokens - resultEN.usage.totalTokens) / resultEN.usage.totalTokens * 100).toFixed(1);
+// console.log(`\nDeutsch braucht ${diff}% mehr/weniger Tokens als Englisch`);
+```
+
+**Checkliste:**
+- [ ] Deutscher und englischer Prompt mit gleichem Inhalt
+- [ ] `result.usage` fuer beide geloggt
+- [ ] Token-Zahlen verglichen (promptTokens und completionTokens)
+- [ ] Prozentualer Unterschied berechnet
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const resultDE = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere in 2 Saetzen, was eine Datenbank ist.',
+});
+
+const resultEN = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Explain in 2 sentences what a database is.',
+});
+
+console.log('--- Deutsch ---');
+console.log('Prompt Tokens:', resultDE.usage.promptTokens);
+console.log('Completion Tokens:', resultDE.usage.completionTokens);
+console.log('Total Tokens:', resultDE.usage.totalTokens);
+
+console.log('\n--- English ---');
+console.log('Prompt Tokens:', resultEN.usage.promptTokens);
+console.log('Completion Tokens:', resultEN.usage.completionTokens);
+console.log('Total Tokens:', resultEN.usage.totalTokens);
+
+const diff = ((resultDE.usage.totalTokens - resultEN.usage.totalTokens) / resultEN.usage.totalTokens * 100).toFixed(1);
+console.log(`\nDeutsch braucht ${diff}% mehr Tokens als Englisch`);
+```
+
+**Erklaerung:** Du wirst sehen, dass der deutsche Prompt und die deutsche Antwort typischerweise 20-40% mehr Tokens verbrauchen als die englische Variante. Das liegt an der Tokenizer-Verteilung — englische Woerter kommen haeufiger in den Trainingsdaten vor und werden effizienter kodiert.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Task["Aufgabe"] --> SM["selectModel()"]
+  SM --> Model["Modell"]
+  Model --> GT["generateText()"]
+  GT --> Usage["result.usage"]
+  Usage --> Tokens["Token-Vergleich"]
+  style Task fill:#4A90D9,color:#fff
+  style SM fill:#27AE60,color:#fff
+  style Model fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Usage fill:#E67E22,color:#fff
+  style Tokens fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere Token-Counting mit der Modell-Auswahl aus Level 1. Stelle denselben Prompt an zwei verschiedene Modelle und vergleiche den Token-Verbrauch.
+
+1. Nutze `selectModel('zusammenfassen')` fuer ein Flash-Modell (z.B. Gemini Flash)
+2. Nutze `selectModel('analysieren')` fuer ein Pro-Modell (z.B. Claude Sonnet)
+3. Stelle denselben Prompt an beide Modelle
+4. Vergleiche `promptTokens` und `completionTokens` — unterschiedliche Tokenizer ergeben unterschiedliche Zahlen
+
+**Optional Stretch Goal:** Berechne die geschaetzten Kosten fuer beide Modelle basierend auf der Preistabelle aus Schicht 4. Welches Modell ist guenstiger — und um wie viel?
+
+## Quellen
+
+- [Anthropic: Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting)
+- [Vercel AI SDK: Generating Text — Usage](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [OpenAI: Tokenizer](https://platform.openai.com/tokenizer)

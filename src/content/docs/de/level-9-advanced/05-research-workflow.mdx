@@ -1,0 +1,464 @@
+---
+title: "Challenge 9.4: Research Workflow"
+description: "Baue eine End-to-End AI-Pipeline die selbststaendig recherchiert, zusammenfasst und einen qualitaetsgesicherten Report erstellt."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+Wie baust Du ein End-to-End AI-System das selbststaendig recherchiert, zusammenfasst und einen qualitaetsgesicherten Bericht erstellt — und dabei Guardrails, Model Routing und alle bisher gelernten Konzepte nutzt?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  Topic["Topic"] --> R
+  subgraph HIER["Du bist HIER: Research Workflow"]
+    subgraph Phase1["Research Phase"]
+      R["Agent Loop<br/>(8.3 + Tools 3.1)"]
+      BC["Break<br/>Conditions (8.4)"]
+      R --> BC
+    end
+    subgraph Phase2["Processing Phase"]
+      WF["Workflow<br/>(8.1)"]
+      CE["Context<br/>Engineering (5.x)"]
+      WF --> CE
+    end
+    subgraph Phase3["Quality Phase"]
+      GR["Guardrails<br/>(9.1)"]
+      MR["Model<br/>Router (9.2)"]
+      GR --> MR
+    end
+  end
+  Phase1 --> Phase2
+  Phase2 --> Phase3
+  Phase3 --> Report["Report"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style Topic fill:#4A90D9,color:#fff
+  style R fill:#27AE60,color:#fff
+  style BC fill:#E74C3C,color:#fff
+  style WF fill:#27AE60,color:#fff
+  style CE fill:#27AE60,color:#fff
+  style GR fill:#27AE60,color:#fff
+  style MR fill:#27AE60,color:#fff
+  style Report fill:#E67E22,color:#fff
+```
+
+Drei Phasen: Research (Agent Loop mit Tools und Break Conditions), Processing (Workflow mit Context Engineering) und Quality (Guardrails und Model Router). Konzepte aus 8 verschiedenen Levels kommen zusammen.
+
+## WHY
+
+**Ohne Orchestrierung:** Einzelne Bausteine die nicht zusammenspielen. Du hast Guardrails, aber sie sind nicht in die Pipeline integriert. Du hast einen Model Router, aber er wird nicht genutzt. Du hast Workflows, aber ohne Qualitaetssicherung. Das Ergebnis: ein fragiles System das in Production versagt.
+
+**Mit Orchestrierung:** Eine durchgaengige Pipeline in der jede Phase auf die vorherige aufbaut. Research sammelt Daten mit Safeguards. Processing strukturiert die Ergebnisse mit Context Engineering. Quality sichert Guardrails und optimiert Kosten mit Model Routing. Das Ergebnis: ein Production-Ready System.
+
+## WALKTHROUGH
+
+### Schicht 1: Die Pipeline-Architektur
+
+Diese Pipeline verbindet Konzepte aus dem gesamten Lernpfad. Hier ist die Uebersicht, welches Level wo zum Einsatz kommt:
+
+| Phase | Konzept | Level | Funktion |
+|-------|---------|-------|----------|
+| Research | Tool Calling | 3.1 | `search`-Tool fuer Datensammlung |
+| Research | Custom Loop | 8.3 | Agent entscheidet selbst wann genug recherchiert ist |
+| Research | Break Conditions | 8.4 | Max Iterations, Timeout, Cost Guard |
+| Processing | Workflow | 8.1 | Sequentielle Steps: Zusammenfassen, Strukturieren |
+| Processing | Context Engineering | 5.x | XML-strukturierte Prompts fuer praezise Outputs |
+| Processing | Structured Output | 1.5 | Zod Schema fuer typisierte Metadaten |
+| Quality | Guardrails | 9.1 | Input/Output-Validierung |
+| Quality | Model Router | 9.2 | Optimales Modell pro Phase |
+| Quality | Usage Tracking | 2.2 | Token-Kosten ueber die gesamte Pipeline |
+
+### Schicht 2: Research-Phase
+
+Die Research-Phase ist ein Custom Agent Loop mit Tools — das Muster aus Level 8.3 und 8.4:
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { z } from 'zod';
+
+// search-Tool — simuliert Websuche (in Production: echte API)
+const searchTool = tool({
+  description: 'Suche nach Informationen zu einem Thema',
+  parameters: z.object({
+    query: z.string().describe('Der Suchbegriff'),
+  }),
+  execute: async ({ query }) => {
+    console.log(`  Suche: "${query}"`);
+    // In Production: Web Search API, Datenbank, etc.
+    return `Ergebnisse fuer "${query}": [Hier wuerden echte Suchergebnisse stehen]`;
+  },
+});
+
+async function researchPhase(topic: string) {
+  const LIMITS = { maxIterations: 5, timeoutMs: 30_000, maxTokens: 5_000 };
+  let totalTokens = 0;
+  let iterations = 0;
+  let breakReason = 'complete';
+
+  const messages: Array<{ role: string; content: string }> = [
+    {
+      role: 'user',
+      content: `Recherchiere gruendlich zum Thema: ${topic}.
+Nutze das search-Tool um Informationen zu sammeln.
+Wenn Du genug Informationen hast, fasse die Ergebnisse zusammen.`,
+    },
+  ];
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), LIMITS.timeoutMs);
+
+  try {
+    while (true) {
+      // Break Condition: Max Iterations
+      if (iterations >= LIMITS.maxIterations) {
+        breakReason = 'max-iterations';
+        break;
+      }
+      // Break Condition: Cost Guard
+      if (totalTokens >= LIMITS.maxTokens) {
+        breakReason = 'cost-limit';
+        break;
+      }
+
+      iterations++;
+      const result = await generateText({
+        model: google('gemini-2.5-flash'),              // ← Guenstiges Modell fuer Research
+        tools: { search: searchTool },
+        messages,
+        abortSignal: controller.signal,
+      });
+
+      totalTokens += result.usage.totalTokens;
+      messages.push(...result.response.messages);
+
+      // Break Condition: LLM ist fertig (kein Tool Call mehr)
+      if (result.finishReason === 'stop') break;
+    }
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      breakReason = 'timeout';
+    } else {
+      throw error;
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  // Letzten Text-Output extrahieren
+  const lastAssistant = messages.filter(m => m.role === 'assistant').pop();
+  const researchResult = typeof lastAssistant?.content === 'string'
+    ? lastAssistant.content
+    : 'Keine Ergebnisse gefunden.';
+
+  console.log(`Research: ${iterations} Iterationen, ${totalTokens} Tokens, Grund: ${breakReason}`);
+  return { result: researchResult, iterations, totalTokens, breakReason };
+}
+```
+
+Drei Break Conditions schuetzen den Loop: Max Iterations (5), Timeout (30s), Cost Guard (5.000 Tokens). Das `search`-Tool wird vom LLM autonom genutzt — es entscheidet, welche Suchbegriffe es verwendet. Wenn das LLM `finishReason: 'stop'` zurueckgibt, hat es genug recherchiert.
+
+### Schicht 3: Processing-Phase
+
+Die Processing-Phase nutzt den Workflow-Pattern aus Level 8.1 mit Context Engineering aus Level 5:
+
+```typescript
+import { generateText, Output } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const ReportSchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  keyFindings: z.array(z.string()).min(3).max(7),
+  conclusion: z.string(),
+});
+
+async function processingPhase(researchResult: string, topic: string) {
+  // Step 1: Zusammenfassen (Context Engineering — XML-strukturierter Prompt)
+  const summary = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    system: `<role>Du bist ein Research-Analyst.</role>
+<task>Fasse die Recherche-Ergebnisse in 5-7 Kernaussagen zusammen.</task>
+<rules>
+- Jede Aussage in maximal 2 Saetzen
+- Nur Fakten, keine Spekulationen
+- Wenn Informationen fehlen, sage es explizit
+</rules>`,
+    prompt: `<topic>${topic}</topic>\n<research>\n${researchResult}\n</research>`,
+  });
+
+  console.log(`Zusammenfassung: ${summary.usage.totalTokens} Tokens`);
+
+  // Step 2: Strukturieren (Structured Output — Zod Schema)
+  const structured = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    system: `Erstelle einen strukturierten Report aus der folgenden Zusammenfassung.`,
+    prompt: summary.text,
+    experimental_output: Output.object({ schema: ReportSchema }),
+  });
+
+  console.log(`Strukturierung: ${structured.usage.totalTokens} Tokens`);
+
+  return {
+    report: structured.experimental_output,
+    totalTokens: summary.usage.totalTokens + structured.usage.totalTokens,
+  };
+}
+```
+
+Zwei sequentielle Steps: Erst zusammenfassen mit XML-strukturiertem Prompt (Context Engineering aus Level 5), dann in ein typisiertes Schema umwandeln (Structured Output aus Level 1.5). Jeder Step hat seinen eigenen System Prompt mit klarer Rolle.
+
+### Schicht 4: Quality-Phase
+
+Die Quality-Phase wendet Guardrails aus Challenge 9.1 und Model Routing aus Challenge 9.2 an:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+type Guardrail = (text: string) => { ok: boolean; reason?: string };
+
+// Output-Guardrails
+const notEmpty: Guardrail = (text) =>
+  text.length > 0 ? { ok: true } : { ok: false, reason: 'Output is empty' };
+
+const maxLength: Guardrail = (text) =>
+  text.length <= 15_000 ? { ok: true } : { ok: false, reason: `Too long: ${text.length}` };
+
+const noHallucination: Guardrail = (text) => {
+  const markers = ['ich bin nicht sicher', 'ich weiss nicht', 'keine informationen'];
+  const hasUncertainty = markers.some(m => text.toLowerCase().includes(m));
+  if (hasUncertainty) {
+    console.warn('Warnung: Output enthaelt Unsicherheits-Marker');
+  }
+  return { ok: true }; // Warnen, nicht blocken
+};
+
+function runGuardrails(text: string, guardrails: Guardrail[]): void {
+  for (const guard of guardrails) {
+    const result = guard(text);
+    if (!result.ok) throw new Error(`Quality check failed: ${result.reason}`);
+  }
+}
+
+// Vollstaendige Pipeline
+async function researchPipeline(topic: string) {
+  console.log(`\n=== Research Pipeline: "${topic}" ===\n`);
+  const pipelineStart = Date.now();
+
+  // Phase 1: Research
+  console.log('[Phase 1: Research]');
+  const research = await researchPhase(topic);
+
+  // Phase 2: Processing
+  console.log('\n[Phase 2: Processing]');
+  const processing = await processingPhase(research.result, topic);
+
+  // Phase 3: Quality
+  console.log('\n[Phase 3: Quality]');
+  const report = processing.report;
+  const reportText = `${report.title}\n\n${report.summary}\n\n${report.keyFindings.join('\n')}\n\n${report.conclusion}`;
+  runGuardrails(reportText, [notEmpty, maxLength, noHallucination]);
+  console.log('Alle Quality-Checks bestanden.');
+
+  // Statistiken
+  const totalTokens = research.totalTokens + processing.totalTokens;
+  const durationMs = Date.now() - pipelineStart;
+
+  console.log(`\n=== Pipeline abgeschlossen ===`);
+  console.log(`Dauer: ${durationMs}ms`);
+  console.log(`Tokens gesamt: ${totalTokens}`);
+  console.log(`Research-Iterationen: ${research.iterations}`);
+  console.log(`Abbruchgrund: ${research.breakReason}`);
+
+  return { report, totalTokens, durationMs, breakReason: research.breakReason };
+}
+
+// Ausfuehren
+const result = await researchPipeline('Edge Computing Trends 2026');
+console.log('\n--- Report ---');
+console.log(`Titel: ${result.report.title}`);
+console.log(`Zusammenfassung: ${result.report.summary}`);
+console.log(`Kernaussagen:`);
+for (const finding of result.report.keyFindings) {
+  console.log(`  - ${finding}`);
+}
+console.log(`Fazit: ${result.report.conclusion}`);
+```
+
+Die Quality-Phase ist die letzte Verteidigungslinie. Guardrails pruefen den finalen Output auf Laenge, Inhalt und Qualitaet. Die gesamte Pipeline trackt Tokens und Dauer — wichtig fuer Production Monitoring.
+
+## TRY
+
+**Aufgabe:** Baue eine Mini Research Pipeline: Suche, Zusammenfassung, Formatierung mit Guardrails.
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+// TODO 1: Definiere ein search-Tool (simuliert, gibt festen Text zurueck)
+
+// TODO 2: Baue Phase 1 — Research
+//   - generateText mit search-Tool
+//   - Maximal 3 Iterationen
+
+// TODO 3: Baue Phase 2 — Summarize
+//   - generateText das die Recherche in 3 Kernaussagen zusammenfasst
+
+// TODO 4: Baue Phase 3 — Format + Guardrails
+//   - Formatiere als kurzen Report
+//   - Pruefe: nicht leer, max 5.000 Zeichen
+
+// TODO 5: Logge Token-Verbrauch pro Phase und gesamt
+```
+
+**Checkliste:**
+- [ ] search-Tool definiert und genutzt
+- [ ] Research-Phase mit Iterations-Limit
+- [ ] Zusammenfassung nutzt Research-Output als Input
+- [ ] Output-Guardrails pruefen den finalen Report
+- [ ] Token-Verbrauch wird pro Phase und gesamt geloggt
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText, tool } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+
+// search-Tool (simuliert)
+const searchTool = tool({
+  description: 'Suche nach Informationen',
+  parameters: z.object({ query: z.string() }),
+  execute: async ({ query }) => {
+    console.log(`  Suche: "${query}"`);
+    return `Suchergebnisse fuer "${query}": AI wird in der Medizin fuer Diagnostik, Medikamentenentwicklung und personalisierte Therapie eingesetzt. Aktuelle Studien zeigen 30% schnellere Diagnosen durch AI-Unterstuetzung.`;
+  },
+});
+
+async function miniResearchPipeline(topic: string) {
+  let totalTokens = 0;
+  console.log(`\n=== Mini Research Pipeline: "${topic}" ===\n`);
+
+  // Phase 1: Research (max 3 Iterationen)
+  console.log('[Phase 1: Research]');
+  const messages: Array<{ role: string; content: string }> = [
+    { role: 'user', content: `Recherchiere zum Thema: ${topic}. Nutze das search-Tool.` },
+  ];
+
+  let iterations = 0;
+  while (iterations < 3) {
+    iterations++;
+    const result = await generateText({
+      model,
+      tools: { search: searchTool },
+      messages,
+    });
+    totalTokens += result.usage.totalTokens;
+    messages.push(...result.response.messages);
+    if (result.finishReason === 'stop') break;
+  }
+
+  const researchText = messages
+    .filter(m => m.role === 'assistant' && typeof m.content === 'string')
+    .map(m => m.content)
+    .join('\n');
+
+  console.log(`  ${iterations} Iterationen, ${totalTokens} Tokens\n`);
+
+  // Phase 2: Summarize
+  console.log('[Phase 2: Summarize]');
+  const summary = await generateText({
+    model,
+    system: 'Fasse die Informationen in exakt 3 Kernaussagen zusammen. Jede in einem Satz.',
+    prompt: researchText,
+  });
+  totalTokens += summary.usage.totalTokens;
+  console.log(`  ${summary.usage.totalTokens} Tokens\n`);
+
+  // Phase 3: Format + Guardrails
+  console.log('[Phase 3: Format + Quality]');
+  const report = await generateText({
+    model,
+    system: 'Formatiere als kurzen Report mit Titel, Kernaussagen und Fazit.',
+    prompt: summary.text,
+  });
+  totalTokens += report.usage.totalTokens;
+
+  // Guardrails
+  if (report.text.length === 0) throw new Error('Report ist leer');
+  if (report.text.length > 5_000) throw new Error('Report zu lang');
+  console.log('  Quality-Checks bestanden.');
+
+  console.log(`\n=== Fertig. Gesamt: ${totalTokens} Tokens ===\n`);
+  console.log(report.text);
+
+  return { report: report.text, totalTokens };
+}
+
+await miniResearchPipeline('AI in der Medizin');
+```
+
+**Erklaerung:** Drei Phasen — Research mit Tool-Loop (max 3 Iterationen), Summarize mit eigenem System Prompt, Format mit Guardrails. Token-Verbrauch wird ueber alle Phasen kumuliert. Die Pipeline laeuft von Anfang bis Ende durch, auch wenn der Research-Loop frueh abbricht.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  L1["Structured<br/>Output (1.5)"]
+  L2["Token<br/>Tracking (2.2)"]
+  L3["Tools (3.1)"]
+  L5["Context<br/>Engineering (5.x)"]
+  L6["Evals (6.x)"]
+  L8["Workflows (8.x)"]
+  L9["Guardrails +<br/>Router (9.x)"]
+  L1 --> Pipeline["Research<br/>Pipeline"]
+  L2 --> Pipeline
+  L3 --> Pipeline
+  L5 --> Pipeline
+  L6 --> Pipeline
+  L8 --> Pipeline
+  L9 --> Pipeline
+  Pipeline --> Production["Production-Ready<br/>AI System"]
+  style L1 fill:#27AE60,color:#fff
+  style L2 fill:#27AE60,color:#fff
+  style L3 fill:#27AE60,color:#fff
+  style L5 fill:#27AE60,color:#fff
+  style L6 fill:#27AE60,color:#fff
+  style L8 fill:#27AE60,color:#fff
+  style L9 fill:#E67E22,color:#fff
+  style Pipeline fill:#27AE60,color:#fff
+  style Production fill:#E67E22,color:#fff
+```
+
+Das ist das grosse Bild. Du hast jetzt alle Bausteine, um Production-Ready AI-Systeme zu bauen:
+
+- **Level 1:** Text generieren, streamen, strukturieren — die Grundlagen
+- **Level 2:** Token-Verbrauch verstehen und tracken — Kosten im Griff
+- **Level 3:** Tools und Agents — AI die handeln kann
+- **Level 5:** Context Engineering — praezise Prompts die konsistente Ergebnisse liefern
+- **Level 6:** Evals — Qualitaet messen statt raten
+- **Level 8:** Workflows — komplexe Aufgaben orchestrieren
+- **Level 9:** Guardrails, Routing, Comparing — Production-Patterns
+
+In der Boss Fight baust Du ein System das alles vereint.
+
+## Quellen
+
+- [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Vercel AI SDK: Building Agents](https://ai-sdk.dev/docs/agents/building-agents)
+- [Anthropic: Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [ai-hero-dev Exercise 09.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/09-production-patterns/09.04-research-workflow)

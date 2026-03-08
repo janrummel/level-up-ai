@@ -1,0 +1,171 @@
+---
+title: "Boss Fight: Eval-Pipeline fuer Chat Titles"
+description: "Kombiniere alle fuenf Bausteine aus Level 6 in einer kompletten Eval-Pipeline fuer einen Chat-Titel-Generator."
+sidebar:
+  order: 7
+---
+
+## Das Szenario
+
+Du baust eine **komplette Eval-Pipeline fuer einen Chat-Titel-Generator**. Das System nimmt eine User-Nachricht und generiert einen kurzen, beschreibenden Titel fuer den Chat. Deine Pipeline evaluiert die Qualitaet dieser Titel automatisch — mit deterministischen Scorern UND LLM-as-Judge.
+
+So soll es funktionieren:
+
+```
+Input:  "Ich brauche Hilfe mit TypeScript Generics und Constraints"
+Title:  "TypeScript Generics"
+
+Input:  "Wie konfiguriere ich Docker Compose fuer ein Multi-Container Setup?"
+Title:  "Docker Compose Setup"
+
+Input:  ""
+Title:  "Neuer Chat"
+```
+
+Dieses Projekt verbindet alle fuenf Bausteine:
+
+```mermaid
+graph LR
+  Dataset["Dataset<br/>(6.4)"] --> Task["generateText<br/>(6.1)"]
+  Trace["traceAISDKModel<br/>(6.1)"] --> Task
+  System["System Prompt"] --> Task
+  Task --> Title["Generated Title"]
+  Title --> Det["Deterministic Scorer<br/>(6.2)"]
+  Title --> Judge["LLM-as-Judge<br/>(6.3)"]
+  Det --> Dashboard["Evalite Dashboard"]
+  Judge --> Dashboard
+  Dashboard --> |"Score-Analyse"| Iterate["Prompt Iteration"]
+  Iterate --> |"Verbessern"| System
+  style Dataset fill:#4A90D9,color:#fff
+  style Trace fill:#4A90D9,color:#fff
+  style System fill:#4A90D9,color:#fff
+  style Task fill:#27AE60,color:#fff
+  style Title fill:#E67E22,color:#fff
+  style Det fill:#27AE60,color:#fff
+  style Judge fill:#27AE60,color:#fff
+  style Dashboard fill:#E67E22,color:#fff
+  style Iterate fill:#E67E22,color:#fff
+```
+
+## Anforderungen
+
+1. **Dataset** (Challenge 6.4) — Erstelle ein Dataset mit mindestens 20 diversen Chat-Verlaeufen. Decke ab: technische Fragen, kurze Inputs, lange Inputs, leere Inputs, mehrdeutige Inputs, mehrsprachige Inputs.
+
+2. **Task: generateText** (Challenge 6.1) — Nutze `generateText` mit einem System Prompt, der den Titel-Generator steuert. Der System Prompt sollte Regeln definieren: maximale Laenge, keine Satzzeichen am Ende, beschreibend aber knapp.
+
+3. **traceAISDKModel** (Challenge 6.1) — Wrappe das Modell mit `traceAISDKModel`, um Token-Verbrauch und Latenz im Dashboard zu sehen.
+
+4. **Deterministic Scorer: Titellaenge** (Challenge 6.2) — Erstelle einen `createScorer`, der die Titellaenge bewertet:
+   - 1-50 Zeichen → Score 1.0
+   - 51-80 Zeichen → Score 0.5
+   - 0 oder >80 Zeichen → Score 0.0
+
+5. **Deterministic Scorer: Kein Punkt am Ende** (Challenge 6.2) — Erstelle einen Scorer, der prueft, ob der Titel NICHT mit einem Punkt endet.
+
+6. **LLM-as-Judge Scorer: Relevanz** (Challenge 6.3) — Erstelle einen Scorer, der bewertet, ob der generierte Titel zur User-Nachricht passt. Nutze `generateObject` mit einem Zod Schema und einer Score-Skala.
+
+7. **Mehrere Scorer kombiniert** — Alle drei Scorer (Titellaenge, kein Punkt, Relevanz) muessen in einem `scorers`-Array laufen.
+
+8. **Eval-Driven Iteration** — Fuehre die Evals einmal aus, analysiere die Ergebnisse, passe den System Prompt an und fuehre die Evals erneut aus. Hat sich der Score verbessert?
+
+## Starter-Code
+
+```typescript
+// chat-titles.eval.ts
+
+import { evalite } from 'evalite';
+import { createScorer } from 'evalite';
+import { traceAISDKModel } from 'evalite/ai-sdk';
+import { generateText, generateObject } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+// TODO 1: Erstelle den titleLength Scorer (createScorer)
+//   - 1-50 Zeichen → 1.0
+//   - 51-80 Zeichen → 0.5
+//   - 0 oder >80 → 0.0
+
+// TODO 2: Erstelle den noTrailingPeriod Scorer (createScorer)
+//   - Endet NICHT mit Punkt → 1.0
+//   - Endet mit Punkt → 0.0
+
+// TODO 3: Erstelle den titleRelevance Scorer (createScorer mit LLM-as-Judge)
+//   - Nutze generateObject mit einem Judge-Prompt
+//   - Score-Skala: A (perfekt relevant), B (teilweise relevant),
+//     C (vage relevant), D (nicht relevant)
+//   - Gib score + metadata (rationale) zurueck
+
+// TODO 4: Definiere den System Prompt fuer den Titel-Generator
+
+// TODO 5: Erstelle das Dataset mit 20+ Test-Cases
+
+// TODO 6: Erstelle die evalite() mit:
+//   - data: Dein Dataset
+//   - task: generateText mit traceAISDKModel
+//   - scorers: [titleLength, noTrailingPeriod, titleRelevance]
+```
+
+## Bewertungskriterien
+
+Deine Boss Fight ist bestanden, wenn:
+
+- [ ] Dataset mit mindestens 20 diversen Test-Cases (technisch, conversational, Edge Cases, mehrdeutig)
+- [ ] `generateText` mit `traceAISDKModel` als `task` — Titel werden vom LLM generiert
+- [ ] System Prompt definiert Regeln fuer Titel-Generierung (Laenge, Format, Stil)
+- [ ] `titleLength` Scorer bewertet die Laenge mit abgestuften Scores
+- [ ] `noTrailingPeriod` Scorer prueft auf fehlendes Punkt am Ende
+- [ ] `titleRelevance` Scorer nutzt LLM-as-Judge mit `generateObject` und Zod Schema
+- [ ] Alle drei Scorer laufen in einem `scorers`-Array
+- [ ] Mindestens eine Iteration: System Prompt anpassen, erneut evaluieren, Scores vergleichen
+
+## Hinweise
+
+<details>
+<summary>Hinweis 1: System Prompt Design</summary>
+
+Ein guter System Prompt fuer Titel-Generierung koennte so aussehen:
+
+```
+Generate a short, descriptive title for the following chat message.
+Rules:
+- Maximum 50 characters
+- No periods at the end
+- Be specific, not generic
+- If the input is empty, return "Neuer Chat"
+- Use the language of the input
+```
+
+Starte damit und iteriere basierend auf den Eval-Ergebnissen.
+
+</details>
+
+<details>
+<summary>Hinweis 2: Relevance Scorer Prompt</summary>
+
+Der Judge-Prompt fuer Relevanz koennte die Frage stellen: "How well does this title describe the chat message?" und eine Skala anbieten:
+- A (1.0): Title captures the main topic precisely
+- B (0.7): Title is related but too vague or too specific
+- C (0.3): Title is only loosely related
+- D (0.0): Title is unrelated to the message
+
+</details>
+
+<details>
+<summary>Hinweis 3: Edge Cases im Dataset</summary>
+
+Vergiss nicht:
+- Leere Strings (`''`)
+- Nur Whitespace (`'   '`)
+- Sehr kurze Inputs (`'Hi'`, `'?'`)
+- Sehr lange Inputs (200+ Zeichen)
+- Inputs mit Sonderzeichen, Emojis oder Code-Snippets
+- Inputs in verschiedenen Sprachen
+
+</details>
+
+## Quellen
+
+- [github.com/mattpocock/evalite](https://github.com/mattpocock/evalite)
+- [Vercel AI SDK: generateText](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Vercel AI SDK: generateObject](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data)
+- [ai-hero-dev Exercises 06.01-06.07](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/06-evals)

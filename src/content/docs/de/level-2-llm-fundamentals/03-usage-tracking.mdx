@@ -1,0 +1,289 @@
+---
+title: "Challenge 2.2: Usage Tracking"
+description: "Tracke Token-Verbrauch und berechne Kosten pro LLM-Call — mit result.usage und erweiterten Usage Details."
+sidebar:
+  order: 3
+---
+
+## THINK
+
+Was kostet ein einzelner LLM-Call — und wie findest Du das heraus?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph HIER["Du bist HIER: Usage Tracking"]
+    GT["generateText()"] --> Result["result"]
+    Result --> Usage["result.usage"]
+    Usage --> PT["promptTokens"]
+    Usage --> CT["completionTokens"]
+    Usage --> TT["totalTokens"]
+  end
+  PT --> Cost["Kosten-<br/>berechnung"]
+  CT --> Cost
+  Cost --> EUR["$0.0024"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style GT fill:#27AE60,color:#fff
+  style Result fill:#27AE60,color:#fff
+  style Usage fill:#E67E22,color:#fff
+  style PT fill:#E67E22,color:#fff
+  style CT fill:#E67E22,color:#fff
+  style TT fill:#E67E22,color:#fff
+  style Cost fill:#27AE60,color:#fff
+  style EUR fill:#E67E22,color:#fff
+```
+
+Jeder `generateText`-Call gibt ein `usage`-Objekt zurueck, das Dir genau sagt, wie viele Tokens verbraucht wurden. Mit den Preisen des Providers rechnest Du daraus die Kosten pro Call.
+
+## WHY
+
+**Ohne Usage Tracking:** Du hast keine Ahnung, was Deine AI-Anwendung kostet. Am Monatsende kommt die Provider-Rechnung und Du kannst nicht nachvollziehen, welcher Endpoint wie viel verbraucht hat. Kostenexplosion ohne Vorwarnung.
+
+**Mit Usage Tracking:** Du weisst nach jedem Call, was er gekostet hat. Du kannst Budgets setzen, Alerts bei Ueberschreitung ausloesen und gezielt optimieren — z.B. den teuersten Endpoint identifizieren und auf ein guenstigeres Modell umstellen.
+
+## WALKTHROUGH
+
+### Schicht 1: Das usage-Objekt
+
+Jeder `generateText`- und `streamText`-Call liefert automatisch ein `usage`-Objekt mit drei Feldern:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: 'Du bist ein hilfreicher Assistent.',
+  prompt: 'Was ist TypeScript?',
+});
+
+console.log(result.usage);
+// → {
+//     promptTokens: 22,        ← Was Du geschickt hast (system + prompt)
+//     completionTokens: 85,    ← Was das LLM generiert hat
+//     totalTokens: 107         ← Summe
+//   }
+```
+
+`promptTokens` enthaelt alles, was zum LLM geht: `system`, `prompt`, `messages`, Tool-Definitionen. `completionTokens` ist die Antwort des LLM. Die Unterscheidung ist wichtig, weil Input und Output unterschiedlich bepreist sind.
+
+### Schicht 2: Kosten berechnen
+
+Die Formel ist einfach — Tokens geteilt durch 1 Million, mal Preis pro 1M Tokens:
+
+```typescript
+interface ModelPricing {
+  inputPerMillion: number;   // Preis pro 1M Input-Tokens in USD
+  outputPerMillion: number;  // Preis pro 1M Output-Tokens in USD
+}
+
+// Preise der gaengigen Modelle (Stand: Maerz 2026)
+const PRICING: Record<string, ModelPricing> = {
+  'claude-sonnet-4-5-20250514': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
+  'gpt-4o':                      { inputPerMillion: 2.5, outputPerMillion: 10.0 },
+  'gemini-2.5-flash':            { inputPerMillion: 0.15, outputPerMillion: 0.60 },
+};
+
+function calculateCost(                                   // ← Wiederverwendbare Funktion
+  usage: { promptTokens: number; completionTokens: number },
+  modelId: string,
+): { inputCost: number; outputCost: number; totalCost: number } {
+  const pricing = PRICING[modelId];
+  if (!pricing) throw new Error(`Unbekanntes Modell: ${modelId}`);
+
+  const inputCost = (usage.promptTokens / 1_000_000) * pricing.inputPerMillion;
+  const outputCost = (usage.completionTokens / 1_000_000) * pricing.outputPerMillion;
+
+  return {
+    inputCost,
+    outputCost,
+    totalCost: inputCost + outputCost,                    // ← Gesamtkosten pro Call
+  };
+}
+```
+
+Beispiel: 22 Prompt-Tokens + 85 Completion-Tokens mit Claude Sonnet:
+- Input: 22 / 1.000.000 * $3.00 = $0.000066
+- Output: 85 / 1.000.000 * $15.00 = $0.001275
+- Gesamt: **$0.001341** pro Call
+
+### Schicht 3: Extended Usage Details
+
+Ab AI SDK v6 liefern manche Provider erweiterte Token-Details. Diese findest Du in `result.usage` oder im `experimental_providerMetadata`:
+
+```typescript
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: 'Du bist ein hilfreicher Assistent fuer TypeScript-Fragen.',
+  prompt: 'Erklaere Generics in TypeScript.',
+});
+
+// Standard-Usage (immer verfuegbar)
+console.log('Prompt Tokens:', result.usage.promptTokens);
+console.log('Completion Tokens:', result.usage.completionTokens);
+
+// Erweiterte Details (provider-abhaengig)
+// Bei Anthropic:
+// - cacheReadTokens: Tokens aus dem Cache gelesen (guenstiger!)
+// - cacheCreationTokens: Tokens in den Cache geschrieben
+// Bei OpenAI mit Reasoning-Modellen:
+// - reasoningTokens: Tokens fuer internes Nachdenken
+```
+
+Diese erweiterten Details sind wichtig fuer die Kostenoptimierung. Wenn `cacheReadTokens` > 0, zahlst Du weniger fuer diese Tokens — das lernst Du in Challenge 2.4 (Prompt Caching).
+
+### Schicht 4: Session-Tracking mit onFinish
+
+Fuer eine Anwendung mit mehreren Calls brauchst Du einen Gesamtzaehler. Der `onFinish`-Callback eignet sich perfekt dafuer:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+let sessionTokens = { prompt: 0, completion: 0, total: 0 };
+let sessionCost = 0;
+
+async function trackedGenerate(prompt: string) {
+  const modelId = 'claude-sonnet-4-5-20250514';
+
+  const result = await generateText({
+    model: anthropic(modelId),
+    prompt,
+    onFinish({ usage }) {                                   // ← Callback fuer Tracking
+      sessionTokens.prompt += usage.promptTokens;
+      sessionTokens.completion += usage.completionTokens;
+      sessionTokens.total += usage.totalTokens;
+
+      const cost = calculateCost(usage, modelId);
+      sessionCost += cost.totalCost;
+
+      console.log(`[Track] Call: ${cost.totalCost.toFixed(6)} USD | Session: ${sessionCost.toFixed(6)} USD`);
+    },
+  });
+
+  return result;
+}
+
+// Mehrere Calls — Session-Kosten summieren sich
+await trackedGenerate('Was ist TypeScript?');
+await trackedGenerate('Erklaere async/await.');
+await trackedGenerate('Was sind Generics?');
+
+console.log(`\nSession gesamt: ${sessionTokens.total} Tokens, ${sessionCost.toFixed(6)} USD`);
+```
+
+## TRY
+
+**Aufgabe:** Baue einen Cost Calculator — mache einen `generateText`-Call, lies `usage` aus und berechne die Kosten basierend auf der Modell-Preisliste.
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO 1: Definiere eine PRICING-Tabelle mit mindestens 2 Modellen
+// Tipp: { inputPerMillion: number, outputPerMillion: number }
+
+// TODO 2: Implementiere calculateCost(usage, modelId)
+// Formel: tokens / 1_000_000 * preisProMillion
+
+// TODO 3: Mache einen generateText-Call
+// const result = await generateText({
+//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   prompt: 'Erklaere in 3 Saetzen, was Machine Learning ist.',
+// });
+
+// TODO 4: Berechne und logge die Kosten
+// console.log('Usage:', result.usage);
+// const cost = calculateCost(result.usage, 'claude-sonnet-4-5-20250514');
+// console.log('Input-Kosten:', cost.inputCost.toFixed(6), 'USD');
+// console.log('Output-Kosten:', cost.outputCost.toFixed(6), 'USD');
+// console.log('Gesamt:', cost.totalCost.toFixed(6), 'USD');
+```
+
+**Checkliste:**
+- [ ] PRICING-Tabelle mit mindestens 2 Modellen
+- [ ] `calculateCost` berechnet Input- und Output-Kosten separat
+- [ ] `result.usage` wird korrekt an `calculateCost` uebergeben
+- [ ] Kosten werden mit 6 Dezimalstellen geloggt (USD-Bereich fuer einzelne Calls)
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+interface ModelPricing {
+  inputPerMillion: number;
+  outputPerMillion: number;
+}
+
+const PRICING: Record<string, ModelPricing> = {
+  'claude-sonnet-4-5-20250514': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
+  'gpt-4o': { inputPerMillion: 2.5, outputPerMillion: 10.0 },
+};
+
+function calculateCost(
+  usage: { promptTokens: number; completionTokens: number },
+  modelId: string,
+): { inputCost: number; outputCost: number; totalCost: number } {
+  const pricing = PRICING[modelId];
+  if (!pricing) throw new Error(`Unbekanntes Modell: ${modelId}`);
+
+  const inputCost = (usage.promptTokens / 1_000_000) * pricing.inputPerMillion;
+  const outputCost = (usage.completionTokens / 1_000_000) * pricing.outputPerMillion;
+
+  return { inputCost, outputCost, totalCost: inputCost + outputCost };
+}
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere in 3 Saetzen, was Machine Learning ist.',
+});
+
+console.log('Usage:', result.usage);
+
+const cost = calculateCost(result.usage, 'claude-sonnet-4-5-20250514');
+console.log('Input-Kosten:', cost.inputCost.toFixed(6), 'USD');
+console.log('Output-Kosten:', cost.outputCost.toFixed(6), 'USD');
+console.log('Gesamt:', cost.totalCost.toFixed(6), 'USD');
+```
+
+**Erklaerung:** Die Funktion trennt Input- und Output-Kosten, weil sie unterschiedlich bepreist sind. Bei Claude Sonnet kostet Output 5x mehr als Input — deshalb lohnt es sich, die Antwortlaenge zu kontrollieren (z.B. "Antworte in maximal 3 Saetzen").
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Task["Aufgabe"] --> SM["selectModel()"]
+  SM --> Model["Modell"]
+  Model --> GT["generateText()"]
+  GT --> Usage["result.usage"]
+  Usage --> Calc["calculateCost()"]
+  Calc --> Log["Kosten-Log"]
+  style Task fill:#4A90D9,color:#fff
+  style SM fill:#27AE60,color:#fff
+  style Model fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Usage fill:#E67E22,color:#fff
+  style Calc fill:#27AE60,color:#fff
+  style Log fill:#E67E22,color:#fff
+```
+
+**Uebung:** Erweitere die `selectModel`-Funktion aus Level 1.2 um automatisches Cost-Tracking. Jeder Call soll seine Kosten loggen.
+
+1. Importiere `selectModel` aus Challenge 1.2 (oder reimplementiere sie)
+2. Wrape den `generateText`-Call in eine `trackedGenerate`-Funktion
+3. Nutze `onFinish`, um nach jedem Call die Kosten zu berechnen und zu loggen
+4. Teste mit verschiedenen Aufgaben — vergleiche die Kosten zwischen Flash- und Pro-Modell
+
+**Optional Stretch Goal:** Baue ein Session-Tracking, das die kumulierten Kosten ueber mehrere Calls summiert und am Ende eine Zusammenfassung ausgibt ("3 Calls, 450 Tokens, $0.003420 USD").
+
+## Quellen
+
+- [Vercel AI SDK: Generating Text — Usage](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Anthropic: Pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)

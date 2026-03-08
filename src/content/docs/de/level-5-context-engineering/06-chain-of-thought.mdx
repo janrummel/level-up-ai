@@ -1,0 +1,309 @@
+---
+title: "Challenge 5.5: Chain of Thought"
+description: "Bringe das LLM dazu, Schritt fuer Schritt nachzudenken — fuer nachvollziehbare, fehleraermere Antworten."
+sidebar:
+  order: 6
+---
+
+## THINK
+
+Wenn Du eine komplexe Rechenaufgabe loest — rechnest Du im Kopf oder schreibst Du Zwischenschritte auf? Warum?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph "Direkt (ohne CoT)"
+    Q1["Frage"] --> LLM1["LLM"]
+    LLM1 --> A1["Antwort"]
+  end
+  subgraph HIER["Du bist HIER: Chain of Thought"]
+    subgraph "Mit Chain of Thought"
+      Q2["Frage"] --> LLM2["LLM denkt<br/>Schritt fuer Schritt"]
+      LLM2 --> TH["thinking-instructions<br/>+ output-format"]
+      TH --> A2["Nachvollziehbare<br/>Antwort"]
+    end
+  end
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style Q1 fill:#4A90D9,color:#fff
+  style LLM1 fill:#27AE60,color:#fff
+  style A1 fill:#E74C3C,color:#fff
+  style Q2 fill:#4A90D9,color:#fff
+  style LLM2 fill:#27AE60,color:#fff
+  style TH fill:#27AE60,color:#fff
+  style A2 fill:#E67E22,color:#fff
+```
+
+Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen fehleranfaellig (rot). Rechts: Mit `<thinking-instructions>` und `<output-format>` denkt das LLM zuerst nach. Die Antwort ist nachvollziehbar und basiert auf Zwischenschritten.
+
+## WHY
+
+**Ohne Chain of Thought:** LLMs generieren Tokens sequentiell — jedes Wort basiert auf den vorherigen. Wenn das LLM sofort mit der Antwort beginnt, hat es keine Gelegenheit, das Problem zu durchdenken. Bei komplexen Aufgaben fuehrt das zu oberflaechlichen oder fehlerhaften Antworten. Fehler sind nicht nachvollziehbar, weil der Denkprozess unsichtbar bleibt.
+
+**Mit Chain of Thought:** Das LLM "verbrennt" Tokens fuer seinen Denkprozess, bevor es die eigentliche Antwort generiert. Die Zwischenschritte stehen im Kontext und beeinflussen die nachfolgenden Tokens. Die Reasoning-Kette ist nachpruefbar, Fehler sind lokalisierbar, die Ergebnisse sind besser.
+
+## WALKTHROUGH
+
+### Schicht 1: Was ist Chain of Thought (Zwischenschritte explizit machen)
+
+Chain of Thought (CoT) bedeutet: Das LLM soll seine Gedanken aufschreiben, bevor es antwortet. Statt direkt das Ergebnis auszugeben, durchlaeuft es erst einen sichtbaren Denkprozess.
+
+```
+Ohne CoT:  "Was ist 17 * 24?"  →  "408"  (geraten, falsch)
+Mit CoT:   "Was ist 17 * 24?"  →  "17 * 20 = 340, 17 * 4 = 68, 340 + 68 = 408"  →  "408"
+```
+
+Die Tokens, die das LLM beim Nachdenken generiert, beeinflussen die Qualitaet der eigentlichen Antwort. Der Plan steht im Kontext — und der Kontext steuert, was als naechstes kommt.
+
+> Moderne Modelle wie Claude bieten "Extended Thinking" als eingebautes Feature an. Das hier beschriebene Prompt-basierte CoT ist die manuelle Variante, die mit jedem Modell funktioniert.
+
+### Schicht 2: thinking-instructions XML Tag
+
+Der `<thinking-instructions>`-Tag sagt dem LLM **WIE** es denken soll. Er steht am Ende des Prompts (hoher Einfluss) und definiert die Schritte des Denkprozesses:
+
+```xml
+<thinking-instructions>
+Think about your answer first before you respond.
+Consider the optimal path for the user to understand the material.
+Create a list of knowledge dependencies — pieces of knowledge
+that rely on other pieces of knowledge.
+Order them from foundational to advanced.
+</thinking-instructions>
+```
+
+Wichtig: Die Instructions beschreiben nicht WAS das LLM antworten soll, sondern WIE es darueber nachdenken soll. Das ist der Unterschied zu `<rules>` — Rules steuern die Ausgabe, Thinking Instructions steuern den Denkprozess.
+
+### Schicht 3: output-format fuer strukturierte Ausgabe
+
+Ohne klares `<output-format>` mischt das LLM Denken und Antwort. Mit dem Tag trennst Du beides sauber:
+
+```xml
+<output-format>
+Return two sections:
+- A <thinking> block with your thought process, wrapped in a <thinking> tag.
+- The answer (unwrapped, in markdown format). Do not wrap it in an <answer> tag.
+</output-format>
+```
+
+Das LLM gibt dann eine Ausgabe in dieser Struktur:
+
+```
+<thinking>
+1. Der User kennt wahrscheinlich keine Generics
+2. Ich muss erst Grundtypen erklaeren
+3. Dann Generics einfuehren
+4. Dann das konkrete Beispiel zeigen
+</thinking>
+
+# TypeScript Generics erklaert
+
+Stell Dir vor, Du hast eine Funktion die mit verschiedenen Typen arbeiten soll...
+```
+
+So kann das Frontend den `<thinking>`-Block separat rendern oder ausblenden — die eigentliche Antwort steht sauber getrennt darunter.
+
+### Schicht 4: Wann Chain of Thought nutzen?
+
+CoT ist nicht fuer jede Aufgabe sinnvoll. Es kostet zusaetzliche Tokens und verlangsamt die Antwort.
+
+| Sinnvoll | Nicht noetig |
+|----------|-------------|
+| Komplexe Logik, Multi-Step-Analyse | Einfache Fragen ("Was ist die Hauptstadt von Frankreich?") |
+| Code Review, Debugging | Format-Konvertierung |
+| Analyse mit mehreren Faktoren | Uebersetzungen |
+| Aufgaben mit Wissens-Abhaengigkeiten | Zusammenfassungen kurzer Texte |
+| Wenn Nachvollziehbarkeit wichtig ist | Wenn Geschwindigkeit Prioritaet hat |
+
+**Faustregel:** Wenn Du als Mensch Zwischenschritte aufschreiben wuerdest, profitiert auch das LLM von CoT.
+
+## TRY
+
+**Aufgabe:** Fuege Chain of Thought zu einem Code Review Prompt hinzu. Das LLM soll erst den Code analysieren (thinking), dann eine strukturierte Bewertung abgeben (output). Ergaenze `<thinking-instructions>` und `<output-format>`.
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const CODE_TO_REVIEW = `
+function processUsers(users: any[]) {
+  let result = [];
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].age > 18) {
+      result.push({
+        name: users[i].name.toUpperCase(),
+        email: users[i].email,
+        isAdmin: users[i].role == 'admin',
+      });
+    }
+  }
+  return result;
+}
+`;
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a senior TypeScript engineer performing a code review.
+Your goal is to identify issues and suggest improvements.
+</task-context>
+
+<background-data>
+<code>
+${CODE_TO_REVIEW}
+</code>
+</background-data>
+
+<rules>
+- Focus on type safety, readability, and best practices.
+- Rate each issue as: critical, warning, or suggestion.
+- Provide a concrete fix for each issue.
+</rules>
+
+<the-ask>
+Review this code and provide actionable feedback.
+</the-ask>
+
+// TODO: Fuege <thinking-instructions> hinzu.
+// Das LLM soll zuerst:
+//   - Den Code Zeile fuer Zeile durchgehen
+//   - Potentielle Probleme identifizieren
+//   - Die Probleme nach Schweregrad sortieren
+//   - Abhaengigkeiten zwischen Fixes beachten
+
+// TODO: Fuege <output-format> hinzu.
+// Zwei Abschnitte:
+//   - <thinking> Block mit dem Analyseprozess
+//   - Strukturierte Review-Ergebnisse (Issue, Severity, Fix)
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Checkliste:**
+- [ ] `<thinking-instructions>` beschreibt die Analyse-Schritte
+- [ ] `<output-format>` trennt Reasoning von Ergebnis
+- [ ] LLM-Ausgabe zeigt nachvollziehbare Zwischenschritte
+- [ ] Ergebnis basiert auf den Zwischenschritten
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const CODE_TO_REVIEW = `
+function processUsers(users: any[]) {
+  let result = [];
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].age > 18) {
+      result.push({
+        name: users[i].name.toUpperCase(),
+        email: users[i].email,
+        isAdmin: users[i].role == 'admin',
+      });
+    }
+  }
+  return result;
+}
+`;
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a senior TypeScript engineer performing a code review.
+Your goal is to identify issues and suggest improvements.
+</task-context>
+
+<background-data>
+<code>
+${CODE_TO_REVIEW}
+</code>
+</background-data>
+
+<rules>
+- Focus on type safety, readability, and best practices.
+- Rate each issue as: critical, warning, or suggestion.
+- Provide a concrete fix for each issue.
+</rules>
+
+<the-ask>
+Review this code and provide actionable feedback.
+</the-ask>
+
+<thinking-instructions>
+Before writing your review, analyze the code systematically:
+1. Read the code line by line.
+2. Identify all potential issues (type safety, logic, style).
+3. For each issue, determine: What could go wrong in production?
+4. Sort issues by severity (critical first).
+5. Consider dependencies between fixes — does fixing one issue
+   affect another?
+6. Think about what the developer likely intended and how to
+   preserve that intent while improving the code.
+</thinking-instructions>
+
+<output-format>
+Return two sections:
+- A <thinking> block containing your analysis process.
+- The review results in markdown format (unwrapped, no <answer> tag).
+
+For each issue in the review, use this structure:
+### Issue: [title]
+- **Severity:** critical | warning | suggestion
+- **Line:** [line reference]
+- **Problem:** [what is wrong]
+- **Fix:** [concrete code change]
+</output-format>
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Erklaerung:** Die `<thinking-instructions>` fuehren das LLM durch einen systematischen Analyseprozess: erst lesen, dann Probleme identifizieren, dann priorisieren. Das `<output-format>` trennt den Denkprozess (`<thinking>` Block) von den strukturierten Review-Ergebnissen. So kann man nachvollziehen, warum das LLM welches Issue wie bewertet hat — und die Ergebnisse sind konsistent formatiert.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Config["PromptConfig<br/>(5.1)"] --> BSP["buildFullPrompt()"]
+  XML["XML Struktur<br/>(5.2)"] --> BSP
+  Exemplars["Exemplars<br/>(5.3)"] --> BSP
+  Data["Externe Daten<br/>(5.4)"] --> BSP
+  CoT["Chain of Thought<br/>(5.5)"] --> BSP
+  BSP --> Call["generateText()"]
+  Call --> Output["Strukturierte<br/>Antwort"]
+  style Config fill:#4A90D9,color:#fff
+  style XML fill:#4A90D9,color:#fff
+  style Exemplars fill:#4A90D9,color:#fff
+  style Data fill:#4A90D9,color:#fff
+  style CoT fill:#4A90D9,color:#fff
+  style BSP fill:#27AE60,color:#fff
+  style Call fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+**Uebung:** Baue einen vollstaendigen Prompt der ALLE 5 Konzepte dieses Levels vereint: Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + RAG (5.4) + Chain of Thought (5.5). Das ist die Vorbereitung fuer die Boss Fight.
+
+Konkret:
+1. Erstelle eine `buildFullPrompt`-Funktion die ein Config-Objekt mit allen Parametern akzeptiert: `role`, `audience`, `tone`, `sourceUrl`, `content`, `exemplars`, `thinkingInstructions`
+2. Der Prompt muss alle XML Tags in der richtigen Reihenfolge enthalten: `<task-context>` → `<background-data>` → `<examples>` → `<rules>` → `<the-ask>` → `<thinking-instructions>` → `<output-format>`
+3. Teste mit einem konkreten Szenario: Ein technischer Assistent, der Dokumentation analysiert und Fragen beantwortet
+
+**Optional Stretch Goal:** Mache `<thinking-instructions>` optional — wenn nicht uebergeben, wird der Tag weggelassen. Bei einfachen Fragen ist CoT ueberfluessig.
+
+## Quellen
+
+- [Anthropic: Chain of Thought Prompting](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-of-thought)
+- [Anthropic: Extended Thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+- [ai-hero-dev Exercise 05.05](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.05-chain-of-thought)

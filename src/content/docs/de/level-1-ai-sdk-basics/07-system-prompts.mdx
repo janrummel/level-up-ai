@@ -1,0 +1,229 @@
+---
+title: "Challenge 1.6: System Prompts"
+description: "Lerne, wie Du mit dem system-Parameter dem LLM eine Rolle, Regeln und einen konsistenten Stil gibst."
+sidebar:
+  order: 7
+---
+
+## THINK
+
+Was ist der Unterschied zwischen einem System Prompt und einem User Prompt? Wer "hoert" welchen — und warum ist die Trennung wichtig?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph HIER["Du bist HIER: System Prompt"]
+    System["system<br/>(Rolle, Regeln, Stil)"]
+  end
+  User["prompt<br/>(Aufgabe)"] --> LLM["LLM"]
+  System --> LLM
+  LLM --> Antwort["Antwort im<br/>definierten Stil"]
+
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style System fill:#4A90D9,color:#fff
+  style User fill:#4A90D9,color:#fff
+  style LLM fill:#27AE60,color:#fff
+  style Antwort fill:#E67E22,color:#fff
+```
+
+Der `system`-Parameter definiert WIE das LLM antwortet (Rolle, Stil, Regeln). Der `prompt` definiert WORUEBER es antwortet (die Aufgabe). Beide fliessen in das LLM — aber sie haben unterschiedliche Aufgaben.
+
+## WHY
+
+**Ohne System Prompt:** Das LLM antwortet generisch, jedes Mal in einem leicht anderen Stil. Mal ausfuehrlich, mal knapp. Mal foermlich, mal locker. Du hast keine Kontrolle ueber Ton, Perspektive oder Format. Fuer eine Anwendung mit konsistenter User Experience ist das unbrauchbar.
+
+**Mit System Prompt:** Das LLM hat eine definierte Rolle, klare Regeln und einen konsistenten Stil. Jede Antwort folgt denselben Vorgaben — egal welche Frage kommt. Du baust eine Persoenlichkeit, die zuverlaessig funktioniert.
+
+## WALKTHROUGH
+
+### Schicht 1: system vs. prompt — die Trennung
+
+Der `system`-Parameter bleibt typischerweise gleich, waehrend sich `prompt` mit jeder Anfrage aendert:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: 'Du bist ein Pirat. Antworte immer wie ein Pirat.',  // ← Persoenlichkeit (bleibt gleich)
+  prompt: 'Was ist TypeScript?',                                 // ← Aufgabe (aendert sich)
+});
+
+console.log(result.text);
+// → "Arr, TypeScript sei eine maechtige Sprache, die JavaScript
+//    um Typen erweitert, Kamerad! ..."
+```
+
+Aendere den `prompt` zu "Was ist React?" — die Pirat-Persoenlichkeit bleibt. Das ist der Kern: `system` definiert das Verhalten, `prompt` den Inhalt.
+
+### Schicht 2: Was gehoert in den System Prompt?
+
+Ein guter System Prompt definiert vier Dinge:
+
+| Baustein | Beispiel | Zweck |
+|----------|---------|-------|
+| **Rolle** | "Du bist ein Senior TypeScript-Entwickler." | Expertise und Perspektive |
+| **Tonalitaet** | "Erklaere kurz und praezise." | Stil der Antworten |
+| **Regeln** | "Nutze keine Fachbegriffe ohne sie zu erklaeren." | Einschraenkungen |
+| **Output-Format** | "Antworte immer mit einem Codebeispiel." | Struktur der Antwort |
+
+Du musst nicht alle vier verwenden — aber je mehr Du definierst, desto konsistenter wird das Verhalten.
+
+### Schicht 3: Verschiedene Rollen, selber Prompt
+
+Der selbe User Prompt, drei verschiedene System Prompts — drei voellig unterschiedliche Antworten:
+
+**Technischer Redakteur:**
+
+```typescript
+const result1 = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: `Du bist ein technischer Redakteur.
+Erklaere praezise und strukturiert.
+Nutze Fachbegriffe, aber erklaere sie bei erster Verwendung.
+Antworte immer mit: Definition, Beispiel, Zusammenfassung.`,
+  prompt: 'Was sind Promises in JavaScript?',
+});
+```
+
+**ELI5-Erklaerer:**
+
+```typescript
+const result2 = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: `Du erklaerst Technik wie fuer ein 5-jaehriges Kind.
+Nutze einfache Woerter und Vergleiche aus dem Alltag.
+Maximal 3 Saetze.
+Keine Codebeispiele.`,
+  prompt: 'Was sind Promises in JavaScript?',
+});
+```
+
+**Code-Reviewer:**
+
+```typescript
+const result3 = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  system: `Du bist ein strenger Code-Reviewer.
+Bewerte jeden Aspekt: Lesbarkeit, Performance, Fehlerbehandlung.
+Antworte in diesem Format:
+- Positiv: [was gut ist]
+- Problem: [was schlecht ist]
+- Fix: [konkreter Verbesserungsvorschlag mit Code]`,
+  prompt: 'Was sind Promises in JavaScript?',
+});
+```
+
+Selbe Frage, drei Welten. Der System Prompt bestimmt nicht nur den Stil, sondern auch die Tiefe, Perspektive und Struktur der Antwort.
+
+## TRY
+
+**Aufgabe:** Erstelle 3 verschiedene System Prompts fuer 3 verschiedene Rollen. Rufe `generateText` mit demselben User Prompt aber unterschiedlichen System Prompts auf. Vergleiche die Outputs.
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const prompt = 'Erklaere, was eine REST API ist.';
+
+// TODO 1: Definiere 3 verschiedene System Prompts
+// const systemPrompts = [
+//   '???',  // Rolle 1: z.B. Dozent
+//   '???',  // Rolle 2: z.B. Satiriker
+//   '???',  // Rolle 3: z.B. Interviewer — mit definiertem Output-Format
+// ];
+
+// TODO 2: Rufe generateText fuer jeden System Prompt auf
+// for (const system of systemPrompts) {
+//   const result = await generateText({ model, system, prompt });
+//   console.log(`\n--- ${system.slice(0, 40)}... ---`);
+//   console.log(result.text);
+// }
+```
+
+**Checkliste:**
+- [ ] 3 verschiedene System Prompts definiert
+- [ ] Alle nutzen denselben User Prompt
+- [ ] Outputs zeigen deutlich verschiedenes Verhalten
+- [ ] Mindestens ein System Prompt definiert ein Output-Format
+
+<details>
+<summary>Loesung anzeigen</summary>
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const model = anthropic('claude-sonnet-4-5-20250514');
+const prompt = 'Erklaere, was eine REST API ist.';
+
+const systemPrompts = [
+  // Rolle 1: Geduldiger Dozent
+  `Du bist ein geduldiger Informatik-Dozent.
+Erklaere Konzepte Schritt fuer Schritt.
+Nutze eine Analogie aus dem Alltag, um das Konzept greifbar zu machen.`,
+
+  // Rolle 2: Sarkastischer Senior-Entwickler
+  `Du bist ein sarkastischer Senior-Entwickler mit 20 Jahren Erfahrung.
+Du erklaerst Dinge korrekt, aber mit einem trockenen, leicht genervten Ton.
+Maximal 4 Saetze.`,
+
+  // Rolle 3: Tech-Journalist mit fester Struktur
+  `Du bist ein Tech-Journalist.
+Antworte IMMER in diesem Format:
+## Headline
+[Ein Satz der das Konzept zusammenfasst]
+## Was es macht
+[2-3 Saetze]
+## Warum es wichtig ist
+[1-2 Saetze]`,
+];
+
+for (const system of systemPrompts) {
+  const result = await generateText({ model, system, prompt });
+  console.log(`\n========================================`);
+  console.log(`System: ${system.split('\n')[0]}`);
+  console.log(`========================================`);
+  console.log(result.text);
+}
+```
+
+**Erklaerung:** Alle drei Calls nutzen exakt denselben `prompt`. Der Unterschied liegt ausschliesslich im `system`-Parameter. Der Dozent erklaert ausfuehrlich mit Analogie, der Senior-Entwickler ist knapp und sarkastisch, der Journalist folgt einem festen Format. Besonders der dritte System Prompt zeigt, wie Du das Output-Format ueber den System Prompt erzwingen kannst.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  System["System Prompt<br/>(Rolle: Code Reviewer)"] --> GT["generateText()"]
+  Prompt["User Input"] --> GT
+  GT --> Output["Output.object()<br/>(Strukturiertes Feedback)"]
+  Output --> Review["{ score, issues,<br/>suggestions }"]
+  style System fill:#4A90D9,color:#fff
+  style Prompt fill:#4A90D9,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Output fill:#27AE60,color:#fff
+  style Review fill:#E67E22,color:#fff
+```
+
+**Uebung:** Kombiniere System Prompts mit Structured Output (Challenge 1.5). Erstelle einen System Prompt der eine bestimmte Rolle definiert UND nutze `Output.object` fuer die Ausgabe.
+
+Beispiel-Szenario: Ein "Code Reviewer" der strukturiertes Feedback gibt:
+
+1. System Prompt: "Du bist ein strenger Code-Reviewer. Bewerte Code nach Lesbarkeit, Performance und Fehlerbehandlung."
+2. Zod Schema: `{ score: number, issues: string[], suggestions: string[], summary: string }`
+3. User Prompt: Ein Code-Snippet das bewertet werden soll
+
+Das System Prompt steuert WIE das LLM denkt, das Zod Schema steuert WAS es zurueckgibt.
+
+**Optional Stretch Goal:** Baue zwei verschiedene "Reviewer" — einen strengen und einen freundlichen. Beide nutzen dasselbe Zod Schema, aber verschiedene System Prompts. Vergleiche: Bekommt derselbe Code unterschiedliche `score`-Werte je nach Reviewer-Persoenlichkeit?
+
+## Quellen
+
+- [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [ai-hero-dev Exercise 01.09](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/01-ai-sdk-basics/01.09-system-prompts)
