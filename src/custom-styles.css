@@ -224,6 +224,15 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
    6. GENERAL POLISH
    ============================================ */
 
+/* Level Complete — page-level celebration gradient border */
+.sl-markdown-content:has(h2#was-du-gelernt-hast),
+.sl-markdown-content:has(h2#what-youve-learned),
+.sl-markdown-content:has(h2#what-you-learned) {
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, #27ae60, #f1c40f, #27ae60) 1;
+  padding-top: 1.5rem;
+}
+
 /* Level Complete — celebration banner */
 .sl-markdown-content h2#was-du-gelernt-hast,
 .sl-markdown-content h2#what-youve-learned,
@@ -235,7 +244,10 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   border-radius: 0.5rem;
   background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.05));
   border-left: 4px solid #27ae60;
+  border-right: 4px solid #f1c40f;
   color: #27ae60;
+  font-size: var(--sl-text-h3);
+  letter-spacing: 0.03em;
 }
 .sl-markdown-content h2#was-du-gelernt-hast::before,
 .sl-markdown-content h2#what-youve-learned::before,
