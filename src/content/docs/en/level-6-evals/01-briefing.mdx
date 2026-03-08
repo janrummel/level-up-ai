@@ -1,0 +1,94 @@
+---
+title: "Level 6: Evals — Briefing"
+description: "Learn how to automatically test LLM applications — from Evalite to deterministic scorers, LLM-as-a-Judge, and Langfuse."
+sidebar:
+  order: 1
+---
+
+## TL;DR
+
+> Evals are automated tests for LLM applications. Instead of right/wrong, they measure quality on a scale. Evalite is your Vitest for AI.
+
+## Skill Tree
+
+```mermaid
+graph LR
+  subgraph "Unlocked"
+    L1["Level 1: AI SDK Basics"]
+    L2["Level 2: LLM Fundamentals"]
+    L3["Level 3: Agents & MCP"]
+    L4["Level 4: Persistence"]
+    L5["Level 5: Context Engineering"]
+  end
+  subgraph HIER["Current Level"]
+    L6["Level 6: Evals"]
+  end
+  subgraph "Locked"
+    L7["Level 7: Streaming"]
+    L8["Level 8: Workflows"]
+    L9["Level 9: Advanced Patterns"]
+  end
+  L1 --> L2
+  L2 --> L3
+  L3 --> L4
+  L4 --> L5
+  L5 --> L6
+  L6 -.-> L7
+  L7 -.-> L8
+  L8 -.-> L9
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style L6 fill:#E67E22,color:#fff
+  style L1 fill:#27AE60,color:#fff
+  style L2 fill:#27AE60,color:#fff
+  style L3 fill:#27AE60,color:#fff
+  style L4 fill:#27AE60,color:#fff
+  style L5 fill:#27AE60,color:#fff
+  style L7 fill:#95a5a6,color:#fff
+  style L8 fill:#95a5a6,color:#fff
+  style L9 fill:#95a5a6,color:#fff
+```
+
+## What You Will Learn
+
+- **Evalite Basics** — Set up the TypeScript-native eval framework and write your first eval
+- **Deterministic Eval** — Fast, cheap scorers without an LLM: string comparison, contains checks, custom scorers
+- **LLM-as-a-Judge** — An LLM evaluates the output of another LLM — for open-ended answers without a single correct solution
+- **Dataset Management** — Collect, maintain, and critically evaluate representative test data
+- **Langfuse** — Production observability: monitor traces, costs, and quality in real time
+
+## Why This Matters
+
+> "Your App Is Only As Good As Its Evals" — Matt Pocock
+
+Without evals, you change a prompt and hope it gets better. You manually read through outputs to check if the answers are still good. One change breaks something else — and you only notice when a user complains.
+
+The concrete problem: LLM outputs are non-deterministic. The same prompt can produce different results. Classic unit tests with `expect(result).toBe("...")` don't work. You need a new testing paradigm — scorers that measure quality on a scale instead of binary right/wrong.
+
+## Prerequisites
+
+- **Level 1: AI SDK Basics** — You should be comfortable with `generateText`, as it serves as your task function in evals
+- **Level 5: Context Engineering** — System prompts and prompt templates that you'll iteratively improve with evals
+
+> **Skip hint:** Already working with Evalite or another eval framework and know the difference between deterministic and LLM-as-Judge scorers? Jump straight to the [Boss Fight](/en/level-6-evals/07-boss-fight/) and build a complete eval pipeline.
+
+## Challenges
+
+| # | Challenge | Concept |
+|---|-----------|---------|
+| 6.1 | [Evalite Basics](/en/level-6-evals/02-evalite-basics/) | Installation, `.eval.ts` file convention, evalite() basic structure |
+| 6.2 | [Deterministic Eval](/en/level-6-evals/03-deterministic-eval/) | Inline scorer, createScorer, Levenshtein, contains check |
+| 6.3 | [LLM-as-a-Judge](/en/level-6-evals/04-llm-as-judge/) | Factuality scorer, score scale A-E, rationale |
+| 6.4 | [Dataset Management](/en/level-6-evals/05-dataset-management/) | Representative datasets, edge cases, dataset critiquing |
+| 6.5 | [Langfuse Basics](/en/level-6-evals/06-langfuse/) | Traces, generations, scores, production monitoring |
+
+## Boss Fight
+
+Build an **eval pipeline for chat titles**: A complete evaluation system for a chat title generator. You create a dataset with diverse chat histories, combine deterministic scorers (title length) with LLM-as-Judge (relevance), and track everything with `traceAISDKModel`. All five building blocks in one pipeline.
+
+## Sources for This Level
+
+- [github.com/mattpocock/evalite](https://github.com/mattpocock/evalite) — Evalite Repo + Docs
+- [npmjs.com/package/evalite](https://www.npmjs.com/package/evalite)
+- [Autoevals Library (Braintrust)](https://github.com/braintrustdata/autoevals)
+- [Langfuse: Evaluation Overview](https://langfuse.com/docs/evaluation/overview)
+- [ai-hero-dev Exercises 06.01-06.07](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/06-evals)

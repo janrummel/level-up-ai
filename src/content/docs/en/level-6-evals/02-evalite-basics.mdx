@@ -1,0 +1,256 @@
+---
+title: "Challenge 6.1: Evalite Basics"
+description: "Set up Evalite and write your first automated eval for LLM outputs — with data, task, and scorer."
+sidebar:
+  order: 2
+---
+
+## THINK
+
+How do you test whether your LLM system gives good answers — manually read through them every time? What if you change 50 prompts and want to check whether quality went up or down?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  File[".eval.ts File"] --> Data["data<br/>(Input + Expected)"]
+  Data --> Task["task<br/>(LLM Call)"]
+  Task --> Scorers["scorers<br/>(Evaluation)"]
+  Scorers --> Dashboard["Score Dashboard<br/>localhost:3006"]
+  subgraph HIER["You are HERE: evalite()"]
+    Data
+    Task
+    Scorers
+  end
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style File fill:#4A90D9,color:#fff
+  style Data fill:#4A90D9,color:#fff
+  style Task fill:#27AE60,color:#fff
+  style Scorers fill:#27AE60,color:#fff
+  style Dashboard fill:#E67E22,color:#fff
+```
+
+`evalite()` takes three things: **data** (what goes in and what should come out), **task** (the function under test), and **scorers** (how the output is evaluated). Results are stored in a local SQLite database and displayed in the browser dashboard.
+
+## WHY
+
+**Without evals:** You change a prompt and hope the answers get better. You manually read through 5 answers, they look fine, so you deploy. Two weeks later you notice: for a certain question the LLM now hallucinates. No idea since when.
+
+**With evals:** You change a prompt, run `evalite watch`, and immediately see: score went from 0.82 to 0.91. Or: score dropped from 0.82 to 0.65 — regression caught before any user notices. Measure, compare, iterate.
+
+## WALKTHROUGH
+
+### Layer 1: Installation
+
+Install Evalite and the Autoevals library as dev dependencies:
+
+```bash
+pnpm add -D evalite vitest autoevals
+```
+
+Then set up a script in `package.json`:
+
+```json
+{
+  "scripts": {
+    "eval": "evalite",
+    "eval:dev": "evalite watch"
+  }
+}
+```
+
+`evalite watch` starts watch mode — like `vitest --watch`. Whenever a `.eval.ts` file changes, evals are automatically re-run.
+
+### Layer 2: The .eval.ts File Convention
+
+Evalite looks for files ending in `.eval.ts` — analogous to `.test.ts` in Vitest:
+
+```
+src/
+  my-feature.ts          <- Your code
+  my-feature.test.ts     <- Unit tests (Vitest)
+  my-feature.eval.ts     <- Evals (Evalite)
+```
+
+Each `.eval.ts` file contains one or more `evalite()` calls.
+
+### Layer 3: evalite() Basic Structure
+
+The three building blocks — `data`, `task`, `scorers`:
+
+```typescript
+import { evalite } from 'evalite';
+import { Levenshtein } from 'autoevals';
+
+evalite('My First Eval', {
+  // 1. Test data: What goes in, what should come out?
+  data: [
+    { input: 'Hello', expected: 'Hello World!' },
+  ],
+
+  // 2. The function under test — here still without an LLM
+  task: async (input) => {
+    return input + ' World!';
+  },
+
+  // 3. Evaluation: How close is the output to the expected?
+  scorers: [Levenshtein],
+});
+```
+
+**Flow:**
+1. `data` provides test cases (input + expected output)
+2. `task` is executed per test case with the `input`
+3. `scorers` compare the actual output with the `expected` value
+4. Results are stored in SQLite (`node_modules/.evalite`)
+5. Dashboard shows scores at `http://localhost:3006`
+
+### Layer 4: data as an async Function
+
+Instead of a static array, `data` can also be an async function — useful for dynamic loading:
+
+```typescript
+evalite('Capital Cities', {
+  data: async () => [
+    { input: 'What is the capital of France?', expected: 'Paris' },
+    { input: 'What is the capital of Germany?', expected: 'Berlin' },
+    { input: 'What is the capital of Japan?', expected: 'Tokyo' },
+  ],
+  task: async (input) => {
+    // Your LLM call goes here later
+    return input;
+  },
+  scorers: [Levenshtein],
+});
+```
+
+### Layer 5: traceAISDKModel — AI SDK Integration
+
+When you use a real LLM call as your `task`, you wrap the model with `traceAISDKModel`. This lets Evalite capture all LLM calls (tokens, latency, cost) in the dashboard:
+
+```typescript
+import { evalite } from 'evalite';
+import { traceAISDKModel } from 'evalite/ai-sdk';
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { Levenshtein } from 'autoevals';
+
+evalite('Capital Cities', {
+  data: async () => [
+    { input: 'What is the capital of France?', expected: 'Paris' },
+    { input: 'What is the capital of Germany?', expected: 'Berlin' },
+  ],
+  task: async (input) => {
+    const result = await generateText({
+      model: traceAISDKModel(openai('gpt-4o-mini')),  // <- Tracing!
+      system: 'Answer concisely. No periods.',
+      prompt: input,
+    });
+    return result.text;
+  },
+  scorers: [Levenshtein],
+});
+```
+
+`traceAISDKModel` is a wrapper that adds Evalite tracing to the AI SDK model. In the dashboard you'll then see not only the score, but also token usage and latency per test case.
+
+### Layer 6: Result UI
+
+Start the evals with `pnpm eval:dev` and open `http://localhost:3006`:
+
+- **Overview:** All evals with average score
+- **Detail view:** Each test case with input, output, expected, and score
+- **History:** Scores over time — see improvements or regressions
+- **Traces:** With `traceAISDKModel` you see the LLM calls with token usage
+
+## TRY
+
+**Task:** Set up Evalite and write a simple eval with the Levenshtein scorer.
+
+```typescript
+// hello.eval.ts
+
+import { evalite } from 'evalite';
+import { Levenshtein } from 'autoevals';
+
+// TODO 1: Create an evalite() with the name 'Greeting Eval'
+
+// TODO 2: Define data with 3 test cases:
+//   - input: 'Hi'      -> expected: 'Hi! How can I help?'
+//   - input: 'Hello'   -> expected: 'Hello! How can I help?'
+//   - input: 'Hey'     -> expected: 'Hey! How can I help?'
+
+// TODO 3: Implement a task function that takes the input
+//   and appends ' How can I help?' (with an exclamation mark after the input)
+
+// TODO 4: Use Levenshtein as the scorer
+```
+
+**Checklist:**
+- [ ] `evalite` and `Levenshtein` imported
+- [ ] `data` with 3 test cases defined
+- [ ] `task` returns the input with appended text
+- [ ] `Levenshtein` set as scorer
+- [ ] `pnpm eval:dev` shows results in the dashboard
+
+<details>
+<summary>Show solution</summary>
+
+```typescript
+// hello.eval.ts
+
+import { evalite } from 'evalite';
+import { Levenshtein } from 'autoevals';
+
+evalite('Greeting Eval', {
+  data: [
+    { input: 'Hi', expected: 'Hi! How can I help?' },
+    { input: 'Hello', expected: 'Hello! How can I help?' },
+    { input: 'Hey', expected: 'Hey! How can I help?' },
+  ],
+  task: async (input) => {
+    return `${input}! How can I help?`;
+  },
+  scorers: [Levenshtein],
+});
+```
+
+**Explanation:** The Levenshtein scorer measures the similarity between the actual output and the expected output. A score of 1.0 means identical, a score of 0.0 means completely different. In this example, every test case should achieve a score of 1.0, because the `task` function produces exactly the expected output.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Prompt["prompt"] --> GT["generateText()<br/>(Level 1.3)"]
+  System["system"] --> GT
+  GT --> Output["result.text"]
+  Output --> Scorer["Levenshtein<br/>Scorer"]
+  Expected["expected"] --> Scorer
+  Scorer --> Score["Score 0-1"]
+  style Prompt fill:#4A90D9,color:#fff
+  style System fill:#4A90D9,color:#fff
+  style Expected fill:#4A90D9,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Scorer fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+  style Score fill:#E67E22,color:#fff
+```
+
+**Exercise:** Use `generateText` from Level 1.3 as the `task` function in an Evalite eval. Test whether an LLM correctly names capital cities.
+
+1. Create an `.eval.ts` file with 5 capital city questions
+2. Use `generateText` with `traceAISDKModel` as the `task`
+3. System prompt: `'Answer with only the city name. No periods, no extra text.'`
+4. Scorer: `Levenshtein`
+5. Run `pnpm eval:dev` and check the scores in the dashboard
+
+**Food for thought:** Why is `Levenshtein` not the ideal scorer here? What happens if the LLM answers "Paris, France" instead of "Paris"?
+
+## Sources
+
+- [github.com/mattpocock/evalite](https://github.com/mattpocock/evalite) — Evalite Repo + Docs
+- [npmjs.com/package/evalite](https://www.npmjs.com/package/evalite)
+- [Autoevals Library (Braintrust)](https://github.com/braintrustdata/autoevals)
+- [ai-hero-dev Exercise 06.01](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/06-evals/06.01-evalite-basics)

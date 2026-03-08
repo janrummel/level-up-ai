@@ -1,0 +1,232 @@
+---
+title: "Challenge 1.5: Structured output"
+description: "Learn how to get typed JSON objects instead of free text from the LLM using Zod schemas and the Output API."
+sidebar:
+  order: 6
+---
+
+## THINK
+
+How do you get an LLM to return JSON instead of free text — reliably, every time? And how do you ensure the JSON has exactly the fields and types you need?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  subgraph HIER["You are HERE: Output API"]
+    Schema["Zod Schema"] --> OutputObj["Output.object()"]
+    OutputObj --> GT["generateText()"]
+  end
+  GT --> Typed["Typed Object"]
+
+  subgraph Ohne["Without Schema"]
+    Prompt2["Prompt"] --> GT2["generateText()"]
+    GT2 --> Freitext["Unstructured Text"]
+  end
+
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style Schema fill:#4A90D9,color:#fff
+  style OutputObj fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Typed fill:#E67E22,color:#fff
+  style Prompt2 fill:#4A90D9,color:#fff
+  style GT2 fill:#27AE60,color:#fff
+  style Freitext fill:#E74C3C,color:#fff
+```
+
+Top: With a Zod schema and `Output.object` you get a typed object. Bottom: Without a schema you get free text that you'd have to parse manually.
+
+## WHY
+
+**Without structured output:** You ask the LLM for JSON, sometimes get valid JSON, sometimes free text wrapped in a Markdown code block. `JSON.parse` breaks, you build regex hacks, the extraction is fragile. Any change to the prompt can break the format.
+
+**With the Output API:** The AI SDK guarantees you a valid, typed object. No parsing, no regex, no `any`. You define a Zod schema, and `result.output` has exactly the types you defined.
+
+## WALKTHROUGH
+
+### Layer 1: Zod schema defines the expectation
+
+A Zod schema describes the structure you expect from the LLM. It defines fields, types and optional descriptions:
+
+```typescript
+import { z } from 'zod';
+
+const recipeSchema = z.object({
+  name: z.string(),
+  ingredients: z.array(z.string()),
+  steps: z.array(z.string()),
+  prepTime: z.number().describe('Zubereitungszeit in Minuten'),  // ← describe() hilft dem LLM
+});
+```
+
+`z.describe()` is especially useful: It gives the LLM a hint about what a field means. Without a description the LLM has to infer the purpose from the field name — with a description it becomes more precise.
+
+### Layer 2: Output.object — connects schema with generateText
+
+`Output.object` takes your Zod schema and tells the AI SDK: "I expect an object with this structure." The result is in `result.output`:
+
+```typescript
+import { Output, generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const { output } = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  output: Output.object({ schema: recipeSchema }),  // ← Schema verbinden
+  prompt: 'Erstelle ein Rezept fuer Pasta Carbonara.',
+});
+
+console.log(output.name);         // ← string — typisiert!
+console.log(output.ingredients);  // ← string[] — typisiert!
+console.log(output.prepTime);    // ← number — typisiert!
+```
+
+No `JSON.parse`, no `as any`, no manual casting. TypeScript knows the types because they're derived from the Zod schema.
+
+### Layer 3: Output.array — list of objects
+
+When you need multiple objects of the same type, use `Output.array`:
+
+```typescript
+const { output } = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  output: Output.array({
+    element: z.object({
+      city: z.string(),
+      country: z.string(),
+      population: z.number().describe('Einwohnerzahl'),
+    }),
+  }),
+  prompt: 'Liste 5 Grossstaedte in Europa.',
+});
+
+// output ist ein typisiertes Array
+for (const city of output) {
+  console.log(`${city.city}, ${city.country}: ${city.population}`);
+}
+```
+
+`Output.array` enforces an array of objects. Each element in the array has the structure of the `element` schema.
+
+### Layer 4: Output.choice — choosing from options
+
+For classification or simple decisions there's `Output.choice`:
+
+```typescript
+const { output } = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  output: Output.choice({
+    options: ['positive', 'negative', 'neutral'],  // ← Erlaubte Werte
+  }),
+  prompt: 'Sentiment: "Das Produkt ist grossartig!"',
+});
+
+console.log(output);  // → 'positive'
+```
+
+`Output.choice` is ideal for routing decisions: The LLM picks an option, and you react based on the choice. No free text parsing, no unreliable `includes()` checks.
+
+> **Tip:** `z.describe()` works at every level — fields, nested objects, arrays. The better your descriptions, the more precise the result. Describe not just WHAT a field is, but also in what FORMAT or RANGE you expect the value.
+
+## TRY
+
+**Task:** Extract structured data from a product review. Define a Zod schema and use `Output.object`.
+
+```typescript
+import { z } from 'zod';
+import { Output, generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO 1: Definiere ein Zod Schema fuer eine Produktbewertung
+// const reviewSchema = z.object({
+//   name: ???,                    // Produktname
+//   rating: ???,                  // Bewertung 1-5
+//   pros: ???,                    // Vorteile (Array)
+//   cons: ???,                    // Nachteile (Array)
+//   summary: ???,                 // Zusammenfassung
+// });
+
+// TODO 2: Nutze Output.object mit dem Schema
+// const { output } = await generateText({
+//   model: ???,
+//   output: ???,
+//   prompt: 'Bewerte das iPhone 16 Pro. Sei ehrlich und nenne Vor- und Nachteile.',
+// });
+
+// TODO 3: Logge die typisierten Ergebnisse
+// console.log('Produkt:', output.name);
+// console.log('Bewertung:', output.rating);
+// console.log('Vorteile:', output.pros);
+// console.log('Nachteile:', output.cons);
+// console.log('Fazit:', output.summary);
+```
+
+**Checklist:**
+- [ ] Zod schema defined with at least 4 fields
+- [ ] `Output.object` used with the schema
+- [ ] Result is typed (no `any`)
+- [ ] `z.describe()` used for at least one field
+
+<details>
+<summary>Show solution</summary>
+
+```typescript
+import { z } from 'zod';
+import { Output, generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const reviewSchema = z.object({
+  name: z.string().describe('Name des Produkts'),
+  rating: z.number().describe('Bewertung von 1 (schlecht) bis 5 (ausgezeichnet)'),
+  pros: z.array(z.string()).describe('Liste der Vorteile'),
+  cons: z.array(z.string()).describe('Liste der Nachteile'),
+  summary: z.string().describe('Zusammenfassung der Bewertung in 1-2 Saetzen'),
+});
+
+const { output } = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  output: Output.object({ schema: reviewSchema }),
+  prompt: 'Bewerte das iPhone 16 Pro. Sei ehrlich und nenne Vor- und Nachteile.',
+});
+
+console.log('Produkt:', output.name);
+console.log('Bewertung:', output.rating, '/ 5');
+console.log('Vorteile:', output.pros);
+console.log('Nachteile:', output.cons);
+console.log('Fazit:', output.summary);
+```
+
+**Explanation:** The Zod schema defines exactly which fields and types you expect. `Output.object` ensures the LLM generates a valid object that matches this schema. `z.describe()` gives the LLM additional context — especially for `rating` it helps to communicate the expected value range.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Text["User Text"] --> Choice["Output.choice()<br/>(Category)"]
+  Choice --> Cat["Category"]
+  Cat --> Prompt2["Prompt + Category"]
+  Prompt2 --> Obj["Output.object()<br/>(Details)"]
+  Obj --> Result["Structured<br/>Result"]
+  style Text fill:#4A90D9,color:#fff
+  style Choice fill:#27AE60,color:#fff
+  style Cat fill:#E67E22,color:#fff
+  style Prompt2 fill:#4A90D9,color:#fff
+  style Obj fill:#27AE60,color:#fff
+  style Result fill:#E67E22,color:#fff
+```
+
+**Exercise:** Use `Output.choice` to first determine the category of a text (e.g. "bug-report", "feature-request", "question"), then `Output.object` to extract structured details. Two `generateText` calls in sequence — the output of the first determines the prompt of the second.
+
+1. First call: `Output.choice` with categories like `['bug-report', 'feature-request', 'question']`
+2. Second call: `Output.object` with a schema that fits the detected category
+3. The prompt of the second call contains the category from the first call
+
+**Optional Stretch Goal:** Use the `selectModel` function from Challenge 1.2 to choose a cheap flash model for the classification call and a pro model for the detail extraction.
+
+## Sources
+
+- [Vercel AI SDK: Generating Structured Data](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data)
+- [Vercel AI SDK: Output API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/output)
+- [Zod Documentation](https://zod.dev)
+- [ai-hero-dev Exercises 01.11-01.12](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/01-ai-sdk-basics)

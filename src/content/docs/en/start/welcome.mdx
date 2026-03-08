@@ -11,33 +11,45 @@ This project is an open, gamified learning path for anyone who wants to not just
 
 ## Your Progress
 
-| Level | Topic | Status |
-|-------|-------|--------|
-| 1 | AI SDK Basics | Not started |
-| 2 | LLM Fundamentals | Not started |
-| 3 | Agents & MCP | Not started |
-| 4 | Persistence | Not started |
-| 5 | Context Engineering | Not started |
-| 6 | Evals | Not started |
-| 7 | Streaming | Not started |
-| 8 | Workflows | Not started |
-| 9 | Advanced Patterns | Not started |
+| Level | Topic | Challenges | Core Concept |
+|-------|-------|-----------|--------------|
+| 1 | AI SDK Basics | 6 | generateText, streamText, Output API |
+| 2 | LLM Fundamentals | 4 | Tokens, Context Window, Caching |
+| 3 | Agents & MCP | 5 | Tools, Agent Loop, MCP Protocol |
+| 4 | Persistence | 4 | Saving and loading chat history |
+| 5 | Context Engineering | 5 | Prompt Templates, RAG, Chain of Thought |
+| 6 | Evals | 5 | Evalite, LLM-as-Judge, Langfuse |
+| 7 | Streaming | 4 | Custom Data Parts, Transforms, Errors |
+| 8 | Workflows | 4 | Multi-Step Pipelines, Custom Loops |
+| 9 | Advanced Patterns | 4 | Guardrails, Model Router, Production |
 
 ## How It Works
 
-Each level consists of:
+Each level consists of **Briefing → Challenges → Boss Fight → Level Complete**.
 
-- **Briefing** — What you'll learn and why it matters
-- **Theory** — The knowledge, explained concisely
-- **Challenge** — Hands-on exercise with clear objectives
-- **Solution** — Reference solution for comparison
-- **Boss Fight** — An advanced task that combines everything
+Each challenge follows 6 steps:
+
+1. **THINK** — A question activates your prior knowledge
+2. **OVERVIEW** — A diagram shows the big picture
+3. **WHY** — The problem this concept solves
+4. **WALKTHROUGH** — Explained layer by layer, with annotated code
+5. **TRY** — Guided exercise with starter code and checklist
+6. **COMBINE** — Connect the new concept with previous challenges
+
+The **Boss Fight** at the end of each level combines all building blocks — without a pre-made solution.
 
 ## Prerequisites
 
 - Node.js 18+ and basic TypeScript knowledge
 - An API key (Anthropic, OpenAI, or Google)
+- Experience with ChatGPT or similar AI tools
 - Curiosity and willingness to break things
+
+## Start Here
+
+Ready? Then head to [Level 1: AI SDK Basics](/en/level-1-ai-sdk-basics/01-briefing/).
+
+Or check out the [Roadmap](/en/start/roadmap/) first to find the optimal learning path for your level.
 
 ## Sources
 
@@ -45,4 +57,6 @@ This project builds on freely available knowledge:
 - [Vercel AI SDK Docs](https://ai-sdk.dev/docs)
 - [Anthropic Docs](https://docs.anthropic.com)
 - [Model Context Protocol](https://modelcontextprotocol.io)
+- [Evalite (Eval Framework)](https://github.com/mattpocock/evalite)
+- [Langfuse (Observability)](https://langfuse.com)
 - [ai-hero-dev Exercises (Open Source)](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course)

@@ -7,36 +7,78 @@ description: The learning path at a glance — which level builds on which?
 
 ## The Skill Tree
 
+```mermaid
+graph TD
+  L1[Level 1: AI SDK Basics]
+  L2[Level 2: LLM Fundamentals]
+  L3[Level 3: Agents & MCP]
+  L4[Level 4: Persistence]
+  L5[Level 5: Context Engineering]
+  L6[Level 6: Evals]
+  L7[Level 7: Streaming]
+  L8[Level 8: Workflows]
+  L9[Level 9: Advanced Patterns]
+
+  L1 --> L2
+  L1 --> L4
+  L2 --> L3
+  L2 --> L5
+  L5 --> L6
+  L1 --> L7
+  L3 --> L8
+  L7 --> L8
+  L8 --> L9
+  L6 --> L9
+
+  style L1 fill:#4A90D9,color:#fff
+  style L2 fill:#4A90D9,color:#fff
+  style L3 fill:#27AE60,color:#fff
+  style L4 fill:#27AE60,color:#fff
+  style L5 fill:#27AE60,color:#fff
+  style L6 fill:#E67E22,color:#fff
+  style L7 fill:#E67E22,color:#fff
+  style L8 fill:#E67E22,color:#fff
+  style L9 fill:#E74C3C,color:#fff
 ```
-Level 1: AI SDK Basics
-    |
-Level 2: LLM Fundamentals
-    |
-    +---> Level 3: Agents & MCP
-    |         |
-    |    Level 4: Persistence
-    |         |
-    +---> Level 5: Context Engineering
-              |
-         Level 6: Evals
-              |
-    +----+----+----+
-    |              |
-Level 7:      Level 8:
-Streaming     Workflows
-    |              |
-    +------+-------+
-           |
-      Level 9:
-   Advanced Patterns
-```
 
-## Recommended Order
+**Legend:** Blue = Fundamentals | Green = Intermediate | Orange = Advanced | Red = Expert
 
-**Beginners:** Level 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+## Recommended Learning Paths
 
-**Intermediate (AI SDK experience):** Level 3 → 5 → 6 → 8 → 9
+### Beginner (recommended)
 
-**Focus Agents & MCP:** Level 3 → 4 → 8 → 9
+Level 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
-**Focus Quality & Production:** Level 5 → 6 → 7 → 9
+Follow the levels in order. Each level builds on the previous ones.
+
+### Advanced (already have AI SDK experience)
+
+Level 3 → 5 → 6 → 8 → 9
+
+Skip the fundamentals and jump straight into Agents or Context Engineering.
+
+### Focus: Agents & MCP
+
+Level 1 → 3 → 4 → 8 → 9
+
+Go directly to Agents, Tools, and Workflows — you'll need Persistence for robust Agents.
+
+### Focus: Quality & Production
+
+Level 1 → 5 → 6 → 7 → 9
+
+Context Engineering, Evals, and Streaming — everything that makes production-ready AI.
+
+## Level Details
+
+| Level | Challenges | Core Diagram | Depends on |
+|-------|-----------|--------------|------------|
+| 1 — AI SDK Basics | 6 | Flow: User → SDK → Provider → LLM | — |
+| 2 — LLM Fundamentals | 4 | Box: Tokens, Context Window, Caching | Level 1 |
+| 3 — Agents & MCP | 5 | Sequence: LLM → Tool → LLM Loop | Level 1, 2 |
+| 4 — Persistence | 4 | Flow: Chat → API → DB → Reload | Level 1 |
+| 5 — Context Engineering | 5 | Box: Prompt Template Layers | Level 1, 2 |
+| 6 — Evals | 5 | Flow: Task → Scorer → Score → Iterate | Level 1, 5 |
+| 7 — Streaming | 4 | Sequence: Stream Events Timeline | Level 1 |
+| 8 — Workflows | 4 | Flow: Multi-Step Agent Pipeline | Level 3, 7 |
+| 9 — Advanced Patterns | 4 | Decision Tree: Model Router | Level 6, 8 |

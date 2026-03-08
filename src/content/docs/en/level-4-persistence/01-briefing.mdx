@@ -1,0 +1,89 @@
+---
+title: "Level 4: Persistence — Briefing"
+description: "Save, load, and resume chats — without persistence your AI system loses its memory on every reload."
+sidebar:
+  order: 1
+---
+
+## TL;DR
+
+> Save, load, and resume chats — without persistence your AI system loses its memory on every reload. In this level you'll learn how to capture results with `onFinish`, manage chat sessions via IDs, persist messages in a database, and validate incoming messages.
+
+## Skill Tree
+
+```mermaid
+graph LR
+  subgraph "Unlocked"
+    L1["Level 1: AI SDK Basics"]
+    L2["Level 2: LLM Fundamentals"]
+    L3["Level 3: Agents & MCP"]
+  end
+  subgraph HIER["Current Level"]
+    L4["Level 4: Persistence"]
+  end
+  subgraph "Locked"
+    L5["Level 5: Context Engineering"]
+    L6["Level 6: Evals"]
+    L7["Level 7: Streaming"]
+    L8["Level 8: Workflows"]
+    L9["Level 9: Advanced Patterns"]
+  end
+  L1 --> L2
+  L2 --> L3
+  L3 --> L4
+  L4 -.-> L5
+  L5 -.-> L6
+  L6 -.-> L7
+  L7 -.-> L8
+  L8 -.-> L9
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style L4 fill:#E67E22,color:#fff
+  style L1 fill:#27AE60,color:#fff
+  style L2 fill:#27AE60,color:#fff
+  style L3 fill:#27AE60,color:#fff
+  style L5 fill:#95a5a6,color:#fff
+  style L6 fill:#95a5a6,color:#fff
+  style L7 fill:#95a5a6,color:#fff
+  style L8 fill:#95a5a6,color:#fff
+  style L9 fill:#95a5a6,color:#fff
+```
+
+## What You'll Learn
+
+- **On Finish Callback** — Automatically capture and save results of an LLM call before the response is returned
+- **Chat ID** — Identify sessions so your backend knows which chat a message belongs to
+- **Persistence** — Save messages to a database and reload them on page refresh
+- **Message Validation** — Validate incoming messages against a schema before they are saved or sent to the LLM
+
+## Why This Matters
+
+Every chatbot project starts in memory — and that feels fine. Until someone reloads the page and the entire conversation history is gone. Or until you have no overview of which chats are running and what they cost. Or until malformed messages corrupt your database.
+
+The concrete problem: Without persistence your chat is a goldfish — no memory beyond the current request. Users lose their history, you lose insights into token usage, and your system has no foundation for features like chat history, analytics, or debugging.
+
+## Prerequisites
+
+- **Level 1: AI SDK Basics** — `generateText`, `streamText`, the Result object, and callbacks must be solid
+- **TypeScript fundamentals** — async/await, interfaces, Map/Object
+- **Basic understanding of APIs** — Request/Response, JSON body
+
+> **Skip hint:** Already building chat systems with database connections, chat IDs, and message validation? Jump straight to the [Boss Fight](/en/level-4-persistence/06-boss-fight/) and test whether you've mastered the complete persistence cycle.
+
+## Challenges
+
+| # | Challenge | Concept |
+|---|-----------|---------|
+| 4.1 | [On Finish](/en/level-4-persistence/02-on-finish/) | `onFinish` callback, automatic saving after completion |
+| 4.2 | [Chat ID](/en/level-4-persistence/03-chat-id/) | Session management, chat assignment via ID |
+| 4.3 | [Persistence](/en/level-4-persistence/04-persistence/) | Save, load, and resume messages |
+| 4.4 | [Message Validation](/en/level-4-persistence/05-message-validation/) | Zod schema, validation before saving |
+
+## Boss Fight
+
+Build a **persistent chat with reload**: A system that generates a chat ID, saves messages, loads the history after a simulated reload, and seamlessly resumes the conversation. You'll combine all four building blocks from this level in one project.
+
+## Sources for This Level
+
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [ai-hero-dev Exercises 04.01-04.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)

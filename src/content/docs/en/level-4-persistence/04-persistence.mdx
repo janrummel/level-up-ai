@@ -1,0 +1,325 @@
+---
+title: "Challenge 4.3: Persistence"
+description: "Save messages to a database and reload them — so your chat keeps its memory."
+sidebar:
+  order: 4
+---
+
+## THINK
+
+What happens to your chat history when you reload the page?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  User["User Message"] --> API["API Handler"]
+  API --> GT["generateText()"]
+  GT --> OF["onFinish"]
+  subgraph HIER["You are HERE: Persistence"]
+    OF --> Save["DB: Save"]
+    Load["DB: Load"] --> API
+  end
+  Save --> DB[("Database")]
+  DB --> Load
+  GT --> Resp["Response"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
+  style User fill:#4A90D9,color:#fff
+  style API fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style OF fill:#27AE60,color:#fff
+  style Save fill:#E67E22,color:#fff
+  style Load fill:#E67E22,color:#fff
+  style DB fill:#E67E22,color:#fff
+  style Resp fill:#E67E22,color:#fff
+```
+
+Persistence means: Messages are saved after every LLM call and loaded again on the next request (or after a reload). The chat "remembers" everything that was said before.
+
+## WHY
+
+**Without Persistence:** The chat history lives only in memory. On reload, server restart, or deployment everything is gone. The user has to start over. Multi-turn conversations only work within a single session.
+
+**With Persistence:** The history survives reloads, server restarts, and deployments. The user can resume a chat at any time. You have a foundation for chat history, search, and analytics.
+
+## WALKTHROUGH
+
+### Layer 1: The Persistence Cycle
+
+The complete cycle consists of three steps:
+
+```mermaid
+graph TD
+  A["1. Load: Load messages from DB"] --> B["2. Generate: Call LLM with history"]
+  B --> C["3. Save: Save new messages to DB"]
+  C --> A
+  style A fill:#4A90D9,color:#fff
+  style B fill:#27AE60,color:#fff
+  style C fill:#E67E22,color:#fff
+```
+
+1. **Load:** Before the LLM call, load the existing messages from the database
+2. **Generate:** Call `generateText` with the loaded messages + the new user message
+3. **Save:** In the `onFinish` callback, save the new messages (user + assistant)
+
+### Layer 2: Saving Messages (Save)
+
+After every LLM call you save the new messages to the database:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// Simulated database (Map as in-memory DB)
+const db = new Map<string, Array<{ role: string; content: string }>>();
+
+async function saveMessages(
+  chatId: string,
+  messages: Array<{ role: string; content: string }>,
+) {
+  db.set(chatId, messages);                                      // ← Save all messages
+  console.log(`Saved ${messages.length} messages for chat ${chatId.substring(0, 8)}...`);
+}
+
+const chatId = crypto.randomUUID();
+const userMessage = 'Was ist TypeScript?';
+
+// User message + LLM call
+const messages: Array<{ role: string; content: string }> = [
+  { role: 'user', content: userMessage },
+];
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  messages,
+  onFinish({ text }) {
+    messages.push({ role: 'assistant', content: text });         // ← Append assistant response
+    saveMessages(chatId, messages);                              // ← Save to DB
+  },
+});
+```
+
+### Layer 3: Loading Messages (Load)
+
+On the next request (or after a reload) the backend loads the existing history:
+
+```typescript
+async function loadMessages(
+  chatId: string,
+): Promise<Array<{ role: string; content: string }>> {
+  return db.get(chatId) || [];                                   // ← Empty array if no chat
+}
+
+// After "reload": Load history
+const history = await loadMessages(chatId);
+console.log(`Loaded ${history.length} messages`);
+// → "Loaded 2 messages" (user + assistant from before)
+```
+
+### Layer 4: Resuming a Chat
+
+Now everything comes together — load, append new message, generate, save:
+
+```typescript
+async function continueChat(chatId: string, userMessage: string) {
+  // 1. Load: Load existing history
+  const history = await loadMessages(chatId);
+
+  // 2. Append new user message
+  const messages = [...history, { role: 'user' as const, content: userMessage }];
+
+  // 3. Generate: Call LLM with complete history
+  const result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    messages,
+    onFinish({ text }) {
+      // 4. Save: Save complete history
+      messages.push({ role: 'assistant', content: text });
+      saveMessages(chatId, messages);
+    },
+  });
+
+  return result.text;
+}
+
+// First call
+await continueChat(chatId, 'Was ist TypeScript?');
+// DB: [user: "Was ist TypeScript?", assistant: "TypeScript ist..."]
+
+// Second call — chat "remembers" the first one
+await continueChat(chatId, 'Und worin unterscheidet es sich von JavaScript?');
+// DB: [user: "Was ist TypeScript?", assistant: "TypeScript ist...",
+//      user: "Und worin unterscheidet es sich?", assistant: "Der Hauptunterschied..."]
+```
+
+The LLM receives the entire history with every call and can reference earlier messages. Without persistence it would answer the second question without any context.
+
+### Layer 5: Normalized DB Schema (Outlook)
+
+In production you use a real database with a normalized schema instead of a `Map`:
+
+```typescript
+// Conceptual table structure (e.g. SQLite, PostgreSQL)
+
+// Table: chats
+interface Chat {
+  id: string;           // UUID
+  createdAt: Date;
+  title: string;        // First user message or generated title
+}
+
+// Table: messages
+interface Message {
+  id: string;           // UUID
+  chatId: string;       // Foreign Key → chats.id
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  tokens: number;       // Token usage for this message
+  createdAt: Date;
+}
+```
+
+Two separate tables: `chats` for metadata, `messages` for content. Linked via `chatId`. This enables efficient queries like "all chats by the user" or "token usage per chat".
+
+## TRY
+
+**Task:** Simulate the complete persistence cycle with a `Map` as an in-memory database: save messages, load them, and resume a chat.
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// In-memory "database"
+const db = new Map<string, Array<{ role: string; content: string }>>();
+
+// TODO 1: Implement saveMessages(chatId, messages) — saves to the Map
+// TODO 2: Implement loadMessages(chatId) — reads from the Map (empty array as fallback)
+// TODO 3: Implement continueChat(chatId, userMessage):
+//   a) Load history with loadMessages
+//   b) Append new user message
+//   c) Call generateText with messages
+//   d) In onFinish: Append assistant response + call saveMessages
+//   e) Return result.text
+
+// TODO 4: Test the cycle:
+//   a) Generate a new chatId
+//   b) First message: "Was ist TypeScript?"
+//   c) Second message: "Nenne mir 3 Vorteile."
+//   d) Log the stored history — it should have 4 messages
+```
+
+**Checklist:**
+- [ ] `saveMessages` saves messages to the Map
+- [ ] `loadMessages` reads messages (with empty-array fallback)
+- [ ] `continueChat` loads, generates, and saves
+- [ ] After 2 calls: 4 messages in history (2x user + 2x assistant)
+- [ ] The LLM references the first question in the second answer
+
+<details>
+<summary>Show solution</summary>
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const db = new Map<string, Array<{ role: string; content: string }>>();
+
+function saveMessages(
+  chatId: string,
+  messages: Array<{ role: string; content: string }>,
+) {
+  db.set(chatId, [...messages]); // Save a copy
+  console.log(
+    `Saved: Chat ${chatId.substring(0, 8)}... → ${messages.length} messages`,
+  );
+}
+
+function loadMessages(
+  chatId: string,
+): Array<{ role: string; content: string }> {
+  return db.get(chatId) || [];
+}
+
+async function continueChat(chatId: string, userMessage: string) {
+  const history = loadMessages(chatId);
+  const messages: Array<{ role: string; content: string }> = [
+    ...history,
+    { role: 'user', content: userMessage },
+  ];
+
+  const result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    messages,
+    onFinish({ text }) {
+      messages.push({ role: 'assistant', content: text });
+      saveMessages(chatId, messages);
+    },
+  });
+
+  return result.text;
+}
+
+// Test
+const chatId = crypto.randomUUID();
+
+console.log('--- Erste Nachricht ---');
+const answer1 = await continueChat(chatId, 'Was ist TypeScript?');
+console.log(answer1.substring(0, 100) + '...\n');
+
+console.log('--- Zweite Nachricht (Chat erinnert sich) ---');
+const answer2 = await continueChat(chatId, 'Nenne mir 3 Vorteile.');
+console.log(answer2.substring(0, 200) + '...\n');
+
+console.log('--- Gespeicherter Verlauf ---');
+const stored = loadMessages(chatId);
+console.log(`Messages: ${stored.length}`);
+stored.forEach((m, i) =>
+  console.log(`  ${i + 1}. [${m.role}] ${m.content.substring(0, 60)}...`),
+);
+```
+
+**Explanation:** `continueChat` implements the complete persistence cycle: Load → Generate → Save. The LLM receives the entire history with every call and can reference earlier messages. The `Map` simulates a database — in production this would be a SQL INSERT / SELECT.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  FE["Frontend"] --> ID["chatId"]
+  ID --> Load["loadMessages()"]
+  Load --> DB[("Database")]
+  DB --> Msgs["History"]
+  Msgs --> GT["generateText()"]
+  NewMsg["New Message"] --> GT
+  GT --> OF["onFinish"]
+  OF --> Save["saveMessages()"]
+  Save --> DB
+  style FE fill:#4A90D9,color:#fff
+  style ID fill:#4A90D9,color:#fff
+  style NewMsg fill:#4A90D9,color:#fff
+  style Load fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style OF fill:#27AE60,color:#fff
+  style Save fill:#E67E22,color:#fff
+  style DB fill:#E67E22,color:#fff
+  style Msgs fill:#27AE60,color:#fff
+```
+
+**Exercise:** Connect Persistence with Chat ID — load a chat by ID, add new messages, and save everything.
+
+1. Create a `ChatDB` class with `save`, `load`, and `list` methods
+2. `save(chatId, messages)` saves the complete history
+3. `load(chatId)` returns the history (empty array as fallback)
+4. `list()` returns all chat IDs with message count
+5. Build a `chat(db, chatId, userMessage)` function that executes the cycle
+6. Create 2 different chats, run 2 messages each
+7. Use `list()` to display all chats with message count
+
+**Optional Stretch Goal:** Add a `delete(chatId)` method and a `getTokenCount(chatId)` method that calculates the total token usage of a chat (requires: storing token counts in the messages).
+
+## Sources
+
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [ai-hero-dev Exercise 04.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)

@@ -1,0 +1,149 @@
+---
+title: "Boss Fight: Token Budget Calculator"
+description: "Combine all four building blocks from Level 2 — Tokens, Usage Tracking, Context Window, and Prompt Caching — into a Token Budget Calculator."
+sidebar:
+  order: 6
+---
+
+## The scenario
+
+You're building a **Token Budget Calculator** — a tool that checks before every LLM call whether the request fits within budget. The calculator combines all four building blocks from Level 2: token counting, cost calculation, Context Window check, and cache tracking.
+
+Your tool should feel like this:
+
+```
+[Budget Check] System: ~580 Tokens | User: ~15 Tokens | Output reserve: 4096
+[Budget Check] Total: ~4691 / 200000 Tokens (2.3%)
+[Budget Check] Status: OK
+
+[Cost] Call 1: $0.001245 (Cache: MISS)
+[Cost] Call 2: $0.000387 (Cache: HIT — 69% cheaper)
+[Cost] Call 3: $0.000391 (Cache: HIT — 69% cheaper)
+
+[Session] 3 Calls | 892 Tokens | $0.002023 | Cache hit rate: 66.7%
+```
+
+This project connects all four building blocks:
+
+```mermaid
+graph LR
+  Input["System + User<br/>Prompt"] --> Count["Token<br/>Counting<br/>(2.1)"]
+  Count --> Check["Context Window<br/>Check<br/>(2.3)"]
+  Check -->|Fits| GT["generateText()"]
+  Check -->|Too large| Truncate["Truncation"]
+  Truncate --> GT
+  GT --> Usage["Usage<br/>Tracking<br/>(2.2)"]
+  Usage --> Cache["Cache<br/>Tracking<br/>(2.4)"]
+  Cache --> Report["Session<br/>Report"]
+  style Input fill:#4A90D9,color:#fff
+  style Count fill:#27AE60,color:#fff
+  style Check fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style Truncate fill:#E67E22,color:#fff
+  style Usage fill:#E67E22,color:#fff
+  style Cache fill:#E67E22,color:#fff
+  style Report fill:#E67E22,color:#fff
+```
+
+## Requirements
+
+1. **Token Counting** (Challenge 2.1) — Implement `estimateTokens(text)` that calculates the approximate token count of a text. Use the rule of thumb (1 token ≈ 3.5 characters).
+
+2. **Context Window Check** (Challenge 2.3) — Before each call: Calculate System Prompt + User Prompt + output reserve. Check against the model's Context Window limit. If >90%: warning. If >100%: abort with error message.
+
+3. **Cost Calculation** (Challenge 2.2) — After each call: Read `result.usage` and calculate costs based on the model pricing table. Track input and output costs separately.
+
+4. **Cache Tracking** (Challenge 2.4) — Track across multiple calls whether the System Prompt is being cached. Calculate the cache hit rate and the theoretical savings compared to "no caching."
+
+5. **Session Report** — After all calls: Show a summary with total number of calls, token usage, costs, and cache hit rate.
+
+## Starter code
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// TODO: Define ModelPricing interface and PRICING table
+
+// TODO: Implement estimateTokens(text: string): number
+
+// TODO: Implement checkContextWindow(systemPrompt, userPrompt, modelContextWindow, outputReserve)
+//   - Calculate estimated tokens for system + user + reserve
+//   - Return: { totalEstimate, utilization, status: 'ok' | 'warning' | 'error' }
+
+// TODO: Implement calculateCost(usage, modelId)
+//   - Calculate input and output costs separately
+//   - Return: { inputCost, outputCost, totalCost }
+
+// TODO: Define session tracking variables
+// let session = { calls: 0, totalTokens: 0, totalCost: 0, cacheHits: 0 };
+
+// TODO: Implement budgetedGenerate(systemPrompt, userPrompt, modelId)
+//   - 1. Context Window check
+//   - 2. generateText call
+//   - 3. Calculate costs
+//   - 4. Track cache status
+//   - 5. Update session variables
+//   - 6. Return: result + cost + cacheStatus
+
+// TODO: Define a long System Prompt (>1024 tokens)
+
+// TODO: Execute 3+ calls with the same System Prompt
+
+// TODO: Display the Session Report
+```
+
+## Evaluation criteria
+
+Your Boss Fight is passed when:
+
+- [ ] `estimateTokens` calculates the approximate token count of a text
+- [ ] Before each call, it checks whether the input fits into the Context Window
+- [ ] A warning is shown at >90% Context Window utilization
+- [ ] Costs are calculated after each call based on `result.usage`
+- [ ] Input and output costs are shown separately
+- [ ] Cache hit/miss is logged per call
+- [ ] The cache hit rate is calculated across the session
+- [ ] A final session report shows: calls, tokens, costs, cache hit rate
+
+## Hints
+
+<details>
+<summary>Hint 1: Improving token estimation</summary>
+
+The simplest approach is `Math.ceil(text.length / 3.5)`. For better accuracy you can use different factors for different text types: code has more special characters (their own tokens), German text requires more tokens than English. A weighted estimate could count words and assume 1.3 tokens per word.
+
+</details>
+
+<details>
+<summary>Hint 2: Cache detection</summary>
+
+Anthropic supports automatic Prompt Caching. The cache status can be detected most easily indirectly: if the second call with an identical System Prompt has lower effective costs, the cache was hit. Alternatively, you can simply track: first call = cache miss (write), subsequent calls with identical prefix = cache hit (read).
+
+</details>
+
+<details>
+<summary>Hint 3: Session tracking structure</summary>
+
+A simple object is sufficient for session tracking:
+
+```typescript
+interface SessionStats {
+  calls: number;
+  totalTokens: number;
+  totalCost: number;
+  cacheHits: number;
+  cacheMisses: number;
+}
+```
+
+Update it in the `onFinish` callback or after each `generateText` call. The cache hit rate is `cacheHits / (cacheHits + cacheMisses) * 100`.
+
+</details>
+
+## Sources
+
+- [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Anthropic: Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting)
+- [Anthropic: Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
+- [Anthropic: Pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)

@@ -1,0 +1,94 @@
+---
+title: "Level 3: Agents & MCP — Briefing"
+description: "Agents use tools to solve tasks autonomously. MCP standardizes the connection to tool servers. In this level you'll learn both."
+sidebar:
+  order: 1
+---
+
+## TL;DR
+
+> Agents use tools to solve tasks autonomously. MCP standardizes the connection to tool servers. In this level you'll learn both — from the first tool call through multi-step agents to the standardized protocol for external services.
+
+## Skill Tree
+
+```mermaid
+graph LR
+  subgraph "Unlocked"
+    L1["Level 1: AI SDK Basics"]
+    L2["Level 2: LLM Fundamentals"]
+  end
+  subgraph HIER["Current Level"]
+    L3["Level 3: Agents & MCP"]
+  end
+  subgraph "Locked"
+    L4["Level 4: Persistence"]
+    L5["Level 5: Context Engineering"]
+    L6["Level 6: Evals"]
+    L7["Level 7: Streaming"]
+    L8["Level 8: Workflows"]
+    L9["Level 9: Advanced Patterns"]
+  end
+  L1 --> L2
+  L2 --> L3
+  L3 -.-> L4
+  L4 -.-> L5
+  L5 -.-> L6
+  L6 -.-> L7
+  L7 -.-> L8
+  L8 -.-> L9
+  style L1 fill:#27AE60,color:#fff
+  style L2 fill:#27AE60,color:#fff
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style L3 fill:#E67E22,color:#fff
+  style L4 fill:#95a5a6,color:#fff
+  style L5 fill:#95a5a6,color:#fff
+  style L6 fill:#95a5a6,color:#fff
+  style L7 fill:#95a5a6,color:#fff
+  style L8 fill:#95a5a6,color:#fff
+  style L9 fill:#95a5a6,color:#fff
+```
+
+## What you'll learn
+
+- **Tool Calling** — How an LLM calls functions to perform actions instead of just generating text
+- **Tools in the Frontend** — How to make tool calls visible in the UI with message parts and loading states
+- **Tool Loop Agent** — Multi-step agents that autonomously use multiple tools in sequence
+- **MCP (Model Context Protocol)** — A standardized protocol for connecting to external tool servers
+- **Tool Approval** — Human-in-the-loop for critical operations, so agents don't act without oversight
+
+## Why this matters
+
+Without tools, an LLM can only talk. It has no knowledge of current data, can't read files, can't call APIs, can't compute anything. Tools turn a chatbot into an agent that gets things done.
+
+The concrete problem: You want your LLM to perform real tasks — check the weather, fetch data from a database, run calculations. For that it needs tools. And if you want to connect many different external services, you need a protocol for that — MCP.
+
+## Prerequisites
+
+- **Level 1 completed** — `generateText`, `streamText`, system prompts, Zod schemas
+- **Zod fundamentals** — Schema definition, `.describe()` for parameters
+- **async/await** — Tools are asynchronous functions
+
+> **Skip hint:** You already know `tool()`, `stopWhen: stepCountIs()` and `createMCPClient`? Jump straight to the [Boss Fight](/en/level-3-agents/07-boss-fight/) and build a research agent with MCP and approval flow.
+
+## Challenges
+
+| # | Challenge | Concept |
+|---|-----------|---------|
+| 3.1 | [Tool Calling](/en/level-3-agents/02-tool-calling/) | `tool()`, Zod inputSchema, execute, integration with generateText |
+| 3.2 | [Tools in the Frontend](/en/level-3-agents/03-tools-in-frontend/) | Message parts, tool-call/tool-result events, UI rendering |
+| 3.3 | [Tool Loop Agent](/en/level-3-agents/04-tool-loop-agent/) | Multi-step tool calls, `stopWhen: stepCountIs()`, steps array |
+| 3.4 | [MCP](/en/level-3-agents/05-mcp/) | `createMCPClient`, transport types, MCP tools with generateText |
+| 3.5 | [Tool Approval](/en/level-3-agents/06-tool-approval/) | `needsApproval`, human-in-the-loop, dynamic approval logic |
+
+## Boss Fight
+
+Build a **Research Agent** — an agent that uses MCP tools, researches across multiple steps, and asks the user for approval before saving results. You'll combine all five building blocks of this level in one project.
+
+## Sources for this level
+
+- [Vercel AI SDK: Tools and Tool Calling](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling)
+- [Vercel AI SDK: Building Agents](https://ai-sdk.dev/docs/agents/building-agents)
+- [Vercel AI SDK: MCP Tools](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools)
+- [Vercel Blog: AI SDK 6](https://vercel.com/blog/ai-sdk-6)
+- [Model Context Protocol](https://modelcontextprotocol.io)
+- [ai-hero-dev Exercises 03.01-03.07](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/03-agents-and-tools)

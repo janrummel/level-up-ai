@@ -1,0 +1,342 @@
+---
+title: "Challenge 5.4: Retrieval (RAG)"
+description: "Dynamically load external knowledge into the prompt to prevent hallucinations and enable source-based answers."
+sidebar:
+  order: 5
+---
+
+## THINK
+
+What happens when you ask an LLM about current news? How does it know whether its answer is correct?
+
+## OVERVIEW
+
+```mermaid
+graph LR
+  Q["User Question"] --> R["Search External<br/>Source"]
+  subgraph HIER["You are HERE: Retrieval"]
+    R --> F["Find Relevant<br/>Data"]
+    F --> P["Insert into Prompt<br/>&lt;background-data&gt;"]
+  end
+  P --> LLM["LLM answers"]
+  LLM --> A["Source-based<br/>Answer"]
+  Q -.-> NOPE["Without RAG:<br/>Hallucination"]
+  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
+  style Q fill:#4A90D9,color:#fff
+  style R fill:#4A90D9,color:#fff
+  style F fill:#4A90D9,color:#fff
+  style P fill:#27AE60,color:#fff
+  style LLM fill:#27AE60,color:#fff
+  style A fill:#E67E22,color:#fff
+  style NOPE fill:#E74C3C,color:#fff
+```
+
+The diagram shows the RAG data flow: A user question is not sent directly to the LLM — first, relevant data is loaded from an external source and inserted into the prompt via the `<background-data>` tag. Without this step (dashed line) hallucination is likely.
+
+This is what the `<background-data>` tag looks like in the full prompt template:
+
+```xml
+<task-context>
+Du bist ein Assistent, der Fragen zu Webseiten beantwortet.
+</task-context>
+
+<background-data>                          <!-- ← HIER kommen die externen Daten rein -->
+  <url>https://example.com</url>
+  <content>
+  [Geladener Inhalt der Webseite]
+  </content>
+</background-data>
+
+<rules>
+- Nutze nur die bereitgestellten Daten zur Beantwortung.
+- Wenn die Frage nicht beantwortbar ist, sage das ehrlich.
+</rules>
+
+<the-ask>
+Beantworte die Frage basierend auf den Daten.
+</the-ask>
+
+<output-format>
+Antwort mit Quellenangabe.
+</output-format>
+```
+
+## WHY
+
+**Without RAG:** An LLM has a fixed training cutoff date. It knows nothing about current events, internal company data, or specific websites. If you ask about them anyway, it will hallucinate — generating a plausible-sounding but incorrect answer. The answer is not verifiable.
+
+**With RAG:** You load the relevant data beforehand and provide it as context. The LLM answers based on real sources. The answer is verifiable, up-to-date, and includes source citations. Hallucinations are drastically reduced.
+
+## WALKTHROUGH
+
+### Layer 1: The RAG Principle (Retrieve, Augment, Generate)
+
+RAG stands for **Retrieval-Augmented Generation** and consists of three steps:
+
+1. **Retrieve:** Load relevant data from an external source
+2. **Augment:** Insert the data into the prompt (as `<background-data>`)
+3. **Generate:** The LLM answers based on the enriched context
+
+```typescript
+// Schritt 1: RETRIEVE — Daten aus einer Quelle laden
+const content = loadContent('https://docs.example.com/api');  // ← Retrieve
+
+// Schritt 2: AUGMENT — Daten in den Prompt einfuegen
+const prompt = `
+<background-data>
+  <url>https://docs.example.com/api</url>
+  <content>${content}</content>                                // ← Augment
+</background-data>
+`;
+
+// Schritt 3: GENERATE — LLM antwortet mit Kontext
+const result = await generateText({                            // ← Generate
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt,
+});
+```
+
+The principle is simple: Give the LLM the data it needs — before it answers.
+
+### Layer 2: Data Source Table
+
+The data for RAG can come from various sources:
+
+| Source | Example | Typical Use Case |
+|--------|---------|------------------|
+| Web Scraping | Tavily, Firecrawl | Current web content |
+| Vector Database | Pinecone, Chroma, pgvector | Own documents (embeddings) |
+| SQL/API | Own DB, REST API | Structured enterprise data |
+| File System | `fs.readFileSync()` | Local files, configurations |
+
+In this challenge we use simulated content — but the prompt pattern remains the same regardless of where the data comes from.
+
+### Layer 3: Integration into the Prompt Template — background-data
+
+Loaded data belongs in the `<background-data>` section — i.e. in the **middle** of the prompt. Within `<background-data>` you structure the data with `<url>` and `<content>` tags:
+
+```typescript
+const sourceUrl = 'https://www.aihero.dev/';
+const websiteContent = '...geladener Inhalt...';
+
+const prompt = `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+<background-data>
+  <url>${sourceUrl}</url>                    // ← Quellenangabe: woher kommen die Daten?
+  <content>
+  ${websiteContent}                          // ← Die eigentlichen Daten
+  </content>
+</background-data>
+
+<rules>
+- Use the content of the website to answer the question.
+- Use quotes from the content.
+- If the question is not answerable from the content, say so honestly.
+</rules>
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided data.
+</the-ask>
+
+<output-format>
+Return the answer in paragraphs. Include quotes from the source material.
+</output-format>
+`;
+```
+
+The `<url>` tag is important: It enables the LLM to cite the source in its answer. This makes the answer verifiable.
+
+### Layer 4: The Critical Rule — Preventing Hallucinations
+
+The most important line in any RAG prompt sits in `<rules>`:
+
+```xml
+<rules>
+- Use only the provided data to answer the question.
+- If the question is not answerable from the provided data,
+  say "I can only answer questions based on the provided content."
+</rules>
+```
+
+Without this rule the LLM will try to answer anyway — with its training knowledge, not with the provided data. This leads to hallucinations that are especially dangerous because they sound plausible and appear in a context that leads users to expect source-based answers.
+
+**Tip:** Phrase the rule positively and concretely. Not "Don't hallucinate", but "Say honestly if the question cannot be answered."
+
+## TRY
+
+**Task:** Build a system that loads website content and answers questions about it. Use the simulated content below. Add `<background-data>`, `<rules>`, and `<output-format>` to the prompt.
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// Simulierter Web-Content (in Production: fetch, Tavily, etc.)
+const websiteContent = `
+AI Hero is an educational platform created by Matt Pocock,
+known for Total TypeScript. The platform teaches AI engineering
+skills including the Vercel AI SDK, prompt engineering, and
+building production-ready AI applications. Guillermo Rauch,
+CEO of Vercel, said: "Matt is one of the best educators in
+the TypeScript ecosystem."
+`;
+
+const question = 'What did Guillermo Rauch say about Matt Pocock?';
+const sourceUrl = 'https://www.aihero.dev/';
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+// TODO: Fuege <background-data> ein mit:
+//   - <url> Tag fuer die Quellenangabe
+//   - <content> Tag fuer den geladenen Inhalt
+
+// TODO: Fuege <rules> ein:
+//   - Nur die bereitgestellten Daten verwenden
+//   - Zitate aus dem Quellmaterial nutzen
+//   - Ehrlich sagen wenn etwas nicht beantwortbar ist
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided website content.
+</the-ask>
+
+// TODO: Fuege <output-format> ein:
+//   - Antwort in Absaetzen
+//   - Quellenangabe einschliessen
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Checklist:**
+- [ ] `<background-data>` contains the loaded content with a `<url>` tag
+- [ ] `<rules>` defines: only use provided data
+- [ ] `<rules>` defines: say honestly if not answerable
+- [ ] `<output-format>` defines the answer format
+
+<details>
+<summary>Show solution</summary>
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const websiteContent = `
+AI Hero is an educational platform created by Matt Pocock,
+known for Total TypeScript. The platform teaches AI engineering
+skills including the Vercel AI SDK, prompt engineering, and
+building production-ready AI applications. Guillermo Rauch,
+CEO of Vercel, said: "Matt is one of the best educators in
+the TypeScript ecosystem."
+`;
+
+const question = 'What did Guillermo Rauch say about Matt Pocock?';
+const sourceUrl = 'https://www.aihero.dev/';
+
+const result = await streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: `
+<task-context>
+You are a helpful assistant that answers questions about website content.
+</task-context>
+
+<background-data>
+  <url>${sourceUrl}</url>
+  <content>
+  ${websiteContent}
+  </content>
+</background-data>
+
+<rules>
+- Use the content of the website to answer the question.
+- If the question is not related to the content of the website,
+  say "I can only answer questions based on the provided content."
+- Use quotes from the content of the website to support your answer.
+- Do not use any knowledge outside the provided content.
+</rules>
+
+<conversation-history>
+${question}
+</conversation-history>
+
+<the-ask>
+Answer the question based on the provided website content.
+</the-ask>
+
+<output-format>
+Return the answer in paragraphs. Include direct quotes from the source
+material where relevant. Cite the source URL.
+</output-format>
+  `.trim(),
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+**Explanation:** The loaded data sits in `<background-data>` with a clear source citation (`<url>`). The `<rules>` explicitly define that only the provided data may be used and that the LLM should be honest if the question cannot be answered. The `<output-format>` requires paragraphs and source citations — making the answer verifiable.
+
+</details>
+
+## COMBINE
+
+```mermaid
+graph LR
+  Config["PromptConfig<br/>(5.1)"] --> BSP["buildSystemPrompt()"]
+  XML["XML Structure<br/>(5.2)"] --> BSP
+  Exemplars["Exemplars<br/>(5.3)"] --> BSP
+  Data["External Data<br/>(5.4)"] --> BSP
+  BSP --> Call["generateText()"]
+  Call --> Output["Source-based<br/>Answer"]
+  style Config fill:#4A90D9,color:#fff
+  style XML fill:#4A90D9,color:#fff
+  style Exemplars fill:#4A90D9,color:#fff
+  style Data fill:#4A90D9,color:#fff
+  style BSP fill:#27AE60,color:#fff
+  style Call fill:#27AE60,color:#fff
+  style Output fill:#E67E22,color:#fff
+```
+
+**Exercise:** Now build a complete RAG system that combines Template (5.1) + XML Structure (5.2) + Exemplars (5.3) + Retrieval (5.4). Create a `buildRAGPrompt` function that unifies all four concepts.
+
+Specifically:
+1. Create a `RAGConfig` interface that extends `PromptConfig` with `sourceUrl`, `content`, and `exemplars`
+2. In `buildRAGPrompt()`: Build the prompt with `<task-context>`, `<background-data>` (with `<url>` and `<content>`), `<examples>`, and `<rules>`
+3. The `<rules>` must contain the anti-hallucination rule
+4. Use the exemplars to demonstrate the answer format
+
+**Optional Stretch Goal:** Add support for multiple sources — `<background-data>` with multiple `<url>`/`<content>` pairs. Use an array of sources in the config.
+
+## Looking Ahead: From Static Content to Vector Search
+
+This challenge uses static content. In production you would:
+1. **Split documents into chunks** (e.g. 500 tokens per chunk)
+2. **Create embeddings** (e.g. with `text-embedding-3-small`)
+3. **Store them in a vector DB** (Pinecone, Chroma, pgvector)
+4. **At runtime, search for the most relevant chunks** and insert them into the prompt
+
+The prompt pattern stays the same — only the retrieve step becomes more complex.
+
+## Sources
+
+- [Anthropic: RAG Overview](https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation)
+- [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)
+- [ai-hero-dev Exercise 05.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.04-retrieval)

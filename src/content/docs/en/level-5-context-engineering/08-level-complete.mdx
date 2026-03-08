@@ -1,0 +1,56 @@
+---
+title: "Level 5 Complete"
+description: "Summary of all concepts from Level 5: Context Engineering — from templates to RAG to chain of thought."
+sidebar:
+  order: 8
+---
+
+## What You Learned
+
+- **Templates:** Structure system prompts as reusable, testable blueprints with `buildSystemPrompt()`
+- **XML Tags:** Structured prompts with clear sections — `<task-context>`, `<rules>`, `<output-format>`, and more
+- **Exemplars:** Few-shot learning for consistent outputs — show instead of describe
+- **RAG:** Dynamically load external knowledge into the prompt with `<background-data>`, prevent hallucinations
+- **Chain of Thought:** Structured reasoning for complex tasks with `<thinking-instructions>`
+
+## Updated Skill Tree
+
+```mermaid
+graph LR
+  subgraph "Unlocked"
+    L1["Level 1: AI SDK Basics"]
+    L2["Level 2: LLM Fundamentals"]
+    L3["Level 3: Agents & MCP"]
+    L4["Level 4: Persistence"]
+    L5["Level 5: Context Engineering"]
+  end
+  subgraph "Next Level"
+    L6["Level 6: Evals"]
+  end
+  subgraph "Locked"
+    L7["Level 7: Streaming"]
+    L8["Level 8: Workflows"]
+    L9["Level 9: Advanced Patterns"]
+  end
+  L1 --> L2
+  L2 --> L3
+  L3 --> L4
+  L4 --> L5
+  L5 --> L6
+  L6 -.-> L7
+  L7 -.-> L8
+  L8 -.-> L9
+  style L1 fill:#27AE60,color:#fff
+  style L2 fill:#27AE60,color:#fff
+  style L3 fill:#27AE60,color:#fff
+  style L4 fill:#27AE60,color:#fff
+  style L5 fill:#27AE60,color:#fff
+  style L6 fill:#E67E22,color:#fff
+  style L7 fill:#95a5a6,color:#fff
+  style L8 fill:#95a5a6,color:#fff
+  style L9 fill:#95a5a6,color:#fff
+```
+
+## Next Level
+
+**Level 6: Evals** — How do you measure whether your AI system works well? Automated tests for LLM applications. You will learn to systematically evaluate prompts, detect regressions, and make quality measurable.

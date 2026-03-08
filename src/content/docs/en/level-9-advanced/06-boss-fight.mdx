@@ -1,0 +1,198 @@
+---
+title: "Boss Fight: Production-Ready AI System"
+description: "The finale — build a complete production-ready AI system that combines all 9 levels: guardrails, routing, comparing, workflows, tools, streaming, and evals."
+sidebar:
+  order: 6
+---
+
+## The Scenario
+
+You're building a **production-ready AI system** — the ultimate project that combines everything you've learned across 9 levels. The system takes a topic, autonomously researches it, selects the optimal model for each step, protects itself with guardrails, and delivers a quality-assured report.
+
+Your system should feel like this:
+
+```
+[Input Guard] "Edge Computing Trends" — Injection Check: OK, PII Check: OK
+
+[Phase 1: Research] Routing: gemini-flash (Research = einfache Suche)
+  Iteration 1: search("Edge Computing Vorteile 2026") — 312 Tokens
+  Iteration 2: search("Edge Computing vs Cloud Computing") — 287 Tokens
+  Iteration 3: Fertig (finishReason: stop)
+[Phase 1] 3 Iterationen, 1.041 Tokens, Abbruch: complete
+
+[Phase 2: Summarize] Routing: claude-sonnet (Analyse = komplex)
+  5 Kernaussagen generiert — 423 Tokens
+
+[Phase 3: Format] Routing: claude-sonnet (Formatierung = komplex)
+  Streaming Report...
+  "Edge Computing hat sich als Schluessel-Technologie etabliert..."
+[Phase 3] 891 Tokens
+
+[Output Guard] Laenge: OK (2.847 Zeichen), Format: OK
+
+[Quality Compare] Gleichen Prompt an 2 Modelle → Judge Score: 8/10
+
+[Stats] Pipeline: 3.2s, 2.355 Tokens, geschaetzte Kosten: $0.023
+```
+
+This project connects all 9 levels:
+
+```mermaid
+graph TB
+  Input["User Input"] --> IG["Input Guardrails<br/>(9.1)"]
+
+  subgraph Pipeline["Production-Ready Pipeline"]
+    IG --> Router1["Model Router<br/>(9.2)"]
+
+    subgraph Research["Phase 1: Research"]
+      Router1 --> Loop["Custom Loop (8.3)<br/>+ Tools (3.1)"]
+      Loop --> BC["Break Conditions<br/>(8.4)"]
+    end
+
+    subgraph Process["Phase 2: Processing"]
+      BC --> WF["Workflow (8.1)<br/>+ Context Eng. (5.x)"]
+      WF --> SO["Structured Output<br/>(1.5)"]
+    end
+
+    subgraph Quality["Phase 3: Quality"]
+      SO --> OG["Output Guardrails<br/>(9.1)"]
+      OG --> Compare["Comparing<br/>Outputs (9.3)"]
+    end
+  end
+
+  Compare --> Stream["Stream (7.x)"]
+  Stream --> Report["Report"]
+
+  Loop -.-> Track["Usage Tracking<br/>(2.2)"]
+  WF -.-> Track
+  Compare -.-> Track
+  Track -.-> Eval["Eval Coverage<br/>(6.x)"]
+
+  style Input fill:#4A90D9,color:#fff
+  style IG fill:#E74C3C,color:#fff
+  style Router1 fill:#27AE60,color:#fff
+  style Loop fill:#27AE60,color:#fff
+  style BC fill:#E74C3C,color:#fff
+  style WF fill:#27AE60,color:#fff
+  style SO fill:#27AE60,color:#fff
+  style OG fill:#E74C3C,color:#fff
+  style Compare fill:#27AE60,color:#fff
+  style Stream fill:#27AE60,color:#fff
+  style Report fill:#E67E22,color:#fff
+  style Track fill:#27AE60,color:#fff
+  style Eval fill:#27AE60,color:#fff
+```
+
+## Requirements
+
+1. **Input Guardrails** (Challenge 9.1) — Check every user input for prompt injection and PII before the pipeline starts. Invalid inputs are rejected with a clear error message.
+
+2. **Model Router** (Challenge 9.2) — Use the optimal model for each phase of the pipeline. Research: cheap flash model. Analysis and formatting: powerful Sonnet/Opus model. Classification: smallest available model.
+
+3. **Research Loop** (Level 3 + Level 8) — A custom agent loop with at least one tool (search). The loop has three break conditions: Max Iterations (5), Timeout (30s), Cost Guard (5,000 tokens). The agent decides on its own when enough research is done.
+
+4. **Workflow** (Level 8.1) — The processing phase chains at least 2 sequential `generateText` calls. Output from Step N becomes input for Step N+1. Each step has its own system prompt with XML-structured Context Engineering (Level 5).
+
+5. **Output Guardrails** (Challenge 9.1) — Check the final report for length, format, and content. Empty or overly long outputs are caught.
+
+6. **Comparing Outputs** (Challenge 9.3) — For the final report: Generate the summary with 2 different models in parallel and choose the better result (via a simple scorer or LLM-as-a-Judge).
+
+7. **Streaming** (Level 7 + 8.2) — Stream the final report in real time. Send progress data parts for each phase of the pipeline.
+
+8. **Usage Tracking** (Level 2.2) — Track token usage per phase and total. Calculate estimated costs.
+
+9. **Structured Output** (Level 1.5) — The report is returned as a typed object with a Zod schema (title, summary, key findings, conclusion).
+
+10. **Eval Coverage** (Level 6) — Write at least 2 Evalite tests: one that checks whether the report has the expected sections, and one that evaluates the length of the summary.
+
+## Starter Code
+
+```typescript
+import { createDataStream, generateText, streamText, tool, Output } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
+import { z } from 'zod';
+
+// --- Schemas ---
+const ReportSchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  keyFindings: z.array(z.string()).min(3).max(7),
+  conclusion: z.string(),
+});
+
+// --- Guardrails ---
+// TODO: Input guardrails (injection, PII)
+// TODO: Output guardrails (length, format)
+
+// --- Model Router ---
+// TODO: selectModel(phase: 'research' | 'analysis' | 'format' | 'classify')
+
+// --- Tools ---
+// TODO: search tool
+
+// --- Pipeline Phases ---
+// TODO: researchPhase(topic) — Custom Loop + Tools + Break Conditions
+// TODO: processingPhase(research, topic) — Workflow + Context Engineering + Structured Output
+// TODO: qualityPhase(report) — Output Guardrails + Comparing Outputs
+
+// --- Main Pipeline ---
+// TODO: researchPipeline(topic) — Orchestrates all phases, streams progress, tracks costs
+
+// --- Evals ---
+// TODO: evalite('research-pipeline', { ... })
+```
+
+## Grading Criteria
+
+Your Boss Fight is passed when:
+
+- [ ] Input guardrails check for prompt injection and PII
+- [ ] Model Router selects different models for Research vs. Analysis
+- [ ] Research Loop uses a custom while loop with at least one tool
+- [ ] At least 2 break conditions are implemented (Max Iterations + one more)
+- [ ] Workflow chains at least 2 sequential `generateText` calls
+- [ ] System prompts use XML structure (Context Engineering)
+- [ ] Output guardrails check the final report
+- [ ] Comparing Outputs generates with at least 2 models in parallel and selects the better result
+- [ ] Token usage is tracked per phase and total
+- [ ] At least one Evalite test checks pipeline quality
+
+## Hints
+
+<details>
+<summary>Hint 1: Pipeline Structure</summary>
+
+Build the pipeline as an `async function researchPipeline(topic: string)` that executes all three phases sequentially. Each phase is its own function that returns a result object. At the end: collect statistics and return the report.
+
+</details>
+
+<details>
+<summary>Hint 2: Model Router Integration</summary>
+
+Create a `selectModel` function that takes the phase name as a parameter. Research gets a flash model, Analysis and Format get Sonnet. The router is called in each phase, not centrally — so each phase can get its optimal model.
+
+</details>
+
+<details>
+<summary>Hint 3: Integrating Comparing Outputs</summary>
+
+The comparison doesn't have to run the entire pipeline twice. It's sufficient to generate the summary with 2 models in parallel (`Promise.all`) in the processing phase and then choose the longer/better output. The research step only runs once.
+
+</details>
+
+<details>
+<summary>Hint 4: Keep Evals Separate</summary>
+
+Write the evals in a separate file. Import the pipeline function and test it with Evalite. One scorer checks whether `keyFindings.length >= 3`, another whether `summary.length > 100`. This keeps pipeline and tests cleanly separated.
+
+</details>
+
+## Sources
+
+- [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
+- [Vercel AI SDK: Building Agents](https://ai-sdk.dev/docs/agents/building-agents)
+- [Vercel AI SDK: Data Streams](https://ai-sdk.dev/docs/ai-sdk-core/data-streams)
+- [Anthropic: Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [Evalite Documentation](https://www.evalite.dev/)
+- [ai-hero-dev Exercises 09.01-09.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/09-production-patterns)

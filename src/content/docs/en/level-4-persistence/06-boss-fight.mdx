@@ -1,0 +1,163 @@
+---
+title: "Boss Fight: Persistent Chat with Reload"
+description: "Combine all four building blocks from Level 4 into a chat system with a complete persistence cycle: generate an ID, validate messages, save, load, and resume after reload."
+sidebar:
+  order: 6
+---
+
+## The Scenario
+
+You're building a **chat system with a complete persistence cycle** — a program that generates a chat ID, validates messages, saves after every LLM call, and loads the history after a simulated reload to seamlessly resume the conversation.
+
+Your system should behave like this:
+
+```
+--- Neuer Chat gestartet: a1b2c3d4... ---
+
+[Request 1] User: Was ist TypeScript?
+[Validation] OK
+[Saved] 2 messages
+Assistant: TypeScript ist eine typisierte Erweiterung von JavaScript...
+
+[Request 2] User: Nenne 3 Vorteile.
+[Validation] OK
+[Saved] 4 messages
+Assistant: 1. Statische Typen fangen Fehler frueh ab...
+
+--- Simulierter Reload ---
+
+[Loaded] 4 messages fuer Chat a1b2c3d4...
+
+[Request 3] User: Welchen Vorteil findest Du am wichtigsten?
+[Validation] OK
+[Saved] 6 messages
+Assistant: Basierend auf unserer Diskussion ueber TypeScript...
+
+--- Ungueltige Nachricht ---
+
+[Request 4] Invalid: role "admin" not allowed
+[Blocked] Message nicht gespeichert.
+```
+
+This project combines all four building blocks from Level 4:
+
+```mermaid
+graph LR
+  ID["Chat ID<br/>(4.2)"] --> Val["Validation<br/>(4.4)"]
+  Val -->|valid| Load["Load History"]
+  Val -->|invalid| Err["Error"]
+  Load --> GT["generateText()"]
+  GT --> OF["onFinish<br/>(4.1)"]
+  OF --> Save["Persistence<br/>(4.3)"]
+  Save --> DB[("Database")]
+  DB --> Load
+  style ID fill:#4A90D9,color:#fff
+  style Val fill:#27AE60,color:#fff
+  style Load fill:#27AE60,color:#fff
+  style GT fill:#27AE60,color:#fff
+  style OF fill:#E67E22,color:#fff
+  style Save fill:#E67E22,color:#fff
+  style DB fill:#E67E22,color:#fff
+  style Err fill:#E74C3C,color:#fff
+```
+
+## Requirements
+
+1. **Generate Chat ID** (Challenge 4.2) — A UUID is generated at start. All messages belong to this ID.
+2. **Message Validation** (Challenge 4.4) — Every request is validated against a Zod schema before processing. Invalid messages are rejected and not saved.
+3. **onFinish Callback** (Challenge 4.1) — In `onFinish`, the new messages (user + assistant) are automatically saved and token usage is logged.
+4. **Persistence** (Challenge 4.3) — Messages are stored in an in-memory "DB" (Map). After a simulated reload, the history is loaded and the chat resumes.
+5. **Simulated Reload** — Between requests a "reload" is simulated: runtime variables are reset, only the "DB" remains. The chat must still continue seamlessly.
+6. **Token Tracking** — The `onFinish` callback logs token usage per request.
+7. **Test Error Case** — At least one invalid request is sent and correctly rejected.
+8. **Complete History** — After all requests, a log shows the complete chat history with roles and message previews.
+
+## Starter Code
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+// --- Database (simulated) ---
+// TODO: Map as in-memory DB
+
+// --- Schemas ---
+// TODO: Zod schema for messages and chat requests
+
+// --- DB Functions ---
+// TODO: saveMessages(chatId, messages)
+// TODO: loadMessages(chatId)
+
+// --- Validation ---
+// TODO: validate(body) — returns { success, data?, error? }
+
+// --- Chat Function ---
+// TODO: chat(chatId, userMessage) — the complete cycle:
+//   1. Validate
+//   2. Load history
+//   3. generateText with onFinish (Save + Token Log)
+//   4. Return result
+
+// --- Execution ---
+
+// Phase 1: New Chat
+// TODO: Generate chat ID
+// TODO: Send first message
+// TODO: Send second message
+
+// Phase 2: Simulated Reload
+// TODO: Reset runtime variables (only DB remains)
+// TODO: Load history and log it
+// TODO: Send third message (chat continues)
+
+// Phase 3: Error Case
+// TODO: Send an invalid request (e.g. role: "admin")
+// TODO: Ensure it is rejected
+
+// Phase 4: Display History
+// TODO: Log all messages of the chat
+```
+
+## Evaluation Criteria
+
+Your Boss Fight is passed when:
+
+- [ ] A chat ID is generated at start and used for all requests
+- [ ] Every request is validated against a Zod schema before processing
+- [ ] Invalid messages are rejected and not saved to the DB
+- [ ] `onFinish` automatically saves messages after every completion
+- [ ] `onFinish` logs token usage per request
+- [ ] After a simulated "reload" the history is correctly loaded
+- [ ] The chat continues seamlessly after reload (LLM references earlier messages)
+- [ ] At the end, a log shows the complete history with all messages
+
+## Hints
+
+<details>
+<summary>Hint 1: Simulating the Reload</summary>
+
+You don't need an actual server restart. Simply create a new variable for the history (`let currentHistory = []`) and set it to empty. Then reload the history with `loadMessages(chatId)` from the Map. This simulates what happens on a real reload: memory is empty, but the DB has the data.
+
+</details>
+
+<details>
+<summary>Hint 2: Separate Validation and Chat Function</summary>
+
+Build validation as a separate function, not directly in the chat logic. Your `chat(chatId, userMessage)` function should call `validate()` first. If validation fails, the function returns early — without DB access and without an LLM call. This makes it clear: Only validated messages reach `generateText`.
+
+</details>
+
+<details>
+<summary>Hint 3: Building the Messages Array Correctly</summary>
+
+When resuming after a reload, the messages array must contain all previous messages — not just the new one. Load the history with `loadMessages(chatId)`, append the new user message, and pass the entire array to `generateText`. In `onFinish` you then save the complete array (including the new assistant response) back to the DB.
+
+</details>
+
+## Sources
+
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
+- [Zod: Documentation](https://zod.dev)
+- [ai-hero-dev Exercises 04.01-04.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)
