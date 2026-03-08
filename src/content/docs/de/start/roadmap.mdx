@@ -10,27 +10,21 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 ## Der Skill Tree
 
 ```mermaid
-graph TD
-  L1[Level 1: AI SDK Basics]
-  L2[Level 2: LLM Fundamentals]
-  L3[Level 3: Agents & MCP]
-  L4[Level 4: Persistence]
-  L5[Level 5: Context Engineering]
-  L6[Level 6: Evals]
-  L7[Level 7: Streaming]
-  L8[Level 8: Workflows]
-  L9[Level 9: Advanced Patterns]
+graph LR
+  L1["1: AI SDK\nBasics"]
+  L2["2: LLM\nFundamentals"]
+  L3["3: Agents\n& MCP"]
+  L4["4: Persistence"]
+  L5["5: Context\nEngineering"]
+  L6["6: Evals"]
+  L7["7: Streaming"]
+  L8["8: Workflows"]
+  L9["9: Advanced\nPatterns"]
 
-  L1 --> L2
+  L1 --> L2 --> L3 --> L8
   L1 --> L4
-  L2 --> L3
-  L2 --> L5
-  L5 --> L6
-  L1 --> L7
-  L3 --> L8
-  L7 --> L8
-  L8 --> L9
-  L6 --> L9
+  L2 --> L5 --> L6 --> L9
+  L1 --> L7 --> L8 --> L9
 
   style L1 fill:#4A90D9,color:#fff
   style L2 fill:#4A90D9,color:#fff
