@@ -1,27 +1,38 @@
 ---
 title: Willkommen bei Level Up AI
 description: Dein Weg vom Vibe Coder zum AI Engineer — kostenlos, praxisnah, Open Source.
+hero:
+  title: Level Up AI
+  tagline: Vom Vibe Coder zum AI Engineer — 9 Levels, 41 Challenges, 100% kostenlos.
+  actions:
+    - text: Level 1 starten
+      link: /de/level-1-ai-sdk-basics/01-briefing/
+      icon: right-arrow
+      variant: primary
+    - text: Roadmap ansehen
+      link: /de/start/roadmap/
+      variant: secondary
+template: splash
 ---
 
-# Level Up AI
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-**Vom Vibe Coder zum AI Engineer.**
+## 9 Levels — vom ersten API-Call bis zum Production-System
 
-Dieses Projekt ist ein offener, gamifizierter Lernpfad fuer alle, die AI nicht nur nutzen, sondern verstehen und bauen wollen. Kein Kurs hinter einer Paywall — sondern kuratiertes Wissen aus den besten freien Quellen, aufbereitet in praktischen Leveln.
-
-## Dein Fortschritt
-
-| Level | Thema | Challenges | Kern-Konzept |
-|-------|-------|-----------|--------------|
-| 1 | AI SDK Basics | 6 | generateText, streamText, Output API |
-| 2 | LLM Fundamentals | 4 | Tokens, Context Window, Caching |
-| 3 | Agents & MCP | 5 | Tools, Agent Loop, MCP Protocol |
-| 4 | Persistence | 4 | Chat-Verlauf speichern und laden |
-| 5 | Context Engineering | 5 | Prompt Templates, RAG, Chain of Thought |
-| 6 | Evals | 5 | Evalite, LLM-as-Judge, Langfuse |
-| 7 | Streaming | 4 | Custom Data Parts, Transforms, Errors |
-| 8 | Workflows | 4 | Multi-Step Pipelines, Custom Loops |
-| 9 | Advanced Patterns | 4 | Guardrails, Model Router, Production |
+<CardGrid>
+  <Card title="Level 1-2: Grundlagen" icon="rocket">
+    AI SDK, Provider-System, Tokens, Context Window — das Fundament.
+  </Card>
+  <Card title="Level 3-4: Aufbau" icon="puzzle">
+    Agents, MCP, Tool Calling, Persistence — AI wird interaktiv.
+  </Card>
+  <Card title="Level 5-6: Fortgeschritten" icon="magnifier">
+    Context Engineering, Evals, LLM-as-Judge — Qualitaet messen.
+  </Card>
+  <Card title="Level 7-9: Experte" icon="star">
+    Streaming, Workflows, Guardrails, Model Router — Production-ready.
+  </Card>
+</CardGrid>
 
 ## Wie es funktioniert
 
@@ -29,12 +40,12 @@ Jedes Level besteht aus **Briefing → Challenges → Boss Fight → Level Compl
 
 Jede Challenge folgt 6 Schritten:
 
-1. **THINK** — Eine Frage aktiviert Dein Vorwissen
-2. **OVERVIEW** — Ein Diagramm zeigt das Gesamtbild
-3. **WHY** — Das Problem, das dieses Konzept loest
-4. **WALKTHROUGH** — Schicht fuer Schicht erklaert, mit annotiertem Code
-5. **TRY** — Gefuehrte Uebung mit Starter-Code und Checkliste
-6. **COMBINE** — Verbinde das neue Konzept mit vorherigen Challenges
+1. **💭 THINK** — Eine Frage aktiviert Dein Vorwissen
+2. **🗺️ OVERVIEW** — Ein Diagramm zeigt das Gesamtbild
+3. **❓ WHY** — Das Problem, das dieses Konzept loest
+4. **📖 WALKTHROUGH** — Schicht fuer Schicht erklaert, mit annotiertem Code
+5. **🛠️ TRY** — Gefuehrte Uebung mit Starter-Code und Checkliste
+6. **🧩 COMBINE** — Verbinde das neue Konzept mit vorherigen Challenges
 
 Die **Boss Fight** am Ende jedes Levels kombiniert alle Bausteine — ohne vorgefertigte Loesung.
 
@@ -44,12 +55,6 @@ Die **Boss Fight** am Ende jedes Levels kombiniert alle Bausteine — ohne vorge
 - Ein API Key (Anthropic, OpenAI, oder Google)
 - Erfahrung mit ChatGPT oder aehnlichen AI-Tools
 - Neugier und die Bereitschaft, Dinge kaputt zu machen
-
-## Starte hier
-
-Bereit? Dann ab zu [Level 1: AI SDK Basics](/de/level-1-ai-sdk-basics/01-briefing/).
-
-Oder schau Dir zuerst die [Roadmap](/de/start/roadmap/) an, um den optimalen Lernpfad fuer Dein Level zu finden.
 
 ## Quellen
 

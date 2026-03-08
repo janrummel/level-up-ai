@@ -12,6 +12,7 @@ export default defineConfig({
 				en: { label: 'English', lang: 'en' },
 			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/janrummel/level-up-ai' }],
+			customCss: ['/src/custom-styles.css'],
 			sidebar: [
 				{
 					label: 'Start',
