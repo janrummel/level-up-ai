@@ -213,6 +213,75 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
    6. GENERAL POLISH
    ============================================ */
 
+/* Level Complete — celebration banner */
+.sl-markdown-content h2#was-du-gelernt-hast,
+.sl-markdown-content h2#what-youve-learned,
+.sl-markdown-content h2#what-you-learned {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.05));
+  border-left: 4px solid #27ae60;
+  color: #27ae60;
+}
+.sl-markdown-content h2#was-du-gelernt-hast::before,
+.sl-markdown-content h2#what-youve-learned::before,
+.sl-markdown-content h2#what-you-learned::before {
+  content: '🎉';
+}
+
+/* Boss Fight — all h2 sections get warning aesthetic */
+.sl-markdown-content h2#anforderungen,
+.sl-markdown-content h2#requirements {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.05));
+  border-left: 4px solid #e74c3c;
+  color: #e74c3c;
+}
+.sl-markdown-content h2#anforderungen::before,
+.sl-markdown-content h2#requirements::before {
+  content: '⚔️';
+}
+
+.sl-markdown-content h2#bewertungskriterien,
+.sl-markdown-content h2#evaluation-criteria {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(230, 126, 34, 0.15), rgba(230, 126, 34, 0.05));
+  border-left: 4px solid #e67e22;
+  color: #e67e22;
+}
+.sl-markdown-content h2#bewertungskriterien::before,
+.sl-markdown-content h2#evaluation-criteria::before {
+  content: '✅';
+}
+
+/* Next Level preview */
+.sl-markdown-content h2#naechstes-level,
+.sl-markdown-content h2#next-level {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
+  border-left: 4px solid #4a90d9;
+  color: #4a90d9;
+}
+.sl-markdown-content h2#naechstes-level::before,
+.sl-markdown-content h2#next-level::before {
+  content: '➡️';
+}
+
 /* Quellen/Sources section — subtle styling */
 .sl-markdown-content h2#quellen,
 .sl-markdown-content h2#sources {
