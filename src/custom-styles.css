@@ -10,6 +10,10 @@
   --sl-color-accent-high: #fad390;
   --sl-color-text-accent: #e67e22;
   --sl-hue-orange: 30;
+  /* Darker sidebar */
+  --sl-color-bg-sidebar: rgba(10, 10, 20, 0.6);
+  /* Better code block contrast */
+  --sl-color-bg-inline-code: rgba(230, 126, 34, 0.1);
 }
 
 [data-theme='light'] {
@@ -17,6 +21,43 @@
   --sl-color-accent: #d35400;
   --sl-color-accent-high: #1a1a2e;
   --sl-color-text-accent: #d35400;
+  --sl-color-bg-sidebar: rgba(254, 240, 219, 0.3);
+  --sl-color-bg-inline-code: rgba(211, 84, 0, 0.08);
+}
+
+/* ============================================
+   0. SITE TITLE GRADIENT
+   ============================================ */
+
+.site-title span {
+  background: linear-gradient(135deg, #e67e22, #f1c40f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* Sidebar group labels — level difficulty colors */
+nav .top-level > li:nth-child(2) summary, /* L1 */
+nav .top-level > li:nth-child(3) summary { /* L2 */
+  border-left: 3px solid #4A90D9;
+  padding-left: 0.5rem;
+}
+nav .top-level > li:nth-child(4) summary, /* L3 */
+nav .top-level > li:nth-child(5) summary, /* L4 */
+nav .top-level > li:nth-child(6) summary { /* L5 */
+  border-left: 3px solid #27AE60;
+  padding-left: 0.5rem;
+}
+nav .top-level > li:nth-child(7) summary, /* L6 */
+nav .top-level > li:nth-child(8) summary { /* L7 */
+  border-left: 3px solid #E67E22;
+  padding-left: 0.5rem;
+}
+nav .top-level > li:nth-child(9) summary, /* L8 */
+nav .top-level > li:nth-child(10) summary { /* L9 */
+  border-left: 3px solid #E74C3C;
+  padding-left: 0.5rem;
 }
 
 /* ============================================
