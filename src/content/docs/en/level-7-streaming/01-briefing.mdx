@@ -7,6 +7,7 @@ sidebar:
     text: 'Advanced'
     variant: 'caution'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ The concrete problem: your stream delivers only raw text. But your UI needs prog
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 7.1 | [Custom Data Parts](/en/level-7-streaming/02-custom-data-parts/) | Structured data in the stream, Data Part Types, frontend consumption |
-| 7.2 | [Message Metadata](/en/level-7-streaming/03-message-metadata/) | Metadata on messages, separation from LLM content, use cases |
-| 7.3 | [Stream Transforms](/en/level-7-streaming/04-stream-transforms/) | `smoothStream`, Custom TransformStream, Transform chains |
-| 7.4 | [Error Handling](/en/level-7-streaming/05-error-handling/) | `onError`, NoSuchToolError, retry strategies, Graceful Degradation |
+<CardGrid>
+  <LinkCard title="7.1 — Custom Data Parts" description="Structured data in the stream, Data Part Types, frontend consumption" href="/en/level-7-streaming/02-custom-data-parts/" />
+  <LinkCard title="7.2 — Message Metadata" description="Metadata on messages, separation from LLM content, use cases" href="/en/level-7-streaming/03-message-metadata/" />
+  <LinkCard title="7.3 — Stream Transforms" description="smoothStream, Custom TransformStream, Transform chains" href="/en/level-7-streaming/04-stream-transforms/" />
+  <LinkCard title="7.4 — Error Handling" description="onError, NoSuchToolError, retry strategies, Graceful Degradation" href="/en/level-7-streaming/05-error-handling/" />
+</CardGrid>
 
 ## Boss Fight
 

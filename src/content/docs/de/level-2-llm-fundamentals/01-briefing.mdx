@@ -7,6 +7,7 @@ sidebar:
     text: 'Basics'
     variant: 'note'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -73,12 +74,12 @@ Das konkrete Problem: Ohne Token-Verstaendnis kannst Du keine Kosten vorhersagen
 
 ## Challenges
 
-| # | Challenge | Konzept |
-|---|-----------|---------|
-| 2.1 | [Tokens](/de/level-2-llm-fundamentals/02-tokens/) | Was Tokens sind, wie Tokenisierung funktioniert, Token-Counting |
-| 2.2 | [Usage Tracking](/de/level-2-llm-fundamentals/03-usage-tracking/) | `result.usage`, Kostenberechnung, Extended Usage Details |
-| 2.3 | [Context Window](/de/level-2-llm-fundamentals/04-context-window/) | Context-Window-Groessen, was reinzaehlt, Strategien bei vollem Fenster |
-| 2.4 | [Prompt Caching](/de/level-2-llm-fundamentals/05-prompt-caching/) | Cache-Mechanik, `cacheReadTokens`, Kosten-Reduktion |
+<CardGrid>
+  <LinkCard title="2.1 — Tokens" description="Was Tokens sind, wie Tokenisierung funktioniert, Token-Counting" href="/de/level-2-llm-fundamentals/02-tokens/" />
+  <LinkCard title="2.2 — Usage Tracking" description="`result.usage`, Kostenberechnung, Extended Usage Details" href="/de/level-2-llm-fundamentals/03-usage-tracking/" />
+  <LinkCard title="2.3 — Context Window" description="Context-Window-Groessen, was reinzaehlt, Strategien bei vollem Fenster" href="/de/level-2-llm-fundamentals/04-context-window/" />
+  <LinkCard title="2.4 — Prompt Caching" description="Cache-Mechanik, `cacheReadTokens`, Kosten-Reduktion" href="/de/level-2-llm-fundamentals/05-prompt-caching/" />
+</CardGrid>
 
 ## Boss Fight
 

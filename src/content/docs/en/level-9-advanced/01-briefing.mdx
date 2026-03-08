@@ -7,6 +7,7 @@ sidebar:
     text: 'Expert'
     variant: 'danger'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ The concrete problem: You want an AI system that is secure, cost-efficient, and 
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 9.1 | [Guardrails](/en/level-9-advanced/02-guardrails/) | Input checks (injection, PII), output checks (toxicity, format), middleware pattern |
-| 9.2 | [Model Router](/en/level-9-advanced/03-model-router/) | Task classification, dynamic routing, cost optimization |
-| 9.3 | [Comparing Outputs](/en/level-9-advanced/04-comparing-outputs/) | Parallel model calls, LLM-as-a-Judge, systematic comparison |
-| 9.4 | [Research Workflow](/en/level-9-advanced/05-research-workflow/) | End-to-end pipeline, all concepts combined, production-ready |
+<CardGrid>
+  <LinkCard title="9.1 — Guardrails" description="Input checks (injection, PII), output checks (toxicity, format), middleware pattern" href="/en/level-9-advanced/02-guardrails/" />
+  <LinkCard title="9.2 — Model Router" description="Task classification, dynamic routing, cost optimization" href="/en/level-9-advanced/03-model-router/" />
+  <LinkCard title="9.3 — Comparing Outputs" description="Parallel model calls, LLM-as-a-Judge, systematic comparison" href="/en/level-9-advanced/04-comparing-outputs/" />
+  <LinkCard title="9.4 — Research Workflow" description="End-to-end pipeline, all concepts combined, production-ready" href="/en/level-9-advanced/05-research-workflow/" />
+</CardGrid>
 
 ## Boss Fight
 

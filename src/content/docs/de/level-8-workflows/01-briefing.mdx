@@ -7,6 +7,7 @@ sidebar:
     text: 'Expert'
     variant: 'danger'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ Das konkrete Problem: Du willst eine Research-Pipeline bauen, die Quellen sucht,
 
 ## Challenges
 
-| # | Challenge | Konzept |
-|---|-----------|---------|
-| 8.1 | [Workflow](/de/level-8-workflows/02-workflow/) | Sequentielle `generateText`-Calls, Output-Verkettung, spezialisierte Steps |
-| 8.2 | [Streaming to Frontend](/de/level-8-workflows/03-streaming-to-frontend/) | `createDataStream` + `writeData` fuer Step-Fortschritt, Frontend-Konsum |
-| 8.3 | [Custom Loop](/de/level-8-workflows/04-custom-loop/) | Eigener while-Loop, Messages-Array, State-Tracking, finishReason-Check |
-| 8.4 | [Breaking the Loop](/de/level-8-workflows/05-breaking-the-loop/) | Max-Iterations, Timeout, Cost Guard, Quality Check, Partial Results |
+<CardGrid>
+  <LinkCard title="8.1 — Workflow" description="Sequentielle `generateText`-Calls, Output-Verkettung, spezialisierte Steps" href="/de/level-8-workflows/02-workflow/" />
+  <LinkCard title="8.2 — Streaming to Frontend" description="`createDataStream` + `writeData` fuer Step-Fortschritt, Frontend-Konsum" href="/de/level-8-workflows/03-streaming-to-frontend/" />
+  <LinkCard title="8.3 — Custom Loop" description="Eigener while-Loop, Messages-Array, State-Tracking, finishReason-Check" href="/de/level-8-workflows/04-custom-loop/" />
+  <LinkCard title="8.4 — Breaking the Loop" description="Max-Iterations, Timeout, Cost Guard, Quality Check, Partial Results" href="/de/level-8-workflows/05-breaking-the-loop/" />
+</CardGrid>
 
 ## Boss Fight
 

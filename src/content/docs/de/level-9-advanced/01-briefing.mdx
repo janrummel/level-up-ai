@@ -7,6 +7,7 @@ sidebar:
     text: 'Expert'
     variant: 'danger'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ Das konkrete Problem: Du willst ein AI-System das sicher, kosteneffizient und qu
 
 ## Challenges
 
-| # | Challenge | Konzept |
-|---|-----------|---------|
-| 9.1 | [Guardrails](/de/level-9-advanced/02-guardrails/) | Input-Checks (Injection, PII), Output-Checks (Toxicity, Format), Middleware-Pattern |
-| 9.2 | [Model Router](/de/level-9-advanced/03-model-router/) | Aufgabenklassifikation, dynamisches Routing, Kostenoptimierung |
-| 9.3 | [Comparing Outputs](/de/level-9-advanced/04-comparing-outputs/) | Parallele Modell-Aufrufe, LLM-as-a-Judge, systematischer Vergleich |
-| 9.4 | [Research Workflow](/de/level-9-advanced/05-research-workflow/) | End-to-End Pipeline, alle Konzepte vereint, Production-Ready |
+<CardGrid>
+  <LinkCard title="9.1 — Guardrails" description="Input-Checks (Injection, PII), Output-Checks (Toxicity, Format), Middleware-Pattern" href="/de/level-9-advanced/02-guardrails/" />
+  <LinkCard title="9.2 — Model Router" description="Aufgabenklassifikation, dynamisches Routing, Kostenoptimierung" href="/de/level-9-advanced/03-model-router/" />
+  <LinkCard title="9.3 — Comparing Outputs" description="Parallele Modell-Aufrufe, LLM-as-a-Judge, systematischer Vergleich" href="/de/level-9-advanced/04-comparing-outputs/" />
+  <LinkCard title="9.4 — Research Workflow" description="End-to-End Pipeline, alle Konzepte vereint, Production-Ready" href="/de/level-9-advanced/05-research-workflow/" />
+</CardGrid>
 
 ## Boss Fight
 

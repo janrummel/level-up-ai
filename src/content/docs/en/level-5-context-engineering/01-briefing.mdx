@@ -7,6 +7,7 @@ sidebar:
     text: 'Building'
     variant: 'success'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -76,13 +77,13 @@ The concrete problem: Without structured prompts you write a new prompt for ever
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 5.1 | [The Template](/en/level-5-context-engineering/02-the-template/) | Structure system prompts as reusable templates |
-| 5.2 | [Basic Prompting](/en/level-5-context-engineering/03-basic-prompting/) | Turn vague prompts into clear instructions with XML tags |
-| 5.3 | [Exemplars](/en/level-5-context-engineering/04-exemplars/) | Few-shot learning with input-output examples |
-| 5.4 | [Retrieval (RAG)](/en/level-5-context-engineering/05-retrieval/) | Dynamically load external knowledge into the prompt |
-| 5.5 | [Chain of Thought](/en/level-5-context-engineering/06-chain-of-thought/) | Make the LLM reason step by step |
+<CardGrid>
+  <LinkCard title="5.1 — The Template" description="Structure system prompts as reusable templates" href="/en/level-5-context-engineering/02-the-template/" />
+  <LinkCard title="5.2 — Basic Prompting" description="Turn vague prompts into clear instructions with XML tags" href="/en/level-5-context-engineering/03-basic-prompting/" />
+  <LinkCard title="5.3 — Exemplars" description="Few-shot learning with input-output examples" href="/en/level-5-context-engineering/04-exemplars/" />
+  <LinkCard title="5.4 — Retrieval (RAG)" description="Dynamically load external knowledge into the prompt" href="/en/level-5-context-engineering/05-retrieval/" />
+  <LinkCard title="5.5 — Chain of Thought" description="Make the LLM reason step by step" href="/en/level-5-context-engineering/06-chain-of-thought/" />
+</CardGrid>
 
 ## Boss Fight
 

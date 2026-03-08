@@ -7,6 +7,7 @@ sidebar:
     text: 'Basics'
     variant: 'note'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -75,14 +76,14 @@ The concrete problem: You want to integrate AI into your code, but every provide
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 1.1 | [What is the AI SDK?](/en/level-1-ai-sdk-basics/02-what-is-ai-sdk/) | SDK architecture, three libraries, first API call |
-| 1.2 | [Your first model](/en/level-1-ai-sdk-basics/03-choosing-your-model/) | Provider system, model selection, switching providers |
-| 1.3 | [Generating text](/en/level-1-ai-sdk-basics/04-generating-text/) | `generateText` API, result object, usage tracking |
-| 1.4 | [Streaming text](/en/level-1-ai-sdk-basics/05-streaming-text/) | `streamText`, `textStream`, real-time output |
-| 1.5 | [Structured output](/en/level-1-ai-sdk-basics/06-structured-output/) | `Output.object`, `Output.array`, Zod schemas |
-| 1.6 | [System prompts](/en/level-1-ai-sdk-basics/07-system-prompts/) | `system` parameter, role behavior, tone setting |
+<CardGrid>
+  <LinkCard title="1.1 — What is the AI SDK?" description="SDK architecture, three libraries, first API call" href="/en/level-1-ai-sdk-basics/02-what-is-ai-sdk/" />
+  <LinkCard title="1.2 — Your first model" description="Provider system, model selection, switching providers" href="/en/level-1-ai-sdk-basics/03-choosing-your-model/" />
+  <LinkCard title="1.3 — Generating text" description="generateText API, result object, usage tracking" href="/en/level-1-ai-sdk-basics/04-generating-text/" />
+  <LinkCard title="1.4 — Streaming text" description="streamText, textStream, real-time output" href="/en/level-1-ai-sdk-basics/05-streaming-text/" />
+  <LinkCard title="1.5 — Structured output" description="Output.object, Output.array, Zod schemas" href="/en/level-1-ai-sdk-basics/06-structured-output/" />
+  <LinkCard title="1.6 — System prompts" description="system parameter, role behavior, tone setting" href="/en/level-1-ai-sdk-basics/07-system-prompts/" />
+</CardGrid>
 
 ## Boss Fight
 

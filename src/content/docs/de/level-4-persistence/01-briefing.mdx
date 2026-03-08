@@ -7,6 +7,7 @@ sidebar:
     text: 'Aufbau'
     variant: 'success'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ Das konkrete Problem: Ohne Persistence ist Dein Chat ein Goldfish — kein Gedae
 
 ## Challenges
 
-| # | Challenge | Konzept |
-|---|-----------|---------|
-| 4.1 | [On Finish](/de/level-4-persistence/02-on-finish/) | `onFinish` Callback, automatisches Speichern nach Completion |
-| 4.2 | [Chat ID](/de/level-4-persistence/03-chat-id/) | Session-Management, Chat-Zuordnung per ID |
-| 4.3 | [Persistence](/de/level-4-persistence/04-persistence/) | Messages speichern, laden, Chat fortsetzen |
-| 4.4 | [Message Validation](/de/level-4-persistence/05-message-validation/) | Zod Schema, Validation vor dem Speichern |
+<CardGrid>
+  <LinkCard title="4.1 — On Finish" description="`onFinish` Callback, automatisches Speichern nach Completion" href="/de/level-4-persistence/02-on-finish/" />
+  <LinkCard title="4.2 — Chat ID" description="Session-Management, Chat-Zuordnung per ID" href="/de/level-4-persistence/03-chat-id/" />
+  <LinkCard title="4.3 — Persistence" description="Messages speichern, laden, Chat fortsetzen" href="/de/level-4-persistence/04-persistence/" />
+  <LinkCard title="4.4 — Message Validation" description="Zod Schema, Validation vor dem Speichern" href="/de/level-4-persistence/05-message-validation/" />
+</CardGrid>
 
 ## Boss Fight
 

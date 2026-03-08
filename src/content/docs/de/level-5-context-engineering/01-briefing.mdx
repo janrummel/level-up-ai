@@ -7,6 +7,7 @@ sidebar:
     text: 'Aufbau'
     variant: 'success'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -76,13 +77,13 @@ Das konkrete Problem: Ohne strukturierte Prompts schreibst Du fuer jeden API-Cal
 
 ## Challenges
 
-| # | Challenge | Konzept |
-|---|-----------|---------|
-| 5.1 | [The Template](/de/level-5-context-engineering/02-the-template/) | System Prompts als wiederverwendbare Templates strukturieren |
-| 5.2 | [Basic Prompting](/de/level-5-context-engineering/03-basic-prompting/) | Vage Prompts in klare Anweisungen mit XML Tags umwandeln |
-| 5.3 | [Exemplars](/de/level-5-context-engineering/04-exemplars/) | Few-Shot Learning mit Input-Output-Beispielen |
-| 5.4 | [Retrieval (RAG)](/de/level-5-context-engineering/05-retrieval/) | Externes Wissen dynamisch in den Prompt laden |
-| 5.5 | [Chain of Thought](/de/level-5-context-engineering/06-chain-of-thought/) | Das LLM zum schrittweisen Nachdenken bringen |
+<CardGrid>
+  <LinkCard title="5.1 — The Template" description="System Prompts als wiederverwendbare Templates strukturieren" href="/de/level-5-context-engineering/02-the-template/" />
+  <LinkCard title="5.2 — Basic Prompting" description="Vage Prompts in klare Anweisungen mit XML Tags umwandeln" href="/de/level-5-context-engineering/03-basic-prompting/" />
+  <LinkCard title="5.3 — Exemplars" description="Few-Shot Learning mit Input-Output-Beispielen" href="/de/level-5-context-engineering/04-exemplars/" />
+  <LinkCard title="5.4 — Retrieval (RAG)" description="Externes Wissen dynamisch in den Prompt laden" href="/de/level-5-context-engineering/05-retrieval/" />
+  <LinkCard title="5.5 — Chain of Thought" description="Das LLM zum schrittweisen Nachdenken bringen" href="/de/level-5-context-engineering/06-chain-of-thought/" />
+</CardGrid>
 
 ## Boss Fight
 

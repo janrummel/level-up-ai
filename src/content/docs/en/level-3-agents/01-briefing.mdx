@@ -7,6 +7,7 @@ sidebar:
     text: 'Building'
     variant: 'success'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -75,13 +76,13 @@ The concrete problem: You want your LLM to perform real tasks — check the weat
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 3.1 | [Tool Calling](/en/level-3-agents/02-tool-calling/) | `tool()`, Zod inputSchema, execute, integration with generateText |
-| 3.2 | [Tools in the Frontend](/en/level-3-agents/03-tools-in-frontend/) | Message parts, tool-call/tool-result events, UI rendering |
-| 3.3 | [Tool Loop Agent](/en/level-3-agents/04-tool-loop-agent/) | Multi-step tool calls, `stopWhen: stepCountIs()`, steps array |
-| 3.4 | [MCP](/en/level-3-agents/05-mcp/) | `createMCPClient`, transport types, MCP tools with generateText |
-| 3.5 | [Tool Approval](/en/level-3-agents/06-tool-approval/) | `needsApproval`, human-in-the-loop, dynamic approval logic |
+<CardGrid>
+  <LinkCard title="3.1 — Tool Calling" description="tool(), Zod inputSchema, execute, integration with generateText" href="/en/level-3-agents/02-tool-calling/" />
+  <LinkCard title="3.2 — Tools in the Frontend" description="Message parts, tool-call/tool-result events, UI rendering" href="/en/level-3-agents/03-tools-in-frontend/" />
+  <LinkCard title="3.3 — Tool Loop Agent" description="Multi-step tool calls, stopWhen: stepCountIs(), steps array" href="/en/level-3-agents/04-tool-loop-agent/" />
+  <LinkCard title="3.4 — MCP" description="createMCPClient, transport types, MCP tools with generateText" href="/en/level-3-agents/05-mcp/" />
+  <LinkCard title="3.5 — Tool Approval" description="needsApproval, human-in-the-loop, dynamic approval logic" href="/en/level-3-agents/06-tool-approval/" />
+</CardGrid>
 
 ## Boss Fight
 

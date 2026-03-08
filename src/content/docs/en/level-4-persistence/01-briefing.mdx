@@ -7,6 +7,7 @@ sidebar:
     text: 'Building'
     variant: 'success'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -74,12 +75,12 @@ The concrete problem: Without persistence your chat is a goldfish — no memory 
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 4.1 | [On Finish](/en/level-4-persistence/02-on-finish/) | `onFinish` callback, automatic saving after completion |
-| 4.2 | [Chat ID](/en/level-4-persistence/03-chat-id/) | Session management, chat assignment via ID |
-| 4.3 | [Persistence](/en/level-4-persistence/04-persistence/) | Save, load, and resume messages |
-| 4.4 | [Message Validation](/en/level-4-persistence/05-message-validation/) | Zod schema, validation before saving |
+<CardGrid>
+  <LinkCard title="4.1 — On Finish" description="onFinish callback, automatic saving after completion" href="/en/level-4-persistence/02-on-finish/" />
+  <LinkCard title="4.2 — Chat ID" description="Session management, chat assignment via ID" href="/en/level-4-persistence/03-chat-id/" />
+  <LinkCard title="4.3 — Persistence" description="Save, load, and resume messages" href="/en/level-4-persistence/04-persistence/" />
+  <LinkCard title="4.4 — Message Validation" description="Zod schema, validation before saving" href="/en/level-4-persistence/05-message-validation/" />
+</CardGrid>
 
 ## Boss Fight
 

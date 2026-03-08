@@ -7,6 +7,7 @@ sidebar:
     text: 'Advanced'
     variant: 'caution'
 ---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## TL;DR
 
@@ -76,13 +77,13 @@ The concrete problem: LLM outputs are non-deterministic. The same prompt can pro
 
 ## Challenges
 
-| # | Challenge | Concept |
-|---|-----------|---------|
-| 6.1 | [Evalite Basics](/en/level-6-evals/02-evalite-basics/) | Installation, `.eval.ts` file convention, evalite() basic structure |
-| 6.2 | [Deterministic Eval](/en/level-6-evals/03-deterministic-eval/) | Inline scorer, createScorer, Levenshtein, contains check |
-| 6.3 | [LLM-as-a-Judge](/en/level-6-evals/04-llm-as-judge/) | Factuality scorer, score scale A-E, rationale |
-| 6.4 | [Dataset Management](/en/level-6-evals/05-dataset-management/) | Representative datasets, edge cases, dataset critiquing |
-| 6.5 | [Langfuse Basics](/en/level-6-evals/06-langfuse/) | Traces, generations, scores, production monitoring |
+<CardGrid>
+  <LinkCard title="6.1 — Evalite Basics" description="Installation, .eval.ts file convention, evalite() basic structure" href="/en/level-6-evals/02-evalite-basics/" />
+  <LinkCard title="6.2 — Deterministic Eval" description="Inline scorer, createScorer, Levenshtein, contains check" href="/en/level-6-evals/03-deterministic-eval/" />
+  <LinkCard title="6.3 — LLM-as-a-Judge" description="Factuality scorer, score scale A-E, rationale" href="/en/level-6-evals/04-llm-as-judge/" />
+  <LinkCard title="6.4 — Dataset Management" description="Representative datasets, edge cases, dataset critiquing" href="/en/level-6-evals/05-dataset-management/" />
+  <LinkCard title="6.5 — Langfuse Basics" description="Traces, generations, scores, production monitoring" href="/en/level-6-evals/06-langfuse/" />
+</CardGrid>
 
 ## Boss Fight
 
