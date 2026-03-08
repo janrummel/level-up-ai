@@ -110,7 +110,7 @@ Beispiel: 22 Prompt-Tokens + 85 Completion-Tokens mit Claude Sonnet:
 
 ### Schicht 3: Extended Usage Details
 
-Ab AI SDK v6 liefern manche Provider erweiterte Token-Details. Diese findest Du in `result.usage` oder im `experimental_providerMetadata`:
+Ab AI SDK v6 liefern manche Provider erweiterte Token-Details. Diese findest Du in `result.usage` oder im `providerMetadata`:
 
 ```typescript
 const result = await generateText({
@@ -133,9 +133,9 @@ console.log('Completion Tokens:', result.usage.completionTokens);
 
 Diese erweiterten Details sind wichtig fuer die Kostenoptimierung. Wenn `cacheReadTokens` > 0, zahlst Du weniger fuer diese Tokens — das lernst Du in Challenge 2.4 (Prompt Caching).
 
-### Schicht 4: Session-Tracking mit onFinish
+### Schicht 4: Session-Tracking ueber mehrere Calls
 
-Fuer eine Anwendung mit mehreren Calls brauchst Du einen Gesamtzaehler. Der `onFinish`-Callback eignet sich perfekt dafuer:
+Fuer eine Anwendung mit mehreren Calls brauchst Du einen Gesamtzaehler. Bei `generateText` ist das Ergebnis nach dem `await` direkt verfuegbar — Du greifst einfach auf `result.usage` zu:
 
 ```typescript
 import { generateText } from 'ai';
@@ -150,17 +150,18 @@ async function trackedGenerate(prompt: string) {
   const result = await generateText({
     model: anthropic(modelId),
     prompt,
-    onFinish({ usage }) {                                   // ← Callback fuer Tracking
-      sessionTokens.prompt += usage.promptTokens;
-      sessionTokens.completion += usage.completionTokens;
-      sessionTokens.total += usage.totalTokens;
-
-      const cost = calculateCost(usage, modelId);
-      sessionCost += cost.totalCost;
-
-      console.log(`[Track] Call: ${cost.totalCost.toFixed(6)} USD | Session: ${sessionCost.toFixed(6)} USD`);
-    },
   });
+
+  // Nach dem await: Usage direkt aus result.usage lesen
+  const { usage } = result;
+  sessionTokens.prompt += usage.promptTokens;
+  sessionTokens.completion += usage.completionTokens;
+  sessionTokens.total += usage.totalTokens;
+
+  const cost = calculateCost(usage, modelId);
+  sessionCost += cost.totalCost;
+
+  console.log(`[Track] Call: ${cost.totalCost.toFixed(6)} USD | Session: ${sessionCost.toFixed(6)} USD`);
 
   return result;
 }
@@ -173,9 +174,13 @@ await trackedGenerate('Was sind Generics?');
 console.log(`\nSession gesamt: ${sessionTokens.total} Tokens, ${sessionCost.toFixed(6)} USD`);
 ```
 
+> **Hinweis:** Bei `streamText` gibt es einen `onFinish`-Callback, der aufgerufen wird wenn der Stream endet. Bei `generateText` brauchst Du keinen Callback — das Ergebnis ist nach dem `await` sofort verfuegbar.
+
 ## TRY
 
 **Aufgabe:** Baue einen Cost Calculator — mache einen `generateText`-Call, lies `usage` aus und berechne die Kosten basierend auf der Modell-Preisliste.
+
+Erstelle eine Datei `challenge-2-2.ts`:
 
 ```typescript
 import { generateText } from 'ai';
@@ -250,6 +255,20 @@ console.log('Output-Kosten:', cost.outputCost.toFixed(6), 'USD');
 console.log('Gesamt:', cost.totalCost.toFixed(6), 'USD');
 ```
 
+Ausfuehren mit:
+
+```bash
+npx tsx challenge-2-2.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+Usage: { promptTokens: 20, completionTokens: 78, totalTokens: 98 }
+Input-Kosten: 0.000060 USD
+Output-Kosten: 0.001170 USD
+Gesamt: 0.001230 USD
+```
+
 **Erklaerung:** Die Funktion trennt Input- und Output-Kosten, weil sie unterschiedlich bepreist sind. Bei Claude Sonnet kostet Output 5x mehr als Input — deshalb lohnt es sich, die Antwortlaenge zu kontrollieren (z.B. "Antworte in maximal 3 Saetzen").
 
 </details>
@@ -275,9 +294,9 @@ graph LR
 
 **Uebung:** Erweitere die `selectModel`-Funktion aus Level 1.2 um automatisches Cost-Tracking. Jeder Call soll seine Kosten loggen.
 
-1. Importiere `selectModel` aus Challenge 1.2 (oder reimplementiere sie)
+1. Kopiere die `selectModel`-Funktion aus Deiner `challenge-1-2.ts` in die aktuelle Datei (oder reimplementiere sie)
 2. Wrape den `generateText`-Call in eine `trackedGenerate`-Funktion
-3. Nutze `onFinish`, um nach jedem Call die Kosten zu berechnen und zu loggen
+3. Lies nach jedem `await generateText(...)` die Kosten aus `result.usage` und logge sie
 4. Teste mit verschiedenen Aufgaben — vergleiche die Kosten zwischen Flash- und Pro-Modell
 
 **Optional Stretch Goal:** Baue ein Session-Tracking, das die kumulierten Kosten ueber mehrere Calls summiert und am Ende eine Zusammenfassung ausgibt ("3 Calls, 450 Tokens, $0.003420 USD").

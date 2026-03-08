@@ -104,6 +104,8 @@ Output tokens are 3-5x more expensive than input tokens. This means: A prompt th
 
 **Task:** Count tokens for different texts and compare German vs. English.
 
+Create a file `challenge-2-1.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -173,7 +175,29 @@ const diff = ((resultDE.usage.totalTokens - resultEN.usage.totalTokens) / result
 console.log(`\nGerman requires ${diff}% more tokens than English`);
 ```
 
-**Explanation:** You'll see that the German prompt and response typically consume 20-40% more tokens than the English version. This is due to the tokenizer distribution — English words appear more frequently in the training data and are encoded more efficiently.
+Run with:
+
+```bash
+npx tsx challenge-2-1.ts
+```
+
+**Expected output (approximate):**
+```
+--- Deutsch ---
+Prompt Tokens: 22
+Completion Tokens: 55
+Total Tokens: 77
+--- English ---
+Prompt Tokens: 18
+Completion Tokens: 42
+Total Tokens: 60
+
+German requires 28.3% more tokens than English
+```
+
+The exact numbers vary with each call (LLM output is non-deterministic), but the German prompt should consistently consume 20-40% more tokens.
+
+**Explanation:** This is due to the tokenizer distribution — English words appear more frequently in the training data and are encoded more efficiently.
 
 </details>
 

@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-08 | Gesamt-Score: **11 / 100**
+> Letztes Update: 2026-03-08 | Gesamt-Score: **19 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -10,7 +10,7 @@
 
 ```
 Level 1  ██████████ 100%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 2  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 2  █████████░  90%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 3  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 4  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 5  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -19,7 +19,7 @@ Level 7  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░�
 Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 11%
+                                                         Gesamt: 19%
 ```
 
 ---
@@ -99,17 +99,43 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 2: LLM Fundamentals — Score: –/100 OFFEN
+## Level 2: LLM Fundamentals — Score: 90/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-08 | Fixes: 2026-03-08
 
-| Kategorie | Punkte | Status |
-|-----------|--------|--------|
-| Fachliche Korrektheit | –/25 | Nicht geprueft |
-| Didaktische Qualitaet | –/25 | Nicht geprueft |
-| Operative Tauglichkeit | –/25 | Nicht geprueft |
-| Quellen & Nachweise | –/15 | Nicht geprueft |
-| Vollstaendigkeit | –/10 | Nicht geprueft |
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **22/25** | Nach Fixes korrekt: `providerMetadata` statt `experimental_`, `onFinish` durch `result.usage` ersetzt, Token-Schaetzung korrigiert. -3: Walkthrough-System-Prompt in 05 zeigt Caching-Mechanik mit einem zu kurzen Prompt (unter 1024 Tokens), koennte Lernende irritieren |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, THINK-Fragen stark, Mermaid-Diagramme klar, Progression logisch (Tokens → Usage → Context → Caching). -1: Level Complete koennte Boss-Fight-Ergebnis staerker referenzieren |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen + `npx tsx` bei allen Challenges, erwarteter Output bei Loesungen, Projektverzeichnis-Hinweis im Briefing. -3: Kein Troubleshooting-Abschnitt fuer Level-2-spezifische Fehler (Cache Miss ohne Meldung, TTL-Verfall) |
+| Quellen & Nachweise | **12/15** | 6/7 Seiten mit Quellen (86%), alle Rang 1. -3: Level Complete ohne Quellen (konsistent mit Pattern, aber koennte auf Challenge-Quellen verweisen) |
+| Vollstaendigkeit | **10/10** | 7 DE + 7 EN Dateien, Briefing+4 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **90/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 2 | 5 | 7 | 0 FAIL, 3 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 2 | 5 | 5 | 0 FAIL, 3 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Erste Pruefung: Progression L1→L2 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 86% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren (Build erfolgreich)
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-2-spezifische Fehler
+2. COMBINE-Referenzen auf `selectModel()` ohne detaillierte Import-Anleitung
+3. Walkthrough-System-Prompt in 05 ist unter 1024 Tokens (zeigt Mechanik, aber kein echtes Caching)
 
 ---
 
@@ -178,3 +204,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | Datum | Aenderung | Score-Aenderung |
 |-------|-----------|-----------------|
 | 2026-03-08 | Level 1 Review + Fixes (DE+EN), Quality Framework erstellt | 0% → 11% |
+| 2026-03-08 | Level 2 Review + Fixes (DE+EN): 3 P0 (API-Fehler), 1 P1 (fehlende Befehle), 6 P2 | 11% → 19% |

@@ -110,7 +110,7 @@ Example: 22 prompt tokens + 85 completion tokens with Claude Sonnet:
 
 ### Layer 3: Extended Usage Details
 
-Starting with AI SDK v6, some providers return extended token details. You'll find these in `result.usage` or in the `experimental_providerMetadata`:
+Starting with AI SDK v6, some providers return extended token details. You'll find these in `result.usage` or in `providerMetadata`:
 
 ```typescript
 const result = await generateText({
@@ -133,9 +133,9 @@ console.log('Completion Tokens:', result.usage.completionTokens);
 
 These extended details are important for cost optimization. If `cacheReadTokens` > 0, you pay less for those tokens — you'll learn about that in Challenge 2.4 (Prompt Caching).
 
-### Layer 4: Session tracking with onFinish
+### Layer 4: Session tracking across multiple calls
 
-For an application with multiple calls, you need a running total. The `onFinish` callback is perfect for this:
+For an application with multiple calls, you need a running total. With `generateText`, the result is available directly after the `await` — you simply access `result.usage`:
 
 ```typescript
 import { generateText } from 'ai';
@@ -150,17 +150,18 @@ async function trackedGenerate(prompt: string) {
   const result = await generateText({
     model: anthropic(modelId),
     prompt,
-    onFinish({ usage }) {                                   // ← Callback for tracking
-      sessionTokens.prompt += usage.promptTokens;
-      sessionTokens.completion += usage.completionTokens;
-      sessionTokens.total += usage.totalTokens;
-
-      const cost = calculateCost(usage, modelId);
-      sessionCost += cost.totalCost;
-
-      console.log(`[Track] Call: ${cost.totalCost.toFixed(6)} USD | Session: ${sessionCost.toFixed(6)} USD`);
-    },
   });
+
+  // After the await: read usage directly from result.usage
+  const { usage } = result;
+  sessionTokens.prompt += usage.promptTokens;
+  sessionTokens.completion += usage.completionTokens;
+  sessionTokens.total += usage.totalTokens;
+
+  const cost = calculateCost(usage, modelId);
+  sessionCost += cost.totalCost;
+
+  console.log(`[Track] Call: ${cost.totalCost.toFixed(6)} USD | Session: ${sessionCost.toFixed(6)} USD`);
 
   return result;
 }
@@ -173,9 +174,13 @@ await trackedGenerate('Was sind Generics?');
 console.log(`\nSession total: ${sessionTokens.total} Tokens, ${sessionCost.toFixed(6)} USD`);
 ```
 
+> **Note:** `streamText` has an `onFinish` callback that fires when the stream ends. With `generateText` you don't need a callback — the result is immediately available after the `await`.
+
 ## TRY
 
 **Task:** Build a Cost Calculator — make a `generateText` call, read `usage`, and calculate the costs based on the model pricing table.
+
+Create a file `challenge-2-2.ts`:
 
 ```typescript
 import { generateText } from 'ai';
@@ -250,6 +255,20 @@ console.log('Output cost:', cost.outputCost.toFixed(6), 'USD');
 console.log('Total:', cost.totalCost.toFixed(6), 'USD');
 ```
 
+Run with:
+
+```bash
+npx tsx challenge-2-2.ts
+```
+
+**Expected output (approximate):**
+```
+Usage: { promptTokens: 20, completionTokens: 78, totalTokens: 98 }
+Input cost: 0.000060 USD
+Output cost: 0.001170 USD
+Total: 0.001230 USD
+```
+
 **Explanation:** The function separates input and output costs because they are priced differently. With Claude Sonnet, output costs 5x more than input — so it pays to control response length (e.g. "Answer in at most 3 sentences").
 
 </details>
@@ -275,9 +294,9 @@ graph LR
 
 **Exercise:** Extend the `selectModel` function from Level 1.2 with automatic cost tracking. Every call should log its costs.
 
-1. Import `selectModel` from Challenge 1.2 (or re-implement it)
+1. Copy the `selectModel` function from your `challenge-1-2.ts` into the current file (or re-implement it)
 2. Wrap the `generateText` call in a `trackedGenerate` function
-3. Use `onFinish` to calculate and log costs after each call
+3. After each `await generateText(...)`, read costs from `result.usage` and log them
 4. Test with different tasks — compare costs between Flash and Pro models
 
 **Optional Stretch Goal:** Build session tracking that sums cumulative costs across multiple calls and outputs a summary at the end ("3 calls, 450 tokens, $0.003420 USD").

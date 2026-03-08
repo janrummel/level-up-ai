@@ -104,6 +104,8 @@ Output-Tokens sind 3-5x teurer als Input-Tokens. Das bedeutet: Ein Prompt, der d
 
 **Aufgabe:** Zaehle Tokens fuer verschiedene Texte und vergleiche Deutsch vs. Englisch.
 
+Erstelle eine Datei `challenge-2-1.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -173,7 +175,29 @@ const diff = ((resultDE.usage.totalTokens - resultEN.usage.totalTokens) / result
 console.log(`\nDeutsch braucht ${diff}% mehr Tokens als Englisch`);
 ```
 
-**Erklaerung:** Du wirst sehen, dass der deutsche Prompt und die deutsche Antwort typischerweise 20-40% mehr Tokens verbrauchen als die englische Variante. Das liegt an der Tokenizer-Verteilung — englische Woerter kommen haeufiger in den Trainingsdaten vor und werden effizienter kodiert.
+Ausfuehren mit:
+
+```bash
+npx tsx challenge-2-1.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+--- Deutsch ---
+Prompt Tokens: 22
+Completion Tokens: 55
+Total Tokens: 77
+--- English ---
+Prompt Tokens: 18
+Completion Tokens: 42
+Total Tokens: 60
+
+Deutsch braucht 28.3% mehr Tokens als Englisch
+```
+
+Die genauen Zahlen variieren bei jedem Aufruf (LLM-Output ist nicht deterministisch), aber der deutsche Prompt sollte konsistent 20-40% mehr Tokens verbrauchen.
+
+**Erklaerung:** Das liegt an der Tokenizer-Verteilung — englische Woerter kommen haeufiger in den Trainingsdaten vor und werden effizienter kodiert.
 
 </details>
 

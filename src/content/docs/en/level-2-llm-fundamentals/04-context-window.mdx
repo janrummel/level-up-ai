@@ -177,6 +177,8 @@ async function summarizeOldMessages(
 
 **Task:** Simulate a conversation approaching the Context Limit. Calculate the token count and check whether it fits in the window.
 
+Create a file `challenge-2-3.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -271,6 +273,24 @@ if (utilization > 80) {
   console.warn('Recommendation: Summarize or remove old messages.');
 }
 ```
+
+Run with:
+
+```bash
+npx tsx challenge-2-3.ts
+```
+
+**Expected output (approximate):**
+```
+System: 45 tokens
+Messages: 6871 tokens (10 messages)
+Output reserve: 4096 tokens
+Total: 11012 tokens
+Remaining: 188988 tokens
+Utilization: 5.5%
+```
+
+This example stays well below the limit. In a real chat application with lengthy code reviews and many messages, utilization will climb quickly.
 
 **Explanation:** The `estimateTokens` function uses the rule of thumb of 1 token ≈ 3.5 characters as an average between German and English. In a production application you'd use the provider's tokenizer for exact numbers. The 80% warning gives you a safety buffer before errors occur.
 

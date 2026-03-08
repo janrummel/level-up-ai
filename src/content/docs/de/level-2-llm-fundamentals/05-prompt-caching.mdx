@@ -72,7 +72,7 @@ Nicht alle Provider unterstuetzen Prompt Caching:
 
 | Provider | Caching | Min. Prefix-Laenge | Cache-Dauer |
 |----------|---------|-------------------|-------------|
-| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) | 5 Minuten |
+| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) | 5 Minuten (TTL — Time To Live, danach verfaellt der Cache) |
 | Google (Gemini) | Ja | variabel | variabel |
 | OpenAI | Automatisch | 1.024 Tokens | bis zu 1 Stunde |
 
@@ -115,7 +115,8 @@ Du bist ein erfahrener Code-Review-Assistent.
 [1-2 Saetze Gesamtbewertung]
 </output-format>
 `.trim();
-// Dieser System Prompt hat ca. 200+ Woerter → weit ueber 1024 Tokens
+// Dieser System Prompt hat ca. 150 Woerter ≈ 200-250 Tokens (unter dem 1024-Token-Minimum fuer Caching).
+// Fuer die Demonstration der Mechanik reicht das — fuer echtes Caching muss der Prompt laenger sein (siehe TRY-Aufgabe).
 
 // Erster Request — Cache wird erstellt
 const result1 = await generateText({
@@ -153,7 +154,7 @@ Die Preisstruktur mit Caching bei Anthropic:
 | Cache Read | $0.30 / 1M | 10% (90% guenstiger!) |
 | Output | $15.00 / 1M | — |
 
-Der erste Request (Cache Write) ist sogar etwas teurer als normal. Aber ab dem zweiten Request sparst Du 90%. Die Break-Even-Rechnung:
+Der erste Request (Cache Write) ist sogar etwas teurer als normal. Aber ab dem zweiten Request sparst Du 90%. Die Break-Even-Rechnung (ab wann sich Caching lohnt):
 
 ```typescript
 // Beispiel: 2000-Token System Prompt, Claude Sonnet
@@ -179,6 +180,8 @@ Ab 2 Requests mit demselben Prefix lohnt sich Caching. Je mehr Requests, desto g
 ## TRY
 
 **Aufgabe:** Mache zwei Calls mit demselben langen System Prompt und vergleiche die Usage Details.
+
+Erstelle eine Datei `challenge-2-4.ts`:
 
 ```typescript
 import { generateText } from 'ai';
@@ -309,7 +312,28 @@ console.log('Completion Tokens:', result2.usage.completionTokens);
 console.log('Total:', result2.usage.totalTokens);
 ```
 
-**Erklaerung:** Beide Requests nutzen denselben System Prompt. Beim zweiten Request sollte der Provider den System Prompt aus dem Cache lesen. Die `promptTokens`-Zahl bleibt gleich (die Tokens werden trotzdem gezaehlt), aber die effektiven Kosten sind niedriger. Anthropic zeigt Cache-Details in erweiterten Usage-Feldern an.
+Ausfuehren mit:
+
+```bash
+npx tsx challenge-2-4.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+--- Request 1 (Cache Creation) ---
+Prompt Tokens: 380
+Completion Tokens: 195
+Total: 575
+
+--- Request 2 (Cache Hit erwartet) ---
+Prompt Tokens: 375
+Completion Tokens: 180
+Total: 555
+```
+
+Die `promptTokens`-Zahlen sind aehnlich, weil die Tokens trotzdem gezaehlt werden. Den Cache-Hit erkennst Du an den erweiterten Usage-Feldern: Pruefe `providerMetadata` fuer `cacheReadTokens` > 0 beim zweiten Call.
+
+**Erklaerung:** Beide Requests nutzen denselben System Prompt. Beim zweiten Request liest der Provider den System Prompt aus dem Cache. Die effektiven Kosten sind niedriger, auch wenn die Token-Zahlen aehnlich aussehen.
 
 </details>
 

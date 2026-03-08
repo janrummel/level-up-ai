@@ -62,6 +62,8 @@ graph LR
 
 ## Starter code
 
+Create a file `boss-fight-2.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -94,6 +96,12 @@ import { anthropic } from '@ai-sdk/anthropic';
 // TODO: Execute 3+ calls with the same System Prompt
 
 // TODO: Display the Session Report
+```
+
+Run with:
+
+```bash
+npx tsx boss-fight-2.ts
 ```
 
 ## Evaluation criteria
@@ -140,7 +148,7 @@ interface SessionStats {
 }
 ```
 
-Update it in the `onFinish` callback or after each `generateText` call. The cache hit rate is `cacheHits / (cacheHits + cacheMisses) * 100`.
+Update it after each `generateText` call (with `generateText`, `result.usage` is available directly after the `await`). The cache hit rate is `cacheHits / (cacheHits + cacheMisses) * 100`.
 
 </details>
 

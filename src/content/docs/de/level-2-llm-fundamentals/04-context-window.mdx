@@ -106,7 +106,7 @@ Stille Truncation ist gefaehrlicher als ein Fehler. Das LLM antwortet normal, ha
 
 Drei Strategien fuer lange Konversationen:
 
-**Strategie 1: Truncation (aelteste Messages entfernen)**
+**Strategie 1: Truncation (Abschneiden aelterer Nachrichten)**
 
 ```typescript
 function truncateMessages(
@@ -176,6 +176,8 @@ async function summarizeOldMessages(
 ## TRY
 
 **Aufgabe:** Simuliere eine Konversation, die sich dem Context Limit naehert. Berechne die Token-Anzahl und pruefe, ob sie ins Fenster passt.
+
+Erstelle eine Datei `challenge-2-3.ts`:
 
 ```typescript
 import { generateText } from 'ai';
@@ -271,6 +273,24 @@ if (utilization > 80) {
   console.warn('Empfehlung: Alte Messages zusammenfassen oder entfernen.');
 }
 ```
+
+Ausfuehren mit:
+
+```bash
+npx tsx challenge-2-3.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+System: 45 Tokens
+Messages: 6871 Tokens (10 Nachrichten)
+Output-Reserve: 4096 Tokens
+Gesamt: 11012 Tokens
+Verbleibend: 188988 Tokens
+Auslastung: 5.5%
+```
+
+Dieses Beispiel bleibt weit unter dem Limit. In einer echten Chat-Anwendung mit langen Code-Reviews und vielen Nachrichten wird die Auslastung schnell steigen.
 
 **Erklaerung:** Die `estimateTokens`-Funktion nutzt die Faustregel 1 Token ≈ 3.5 Zeichen als Durchschnitt zwischen Deutsch und Englisch. In einer Produktionsanwendung wuerdest Du den Tokenizer des Providers verwenden fuer exakte Zahlen. Die 80%-Warnung gibt Dir einen Sicherheitspuffer, bevor es zu Fehlern kommt.
 
