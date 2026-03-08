@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-08 | Gesamt-Score: **19 / 100**
+> Letztes Update: 2026-03-08 | Gesamt-Score: **28 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -11,7 +11,7 @@
 ```
 Level 1  ██████████ 100%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 2  █████████░  90%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 3  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 3  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 4  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 5  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 6  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -19,7 +19,7 @@ Level 7  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░�
 Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 19%
+                                                         Gesamt: 28%
 ```
 
 ---
@@ -139,9 +139,42 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 3: Agents & MCP — Score: –/100 OFFEN
+## Level 3: Agents & MCP — Score: 92/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-08 | Fixes: 2026-03-08
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **24/25** | Alle AI SDK v6 APIs korrekt (`tool()`, `inputSchema`, `stopWhen: stepCountIs()`, `createMCPClient`, `toolCallApproval`, `needsApproval`). Modellname korrekt. -1: `eval()` war im Lernmaterial (gefixt zu switch/case) |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, THINK-Fragen stark, COMBINE-Vernetzung exzellent (Level- und Challenge-uebergreifend). -1: Progression L2→L3 koennte expliziter verknuepft werden |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, npx tsx, erwarteter Output, npm install fuer MCP-Pakete. -3: Kein Troubleshooting-Abschnitt (konsistentes P2 ueber alle Levels) |
+| Quellen & Nachweise | **12/15** | 7/8 Seiten mit Quellen (88%), alle Rang 1-2. -3: Level Complete ohne Quellen (konsistent), Anthropic-Quelle war unspezifisch (gefixt) |
+| Vollstaendigkeit | **10/10** | 8 DE + 8 EN Dateien, Briefing+5 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **92/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 0 | 5 | 9 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 6 | 12 | 78 | 0 FAIL, 4 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L2→L3 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 88% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl + erwarteten Output
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-3-spezifische Fehler
+2. Projektverzeichnis weiterhin nicht explizit im Briefing genannt
 
 ---
 
@@ -205,3 +238,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 |-------|-----------|-----------------|
 | 2026-03-08 | Level 1 Review + Fixes (DE+EN), Quality Framework erstellt | 0% → 11% |
 | 2026-03-08 | Level 2 Review + Fixes (DE+EN): 3 P0 (API-Fehler), 1 P1 (fehlende Befehle), 6 P2 | 11% → 19% |
+| 2026-03-08 | Level 3 Review + Fixes (DE+EN): 2 P0 (fehlende npm install, falsche Quelle), 3 P1 (Dateinamen, Befehle, Output), 4 P2 | 19% → 28% |

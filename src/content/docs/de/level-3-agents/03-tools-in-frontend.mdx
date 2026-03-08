@@ -182,6 +182,8 @@ Die `Map` trackt den Status jedes Tool Calls ueber seine `toolCallId`. In einem 
 
 ## TRY
 
+**Datei:** `challenge-3-2.ts`
+
 **Aufgabe:** Nutze `fullStream` mit einem Tool und formatiere alle Events im Terminal — Text, Tool Calls und Tool Results getrennt.
 
 ```typescript
@@ -268,6 +270,28 @@ for await (const part of result.fullStream) {
 ```
 
 **Erklaerung:** Das LLM ruft `weather` fuer "Berlin" und "Muenchen" auf — moeglicherweise in separaten Tool Calls. Jeder Call erzeugt erst ein `tool-call` Event (mit Args), dann nach Ausfuehrung ein `tool-result` Event (mit Ergebnis). Am Ende kommt Text, der beide Ergebnisse zusammenfasst.
+
+**Ausfuehren:** `npx tsx challenge-3-2.ts`
+
+**Erwarteter Output (ungefaehr):**
+```
+
+[TOOL CALL] weather
+  Parameter: { "location": "Berlin" }
+[TOOL RESULT] weather
+  Ergebnis: { "location": "Berlin", "temperature": 18, "condition": "sunny" }
+
+[TOOL CALL] weather
+  Parameter: { "location": "Muenchen" }
+[TOOL RESULT] weather
+  Ergebnis: { "location": "Muenchen", "temperature": 12, "condition": "cloudy" }
+
+In Berlin sind es 18 Grad und sonnig, in Muenchen 12 Grad und bewoelkt.
+
+--- Stream beendet ---
+Tokens: ~350
+Finish Reason: stop
+```
 
 </details>
 

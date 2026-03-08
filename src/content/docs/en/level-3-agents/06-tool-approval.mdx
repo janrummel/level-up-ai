@@ -95,7 +95,7 @@ With `generateText`, the approval flow is controlled via the `toolCallApproval` 
 import { generateText, tool, stepCountIs } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
-import * as readline from 'readline';
+import * as readline from 'readline';                    // ← Node.js built-in, no installation needed
 
 const readFileTool = tool({
   description: 'Read a file from the filesystem',
@@ -217,6 +217,8 @@ const tools = {
 
 ## TRY
 
+**File:** `challenge-3-5.ts`
+
 **Task:** Build a file management toolset with a `readFile` (safe) and a `deleteFile` (with approval). Simulate the approval flow in the terminal.
 
 ```typescript
@@ -329,6 +331,25 @@ console.log(`\nAnswer: ${text}`);
 
 **Explanation:** The agent first reads `/tmp/notes.txt` (automatically, no approval needed) and then tries to delete the file. On the `deleteFile` call the approval guard kicks in: The user is asked in the terminal. On "y" the file is deleted, on "n" the LLM receives the rejection and reacts accordingly — e.g. with "The file was not deleted because the action was rejected."
 
+**Run:** `npx tsx challenge-3-5.ts`
+
+**Expected output (approximate):**
+```
+--- Approval Request ---
+Tool: deleteFile
+Parameters: {"path":"/tmp/notes.txt"}
+Execute? (y/n): y
+Approved.
+
+=== Result ===
+Steps: 2
+Tool Calls: 2
+  - readFile({"path":"/tmp/notes.txt"})
+  - deleteFile({"path":"/tmp/notes.txt"})
+
+Answer: The file /tmp/notes.txt was read and then deleted.
+```
+
 </details>
 
 ## COMBINE
@@ -370,5 +391,5 @@ graph LR
 ## Sources
 
 - [Vercel AI SDK: Tool Calling — Human in the Loop](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#human-in-the-loop)
-- [Anthropic: Agentic Systems — Autonomy vs. Safety](https://platform.claude.com)
+- [Anthropic: Building Effective Agents](https://docs.anthropic.com/en/docs/build-with-claude/agentic-systems)
 - [ai-hero-dev Exercise 03.06](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/03-agents-and-tools/03.06-tool-approval)

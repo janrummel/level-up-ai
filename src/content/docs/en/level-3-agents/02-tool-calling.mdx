@@ -131,6 +131,8 @@ for (const toolResult of result.toolResults) {
 
 ## TRY
 
+**File:** `challenge-3-1.ts`
+
 **Task:** Build a calculator tool with three operations (add, subtract, multiply) and use it with `generateText`.
 
 ```typescript
@@ -201,6 +203,15 @@ console.log('Tool Results:', result.toolResults);
 ```
 
 **Explanation:** The LLM recognizes the math problem, calls `calculator` with `{ operation: 'multiply', a: 42, b: 17 }`, gets back `{ result: 714 }`, and formulates a natural response like "42 times 17 is 714."
+
+**Run:** `npx tsx challenge-3-1.ts`
+
+**Expected output (approximate):**
+```
+Answer: 42 times 17 is 714.
+Tool Calls: [{ toolName: 'calculator', args: { operation: 'multiply', a: 42, b: 17 } }]
+Tool Results: [{ result: { operation: 'multiply', a: 42, b: 17, result: 714 } }]
+```
 
 </details>
 

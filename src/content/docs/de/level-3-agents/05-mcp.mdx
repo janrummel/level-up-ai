@@ -49,6 +49,14 @@ graph LR
 
 ## WALKTHROUGH
 
+### Setup fuer diese Challenge
+
+MCP erfordert zwei zusaetzliche Pakete:
+
+```bash
+npm install @ai-sdk/mcp @modelcontextprotocol/sdk
+```
+
 ### Schicht 1: MCP Client erstellen
 
 Der MCP Client ist die Bruecke zwischen Deiner App und einem MCP Server. Du erstellst ihn mit `createMCPClient`:
@@ -212,6 +220,8 @@ const result = streamText({
 
 ## TRY
 
+**Datei:** `challenge-3-4.ts`
+
 **Aufgabe:** Erstelle einen MCP Client mit stdio Transport, lade die verfuegbaren Tools und nutze sie mit `generateText`.
 
 ```typescript
@@ -278,6 +288,18 @@ try {
 ```
 
 **Erklaerung:** Der `@modelcontextprotocol/server-everything` ist ein offizieller Demo-Server, der verschiedene Test-Tools bereitstellt (echo, add, etc.). Der stdio Transport startet ihn als lokalen Kindprozess. `client.tools()` laedt automatisch alle verfuegbaren Tools mit ihren Beschreibungen und Schemas. Nach der Nutzung wird der Client — und damit der Kindprozess — sauber geschlossen.
+
+> **Hinweis:** `npx -y` laedt und startet den Demo-Server automatisch — Du musst ihn nicht vorher installieren.
+
+**Ausfuehren:** `npx tsx challenge-3-4.ts`
+
+**Erwarteter Output (ungefaehr):**
+```
+Verfuegbare Tools: [ 'echo', 'add', 'longRunningOperation', ... ]
+
+Antwort: Hello from MCP!
+Tool Calls: [{ toolName: 'echo', args: { message: 'Hello from MCP!' } }]
+```
 
 </details>
 

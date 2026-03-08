@@ -77,6 +77,8 @@ console.log(result.text);                                // ← Final answer aft
 
 Without `stopWhen`, `generateText` performs only a single tool call. With `stopWhen: stepCountIs(5)` the LLM may take up to 5 steps — it decides on its own when it has enough information and generates a final answer.
 
+> **What is a step?** A step = one LLM call. Each step can contain multiple tool calls (when the LLM calls tools in parallel). After each step, the tool results are returned, and the LLM decides whether it needs another step.
+
 ### Layer 2: Evaluating steps
 
 Each step in the loop is stored in the `steps` array. This lets you trace what the agent did:
@@ -139,14 +141,16 @@ const summarizeTool = tool({
 });
 
 const calculatorTool = tool({
-  description: 'Perform a math calculation',
+  description: 'Perform a math calculation with two numbers',
   inputSchema: z.object({
-    expression: z.string().describe('The math expression, e.g. "2024 - 2010"'),
+    operation: z.enum(['add', 'subtract', 'multiply']).describe('The math operation'),
+    a: z.number().describe('First number'),
+    b: z.number().describe('Second number'),
   }),
-  execute: async ({ expression }) => ({
-    expression,
-    result: eval(expression),                            // ← Demo only! Never use eval in production.
-  }),
+  execute: async ({ operation, a, b }) => {
+    const ops = { add: a + b, subtract: a - b, multiply: a * b };
+    return { operation, a, b, result: ops[operation] };  // ← Safe, no eval()
+  },
 });
 
 const { text, steps } = await generateText({
@@ -164,7 +168,7 @@ for (const [i, step] of steps.entries()) {
 }
 ```
 
-The LLM might proceed like this: Step 1 → `search("Rust history")` → Step 2 → `calculator("2026 - 2010")` → Step 3 → `summarize(...)` → Step 4 → Final answer. The order is decided autonomously by the LLM.
+The LLM might proceed like this: Step 1 → `search("Rust history")` → Step 2 → `calculator({ operation: 'subtract', a: 2026, b: 2010 })` → Step 3 → `summarize(...)` → Step 4 → Final answer. The order is decided autonomously by the LLM.
 
 ### Layer 4: onStepFinish callback
 
@@ -192,6 +196,8 @@ const { text, steps } = await generateText({
 `onStepFinish` is called after every step — regardless of whether the step contained a tool call or text. This gives you live feedback on the agent's progress.
 
 ## TRY
+
+**File:** `challenge-3-3.ts`
 
 **Task:** Build a research agent with `search` and `summarize` tools. The agent should research and summarize in up to 3 steps.
 
@@ -295,6 +301,30 @@ console.log(`\nAnswer:\n${text}`);
 ```
 
 **Explanation:** The agent runs through the agentic loop: Step 1 → call `search` → receive search results → Step 2 → `summarize` with the results → receive summary → Step 3 → formulate final answer. The LLM decides the order autonomously.
+
+**Run:** `npx tsx challenge-3-3.ts`
+
+**Expected output (approximate):**
+```
+--- Step 1 ---
+  Tools: search
+  Tokens: ~200
+--- Step 2 ---
+  Tools: summarize
+  Tokens: ~250
+--- Step 3 ---
+  Final answer generated
+  Tokens: ~300
+
+=== Result ===
+Steps: 3
+Tool Calls: 2
+  - search({"query":"TypeScript"})
+  - summarize({"text":"TypeScript is..."})
+
+Answer:
+TypeScript is a programming language developed by Microsoft...
+```
 
 </details>
 
