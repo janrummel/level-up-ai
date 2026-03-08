@@ -3,6 +3,8 @@ title: Roadmap
 description: The learning path at a glance — which level builds on which?
 ---
 
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
 # Roadmap
 
 ## The Skill Tree
@@ -71,14 +73,14 @@ Context Engineering, Evals, and Streaming — everything that makes production-r
 
 ## Level Details
 
-| Level | Challenges | Core Diagram | Depends on |
-|-------|-----------|--------------|------------|
-| 1 — AI SDK Basics | 6 | Flow: User → SDK → Provider → LLM | — |
-| 2 — LLM Fundamentals | 4 | Box: Tokens, Context Window, Caching | Level 1 |
-| 3 — Agents & MCP | 5 | Sequence: LLM → Tool → LLM Loop | Level 1, 2 |
-| 4 — Persistence | 4 | Flow: Chat → API → DB → Reload | Level 1 |
-| 5 — Context Engineering | 5 | Box: Prompt Template Layers | Level 1, 2 |
-| 6 — Evals | 5 | Flow: Task → Scorer → Score → Iterate | Level 1, 5 |
-| 7 — Streaming | 4 | Sequence: Stream Events Timeline | Level 1 |
-| 8 — Workflows | 4 | Flow: Multi-Step Agent Pipeline | Level 3, 7 |
-| 9 — Advanced Patterns | 4 | Decision Tree: Model Router | Level 6, 8 |
+<CardGrid>
+  <LinkCard title="Level 1 — AI SDK Basics" description="6 Challenges · Generate text, stream, structured output and system prompts" href="/en/level-1-ai-sdk-basics/01-briefing/" />
+  <LinkCard title="Level 2 — LLM Fundamentals" description="4 Challenges · Tokens, Context Windows, Usage Tracking and Prompt Caching" href="/en/level-2-llm-fundamentals/01-briefing/" />
+  <LinkCard title="Level 3 — Agents & MCP" description="5 Challenges · Tool Calling, MCP via stdio/HTTP, Tool Loop Agent" href="/en/level-3-agents/01-briefing/" />
+  <LinkCard title="Level 4 — Persistence" description="4 Challenges · Callbacks, Chat IDs, Database Persistence, Message Validation" href="/en/level-4-persistence/01-briefing/" />
+  <LinkCard title="Level 5 — Context Engineering" description="5 Challenges · Prompt Templates, Exemplars, RAG, Chain of Thought" href="/en/level-5-context-engineering/01-briefing/" />
+  <LinkCard title="Level 6 — Evals" description="5 Challenges · Evalite, Deterministic Evals, LLM-as-Judge, Langfuse" href="/en/level-6-evals/01-briefing/" />
+  <LinkCard title="Level 7 — Streaming" description="4 Challenges · Custom Data Parts, Message Metadata, Error Handling" href="/en/level-7-streaming/01-briefing/" />
+  <LinkCard title="Level 8 — Workflows" description="4 Challenges · Multi-Step Workflows, Custom Loops, Frontend Streaming" href="/en/level-8-workflows/01-briefing/" />
+  <LinkCard title="Level 9 — Advanced Patterns" description="4 Challenges · Guardrails, Model Router, Output Comparison, Research Workflow" href="/en/level-9-advanced/01-briefing/" />
+</CardGrid>
