@@ -155,17 +155,28 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
    3. BOSS FIGHT & LEVEL COMPLETE STYLING
    ============================================ */
 
+/* Boss Fight — page-level gradient border banner */
+.sl-markdown-content:has(h2#das-szenario),
+.sl-markdown-content:has(h2#the-scenario) {
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, #e74c3c, #e67e22, #e74c3c) 1;
+  padding-top: 1.5rem;
+}
+
 /* Boss Fight scenario section */
 .sl-markdown-content h2#das-szenario,
 .sl-markdown-content h2#the-scenario {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.05));
   border-left: 4px solid #e74c3c;
+  border-right: 4px solid #e67e22;
   color: #e74c3c;
+  font-size: var(--sl-text-h3);
+  letter-spacing: 0.03em;
 }
 .sl-markdown-content h2#das-szenario::before,
 .sl-markdown-content h2#the-scenario::before {
