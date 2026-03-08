@@ -40,7 +40,7 @@ Bevor eine Nachricht ans LLM geschickt oder in der Datenbank gespeichert wird, m
 
 ### Schicht 1: Zod Schema fuer Messages
 
-Zod definiert die erwartete Struktur einer Message:
+Zod definiert die erwartete Struktur einer Message. Du kennst Zod bereits aus Level 3 (Tool Calling) — falls noch nicht installiert: `npm install zod`.
 
 ```typescript
 import { z } from 'zod';
@@ -204,6 +204,8 @@ Der Typ von `validation.data` ist automatisch aus dem Zod Schema abgeleitet — 
 
 **Aufgabe:** Definiere ein Zod Message-Schema, validiere eingehende Messages und handle ungueltige Messages graceful.
 
+Erstelle eine Datei `challenge-4-4.ts`:
+
 ```typescript
 import { z } from 'zod';
 
@@ -240,6 +242,8 @@ const testCases = [
 - [ ] Gueltiger Input gibt `{ success: true, data: ... }` zurueck
 - [ ] Ungueltiger Input gibt lesbaren Error-String zurueck
 - [ ] Alle 5 Test Cases liefern erwartete Ergebnisse
+
+**Ausfuehren mit:** `npx tsx challenge-4-4.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -338,5 +342,5 @@ graph LR
 ## Quellen
 
 - [Zod: Documentation](https://zod.dev)
-- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-persistence)
 - [ai-hero-dev Exercise 04.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)

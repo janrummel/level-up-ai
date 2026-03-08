@@ -127,6 +127,8 @@ addMessage(chat1, 'user', 'Und worin unterscheidet es sich von JavaScript?');
 
 **Aufgabe:** Baue einen minimalen API-Handler, der `chatId` und `messages` aus einem Request liest und nach Chat ID gruppiert loggt.
 
+Erstelle eine Datei `challenge-4-2.ts`:
+
 ```typescript
 // Simulierte "Datenbank"
 const chatStore = new Map<string, Array<{ role: string; content: string }>>();
@@ -150,6 +152,8 @@ const chatStore = new Map<string, Array<{ role: string; content: string }>>();
 - [ ] Messages werden dem richtigen Chat zugeordnet
 - [ ] Chat A hat 2 Messages, Chat B hat 1 Message
 - [ ] Log zeigt Chat ID und Message-Anzahl
+
+**Ausfuehren mit:** `npx tsx challenge-4-2.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -192,6 +196,21 @@ for (const [id, messages] of chatStore) {
 }
 ```
 
+**Erwarteter Output (Chat IDs variieren):**
+
+```
+Neuer Chat: a1b2c3d4...
+Chat a1b2c3d4...: +1 Message(s), gesamt: 1
+Neuer Chat: e5f6a7b8...
+Chat e5f6a7b8...: +1 Message(s), gesamt: 1
+Chat a1b2c3d4...: +1 Message(s), gesamt: 2
+
+--- Chat Store ---
+Anzahl Chats: 2
+Chat a1b2c3d4...: 2 Messages
+Chat e5f6a7b8...: 1 Messages
+```
+
 **Erklaerung:** `crypto.randomUUID()` generiert eindeutige IDs. Die `Map` speichert Messages gruppiert nach Chat ID. Durch das Kuerzen der ID im Log bleibt die Ausgabe lesbar. Chat A hat zwei Messages, Chat B eine — sauber getrennt.
 
 </details>
@@ -229,6 +248,6 @@ graph LR
 
 ## Quellen
 
-- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-persistence)
 - [MDN: crypto.randomUUID()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID)
 - [ai-hero-dev Exercise 04.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)

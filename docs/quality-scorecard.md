@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-08 | Gesamt-Score: **28 / 100**
+> Letztes Update: 2026-03-09 | Gesamt-Score: **37 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -12,14 +12,14 @@
 Level 1  ██████████ 100%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 2  █████████░  90%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 3  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 4  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 4  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 5  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 6  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 7  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 28%
+                                                         Gesamt: 37%
 ```
 
 ---
@@ -178,9 +178,44 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 4: Persistence — Score: –/100 OFFEN
+## Level 4: Persistence — Score: 91/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-08 | Fixes: 2026-03-08
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **23/25** | Alle AI SDK v6 APIs korrekt (`onFinish`, `generateText`, `streamText`, `crypto.randomUUID()`, Zod Schemas). -2: onFinish-Property-Tabelle war unvollstaendig (gefixt mit Qualifier + API-Ref-Link), Defekte Quellen-URL war systematisch in 5/7 Dateien (gefixt) |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, THINK-Fragen stark, COMBINE-Vernetzung exzellent (Challenge-uebergreifend + Level-2-Rueckgriff). -1: "Persistence in Normalized DB" nur als Ausblick integriert, keine eigene Challenge |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, `npx tsx`, erwarteter Output bei Loesungen, Zod-Rueckverweis, Projektverzeichnis im Briefing. -3: Kein Troubleshooting-Abschnitt (konsistent mit Level 1-3) |
+| Quellen & Nachweise | **12/15** | 6/7 Seiten mit Quellen (86%), alle Rang 1-2. -3: Level Complete ohne Quellen (konsistent mit Pattern), URL-Fix war noetig |
+| Vollstaendigkeit | **10/10** | 7 DE + 7 EN Dateien, Briefing+4 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **91/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 1 | 4 | 9 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 4 | 17 | 63 | 0 FAIL, 4 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L3→L4 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 86% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-4-spezifische Fehler
+2. `as const` Assertion in 04-persistence nicht erklaert
+3. `crypto.randomUUID()` Node.js v19-Anforderung nicht als Mindestversion
+4. COMBINE-Uebungen ohne erwarteten Output (Design-Entscheidung)
 
 ---
 
@@ -239,3 +274,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-08 | Level 1 Review + Fixes (DE+EN), Quality Framework erstellt | 0% → 11% |
 | 2026-03-08 | Level 2 Review + Fixes (DE+EN): 3 P0 (API-Fehler), 1 P1 (fehlende Befehle), 6 P2 | 11% → 19% |
 | 2026-03-08 | Level 3 Review + Fixes (DE+EN): 2 P0 (fehlende npm install, falsche Quelle), 3 P1 (Dateinamen, Befehle, Output), 4 P2 | 19% → 28% |
+| 2026-03-08 | Level 4 Review + Fixes (DE+EN): 1 P0 (defekte Quellen-URL in 5/7 Dateien), 4 P1 (onFinish-Tabelle, Dateinamen, Befehle, Output), 3 P2 | 28% → 37% |

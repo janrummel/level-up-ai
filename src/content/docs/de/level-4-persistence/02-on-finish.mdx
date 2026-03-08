@@ -57,7 +57,7 @@ const result = await generateText({
 });
 ```
 
-Der Callback bekommt ein Objekt mit vier wichtigen Properties:
+Der Callback bekommt ein Objekt mit den wichtigsten Properties (die vollstaendige Liste findest Du in der [generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)):
 
 | Property | Typ | Beschreibung |
 |----------|-----|-------------|
@@ -170,6 +170,8 @@ Bei `streamText` feuert `onFinish` erst, wenn der letzte Chunk gestreamt wurde. 
 
 **Aufgabe:** Implementiere einen `generateText`-Call mit `onFinish` Callback, der Usage und Finish Reason loggt und das Ergebnis in ein simuliertes Log-Array speichert.
 
+Erstelle eine Datei `challenge-4-1.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -200,6 +202,8 @@ const auditLog: Array<{
 - [ ] `finishReason` geloggt
 - [ ] Eintrag ins `auditLog` gepushed
 - [ ] `result.text` nach dem `await` geloggt
+
+**Ausfuehren mit:** `npx tsx challenge-4-1.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -237,6 +241,27 @@ console.log(result.text.substring(0, 100) + '...');
 
 console.log(`\n--- Audit Log ---`);
 console.log(JSON.stringify(auditLog, null, 2));
+```
+
+**Erwarteter Output (ungefaehr — LLM-Antworten variieren):**
+
+```
+--- onFinish ---
+Tokens: 285
+Finish Reason: stop
+
+--- Result ---
+Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit...
+
+--- Audit Log ---
+[
+  {
+    "timestamp": "2026-03-08T14:30:00.000Z",
+    "tokens": 285,
+    "finishReason": "stop",
+    "textPreview": "Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit..."
+  }
+]
 ```
 
 **Erklaerung:** Der `onFinish` Callback wird automatisch nach der Completion aufgerufen. Er loggt die Token-Nutzung und den Finish Reason und speichert einen Audit-Eintrag. Das `auditLog` ist nach dem `await` befuellt, weil `onFinish` vor dem Resolve laeuft.

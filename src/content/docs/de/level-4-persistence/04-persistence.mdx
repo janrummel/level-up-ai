@@ -185,6 +185,8 @@ Zwei getrennte Tabellen: `chats` fuer Metadaten, `messages` fuer den Inhalt. Ver
 
 **Aufgabe:** Simuliere den vollstaendigen Persistence-Cycle mit einer `Map` als In-Memory-Datenbank: Messages speichern, laden und einen Chat fortsetzen.
 
+Erstelle eine Datei `challenge-4-3.ts`:
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -214,6 +216,8 @@ const db = new Map<string, Array<{ role: string; content: string }>>();
 - [ ] `continueChat` laedt, generiert und speichert
 - [ ] Nach 2 Calls: 4 Messages im Verlauf (2x user + 2x assistant)
 - [ ] Das LLM bezieht sich in der zweiten Antwort auf die erste Frage
+
+**Ausfuehren mit:** `npx tsx challenge-4-3.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -278,6 +282,25 @@ stored.forEach((m, i) =>
 );
 ```
 
+**Erwarteter Output (ungefaehr — LLM-Antworten variieren):**
+
+```
+--- Erste Nachricht ---
+Saved: Chat a1b2c3d4... → 2 messages
+TypeScript ist eine typisierte Erweiterung von JavaScript...
+
+--- Zweite Nachricht (Chat erinnert sich) ---
+Saved: Chat a1b2c3d4... → 4 messages
+Drei Vorteile von TypeScript sind: 1. Statische Typen...
+
+--- Gespeicherter Verlauf ---
+Messages: 4
+  1. [user] Was ist TypeScript?...
+  2. [assistant] TypeScript ist eine typisierte Erweiterung von JavaScript...
+  3. [user] Nenne mir 3 Vorteile....
+  4. [assistant] Drei Vorteile von TypeScript sind: 1. Statische Typen...
+```
+
 **Erklaerung:** `continueChat` implementiert den vollstaendigen Persistence-Cycle: Load → Generate → Save. Das LLM bekommt bei jedem Call den gesamten Verlauf und kann auf fruehere Nachrichten Bezug nehmen. Die `Map` simuliert eine Datenbank — in Production wuerde hier ein SQL INSERT / SELECT stehen.
 
 </details>
@@ -320,6 +343,6 @@ graph LR
 
 ## Quellen
 
-- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-persistence)
+- [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-persistence)
 - [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
 - [ai-hero-dev Exercise 04.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/04-persistence)
