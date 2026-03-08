@@ -6,6 +6,8 @@ import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
 export default defineConfig({
 	redirects: {
 		'/': '/de/start/welcome/',
+		'/de/': '/de/start/welcome/',
+		'/en/': '/en/start/welcome/',
 	},
 	integrations: [
 		starlight({
