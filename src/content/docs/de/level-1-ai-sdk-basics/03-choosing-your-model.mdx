@@ -19,7 +19,7 @@ graph TD
     Aufgabe --> Code{"Code?"}
     Einfach -->|Ja| Flash["Flash-Modell<br/>guenstig, schnell<br/>gemini-2.5-flash"]
     Komplex -->|Ja| Pro["Pro-Modell<br/>teurer, besser<br/>claude-sonnet-4-5-20250514"]
-    Code -->|Ja| CodeModel["Code-Modell<br/>spezialisiert<br/>codex-mini"]
+    Code -->|Ja| CodeModel["Code-Modell<br/>spezialisiert<br/>z.B. claude-sonnet"]
   end
   style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
   style Aufgabe fill:#4A90D9,color:#fff
@@ -169,6 +169,26 @@ console.log('Tokens:', result2.usage.totalTokens);
 ```
 
 **Erklaerung:** Beide Calls nutzen exakt denselben `prompt`. Nur `model` unterscheidet sich. Die Outputs zeigen Dir, wie unterschiedlich (oder aehnlich) verschiedene Modelle dieselbe Frage beantworten — und wie viele Tokens sie dafuer verbrauchen.
+
+> **Nur einen API-Key?** Kein Problem — nutze zwei Modelle desselben Providers, z.B. `anthropic('claude-haiku-3-5-20241022')` und `anthropic('claude-sonnet-4-5-20250514')`.
+
+**Ausfuehren:**
+
+```bash
+npx tsx challenge-1-2.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+
+```
+--- Anthropic (Claude Sonnet) ---
+Text: let erlaubt Neuzuweisung, const nicht...
+Tokens: 87
+
+--- OpenAI (GPT-4o) ---
+Text: In JavaScript sind let und const...
+Tokens: 102
+```
 
 </details>
 

@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-What's the difference between a system prompt and a user prompt? Who "hears" which — and why does the separation matter?
+You already know the `system` parameter from Challenge 1.3, where you used it for the first time. But what exactly is the difference between a system prompt and a user prompt? Who "hears" which — and how do you design it for consistent behavior?
 
 ## OVERVIEW
 
@@ -192,6 +192,32 @@ for (const system of systemPrompts) {
 ```
 
 **Explanation:** All three calls use the exact same `prompt`. The difference lies solely in the `system` parameter. The lecturer explains in detail with an analogy, the senior developer is brief and sarcastic, the journalist follows a fixed format. The third system prompt in particular shows how you can enforce the output format via the system prompt.
+
+**Run it:**
+
+```bash
+npx tsx challenge-1-6.ts
+```
+
+**Expected output (approximately):**
+
+```
+========================================
+System: Du bist ein geduldiger Informatik-Dozent.
+========================================
+Imagine you're in a restaurant...
+
+========================================
+System: Du bist ein sarkastischer Senior-Entwickler...
+========================================
+Oh, a REST API? That's like HTTP, except that...
+
+========================================
+System: Du bist ein Tech-Journalist.
+========================================
+## What is a REST API?
+A REST API is an architectural pattern...
+```
 
 </details>
 

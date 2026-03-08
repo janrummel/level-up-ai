@@ -62,6 +62,8 @@ AI SDK Core ist das Fundament. Alles andere baut darauf auf. Wenn Du `generateTe
 
 ### Schicht 2: Installation und Setup
 
+> Falls Du das Briefing-Setup durchlaufen hast, sind `ai` und `@ai-sdk/anthropic` bereits installiert und Dein API-Key liegt in der `.env`-Datei. Du kannst diesen Abschnitt ueberspringen.
+
 Zwei Packages — das AI SDK selbst und ein Provider-Package:
 
 ```bash
@@ -70,10 +72,10 @@ npm install ai @ai-sdk/anthropic
 
 `ai` ist das Kern-Package mit allen Funktionen (`generateText`, `streamText`, `Output`, etc.). `@ai-sdk/anthropic` ist der Provider — er weiss, wie man mit der Anthropic API kommuniziert.
 
-Dein API-Key wird als Environment Variable gesetzt:
+Dein API-Key wird als Environment Variable gesetzt — am besten in einer `.env`-Datei (wird von `tsx` automatisch geladen):
 
 ```bash
-export ANTHROPIC_API_KEY="sk-ant-..."
+echo 'ANTHROPIC_API_KEY=sk-ant-...' > .env
 ```
 
 ### Schicht 3: Dein erster generateText Call
@@ -152,6 +154,20 @@ console.log('Finish Reason:', result.finishReason);
 ```
 
 **Erklaerung:** `generateText` ist eine async Funktion, die ein Result-Objekt zurueckgibt. Das `model`-Argument erstellt eine Anthropic-Modell-Instanz mit dem Modell-Namen `claude-sonnet-4-5-20250514`. Der `prompt` ist der User-Input. Die drei geloggten Properties geben Dir den generierten Text, den Token-Verbrauch und den Grund fuer das Stoppen.
+
+**Ausfuehren:**
+
+```bash
+npx tsx challenge-1-1.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+
+```
+Text: TypeScript ist eine typisierte Obermenge von JavaScript, die statische Typpruefung...
+Usage: { promptTokens: 14, completionTokens: 42, totalTokens: 56 }
+Finish Reason: stop
+```
 
 </details>
 

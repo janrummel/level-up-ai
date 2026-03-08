@@ -29,6 +29,8 @@ Ich bin Dein AI-Assistent. Ich kann Dir bei Fragen helfen...
 > Tokens bisher: 342
 ```
 
+> **Expected duration:** 30-45 minutes. Create a file `chat.ts` and run it with `npx tsx chat.ts`.
+
 This project connects all six building blocks:
 
 ```mermaid
@@ -60,9 +62,12 @@ graph LR
 
 ```typescript
 import * as readline from 'readline';
-// TODO: Importiere AI SDK Funktionen (generateText, streamText, Output)
-// TODO: Importiere Provider
-// TODO: Importiere zod
+// TODO: Import AI SDK functions (generateText, streamText, Output)
+// TODO: Import provider (anthropic from '@ai-sdk/anthropic')
+// TODO: Import zod (z from 'zod')
+// Tip: If you only have one provider, use different models
+// from the same provider -- e.g. anthropic('claude-haiku-3-5-20241022')
+// for short and anthropic('claude-sonnet-4-5-20250514') for long messages.
 
 // TODO: Definiere einen System Prompt mit Rolle und Regeln
 

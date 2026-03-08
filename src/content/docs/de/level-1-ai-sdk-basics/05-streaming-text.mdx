@@ -194,6 +194,25 @@ for await (const part of result.fullStream) {
 
 **Erklaerung:** `streamText` gibt synchron ein Result-Objekt zurueck. Der eigentliche API-Call startet erst, wenn Du den Stream konsumierst (mit `for await`). `textStream` liefert nur Text-Chunks, `fullStream` liefert alle Event-Typen inklusive Metadaten wie Token-Verbrauch.
 
+> **Tipp:** Alternativ zu `fullStream` kannst Du nach dem Stream auch `await result.usage` nutzen — das Result-Objekt hat `usage` als Promise, das aufloest sobald der Stream fertig ist.
+
+**Ausfuehren:**
+
+```bash
+npx tsx challenge-1-4.ts
+```
+
+**Erwarteter Output (ungefaehr):**
+
+```
+TypeScript ist besser als JavaScript weil es statische Typen...
+(Text erscheint Wort fuer Wort im Terminal)
+
+--- Stream beendet ---
+Tokens: 78
+Finish Reason: stop
+```
+
 </details>
 
 ## COMBINE

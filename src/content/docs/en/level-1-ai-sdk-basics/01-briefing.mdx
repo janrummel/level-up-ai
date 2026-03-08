@@ -56,7 +56,7 @@ graph LR
 - **How to choose and configure an LLM model** — provider system, model instances, switching providers
 - **Generating text with `generateText`** — the result object, usage tracking, finish reason
 - **Streaming text with `streamText`** — real-time output, stream events, `textStream`
-- **Structured output with `Output.object` and Zod** — typed JSON responses instead of free text
+- **Structured output with `Output.object`, `Output.array` and `Output.choice`** — typed JSON responses instead of free text
 - **System prompts for role behavior** — giving the LLM an identity and rules
 
 ## Why this matters
@@ -67,10 +67,46 @@ The concrete problem: You want to integrate AI into your code, but every provide
 
 ## Prerequisites
 
-- **Node.js 18+** and **npm** or **pnpm** installed
+- **Node.js 18+** and **npm** installed — check with `node -v` and `npm -v`
 - **TypeScript basics** — types, interfaces, async/await
 - **Experience with ChatGPT or similar** — you know what an LLM is and what it can do
-- **An API key** for at least one provider (Anthropic, OpenAI or Google)
+- **An API key** for at least one provider:
+  - [Anthropic Console](https://console.anthropic.com/) — create an API key under "API Keys" (recommended for this course)
+  - [OpenAI Platform](https://platform.openai.com/) — create an API key under "API Keys"
+  - [Google AI Studio](https://aistudio.google.com/) — create an API key
+
+> All providers offer free starter credits or a free tier. For Level 1, a single API key is enough.
+
+## Before you start
+
+Create a project directory for this level. Each challenge is saved as its own TypeScript file, and the Boss Fight combines everything into a final file.
+
+```bash
+mkdir level-1-ai-sdk && cd level-1-ai-sdk
+npm init -y
+npm install ai @ai-sdk/anthropic zod
+npm install -D tsx typescript
+```
+
+Create a `.env` file for your API key (automatically loaded by `tsx`):
+
+```bash
+echo 'ANTHROPIC_API_KEY=sk-ant-your-key-here' > .env
+```
+
+This is how you run your TypeScript files:
+
+```bash
+npx tsx challenge-1-1.ts
+```
+
+> `tsx` is a TypeScript runner that executes `.ts` files directly — no `tsconfig.json`, no build step, with automatic `.env` support.
+
+### Troubleshooting
+
+- **"API key not found"** — Check that your `.env` file exists and the key is correct: `cat .env`
+- **"Cannot use import statement"** — Use `npx tsx` instead of `node` to run files
+- **"Module not found"** — Check that all packages are installed: `npm ls ai @ai-sdk/anthropic zod`
 
 > **Skip hint:** You already use the AI SDK daily and know `generateText`, `streamText` and `Output.object`? Jump straight to the [Boss Fight](/en/level-1-ai-sdk-basics/08-boss-fight/) and test your knowledge.
 

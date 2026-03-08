@@ -56,7 +56,7 @@ graph LR
 - **Wie Du ein LLM-Modell auswaehlst und konfigurierst** — Provider-System, Modell-Instanzen, Provider wechseln
 - **Text generieren mit `generateText`** — das Result-Objekt, Usage Tracking, Finish Reason
 - **Text streamen mit `streamText`** — Echtzeit-Ausgabe, Stream Events, `textStream`
-- **Strukturierte Ausgaben mit `Output.object` und Zod** — typisierte JSON-Antworten statt Freitext
+- **Strukturierte Ausgaben mit `Output.object`, `Output.array` und `Output.choice`** — typisierte JSON-Antworten statt Freitext
 - **System Prompts fuer Rollenverhalten** — dem LLM eine Identitaet und Regeln geben
 
 ## Warum das wichtig ist
@@ -67,10 +67,46 @@ Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provid
 
 ## Voraussetzungen
 
-- **Node.js 18+** und **npm** oder **pnpm** installiert
+- **Node.js 18+** und **npm** installiert — pruefe mit `node -v` und `npm -v`
 - **TypeScript Grundkenntnisse** — Typen, Interfaces, async/await
 - **Erfahrung mit ChatGPT oder aehnlichem** — Du weisst, was ein LLM ist und was es kann
-- **Ein API-Key** fuer mindestens einen Provider (Anthropic, OpenAI oder Google)
+- **Ein API-Key** fuer mindestens einen Provider:
+  - [Anthropic Console](https://console.anthropic.com/) — API-Key unter "API Keys" erstellen (empfohlen fuer diesen Kurs)
+  - [OpenAI Platform](https://platform.openai.com/) — API-Key unter "API Keys" erstellen
+  - [Google AI Studio](https://aistudio.google.com/) — API-Key erstellen
+
+> Alle Provider bieten ein kostenloses Startguthaben oder Free Tier. Fuer Level 1 reicht ein einzelner API-Key.
+
+## Bevor Du loslegst
+
+Erstelle ein Projektverzeichnis fuer dieses Level. Jede Challenge wird als eigene TypeScript-Datei gespeichert, die Boss Fight kombiniert alles in einer finalen Datei.
+
+```bash
+mkdir level-1-ai-sdk && cd level-1-ai-sdk
+npm init -y
+npm install ai @ai-sdk/anthropic zod
+npm install -D tsx typescript
+```
+
+Erstelle eine `.env`-Datei fuer Deinen API-Key (wird von `tsx` automatisch geladen):
+
+```bash
+echo 'ANTHROPIC_API_KEY=sk-ant-dein-key-hier' > .env
+```
+
+So fuehrst Du Deine TypeScript-Dateien aus:
+
+```bash
+npx tsx challenge-1-1.ts
+```
+
+> `tsx` ist ein TypeScript-Runner, der `.ts`-Dateien direkt ausfuehrt — ohne `tsconfig.json`, ohne Build-Schritt, mit automatischer `.env`-Unterstuetzung.
+
+### Troubleshooting
+
+- **"API key not found"** — Pruefe ob Deine `.env`-Datei existiert und der Key korrekt ist: `cat .env`
+- **"Cannot use import statement"** — Nutze `npx tsx` statt `node` zum Ausfuehren
+- **"Module not found"** — Pruefe ob alle Packages installiert sind: `npm ls ai @ai-sdk/anthropic zod`
 
 > **Skip-Hinweis:** Du nutzt das AI SDK bereits taeglich und kennst `generateText`, `streamText` und `Output.object`? Spring direkt zur [Boss Fight](/de/level-1-ai-sdk-basics/08-boss-fight/) und teste Dein Wissen.
 

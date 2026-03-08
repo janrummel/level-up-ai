@@ -46,6 +46,8 @@ Top: With a Zod schema and `Output.object` you get a typed object. Bottom: Witho
 
 ### Layer 1: Zod schema defines the expectation
 
+> If not yet installed: `npm install zod`. Zod is a TypeScript-first schema validation library — you define the expected structure, and Zod ensures type safety at both compile time and runtime.
+
 A Zod schema describes the structure you expect from the LLM. It defines fields, types and optional descriptions:
 
 ```typescript
@@ -196,6 +198,22 @@ console.log('Fazit:', output.summary);
 ```
 
 **Explanation:** The Zod schema defines exactly which fields and types you expect. `Output.object` ensures the LLM generates a valid object that matches this schema. `z.describe()` gives the LLM additional context — especially for `rating` it helps to communicate the expected value range.
+
+**Run it:**
+
+```bash
+npx tsx challenge-1-5.ts
+```
+
+**Expected output (approximately):**
+
+```
+Product: iPhone 16 Pro
+Rating: 4 / 5
+Pros: [ 'Excellent camera', 'Strong performance', 'Titanium design' ]
+Cons: [ 'High price', 'Little design change from predecessor' ]
+Summary: The iPhone 16 Pro impresses with top camera and performance...
+```
 
 </details>
 
