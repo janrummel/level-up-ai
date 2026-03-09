@@ -120,6 +120,8 @@ CoT ist nicht fuer jede Aufgabe sinnvoll. Es kostet zusaetzliche Tokens und verl
 
 **Aufgabe:** Fuege Chain of Thought zu einem Code Review Prompt hinzu. Das LLM soll erst den Code analysieren (thinking), dann eine strukturierte Bewertung abgeben (output). Ergaenze `<thinking-instructions>` und `<output-format>`.
 
+Erstelle **`challenge-5-5.ts`** und fuehre aus mit: **`npx tsx challenge-5-5.ts`**
+
 ```typescript
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -270,6 +272,22 @@ for await (const chunk of result.textStream) {
 
 **Erklaerung:** Die `<thinking-instructions>` fuehren das LLM durch einen systematischen Analyseprozess: erst lesen, dann Probleme identifizieren, dann priorisieren. Das `<output-format>` trennt den Denkprozess (`<thinking>` Block) von den strukturierten Review-Ergebnissen. So kann man nachvollziehen, warum das LLM welches Issue wie bewertet hat — und die Ergebnisse sind konsistent formatiert.
 
+**Erwarteter Output (ungefaehr):**
+```
+<thinking>
+1. any[] — kein Typsicherheit, Laufzeitfehler moeglich
+2. == statt === — lose Vergleiche koennen zu Bugs fuehren
+3. let statt const — result wird nie reassigned
+...
+</thinking>
+
+### Issue: Fehlende Typisierung
+- **Severity:** critical
+- **Line:** Parameter `users: any[]`
+- **Problem:** any deaktiviert TypeScripts Typsystem
+- **Fix:** Interface User definieren
+```
+
 </details>
 
 ## COMBINE
@@ -304,6 +322,6 @@ Konkret:
 
 ## Quellen
 
-- [Anthropic: Chain of Thought Prompting](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-of-thought)
-- [Anthropic: Extended Thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+- [Anthropic: Prompting Best Practices (Chain of Thought)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
+- [Anthropic: Extended Thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
 - [ai-hero-dev Exercise 05.05](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.05-chain-of-thought)

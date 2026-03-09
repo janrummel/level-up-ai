@@ -1,6 +1,6 @@
 ---
 title: "Challenge 5.2: Basic Prompting"
-description: "Turn vague prompts into clear, structured instructions using the Anthropic Prompt Template."
+description: "Turn vague prompts into clear, structured instructions using a prompt template based on Anthropic best practices."
 sidebar:
   order: 3
 ---
@@ -52,7 +52,7 @@ Left: A vague prompt leads to unpredictable results. Right: A structured prompt 
 
 ### Layer 1: The XML Tag Structure
 
-The Anthropic Prompt Template uses XML tags to clearly separate different prompt sections. Each tag has a specific purpose:
+A prompt template based on Anthropic best practices uses XML tags to clearly separate different prompt sections. Each tag has a specific purpose:
 
 ```xml
 <task-context>
@@ -186,9 +186,13 @@ for await (const chunk of result.textStream) {
 
 The difference: The structured prompt has clear sections. The LLM knows it is a title generator (`task-context`), how the title should look (`rules`), what to do (`the-ask`), and what to return (`output-format`). The result is reproducible — the same prompt consistently produces short titles in title case.
 
+> **Note:** In this example, the entire prompt (including `<task-context>`) is in the `prompt` parameter. In production, you would put `<task-context>` and `<rules>` in the `system` parameter and only `<background-data>`, `<the-ask>`, and user input in the `prompt` parameter. Challenge 5.1 shows this pattern with `buildSystemPrompt()`.
+
 ## TRY
 
 **Task:** Take the bad prompt below and restructure it with XML tags. Goal: The LLM should summarise an article in exactly 3 sentences.
+
+Create **`challenge-5-2.ts`** and run with: **`npx tsx challenge-5-2.ts`**
 
 ```typescript
 import { generateText } from 'ai';
@@ -273,6 +277,11 @@ console.log(result.text);
 
 **Explanation:** The prompt defines a clear role (`technischer Redakteur`), provides the article as `<background-data>`, sets concrete rules (3 sentences, German, factual), and controls the output format. The LLM knows exactly what is expected.
 
+**Expected output (approximate):**
+```
+TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Version unterstuetzt granulare Pruefungen bei Return-Ausdruecken. Zusaetzlich wird der --isolatedDeclarations-Flag eingefuehrt.
+```
+
 </details>
 
 ## COMBINE
@@ -302,5 +311,5 @@ graph LR
 
 ## Sources
 
-- [Anthropic: Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering)
+- [Anthropic: Prompt Engineering Overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)
 - [ai-hero-dev Exercise 05.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.02-basic-prompting)

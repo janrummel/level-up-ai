@@ -72,6 +72,12 @@ The concrete problem: LLM outputs are non-deterministic. The same prompt can pro
 
 - **Level 1: AI SDK Basics** — You should be comfortable with `generateText`, as it serves as your task function in evals
 - **Level 5: Context Engineering** — System prompts and prompt templates that you'll iteratively improve with evals
+- **OpenAI API Key** — This level uses OpenAI models (`gpt-4o`, `gpt-4o-mini`) as judge and task models. Evalite and the Autoevals library use OpenAI by default. Create a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys) and store it in a `.env` file:
+  ```bash
+  OPENAI_API_KEY=sk-...
+  ```
+- **pnpm** — Evalite uses `pnpm` as package manager. If you've been using `npm` so far: `npm install -g pnpm`. Alternatively, `npm install -D` works just as well instead of `pnpm add -D`.
+- Continue working in your project directory from Level 1, or create a new directory for this level.
 
 > **Skip hint:** Already working with Evalite or another eval framework and know the difference between deterministic and LLM-as-Judge scorers? Jump straight to the [Boss Fight](/en/level-6-evals/07-boss-fight/) and build a complete eval pipeline.
 

@@ -106,7 +106,7 @@ Per generation, Langfuse stores:
 
 ### Layer 3: Integration with the AI SDK
 
-Langfuse integrates with the AI SDK via OpenTelemetry. The configuration looks like this:
+Langfuse offers two integration paths: The recommended **OpenTelemetry-based approach** (`LangfuseExporter`) and the manual SDK approach. The following code shows the manual approach to make the concepts (trace, generation, score) explicit. In production you'd use the OTel integration — it captures AI SDK calls automatically without manual logging.
 
 ```typescript
 import { Langfuse } from 'langfuse';

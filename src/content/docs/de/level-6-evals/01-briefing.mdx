@@ -72,6 +72,12 @@ Das konkrete Problem: LLM-Ausgaben sind nicht deterministisch. Derselbe Prompt k
 
 - **Level 1: AI SDK Basics** — `generateText` muss sitzen, das ist Deine Task-Funktion in Evals
 - **Level 5: Context Engineering** — System Prompts und Prompt Templates, die Du mit Evals iterativ verbessern wirst
+- **OpenAI API Key** — Dieses Level nutzt OpenAI-Modelle (`gpt-4o`, `gpt-4o-mini`) als Judge und Task-Modell. Evalite und die Autoevals-Bibliothek verwenden standardmaessig OpenAI. Erstelle einen Key unter [platform.openai.com/api-keys](https://platform.openai.com/api-keys) und lege ihn in einer `.env`-Datei ab:
+  ```bash
+  OPENAI_API_KEY=sk-...
+  ```
+- **pnpm** — Evalite nutzt `pnpm` als Paketmanager. Falls Du bisher mit `npm` gearbeitet hast: `npm install -g pnpm`. Alternativ funktioniert `npm install -D` statt `pnpm add -D` genauso.
+- Du arbeitest weiterhin in Deinem Projektverzeichnis aus Level 1 oder erstellst ein neues Verzeichnis fuer dieses Level.
 
 > **Skip-Hinweis:** Du arbeitest bereits mit Evalite oder einem anderen Eval-Framework und kennst den Unterschied zwischen deterministischen und LLM-as-Judge Scorern? Spring direkt zur [Boss Fight](/de/level-6-evals/07-boss-fight/) und baue eine komplette Eval-Pipeline.
 

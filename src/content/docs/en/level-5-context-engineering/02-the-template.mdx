@@ -170,6 +170,8 @@ The function takes a `PromptConfig` object and returns a complete system prompt 
 
 **Task:** Build your own `buildSystemPrompt` function. It should return a template with XML tags that has at least four sections.
 
+Create the file **`challenge-5-1.ts`** and run it with: **`npx tsx challenge-5-1.ts`**
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -263,6 +265,11 @@ console.log(result.text);
 
 **Explanation:** The function uses `<task-context>` at the beginning for maximum influence on the role and `<output-format>` at the end for maximum control over the format. The `<rules>` sit in the middle. All four `config` variables are dynamically injected.
 
+**Expected output (approximate — LLM outputs vary):**
+```
+Context Engineering is the systematic design of the input...
+```
+
 </details>
 
 ## COMBINE
@@ -291,6 +298,6 @@ You need to:
 
 ## Sources
 
-- [Anthropic: Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering)
+- [Anthropic: Prompt Engineering Overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)
 - [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)
 - [ai-hero-dev Exercise 05.01](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.01-the-template)

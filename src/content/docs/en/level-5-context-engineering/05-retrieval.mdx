@@ -173,6 +173,8 @@ Without this rule the LLM will try to answer anyway — with its training knowle
 
 **Task:** Build a system that loads website content and answers questions about it. Use the simulated content below. Add `<background-data>`, `<rules>`, and `<output-format>` to the prompt.
 
+Create **`challenge-5-4.ts`** and run with: **`npx tsx challenge-5-4.ts`**
+
 ```typescript
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -294,6 +296,13 @@ for await (const chunk of result.textStream) {
 
 **Explanation:** The loaded data sits in `<background-data>` with a clear source citation (`<url>`). The `<rules>` explicitly define that only the provided data may be used and that the LLM should be honest if the question cannot be answered. The `<output-format>` requires paragraphs and source citations — making the answer verifiable.
 
+**Expected output (approximate):**
+```
+Guillermo Rauch, CEO of Vercel, said: "Matt is one of the best educators in the TypeScript ecosystem."
+
+Source: https://www.aihero.dev/
+```
+
 </details>
 
 ## COMBINE
@@ -337,6 +346,6 @@ The prompt pattern stays the same — only the retrieve step becomes more comple
 
 ## Sources
 
-- [Anthropic: RAG Overview](https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation)
+- [Anthropic: Search Results (RAG)](https://platform.claude.com/docs/en/build-with-claude/search-results)
 - [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)
 - [ai-hero-dev Exercise 05.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.04-retrieval)

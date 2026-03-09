@@ -227,8 +227,10 @@ This way you can compare later: Did the score change with dataset v2?
 
 **Task:** Create a dataset for a chat title generator with at least 15 test cases from different categories.
 
+Create the file `dataset.eval.ts` and run it with `pnpm eval:dev`.
+
 ```typescript
-// chat-title-dataset.eval.ts
+// dataset.eval.ts
 
 import { evalite } from 'evalite';
 import { Levenshtein } from 'autoevals';

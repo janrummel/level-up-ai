@@ -120,6 +120,8 @@ CoT is not useful for every task. It costs additional tokens and slows down the 
 
 **Task:** Add chain of thought to a code review prompt. The LLM should first analyse the code (thinking), then provide a structured assessment (output). Add `<thinking-instructions>` and `<output-format>`.
 
+Create **`challenge-5-5.ts`** and run with: **`npx tsx challenge-5-5.ts`**
+
 ```typescript
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -270,6 +272,21 @@ for await (const chunk of result.textStream) {
 
 **Explanation:** The `<thinking-instructions>` guide the LLM through a systematic analysis process: first read, then identify problems, then prioritise. The `<output-format>` separates the reasoning process (`<thinking>` block) from the structured review results. This way you can trace why the LLM rated each issue the way it did — and the results are consistently formatted.
 
+**Expected output (approximate):**
+```
+<thinking>
+1. Line 1: `users: any[]` — no type safety...
+2. Line 2: `let` instead of `const`...
+3. Line 5: `==` instead of `===`...
+</thinking>
+
+### Issue: Missing Type Definition
+- **Severity:** critical
+- **Line:** 1
+- **Problem:** `any[]` disables all type checking
+- **Fix:** Define a `User` interface
+```
+
 </details>
 
 ## COMBINE
@@ -304,6 +321,6 @@ Specifically:
 
 ## Sources
 
-- [Anthropic: Chain of Thought Prompting](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-of-thought)
-- [Anthropic: Extended Thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)
+- [Anthropic: Prompting Best Practices (Chain of Thought)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
+- [Anthropic: Extended Thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
 - [ai-hero-dev Exercise 05.05](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.05-chain-of-thought)

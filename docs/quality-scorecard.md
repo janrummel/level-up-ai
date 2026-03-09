@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-09 | Gesamt-Score: **37 / 100**
+> Letztes Update: 2026-03-09 | Gesamt-Score: **56 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -13,13 +13,13 @@ Level 1  ██████████ 100%  PASS        ░░░░░░░�
 Level 2  █████████░  90%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 3  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 4  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 5  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 6  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 5  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 6  █████████░  93%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 7  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 37%
+                                                         Gesamt: 56%
 ```
 
 ---
@@ -219,15 +219,84 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 5: Context Engineering — Score: –/100 OFFEN
+## Level 5: Context Engineering — Score: 92/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-09 | Fixes: 2026-03-09
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **23/25** | Alle AI SDK v6 APIs korrekt (`generateText`, `streamText`, `anthropic()`), Modellname aktuell. -2: Alle Anthropic-Quellen-URLs waren defekt (301→404, docs.anthropic.com→platform.claude.com Migration, gefixt), XML Tag-Namen als "Anthropic Prompt Template" zugeschrieben (korrigiert zu "basierend auf Anthropic Best Practices") |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, hervorragende kumulative Progression (jede COMBINE-Uebung verbindet alle bisherigen Konzepte). THINK-Fragen stark, OVERVIEW-Diagramme klar. -1: Level Complete relativ knapp, keine Boss Fight Musterloesung |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, `npx tsx`, erwarteter Output, Projektverzeichnis-Hinweis im Briefing. -3: Kein Troubleshooting-Abschnitt (konsistent mit Level 1-4) |
+| Quellen & Nachweise | **13/15** | Nach URL-Fix: 7/8 Seiten mit Quellen (88%), alle Rang 1-2. -2: Level Complete ohne Quellen (konsistent), URL-Fix war noetig |
+| Vollstaendigkeit | **10/10** | 8 DE + 8 EN Dateien, Briefing+5 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **92/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 2 | 2 | 10 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 5 | 26 | 65 | 0 FAIL, 4 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L4→L5 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 88% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren (Build erfolgreich)
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-5-spezifische Fehler
+2. Level Complete knapp — kein Rueckblick auf Boss Fight
+3. Boss Fight ohne Musterloesung (bewusste Entscheidung: Pruefung)
+4. COMBINE-Uebungen ohne erwarteten Output (Design-Entscheidung)
 
 ---
 
-## Level 6: Evals — Score: –/100 OFFEN
+## Level 6: Evals — Score: 93/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-09 | Fixes: 2026-03-09
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **24/25** | Alle Evalite/AI SDK APIs korrekt (`evalite()`, `createScorer`, `traceAISDKModel`, `generateObject` mit Zod). -1: Grade E Score-Tabelle war falsch (0.0 statt 1.0, Beschreibung irreführend — gefixt), Langfuse zeigte manuelle SDK-Variante statt OTel (klargestellt) |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, starke Progression (Evalite→Deterministic→LLM-Judge→Dataset→Production), COMBINE-Vernetzung exzellent. -1: Langfuse Challenge rein konzeptuell (begruendet, aber kein Coding) |
+| Operative Tauglichkeit | **23/25** | Nach Fixes: Dateinamen, `pnpm eval:dev`, erwarteter Output, vollstaendiger Install-Befehl, OpenAI Key Setup, pnpm-Erklaerung. -2: Kein Troubleshooting-Abschnitt (konsistent mit L1-5) |
+| Quellen & Nachweise | **12/15** | 7/8 Seiten mit Quellen (88%), alle Rang 1-2 (GitHub Repos, npmjs, Langfuse Docs). -3: Level Complete ohne Quellen (konsistent), ai-hero-dev Links nicht live verifiziert |
+| Vollstaendigkeit | **10/10** | 8 DE + 8 EN Dateien, Briefing+5 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **93/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 0 | 4 | 10 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 4 | 19 | 73 | 0 FAIL, 3 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L5→L6 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 88% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren (Build erfolgreich)
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-6-spezifische Fehler
+2. ai-hero-dev Exercise-Links nicht live verifiziert
+3. Langfuse-Challenge ohne Coding (bewusste Entscheidung)
 
 ---
 
@@ -275,3 +344,5 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-08 | Level 2 Review + Fixes (DE+EN): 3 P0 (API-Fehler), 1 P1 (fehlende Befehle), 6 P2 | 11% → 19% |
 | 2026-03-08 | Level 3 Review + Fixes (DE+EN): 2 P0 (fehlende npm install, falsche Quelle), 3 P1 (Dateinamen, Befehle, Output), 4 P2 | 19% → 28% |
 | 2026-03-08 | Level 4 Review + Fixes (DE+EN): 1 P0 (defekte Quellen-URL in 5/7 Dateien), 4 P1 (onFinish-Tabelle, Dateinamen, Befehle, Output), 3 P2 | 28% → 37% |
+| 2026-03-09 | Level 5 Review + Fixes (DE+EN): 1 P0 (defekte Anthropic-URLs in 8/8 Dateien, docs.anthropic.com→platform.claude.com), 4 P1 (Dateinamen, Befehle, Output, Zuschreibung), 3 P2 | 37% → 46% |
+| 2026-03-09 | Level 6 Review + Fixes (DE+EN): 4 P0 (OPENAI_API_KEY fehlt, pnpm nicht erklaert, Pakete fehlen, Grade E Tabelle falsch), 4 P1 (Dateinamen, Levenshtein-Erklaerung, Projekt-Setup, Langfuse OTel), 4 P2 | 46% → 56% |

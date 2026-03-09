@@ -182,6 +182,8 @@ Im Dashboard siehst Du dann drei separate Scores pro Test-Case. Das gibt Dir ein
 
 **Aufgabe:** Erstelle einen eigenen "Contains Keyword" Scorer und teste ihn mit Hauptstadt-Fragen.
 
+Erstelle die Datei `capitals.eval.ts` und fuehre sie mit `pnpm eval:dev` aus.
+
 ```typescript
 // capitals.eval.ts
 
@@ -251,6 +253,8 @@ evalite('Capital Cities', {
   scorers: [containsKeyword, Levenshtein],
 });
 ```
+
+**Erwarteter Output:** `containsKeyword` gibt 1.0 fuer alle 5 Test-Cases. `Levenshtein` gibt niedrigere Scores (~0.2-0.4) weil "The capital of France is Paris." viel laenger ist als "Paris".
 
 **Erklaerung:** `containsKeyword` gibt 1.0 fuer alle Test-Cases zurueck — "Paris" kommt in "The capital of France is Paris." vor. `Levenshtein` gibt niedrigere Scores, weil der Output viel laenger ist als der erwartete Wert "Paris". Beide Perspektiven sind nuetzlich: Enthaelt die Antwort das Richtige? UND: Wie knapp ist die Antwort?
 

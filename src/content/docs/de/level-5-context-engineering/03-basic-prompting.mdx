@@ -52,7 +52,7 @@ Links: Ein vager Prompt fuehrt zu unvorhersehbaren Ergebnissen. Rechts: Ein stru
 
 ### Schicht 1: Die XML Tag Struktur
 
-Das Anthropic Prompt Template nutzt XML Tags, um verschiedene Prompt-Abschnitte klar zu trennen. Jeder Tag hat eine bestimmte Aufgabe:
+Ein Prompt Template basierend auf Anthropic Best Practices nutzt XML Tags, wie von Anthropic empfohlen, um verschiedene Prompt-Abschnitte klar zu trennen. Jeder Tag hat eine bestimmte Aufgabe:
 
 ```xml
 <task-context>
@@ -186,9 +186,13 @@ for await (const chunk of result.textStream) {
 
 Der Unterschied: Der strukturierte Prompt hat klare Abschnitte. Das LLM weiss, dass es ein Titel-Generator ist (`task-context`), wie der Titel aussehen soll (`rules`), was es tun soll (`the-ask`) und was es zurueckgeben soll (`output-format`). Das Ergebnis ist reproduzierbar — derselbe Prompt liefert konsistent kurze Titel in Title Case.
 
+> **Hinweis:** In diesem Beispiel steht der gesamte Prompt (inkl. `<task-context>`) im `prompt`-Parameter. In Production wuerdest Du `<task-context>` und `<rules>` im `system`-Parameter uebergeben und nur `<background-data>`, `<the-ask>` und den User-Input im `prompt`-Parameter. Challenge 5.1 zeigt dieses Pattern mit `buildSystemPrompt()`.
+
 ## TRY
 
 **Aufgabe:** Nimm den schlechten Prompt unten und strukturiere ihn mit XML Tags. Ziel: Das LLM soll einen Artikel in genau 3 Saetzen zusammenfassen.
+
+Erstelle **`challenge-5-2.ts`** und fuehre aus mit: **`npx tsx challenge-5-2.ts`**
 
 ```typescript
 import { generateText } from 'ai';
@@ -273,6 +277,11 @@ console.log(result.text);
 
 **Erklaerung:** Der Prompt definiert eine klare Rolle (`technischer Redakteur`), stellt den Artikel als `<background-data>` bereit, setzt konkrete Regeln (3 Saetze, Deutsch, sachlich) und kontrolliert das Ausgabeformat. Das LLM weiss genau, was erwartet wird.
 
+**Erwarteter Output (ungefaehr):**
+```
+TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Version unterstuetzt granulare Pruefungen bei Return-Ausdruecken. Zusaetzlich wird der --isolatedDeclarations-Flag eingefuehrt.
+```
+
 </details>
 
 ## COMBINE
@@ -302,5 +311,5 @@ graph LR
 
 ## Quellen
 
-- [Anthropic: Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering)
+- [Anthropic: Prompt Engineering Overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)
 - [ai-hero-dev Exercise 05.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.02-basic-prompting)

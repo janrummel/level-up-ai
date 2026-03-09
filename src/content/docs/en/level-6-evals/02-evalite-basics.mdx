@@ -45,7 +45,7 @@ graph LR
 Install Evalite and the Autoevals library as dev dependencies:
 
 ```bash
-pnpm add -D evalite vitest autoevals
+pnpm add -D evalite vitest autoevals ai @ai-sdk/openai zod
 ```
 
 Then set up a script in `package.json`:
@@ -80,7 +80,7 @@ The three building blocks — `data`, `task`, `scorers`:
 
 ```typescript
 import { evalite } from 'evalite';
-import { Levenshtein } from 'autoevals';
+import { Levenshtein } from 'autoevals'; // Levenshtein measures edit distance — how many character changes are needed to get from output to expected
 
 evalite('My First Eval', {
   // 1. Test data: What goes in, what should come out?
@@ -167,6 +167,8 @@ Start the evals with `pnpm eval:dev` and open `http://localhost:3006`:
 
 **Task:** Set up Evalite and write a simple eval with the Levenshtein scorer.
 
+Create the file `hello.eval.ts` and run it with `pnpm eval:dev`. You'll see the results in the dashboard at `http://localhost:3006`.
+
 ```typescript
 // hello.eval.ts
 
@@ -214,6 +216,8 @@ evalite('Greeting Eval', {
   scorers: [Levenshtein],
 });
 ```
+
+**Expected output:** All three test cases should achieve a score of 1.0 — the `task` function produces exactly the expected output. In the dashboard at `localhost:3006` you'll see "Greeting Eval" with an average score of 1.0.
 
 **Explanation:** The Levenshtein scorer measures the similarity between the actual output and the expected output. A score of 1.0 means identical, a score of 0.0 means completely different. In this example, every test case should achieve a score of 1.0, because the `task` function produces exactly the expected output.
 

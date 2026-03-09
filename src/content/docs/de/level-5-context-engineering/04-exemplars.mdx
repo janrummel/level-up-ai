@@ -138,6 +138,8 @@ Beachte: Mit guten Exemplars kannst Du oft auf `<rules>` und `<output-format>` v
 
 **Aufgabe:** Baue einen Sentiment Classifier mit Exemplars. Das LLM soll Texte in eine von drei Kategorien einordnen: `positiv`, `negativ` oder `neutral`. Nutze mindestens 3 Exemplars, die alle drei Faelle abdecken.
 
+Erstelle **`challenge-5-3.ts`** und fuehre aus mit: **`npx tsx challenge-5-3.ts`**
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -154,12 +156,10 @@ const NEW_INPUT = 'Das Produkt ist okay, nichts Besonderes aber auch nicht schle
 
 // TODO: Baue den Prompt mit <examples> XML Tags
 // Nutze .map() um die Exemplars in XML zu verwandeln
+// Verwende <task-context>, <examples> und <the-ask>
 const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  prompt: `
-    // TODO: Dein strukturierter Prompt hier
-    // Verwende <task-context>, <examples> und <the-ask>
-  `,
+  prompt: '', // TODO: Dein strukturierter Prompt hier
 });
 
 console.log(result.text);
@@ -257,5 +257,5 @@ Konkret:
 
 ## Quellen
 
-- [Anthropic: Prompt Engineering — Use Examples](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-examples)
+- [Anthropic: Prompting Best Practices (Examples)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
 - [ai-hero-dev Exercise 05.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/05-context-engineering/05.03-exemplars)

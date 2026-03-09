@@ -71,13 +71,13 @@ Der Factuality Scorer nutzt eine 5-stufige Skala:
 | **B** | Superset | 0.6 | Antwort enthaelt alles aus der Expertenmeinung plus Zusaetzliches — korrekt und ausfuehrlicher |
 | **C** | Identical | 1.0 | Antwort und Expertenmeinung sind inhaltlich identisch |
 | **D** | Conflict | 0.0 | Antwort widerspricht der Expertenmeinung — faktisch falsch |
-| **E** | Irrelevant | 0.0 | Antwort hat nichts mit der Frage zu tun |
+| **E** | Irrelevant Diff | 1.0 | Antworten unterscheiden sich, aber die Unterschiede sind fuer die Faktizitaet nicht relevant |
 
 Die Skala erlaubt Abstufungen: Eine unvollstaendige Antwort (A: 0.4) ist besser als eine falsche (D: 0.0), aber schlechter als eine perfekte (C: 1.0).
 
 ### Schicht 3: Der Factuality Scorer — Schritt fuer Schritt
 
-Der Scorer nutzt `generateObject` aus dem AI SDK, um eine strukturierte Bewertung vom Judge-LLM zu bekommen:
+Wir nutzen `gpt-4o` als Judge-Modell — es eignet sich besonders gut fuer nuancierte inhaltliche Bewertungen. Der Scorer nutzt `generateObject` aus dem AI SDK, um eine strukturierte Bewertung vom Judge-LLM zu bekommen:
 
 ```typescript
 import { createScorer } from 'evalite';
@@ -189,6 +189,8 @@ LLM-as-Judge ist maechtig, aber nicht kostenlos:
 ## TRY
 
 **Aufgabe:** Baue einen Factuality Scorer und teste ihn mit korrekten und inkorrekten Antworten.
+
+Erstelle die Datei `factuality.eval.ts` und fuehre sie mit `pnpm eval:dev` aus. Dieser Scorer braucht einen OPENAI_API_KEY (siehe Briefing).
 
 ```typescript
 // factuality.eval.ts

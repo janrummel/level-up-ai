@@ -71,13 +71,13 @@ The Factuality scorer uses a 5-level scale:
 | **B** | Superset | 0.6 | Answer contains everything from the expert opinion plus more — correct and more detailed |
 | **C** | Identical | 1.0 | Answer and expert opinion are factually identical |
 | **D** | Conflict | 0.0 | Answer contradicts the expert opinion — factually wrong |
-| **E** | Irrelevant | 0.0 | Answer has nothing to do with the question |
+| **E** | Irrelevant Diff | 1.0 | Answers differ, but the differences don't matter from the perspective of factuality |
 
 The scale allows gradations: An incomplete answer (A: 0.4) is better than a wrong one (D: 0.0), but worse than a perfect one (C: 1.0).
 
 ### Layer 3: The Factuality Scorer — Step by Step
 
-The scorer uses `generateObject` from the AI SDK to get a structured evaluation from the judge LLM:
+We use `gpt-4o` as the judge model — it's particularly well-suited for nuanced content evaluations. The scorer uses `generateObject` from the AI SDK to get a structured evaluation from the judge LLM:
 
 ```typescript
 import { createScorer } from 'evalite';
@@ -189,6 +189,8 @@ LLM-as-Judge is powerful, but not free:
 ## TRY
 
 **Task:** Build a Factuality scorer and test it with correct and incorrect answers.
+
+Create the file `factuality.eval.ts` and run it with `pnpm eval:dev`. This scorer requires an OPENAI_API_KEY (see Briefing).
 
 ```typescript
 // factuality.eval.ts

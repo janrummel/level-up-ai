@@ -106,7 +106,7 @@ Pro Generation speichert Langfuse:
 
 ### Schicht 3: Integration mit dem AI SDK
 
-Langfuse integriert sich ueber OpenTelemetry mit dem AI SDK. Die Konfiguration sieht so aus:
+Langfuse bietet zwei Integrationswege: Die empfohlene **OpenTelemetry-basierte Variante** (`LangfuseExporter`) und die manuelle SDK-Variante. Der folgende Code zeigt die manuelle Variante, um die Konzepte (Trace, Generation, Score) explizit zu machen. In Production wuerdest Du die OTel-Integration nutzen — sie erfasst AI SDK Calls automatisch ohne manuelles Logging.
 
 ```typescript
 import { Langfuse } from 'langfuse';

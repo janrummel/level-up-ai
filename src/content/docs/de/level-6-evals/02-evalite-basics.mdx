@@ -45,7 +45,7 @@ graph LR
 Evalite und die Autoevals-Bibliothek als Dev-Dependencies installieren:
 
 ```bash
-pnpm add -D evalite vitest autoevals
+pnpm add -D evalite vitest autoevals ai @ai-sdk/openai zod
 ```
 
 Dann ein Script in der `package.json` einrichten:
@@ -80,7 +80,7 @@ Die drei Bausteine — `data`, `task`, `scorers`:
 
 ```typescript
 import { evalite } from 'evalite';
-import { Levenshtein } from 'autoevals';
+import { Levenshtein } from 'autoevals'; // Levenshtein misst die Edit-Distanz — wie viele Zeichenaenderungen noetig sind, um vom Output zum Expected zu kommen
 
 evalite('My First Eval', {
   // 1. Test-Daten: Was geht rein, was soll rauskommen?
@@ -167,6 +167,8 @@ Starte die Evals mit `pnpm eval:dev` und oeffne `http://localhost:3006`:
 
 **Aufgabe:** Richte Evalite ein und schreibe eine einfache Eval mit dem Levenshtein Scorer.
 
+Erstelle die Datei `hello.eval.ts` und fuehre sie mit `pnpm eval:dev` aus. Die Ergebnisse siehst Du im Dashboard unter `http://localhost:3006`.
+
 ```typescript
 // hello.eval.ts
 
@@ -214,6 +216,8 @@ evalite('Greeting Eval', {
   scorers: [Levenshtein],
 });
 ```
+
+**Erwarteter Output:** Alle drei Test-Cases sollten Score 1.0 erreichen — die `task`-Funktion produziert exakt den erwarteten Output. Im Dashboard unter `localhost:3006` siehst Du "Greeting Eval" mit Durchschnitts-Score 1.0.
 
 **Erklaerung:** Der Levenshtein Scorer misst die Aehnlichkeit zwischen dem tatsaechlichen Output und dem erwarteten Output. Score 1.0 bedeutet identisch, Score 0.0 bedeutet komplett verschieden. In diesem Beispiel sollte jeder Test-Case einen Score von 1.0 erreichen, weil die `task`-Funktion exakt den erwarteten Output produziert.
 
