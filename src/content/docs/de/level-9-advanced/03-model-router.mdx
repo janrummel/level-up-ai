@@ -182,6 +182,8 @@ Das ist eine Ersparnis von ueber 90% — bei vergleichbarer Qualitaet, weil die 
 
 **Aufgabe:** Baue einen Model Router der Input klassifiziert und zum passenden Modell routet.
 
+Erstelle **model-router.ts** und fuehre aus mit **npx tsx model-router.ts**.
+
 ```typescript
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
@@ -275,6 +277,24 @@ for (const input of testInputs) {
 ```
 
 **Erklaerung:** Zwei LLM-Calls pro Anfrage — der erste (Klassifikation) kostet nahezu nichts mit Flash Lite. Der zweite Call geht an das passende Modell. Die `Output.enum`-Funktion aus Level 1.5 garantiert, dass die Klassifikation immer einer der drei erlaubten Werte ist.
+
+```
+Erwarteter Output (ungefaehr):
+--- Input: "Was ist eine Variable?" ---
+Klassifikation: simple
+Tokens: 127
+Antwort: Eine Variable ist ein benannter Speicherplatz...
+
+--- Input: "Vergleiche SQL vs. NoSQL Datenbanken fuer eine E-Commerce-Plattform" ---
+Klassifikation: complex
+Tokens: 891
+Antwort: SQL-Datenbanken bieten ACID-Garantien...
+
+--- Input: "Schreibe eine TypeScript-Funktion die ein Array von Zahlen sortiert" ---
+Klassifikation: code
+Tokens: 423
+Antwort: function sortNumbers(arr: number[]): number[]...
+```
 
 </details>
 

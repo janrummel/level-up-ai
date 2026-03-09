@@ -84,7 +84,7 @@ import { z } from 'zod';
 // search tool — simulates web search (in production: real API)
 const searchTool = tool({
   description: 'Suche nach Informationen zu einem Thema',
-  parameters: z.object({
+  inputSchema: z.object({
     query: z.string().describe('Der Suchbegriff'),
   }),
   execute: async ({ query }) => {
@@ -100,7 +100,7 @@ async function researchPhase(topic: string) {
   let iterations = 0;
   let breakReason = 'complete';
 
-  const messages: Array<{ role: string; content: string }> = [
+  const messages: any[] = [ // ← any[] because AI SDK Messages have various content types
     {
       role: 'user',
       content: `Recherchiere gruendlich zum Thema: ${topic}.
@@ -297,6 +297,8 @@ The quality phase is the last line of defense. Guardrails check the final output
 
 **Task:** Build a mini research pipeline: search, summarization, formatting with guardrails.
 
+Create **research-pipeline.ts** and run with **npx tsx research-pipeline.ts**.
+
 ```typescript
 import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -340,7 +342,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 // search tool (simulated)
 const searchTool = tool({
   description: 'Suche nach Informationen',
-  parameters: z.object({ query: z.string() }),
+  inputSchema: z.object({ query: z.string() }),
   execute: async ({ query }) => {
     console.log(`  Suche: "${query}"`);
     return `Suchergebnisse fuer "${query}": AI wird in der Medizin fuer Diagnostik, Medikamentenentwicklung und personalisierte Therapie eingesetzt. Aktuelle Studien zeigen 30% schnellere Diagnosen durch AI-Unterstuetzung.`;
@@ -353,7 +355,7 @@ async function miniResearchPipeline(topic: string) {
 
   // Phase 1: Research (max 3 iterations)
   console.log('[Phase 1: Research]');
-  const messages: Array<{ role: string; content: string }> = [
+  const messages: any[] = [ // ← any[] because AI SDK Messages have various content types
     { role: 'user', content: `Recherchiere zum Thema: ${topic}. Nutze das search-Tool.` },
   ];
 
@@ -411,6 +413,26 @@ await miniResearchPipeline('AI in der Medizin');
 ```
 
 **Explanation:** Three phases — Research with tool loop (max 3 iterations), Summarize with its own system prompt, Format with guardrails. Token usage is accumulated across all phases. The pipeline runs from start to finish, even if the research loop exits early.
+
+```
+Expected output (approximate):
+=== Mini Research Pipeline: "AI in der Medizin" ===
+
+[Phase 1: Research]
+  Suche: "AI in der Medizin"
+  1 iterations, 342 tokens
+
+[Phase 2: Summarize]
+  187 tokens
+
+[Phase 3: Format + Quality]
+  Quality checks passed.
+
+=== Done. Total: 891 tokens ===
+
+AI in der Medizin — Report
+...
+```
 
 </details>
 

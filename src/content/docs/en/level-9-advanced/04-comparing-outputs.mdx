@@ -174,6 +174,8 @@ for (const r of judgment.rankings) {
 
 The judge receives the original task and all outputs. Through the Zod schema, the evaluation is structured — score, reasoning, and winner. Important: The judge should be a strong model, ideally not one of the models being evaluated.
 
+> **Note:** In this example we use Sonnet as both judge and one of the evaluated models — in production you'd use a stronger model (e.g., Opus) as judge that isn't being evaluated itself.
+
 ### Layer 4: Systematic Comparison with Evals
 
 For repeatable comparisons, use an eval framework like Evalite from Level 6:
@@ -224,6 +226,8 @@ With Evalite you get reproducible results across multiple test cases. You can sy
 ## TRY
 
 **Task:** Call 3 models in parallel, compare the results by length and a simple keyword scorer.
+
+Create **compare-outputs.ts** and run with **npx tsx compare-outputs.ts**.
 
 ```typescript
 import { generateText } from 'ai';
@@ -324,6 +328,19 @@ for (const r of results) {
 ```
 
 **Explanation:** `Promise.all` sends all requests in parallel — the total duration is that of the slowest model. The keyword scorer counts how many expected terms appear in the response. On a tie, the shorter response wins, because conciseness was required in the task ("maximum 3 sentences").
+
+```
+Expected output (approximate):
+=== Comparison ===
+
+| Model | Keywords | Characters | Tokens | Duration |
+|-------|----------|------------|--------|----------|
+| Claude Sonnet | 5/5 | 312 | 198 | 1.2s |
+| GPT-4o | 4/5 | 287 | 176 | 0.9s |
+| Gemini Flash | 5/5 | 256 | 143 | 0.6s |
+
+Winner: Gemini Flash (5 keywords, 256 characters)
+```
 
 </details>
 

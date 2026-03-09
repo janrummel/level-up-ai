@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-09 | Gesamt-Score: **65 / 100**
+> Letztes Update: 2026-03-09 | Gesamt-Score: **83 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -17,9 +17,9 @@ Level 5  █████████░  92%  PASS        ░░░░░░░�
 Level 6  █████████░  93%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 7  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 8  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 9  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 74%
+                                                         Gesamt: 83%
 ```
 
 ---
@@ -380,9 +380,43 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 9: Advanced Patterns — Score: –/100 OFFEN
+## Level 9: Advanced Patterns — Score: 92/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-09 | Fixes: 2026-03-09
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **23/25** | Alle AI SDK v6 APIs korrekt (generateText, tool, Output.enum, Output.object, Promise.all, AbortController). -2: `parameters` statt `inputSchema` in tool() (gefixt), Messages-Array falsch getypt (gefixt) |
+| Didaktische Qualitaet | **25/25** | 6-Step 100% konsistent, staerkste Progression im Kurs (Guardrails→Router→Compare→Pipeline). COMBINE 9.4 zeigt das Big Picture aller 9 Levels. Level Complete ist das beste im Kurs ("Vom Vibe Coder zum AI Engineer"). Boss Fight mit 10 Anforderungen als wuerdiges Finale |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, npx tsx, erwarteter Output, Projektverzeichnis-Hinweis, Production-Guardrail-Hinweis, Streaming-Rueckverweis. -3: Kein Troubleshooting-Abschnitt (konsistentes P2) |
+| Quellen & Nachweise | **12/15** | 6/7 Seiten mit Quellen (86%), alle Rang 1-2. OWASP LLM Top 10 als externe Security-Quelle. -3: ai-hero-dev Links nicht live verifiziert, Level Complete ohne dedizierte Quellen-Sektion (hat stattdessen Ressourcen-Links) |
+| Vollstaendigkeit | **10/10** | 7 DE + 7 EN Dateien, Briefing+4 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **92/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 0 | 3 | 11 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 12 | 11 | 40 | 0 FAIL, 3 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L8→L9 konsistent, Kurs-Abschluss |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 86% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-9-spezifische Fehler
+2. `experimental_output` Prefix moeglicherweise veraltet (gleiche Frage wie L7/L8 mit `experimental_transform`)
+3. ai-hero-dev Exercise-Links nicht live verifiziert
 
 ---
 
@@ -416,3 +450,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-09 | Level 6 Review + Fixes (DE+EN): 4 P0 (OPENAI_API_KEY fehlt, pnpm nicht erklaert, Pakete fehlen, Grade E Tabelle falsch), 4 P1 (Dateinamen, Levenshtein-Erklaerung, Projekt-Setup, Langfuse OTel), 4 P2 | 46% → 56% |
 | 2026-03-09 | Level 7 Review + Fixes (DE+EN): 1 P0 (Retry-Pattern Bug), 4 P1 (Dateinamen, Ausfuehrungsbefehle, erwarteter Output, CLI-vs-Web-Abgrenzung), 3 P2 | 56% → 65% |
 | 2026-03-09 | Level 8 Review + Fixes (DE+EN): 0 P0, 4 P1 (Dateinamen, erwarteter Output, ToolLoopAgent-Referenz, Endlosschleifen-Warnung), 4 P2 | 65% → 74% |
+| 2026-03-09 | Level 9 Review + Fixes (DE+EN): 0 P0, 5 P1 (Dateinamen, erwarteter Output, parameters→inputSchema, Messages-Typ, 37→41 Challenges), 5 P2 | 74% → 83% |
