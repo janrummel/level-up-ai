@@ -72,6 +72,8 @@ Die `metadata`-Property wird vom AI SDK beim Senden an den LLM-Provider automati
 
 ### Schicht 2: Metadata auf der Server-Seite nutzen
 
+> **Web-App Kontext:** Die folgenden Beispiele zeigen Metadata in einer Next.js/React App. Deine TRY-Uebung weiter unten arbeitet im Terminal (CLI).
+
 In Deiner API Route kannst Du die Metadata lesen, bevor Du den LLM-Call startest:
 
 ```typescript
@@ -173,6 +175,8 @@ async function loadMessages(chatId: string): Promise<UIMessage[]> {
 
 **Aufgabe:** Erstelle Messages mit Metadata (userId, timestamp) und logge die Metadata serverseitig, bevor der LLM-Call startet. Verifiziere, dass das LLM die Metadata nicht sieht.
 
+Erstelle die Datei `message-metadata.ts`:
+
 ```typescript
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -212,6 +216,8 @@ import type { UIMessage } from 'ai';
 - [ ] Metadata auf der "Server-Seite" geloggt
 - [ ] `streamText` mit den Messages aufgerufen
 - [ ] Verifiziert: LLM erwaehnt userId/timestamp NICHT in der Antwort
+
+Fuehre aus: `npx tsx message-metadata.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -262,6 +268,22 @@ console.log('\n');
 
 **Erklaerung:** Das LLM sieht nur den `content` der Message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." Die Metadata (`userId`, `timestamp`, `sessionId`) wird vom AI SDK herausgefiltert und erscheint nicht in der LLM-Antwort. Damit kannst Du Metadaten sicher transportieren, ohne Tokens zu verschwenden oder das LLM zu verwirren.
 
+**Erwarteter Output (ungefaehr):**
+
+```
+--- App-Metadata (geht NICHT zum LLM) ---
+userId: user-42
+timestamp: 2026-03-09T14:30:00.000Z
+sessionId: session-abc-123
+
+--- LLM-Antwort ---
+In dieser Nachricht sehe ich eine Frage, die mich bittet aufzulisten,
+was ich sehen kann. Ich sehe den Text "Was siehst Du in dieser
+Nachricht? Liste ALLES auf, was Du sehen kannst."
+```
+
+> Das LLM sollte **nur** den Text-Content erwaehnen — keine userId, kein timestamp, keine sessionId. Falls es Metadata erwaehnt, pruefe ob `metadata` korrekt als Eigenschaft (nicht im `content`) steht.
+
 </details>
 
 ## COMBINE
@@ -296,4 +318,4 @@ graph LR
 
 - [Vercel AI SDK: UI Messages](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot#messages)
 - [Vercel AI SDK: Message Metadata](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-metadata)
-- [ai-hero-dev Exercise 07.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.02-message-metadata)
+- [ai-hero-dev Exercise 07.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.03-message-metadata)

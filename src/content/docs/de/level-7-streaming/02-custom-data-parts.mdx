@@ -100,6 +100,8 @@ export async function POST(req: Request) {
 
 ### Schicht 3: Custom Data Parts im Frontend konsumieren
 
+> **Web-App Kontext:** Der folgende Code zeigt Custom Data Parts in einer Next.js/React App. Deine TRY-Uebung weiter unten arbeitet im Terminal (CLI).
+
 Im Frontend empfaengst Du Custom Data Parts ueber den `data`-Array im `useChat`-Hook:
 
 ```typescript
@@ -174,7 +176,9 @@ const latestProgress = progressParts.at(-1);
 
 ## TRY
 
-**Aufgabe:** Baue eine API Route, die per `createDataStream` einen Status ("searching", "analyzing", "done") UND den LLM-Stream sendet. Konsumiere die Data Parts mit `fullStream`.
+**Aufgabe:** Baue einen Stream, der per `createDataStream` einen Status ("searching", "analyzing", "done") UND den LLM-Stream sendet. Konsumiere die Data Parts im Terminal.
+
+Erstelle die Datei `custom-data-parts.ts`:
 
 ```typescript
 import { createDataStream, streamText } from 'ai';
@@ -216,6 +220,8 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] `streamText` gestartet und in den `dataStream` gemerged
 - [ ] Data Part mit Status "done" wird in `onFinish` gesendet
 
+Fuehre aus: `npx tsx custom-data-parts.ts`
+
 <details>
 <summary>Loesung anzeigen</summary>
 
@@ -256,6 +262,19 @@ console.log('\n--- Stream beendet ---');
 ```
 
 **Erklaerung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts als JSON, `mergeIntoDataStream` fuegt den LLM-Text-Stream ein. Im Output siehst Du abwechselnd Data Parts (als JSON-Zeilen) und Text-Chunks — alles in einem Stream, in der richtigen Reihenfolge.
+
+**Erwarteter Output (ungefaehr):**
+
+```
+2:["status","searching"]
+0:"Custom Data Parts "
+0:"sind ein Mechanismus "
+0:"im AI SDK..."
+2:["status","done"]
+--- Stream beendet ---
+```
+
+> Die Zeilen mit `2:` sind Data Parts (JSON-Objekte), die mit `0:` sind Text-Chunks. Der genaue Text variiert (LLM-Output).
 
 </details>
 

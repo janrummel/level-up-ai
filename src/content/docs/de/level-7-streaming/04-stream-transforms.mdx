@@ -171,6 +171,8 @@ const result = streamText({
 
 **Aufgabe:** Wende `smoothStream` an, dann schreibe einen Custom Transform, der alle Text-Chunks in Grossbuchstaben umwandelt.
 
+Erstelle die Datei `stream-transforms.ts`:
+
 ```typescript
 import { smoothStream, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -202,6 +204,8 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] Nur `text-delta` Chunks transformiert, andere Typen durchgelassen
 - [ ] Beide Transforms in `experimental_transform` Array verkettet
 - [ ] Output zeigt glatten, grossgeschriebenen Text
+
+Fuehre aus: `npx tsx stream-transforms.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -242,6 +246,16 @@ console.log(); // Zeilenumbruch am Ende
 
 **Erklaerung:** `smoothStream()` sammelt die einzelnen Buchstaben vom LLM und gibt sie in Wortgruppen weiter. Dann transformiert `upperCase()` jeden Text-Chunk in Grossbuchstaben. Nicht-Text-Chunks (wie `finish` oder `tool-call`) werden unveraendert durchgereicht. Die Reihenfolge im Array bestimmt die Pipeline-Reihenfolge.
 
+**Erwarteter Output (ungefaehr):**
+
+```
+STREAM TRANSFORMS SIND EIN MECHANISMUS, DER CHUNKS ZWISCHEN DEM LLM
+UND DEINER UI VERARBEITET. SIE ERMOEGLICHEN ES, DEN TEXT ZU GLAETTEN,
+ZU FILTERN ODER ZU TRANSFORMIEREN, BEVOR ER BEIM USER ANKOMMT.
+```
+
+> Der gesamte Text erscheint in Grossbuchstaben und fliesst in Wortgruppen statt einzelnen Buchstaben. Der genaue Text variiert (LLM-Output).
+
 </details>
 
 ## COMBINE
@@ -272,4 +286,4 @@ graph LR
 - [Vercel AI SDK: smoothStream](https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream)
 - [Vercel AI SDK: streamText — experimental_transform](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#experimental-transform)
 - [MDN: TransformStream](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream)
-- [ai-hero-dev Exercise 07.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.03-stream-transforms)
+- [ai-hero-dev Exercises 07.01-07.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming) (Stream Transforms basiert auf der offiziellen AI SDK Dokumentation)

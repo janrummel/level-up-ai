@@ -77,6 +77,8 @@ Wichtig: `onError` verhindert nicht, dass der Fehler zum User durchschlaegt. Es 
 
 ### Schicht 2: onError in toUIMessageStreamResponse
 
+> **Web-App Kontext:** Der folgende Code zeigt Error Handling in einer Next.js API Route. Deine TRY-Uebung weiter unten arbeitet im Terminal (CLI).
+
 Fuer Web-APIs kontrollierst Du mit `onError` in `toUIMessageStreamResponse`, welche Fehlermeldung der Client sieht:
 
 ```typescript
@@ -161,24 +163,16 @@ async function streamWithRetry(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const result = streamText({
-        ...params,
-        onError({ error }) {
-          console.error(`Versuch ${attempt}/${maxRetries} fehlgeschlagen:`, error);
-          throw error;                                // ← Re-throw fuer Retry-Loop
-        },
-      });
+      const result = streamText(params);
 
-      // Stream testen: Ersten Chunk lesen
-      const reader = result.textStream.getReader();
-      const { value, done } = await reader.read();
-      reader.releaseLock();
+      // Stream testen: Das text-Promise awaiten
+      // Wenn der Provider antwortet, ist der Stream OK
+      const fullText = await result.text;             // ← Wartet auf kompletten Text
+      return { result, fullText };                    // ← Erfolg: Ergebnis zurueckgeben
 
-      if (!done && value) {
-        return result;                                // ← Erfolg: Stream zurueckgeben
-      }
     } catch (error) {
       lastError = error;
+      console.error(`Versuch ${attempt}/${maxRetries} fehlgeschlagen:`, error);
 
       if (attempt < maxRetries) {
         const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000); // Exponential Backoff
@@ -193,6 +187,8 @@ async function streamWithRetry(
 ```
 
 Die Retry-Strategie nutzt **Exponential Backoff**: 1s, 2s, 4s, ... Das gibt dem Provider Zeit, sich zu erholen (z.B. nach Rate Limiting).
+
+> **Hinweis:** Dieses Pattern wartet auf den vollstaendigen Text (`result.text`). Fuer Streaming-Retries (wo Du den Text schon waehrend der Generierung anzeigen willst) brauchst Du eine komplexere Loesung — z.B. den `for await`-Loop in der Retry-Schleife selbst.
 
 ### Schicht 5: Try/Catch um den Stream-Consumer
 
@@ -220,6 +216,8 @@ try {
 ## TRY
 
 **Aufgabe:** Simuliere einen Fehler und fange ihn mit `onError` ab. Zeige eine User-freundliche Meldung.
+
+Erstelle die Datei `error-handling.ts`:
 
 ```typescript
 import { streamText } from 'ai';
@@ -249,6 +247,8 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] `onError` Callback implementiert mit Server-seitigem Logging
 - [ ] `for await` Loop in try/catch gewrapped
 - [ ] User-freundliche Fehlermeldung im catch-Block
+
+Fuehre aus: `npx tsx error-handling.ts`
 
 <details>
 <summary>Loesung anzeigen</summary>
@@ -284,6 +284,21 @@ try {
 ```
 
 **Erklaerung:** Der ungueltige Modellname fuehrt zu einem API-Fehler. `onError` loggt den Fehler serverseitig (mit allen Details fuer Debugging). Der try/catch um den Stream-Consumer faengt den Fehler ab und zeigt eine verstaendliche Meldung. In Production wuerdest Du hier eine UI-Komponente rendern statt `console.log`.
+
+**Erwarteter Output (ungefaehr):**
+
+```
+Starte Stream mit absichtlichem Fehler...
+
+[Server Log] Stream-Fehler aufgetreten:
+[Server Log] APICallError: 404 model_not_found ...
+
+--- Fehler abgefangen ---
+Dem User anzeigen: "Die Antwort konnte nicht geladen werden.
+Bitte versuche es in einigen Sekunden erneut."
+```
+
+> Der genaue Fehlertext variiert je nach Provider. Entscheidend ist: `onError` loggt den vollen Fehler, der try/catch zeigt die User-freundliche Meldung.
 
 </details>
 

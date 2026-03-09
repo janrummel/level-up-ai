@@ -72,6 +72,8 @@ The `metadata` property is automatically ignored by the AI SDK when sending to t
 
 ### Layer 2: Using Metadata on the Server Side
 
+> **Web app context:** The following examples show metadata in a Next.js/React app. Your TRY exercise below works in the terminal (CLI).
+
 In your API route you can read the metadata before starting the LLM call:
 
 ```typescript
@@ -173,6 +175,8 @@ async function loadMessages(chatId: string): Promise<UIMessage[]> {
 
 **Task:** Create messages with metadata (userId, timestamp) and log the metadata server-side before the LLM call starts. Verify that the LLM does not see the metadata.
 
+Create the file `message-metadata.ts`:
+
 ```typescript
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -212,6 +216,8 @@ import type { UIMessage } from 'ai';
 - [ ] Metadata logged on the "server side"
 - [ ] `streamText` called with the messages
 - [ ] Verified: LLM does NOT mention userId/timestamp in the response
+
+Run: `npx tsx message-metadata.ts`
 
 <details>
 <summary>Show solution</summary>
@@ -262,6 +268,21 @@ console.log('\n');
 
 **Explanation:** The LLM only sees the `content` of the message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." The metadata (`userId`, `timestamp`, `sessionId`) is filtered out by the AI SDK and does not appear in the LLM response. This lets you transport metadata safely without wasting tokens or confusing the LLM.
 
+**Expected output (approximately):**
+
+```
+--- App-Metadata (geht NICHT zum LLM) ---
+userId: user-42
+timestamp: 2026-03-09T14:30:00.000Z
+sessionId: session-abc-123
+
+--- LLM-Antwort ---
+In this message I can see a question asking me to list everything
+I can see. I see the text "Was siehst Du in dieser Nachricht?..."
+```
+
+> The LLM should mention **only** the text content — no userId, no timestamp, no sessionId.
+
 </details>
 
 ## COMBINE
@@ -296,4 +317,4 @@ graph LR
 
 - [Vercel AI SDK: UI Messages](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot#messages)
 - [Vercel AI SDK: Message Metadata](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-metadata)
-- [ai-hero-dev Exercise 07.02](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.02-message-metadata)
+- [ai-hero-dev Exercise 07.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.03-message-metadata)

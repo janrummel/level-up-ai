@@ -171,6 +171,8 @@ const result = streamText({
 
 **Task:** Apply `smoothStream`, then write a custom transform that converts all text chunks to uppercase.
 
+Create the file `stream-transforms.ts`:
+
 ```typescript
 import { smoothStream, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -202,6 +204,8 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] Only `text-delta` chunks transformed, other types passed through
 - [ ] Both transforms chained in the `experimental_transform` array
 - [ ] Output shows smooth, uppercased text
+
+Run: `npx tsx stream-transforms.ts`
 
 <details>
 <summary>Show solution</summary>
@@ -242,6 +246,16 @@ console.log(); // Zeilenumbruch am Ende
 
 **Explanation:** `smoothStream()` collects the individual characters from the LLM and outputs them in word groups. Then `upperCase()` transforms each text chunk to uppercase. Non-text chunks (like `finish` or `tool-call`) are passed through unchanged. The order in the array determines the pipeline order.
 
+**Expected output (approximately):**
+
+```
+STREAM TRANSFORMS ARE A MECHANISM THAT PROCESSES CHUNKS BETWEEN THE
+LLM AND YOUR UI. THEY ALLOW YOU TO SMOOTH, FILTER, OR TRANSFORM
+THE TEXT BEFORE IT REACHES THE USER.
+```
+
+> All text appears in uppercase and flows in word groups instead of individual characters. The exact text varies (LLM output).
+
 </details>
 
 ## COMBINE
@@ -272,4 +286,4 @@ graph LR
 - [Vercel AI SDK: smoothStream](https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream)
 - [Vercel AI SDK: streamText — experimental_transform](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#experimental-transform)
 - [MDN: TransformStream](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream)
-- [ai-hero-dev Exercise 07.03](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming/07.03-stream-transforms)
+- [ai-hero-dev Exercises 07.01-07.04](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course/tree/main/exercises/07-production-streaming) (Stream Transforms is based on official AI SDK documentation)

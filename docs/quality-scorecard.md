@@ -15,11 +15,11 @@ Level 3  █████████░  92%  PASS        ░░░░░░░�
 Level 4  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 5  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 6  █████████░  93%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 7  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 7  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 56%
+                                                         Gesamt: 65%
 ```
 
 ---
@@ -300,9 +300,43 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 7: Streaming — Score: –/100 OFFEN
+## Level 7: Streaming — Score: 91/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-09 | Fixes: 2026-03-09
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **23/25** | APIs korrekt (createDataStream, writeData, mergeIntoDataStream, smoothStream, onError, NoSuchToolError). -2: Retry-Pattern hatte Bug (gefixt), experimental_transform Prefix moeglicherweise veraltet (nicht verifizierbar) |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, THINK-Fragen stark, COMBINE-Vernetzung exzellent. -1: CLI vs. Web-Framework Vermischung in Walkthroughs (adressiert mit Kontext-Hinweisen) |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, npx tsx, erwarteter Output, Web-App-Kontext-Hinweise. -3: Kein Troubleshooting-Abschnitt (konsistentes P2) |
+| Quellen & Nachweise | **12/15** | 6/7 Seiten mit Quellen (86%), alle Rang 1-2. -3: ai-hero-dev Exercise-Mappings fuer 7.2/7.3 korrigiert, Level Complete ohne Quellen |
+| Vollstaendigkeit | **10/10** | 7 DE + 7 EN Dateien, Briefing+4 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **91/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 0 | 4 | 10 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 5 | 14 | 65 | 0 FAIL, 3 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L6→L7 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 86% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren (Build erfolgreich)
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-7-spezifische Fehler
+2. experimental_transform Prefix nicht erklaert (stabil oder nicht?)
+3. Keine emotionale Belohnung im Boss-Fight-Rueckblick (Level Complete hat jetzt Achievement-Text)
 
 ---
 
@@ -346,3 +380,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-08 | Level 4 Review + Fixes (DE+EN): 1 P0 (defekte Quellen-URL in 5/7 Dateien), 4 P1 (onFinish-Tabelle, Dateinamen, Befehle, Output), 3 P2 | 28% → 37% |
 | 2026-03-09 | Level 5 Review + Fixes (DE+EN): 1 P0 (defekte Anthropic-URLs in 8/8 Dateien, docs.anthropic.com→platform.claude.com), 4 P1 (Dateinamen, Befehle, Output, Zuschreibung), 3 P2 | 37% → 46% |
 | 2026-03-09 | Level 6 Review + Fixes (DE+EN): 4 P0 (OPENAI_API_KEY fehlt, pnpm nicht erklaert, Pakete fehlen, Grade E Tabelle falsch), 4 P1 (Dateinamen, Levenshtein-Erklaerung, Projekt-Setup, Langfuse OTel), 4 P2 | 46% → 56% |
+| 2026-03-09 | Level 7 Review + Fixes (DE+EN): 1 P0 (Retry-Pattern Bug), 4 P1 (Dateinamen, Ausfuehrungsbefehle, erwarteter Output, CLI-vs-Web-Abgrenzung), 3 P2 | 56% → 65% |
