@@ -1,0 +1,107 @@
+---
+title: "Custom Data Parts: ID Reconciliation"
+description: "Using IDs on data parts for progressive updates — loading, success, and enriched states without duplicates."
+sidebar:
+  order: 6
+---
+
+## Overview
+
+When you send multiple data parts with the same `id`, AI SDK updates the existing part in `message.parts` instead of appending a new one. This is called ID reconciliation, and it enables progressive state updates for a single logical item.
+
+A typical pattern: send a data part with `status: 'loading'`, then later send the same `id` with `status: 'success'` and the actual data. The frontend sees one part that transitions from loading to loaded -- no duplicate entries, no manual cleanup.
+
+Without ID reconciliation, every `writer.write()` call appends a new part. The UI accumulates stale loading states. With reconciliation, the part is replaced in-place, keeping the message clean.
+
+## Server-Side: Progressive Updates
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      // Step 1: Loading state
+      writer.write({
+        type: 'data',
+        id: 'weather-berlin',
+        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+      });
+
+      // ... fetch weather data ...
+
+      // Step 2: Same ID -> replaces the loading part
+      writer.write({
+        type: 'data',
+        id: 'weather-berlin',
+        data: {
+          type: 'weather',
+          city: 'Berlin',
+          status: 'success',
+          temp: 22,
+          condition: 'sunny',
+        },
+      });
+
+      const result = streamText({ model, messages });
+      result.mergeIntoDataStream(writer);
+    },
+  });
+}
+```
+
+## How It Works
+
+| Scenario | `id` provided? | Behavior |
+|----------|----------------|----------|
+| First write with `id: 'abc'` | Yes | New part added to `message.parts` |
+| Second write with `id: 'abc'` | Yes | Existing part replaced (same index) |
+| Write without `id` | No | Always appends a new part |
+
+## Frontend: Automatic Updates
+
+No special frontend code is required. The `message.parts` array is updated in-place by `useChat`:
+
+```typescript
+// message.parts will contain exactly ONE weather part,
+// with the latest data (status: 'success')
+{m.parts.map((part, i) => {
+  if (part.type === 'data' && part.data.type === 'weather') {
+    if (part.data.status === 'loading') {
+      return <Skeleton key={i} />;
+    }
+    return <WeatherCard key={i} data={part.data} />;
+  }
+})}
+```
+
+## Multi-Item Updates
+
+Use unique IDs per item so they update independently:
+
+```typescript
+writer.write({ type: 'data', id: 'weather-berlin',
+  data: { type: 'weather', city: 'Berlin', status: 'loading' } });
+writer.write({ type: 'data', id: 'weather-tokyo',
+  data: { type: 'weather', city: 'Tokyo', status: 'loading' } });
+
+// Each resolves independently -- same ID replaces its own part
+writer.write({ type: 'data', id: 'weather-berlin',
+  data: { type: 'weather', city: 'Berlin', status: 'success', temp: 22 } });
+writer.write({ type: 'data', id: 'weather-tokyo',
+  data: { type: 'weather', city: 'Tokyo', status: 'success', temp: 28 } });
+```
+
+## See also
+
+- [Custom Data Parts Streaming](/en/reference/04-custom-data-parts-streaming/) -- server-side fundamentals
+- [Custom Data Parts in the Frontend](/en/reference/05-custom-data-parts-frontend/) -- rendering data parts
+- [Challenge 7.1: Custom Data Parts](/en/level-7-streaming/02-custom-data-parts/) -- hands-on exercise
+- [Challenge 8.2: Streaming to Frontend](/en/level-8-workflows/03-streaming-to-frontend/) -- workflow streaming
+
+## Sources
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)
+- [AI SDK: createUIMessageStreamResponse Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-ui-message-stream-response)

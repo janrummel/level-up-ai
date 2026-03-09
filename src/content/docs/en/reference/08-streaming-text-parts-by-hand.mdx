@@ -1,0 +1,106 @@
+---
+title: "Streaming Text Parts by Hand"
+description: "Manually writing text-delta parts to a UI message stream for full control over streamed content."
+sidebar:
+  order: 8
+---
+
+## Overview
+
+Normally, `streamText` handles text streaming automatically through `mergeIntoDataStream`. But sometimes you need manual control -- to prepend custom text before the LLM responds, combine outputs from multiple LLM calls, or inject formatted text between stream segments.
+
+Manual text streaming uses `writer.write()` with `type: 'text-delta'` and a `textDelta` property. Each write appends to the current text part in the message. The frontend treats these identically to text chunks from `streamText`.
+
+This approach gives you full control over what appears in the stream and in what order. You can mix hand-written text with LLM-generated text in a single response.
+
+## Basic Manual Text Streaming
+
+```typescript
+import { createUIMessageStreamResponse } from 'ai';
+
+export async function POST(req: Request) {
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      writer.write({ type: 'text-delta', textDelta: 'Hello ' });
+      writer.write({ type: 'text-delta', textDelta: 'World!' });
+    },
+  });
+}
+```
+
+The frontend sees "Hello World!" as a single text part, streamed incrementally.
+
+## Combining Manual Text with LLM Output
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      // Manual prefix
+      writer.write({ type: 'text-delta', textDelta: '**Analysis:**\n\n' });
+
+      // LLM-generated content
+      const result = streamText({
+        model: anthropic('claude-sonnet-4-5-20250514'),
+        messages,
+      });
+
+      result.mergeIntoDataStream(writer);
+    },
+  });
+}
+```
+
+## Multiple LLM Calls with Separator
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+export async function POST(req: Request) {
+  return createUIMessageStreamResponse({
+    async execute(writer) {
+      // First LLM call
+      writer.write({ type: 'text-delta', textDelta: '## Summary\n\n' });
+      const summary = streamText({
+        model: anthropic('claude-sonnet-4-5-20250514'),
+        prompt: 'Summarize AI SDK streaming in 2 sentences.',
+      });
+      summary.mergeIntoDataStream(writer);
+      await summary.text; // Wait for completion
+
+      // Separator
+      writer.write({ type: 'text-delta', textDelta: '\n\n---\n\n## Details\n\n' });
+
+      // Second LLM call
+      const details = streamText({
+        model: anthropic('claude-sonnet-4-5-20250514'),
+        prompt: 'Explain AI SDK streaming in detail.',
+      });
+      details.mergeIntoDataStream(writer);
+    },
+  });
+}
+```
+
+## Writer API for Text
+
+| Write Object | Effect |
+|-------------|--------|
+| `{ type: 'text-delta', textDelta: '...' }` | Appends text to the current text part |
+| `{ type: 'data', data: {...} }` | Adds a data part (see Data Parts reference) |
+
+## See also
+
+- [Challenge 7.1: Custom Data Parts](/en/level-7-streaming/02-custom-data-parts/) -- stream writing basics
+- [Challenge 8.1: Workflow](/en/level-8-workflows/02-workflow/) -- combining multiple LLM calls
+
+## Sources
+
+- [AI SDK: streamText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [AI SDK: createUIMessageStreamResponse Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-ui-message-stream-response)

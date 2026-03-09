@@ -1,0 +1,81 @@
+---
+title: "Custom Data Parts Streaming"
+description: "Sending custom structured data alongside LLM text in streams using createUIMessageStreamResponse."
+sidebar:
+  order: 4
+---
+
+## Overview
+
+Custom Data Parts let you send structured data alongside the LLM's text stream. Instead of embedding status updates or metadata in the text, you write typed objects into the same stream. The frontend receives them as distinct parts it can render independently.
+
+There are two kinds: **Persistent Data Parts** are saved in `message.parts` and survive across re-renders. **Transient Data Parts** are delivered only via the `onData` callback and are not stored in message history. Use persistent parts for content the user should see (progress, sources), and transient parts for ephemeral signals (loading indicators, analytics events).
+
+On the server side, `createUIMessageStreamResponse` gives you a writer that accepts both standard stream events and custom data. You write data parts with `writer.write()` and merge the LLM stream with `result.mergeIntoDataStream(writer)`.
+
+## Server-Side: Writing Data Parts
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      // Persistent data part -- saved in message.parts
+      writer.write({
+        type: 'data',
+        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+      });
+
+      const result = streamText({
+        model: anthropic('claude-sonnet-4-5-20250514'),
+        messages,
+        onFinish() {
+          writer.write({
+            type: 'data',
+            data: { type: 'weather', city: 'Berlin', status: 'done', temp: 22 },
+          });
+        },
+      });
+
+      result.mergeIntoDataStream(writer);
+    },
+  });
+}
+```
+
+## Writer Methods
+
+| Method / Field | Type | Description |
+|----------------|------|-------------|
+| `writer.write({ type: 'data', data })` | Persistent | Saved in `message.parts` as a `DataUIPart` |
+| `writer.write({ type: 'data', data, id })` | Persistent + ID | Enables ID reconciliation (updates existing part) |
+| `result.mergeIntoDataStream(writer)` | -- | Pipes the LLM stream into the writer |
+
+## Transient Data Parts
+
+Transient parts are not stored in message history. Send them for ephemeral signals:
+
+```typescript
+writer.write({
+  type: 'data',
+  data: { type: 'analytics', event: 'stream-started' },
+});
+```
+
+The frontend receives them only in the `onData` callback of `useChat`, not in `message.parts`.
+
+## See also
+
+- [Custom Data Parts in the Frontend](/en/reference/05-custom-data-parts-frontend/) -- consuming data parts with `useChat`
+- [Custom Data Parts: ID Reconciliation](/en/reference/06-custom-data-parts-id-reconciliation/) -- progressive updates
+- [Challenge 7.1: Custom Data Parts](/en/level-7-streaming/02-custom-data-parts/) -- hands-on exercise
+- [Challenge 8.2: Streaming to Frontend](/en/level-8-workflows/03-streaming-to-frontend/) -- workflow streaming
+
+## Sources
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)
+- [AI SDK: createUIMessageStreamResponse Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-ui-message-stream-response)

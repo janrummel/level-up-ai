@@ -1,0 +1,99 @@
+---
+title: "Custom Data Parts in the Frontend"
+description: "Consuming persistent and transient custom data parts with useChat in a React frontend."
+sidebar:
+  order: 5
+---
+
+## Overview
+
+Custom Data Parts arrive in the frontend through two channels. **Persistent parts** appear in `message.parts` alongside text and tool parts. **Transient parts** are delivered only through the `onData` callback on `useChat` and are not stored in message history.
+
+Persistent parts are the primary mechanism. Each assistant message can contain multiple parts of different types. You filter by `part.type` to render the right component -- text gets a paragraph, a weather data part gets a weather card, a progress part gets a progress bar.
+
+Transient parts are useful for ephemeral UI updates that should not persist when the user scrolls back through conversation history -- things like typing indicators or background analytics events.
+
+## Rendering Persistent Data Parts
+
+```typescript
+'use client';
+import { useChat } from '@ai-sdk/react';
+
+export function Chat() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
+
+  return (
+    <div>
+      {messages.map((m) => (
+        <div key={m.id}>
+          {m.parts.map((part, i) => {
+            if (part.type === 'text') {
+              return <p key={i}>{part.text}</p>;
+            }
+            if (part.type === 'data' && part.data.type === 'weather') {
+              return <WeatherCard key={i} data={part.data} />;
+            }
+            if (part.type === 'data' && part.data.type === 'progress') {
+              return (
+                <ProgressBar
+                  key={i}
+                  current={part.data.current}
+                  total={part.data.total}
+                />
+              );
+            }
+            return null;
+          })}
+        </div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input value={input} onChange={handleInputChange} />
+      </form>
+    </div>
+  );
+}
+```
+
+## Consuming Transient Data Parts
+
+```typescript
+const { messages } = useChat({
+  onData(data) {
+    // Fired for transient data parts only
+    console.log('Transient data:', data);
+
+    if (data.type === 'analytics') {
+      trackEvent(data.event);
+    }
+  },
+});
+```
+
+## Part Type Filtering
+
+| Pattern | Use Case |
+|---------|----------|
+| `part.type === 'text'` | Render text content |
+| `part.type === 'tool'` | Render tool invocation UI |
+| `part.type === 'data'` | Custom data -- check `part.data.type` for subtypes |
+| `part.type === 'source-url'` | Render source citation links |
+| `part.type === 'reasoning'` | Render chain-of-thought |
+
+## Tips
+
+- Always check `part.type` before accessing type-specific properties.
+- Use a `switch` or `if` chain in your render loop to handle each part type.
+- For type safety, define your data part shapes as TypeScript interfaces and use `UIMessage<MyMetadata>` generics.
+
+## See also
+
+- [Custom Data Parts Streaming](/en/reference/04-custom-data-parts-streaming/) -- server-side writing
+- [Custom Data Parts: ID Reconciliation](/en/reference/06-custom-data-parts-id-reconciliation/) -- progressive updates
+- [Challenge 7.1: Custom Data Parts](/en/level-7-streaming/02-custom-data-parts/) -- hands-on exercise
+- [Challenge 8.2: Streaming to Frontend](/en/level-8-workflows/03-streaming-to-frontend/) -- workflow streaming
+
+## Sources
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)
+- [AI SDK: useChat Reference](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat)

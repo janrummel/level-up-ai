@@ -1,0 +1,113 @@
+---
+title: "Start and Finish Parts"
+description: "Understanding step-start, step-finish stream parts and the onStepFinish/onFinish callbacks in streamText."
+sidebar:
+  order: 9
+---
+
+## Overview
+
+When `streamText` runs, each generation step emits a `step-start` part at the beginning and a `step-finish` part at the end. A "step" is one LLM call -- in a multi-step scenario with tool calls, a single `streamText` invocation can produce multiple steps (controlled by `maxSteps`).
+
+The `step-finish` part carries `finishReason` (why the step ended), `usage` (tokens for this step), and `isContinued` (whether the next step continues the same text). This information is critical for monitoring, cost tracking, and understanding multi-step behavior.
+
+Two callbacks provide the same data in a more convenient form: `onStepFinish` fires after each individual step, and `onFinish` fires once after all steps are complete with aggregated totals.
+
+## Stream Part Types
+
+### step-start
+
+Emitted when a generation step begins. In `fullStream`:
+
+```typescript
+for await (const part of result.fullStream) {
+  if (part.type === 'step-start') {
+    console.log('New generation step started');
+  }
+}
+```
+
+### step-finish
+
+Emitted when a generation step completes:
+
+```typescript
+for await (const part of result.fullStream) {
+  if (part.type === 'step-finish') {
+    console.log('Reason:', part.finishReason);
+    console.log('Tokens:', part.usage.totalTokens);
+    console.log('Continued:', part.isContinued);
+  }
+}
+```
+
+## finishReason Values
+
+| Value | Meaning |
+|-------|---------|
+| `'stop'` | LLM finished naturally |
+| `'length'` | Token limit reached (response may be truncated) |
+| `'content-filter'` | Content was filtered by the provider |
+| `'tool-calls'` | LLM wants to call tools (step continues) |
+| `'error'` | An error occurred |
+| `'other'` | Provider-specific reason |
+
+## Callbacks: onStepFinish and onFinish
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'What is the weather in Berlin and Tokyo?',
+  tools: { weather: weatherTool },
+  maxSteps: 5,
+
+  // Called after EACH step
+  onStepFinish({ stepType, finishReason, usage }) {
+    console.log(`Step (${stepType}): ${finishReason}`);
+    console.log(`  Tokens: ${usage.totalTokens}`);
+  },
+
+  // Called once after ALL steps
+  onFinish({ text, totalUsage, steps, finishReason }) {
+    console.log(`Done. Reason: ${finishReason}`);
+    console.log(`Total tokens: ${totalUsage.totalTokens}`);
+    console.log(`Steps: ${steps.length}`);
+  },
+});
+```
+
+## Callback Parameters
+
+### onStepFinish
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `stepType` | `'initial' \| 'continue' \| 'tool-result'` | What triggered this step |
+| `finishReason` | `FinishReason` | Why the step ended |
+| `usage` | `{ promptTokens, completionTokens, totalTokens }` | Token usage for this step |
+| `text` | `string` | Text generated in this step |
+| `toolCalls` | `ToolCall[]` | Tool calls made in this step |
+| `toolResults` | `ToolResult[]` | Tool results from this step |
+
+### onFinish
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `text` | `string` | Complete generated text across all steps |
+| `finishReason` | `FinishReason` | Final finish reason |
+| `usage` | `TokenUsage` | Token usage of the last step |
+| `totalUsage` | `TokenUsage` | Aggregated tokens across all steps |
+| `steps` | `Step[]` | Array of all step results |
+
+## See also
+
+- [Challenge 3.4: Tool Loop Agent](/en/level-3-agents/04-tool-loop-agent/) -- multi-step tool calling with `maxSteps`
+- [Level 8: Workflows](/en/level-8-workflows/01-briefing/) -- orchestrating multi-step generation
+
+## Sources
+
+- [AI SDK: streamText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [AI SDK: Multi-Step Calls](https://ai-sdk.dev/docs/ai-sdk-core/generating-text#multi-step-calls)

@@ -1,0 +1,89 @@
+---
+title: "Custom Data Parts streamen"
+description: "Strukturierte Daten parallel zum LLM-Text im selben Stream senden — mit createUIMessageStream."
+sidebar:
+  order: 4
+---
+
+## Ueberblick
+
+Data Parts transportieren strukturierte Daten neben dem LLM-Text im selben Stream. Statt Fortschritt, Status oder Quellen in den Text einzubetten, sendest Du typisierte JSON-Objekte, die das Frontend direkt rendern kann.
+
+Es gibt zwei Kategorien: **Persistent Data Parts** werden in `message.parts` gespeichert und bleiben Teil der Message-Historie. **Transient Data Parts** sind nur waehrend des Streams ueber den `onData`-Callback verfuegbar und werden nicht persistiert.
+
+Auf der Server-Seite nutzt Du `createUIMessageStreamResponse` (oder `createUIMessageStream`) mit einem `execute`-Callback. Der `writer` bietet eine `write()`-Methode fuer Custom Data Parts und `mergeIntoDataStream()` fuegt den LLM-Stream ein.
+
+## Server-Beispiel
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      // Persistent Data Part (wird in message.parts gespeichert)
+      writer.write({
+        type: 'data',
+        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+      });
+
+      const result = streamText({
+        model: anthropic('claude-sonnet-4-5-20250514'),
+        messages,
+        onFinish() {
+          writer.write({
+            type: 'data',
+            data: {
+              type: 'weather',
+              city: 'Berlin',
+              status: 'success',
+              temp: 22,
+            },
+          });
+        },
+      });
+
+      result.mergeIntoDataStream(writer);
+    },
+  });
+}
+```
+
+## Typsichere Data Parts
+
+```typescript
+import type { UIMessage } from 'ai';
+
+// Generics definieren die erlaubten Data Part Typen
+type MyUIMessage = UIMessage<
+  never, // Metadata-Typ
+  {
+    weather: { city: string; status: 'loading' | 'success'; temp?: number };
+    notification: { message: string; level: 'info' | 'warning' };
+  }
+>;
+```
+
+## API
+
+| Methode | Beschreibung |
+|---------|-------------|
+| `createUIMessageStreamResponse({ execute })` | Erstellt eine Response mit UI Message Stream |
+| `createUIMessageStream({ execute })` | Erstellt einen rohen UI Message Stream |
+| `writer.write({ type: 'data', data })` | Schreibt ein Persistent Data Part |
+| `writer.write({ type: 'data', data, id })` | Schreibt ein Data Part mit ID (fuer Reconciliation) |
+| `result.mergeIntoDataStream(writer)` | Fuegt den LLM-Stream in den Writer ein |
+
+## Siehe auch
+
+- [Challenge 7.1: Custom Data Parts](/de/level-7-streaming/02-custom-data-parts) — Hands-on mit Data Parts
+- [Challenge 8.2: Streaming Custom Data to Frontend](/de/level-8-workflows/03-streaming-to-frontend) — Data Parts in Workflows
+- [Custom Data Parts im Frontend](/de/reference/05-custom-data-parts-frontend) — Frontend-Konsum
+
+## Quellen
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)
+- [AI SDK: createUIMessageStream Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-ui-message-stream)

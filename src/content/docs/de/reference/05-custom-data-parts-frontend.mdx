@@ -1,0 +1,91 @@
+---
+title: "Custom Data Parts im Frontend"
+description: "Wie Du Custom Data Parts mit useChat im Frontend konsumierst und renderst."
+sidebar:
+  order: 5
+---
+
+## Ueberblick
+
+Persistent Data Parts landen in `message.parts` und koennen ueber den Part-Typ gefiltert werden. Du iterierst ueber die Parts einer Message und renderst je nach `type` unterschiedliche Komponenten — Text als Paragraph, Data Parts als spezialisierte UI-Elemente.
+
+Transient Data Parts sind nicht in `message.parts` enthalten. Sie werden ueber den `onData`-Callback in `useChat` empfangen und eignen sich fuer fluechtige Informationen wie Ladefortschritt oder temporaere Statusmeldungen, die nicht in der Chat-Historie erscheinen sollen.
+
+Progressive Updates funktionieren ueber IDs: Wenn der Server ein Data Part mit derselben ID erneut sendet, wird das bestehende Part aktualisiert statt ein neues hinzugefuegt (siehe [ID Reconciliation](/de/reference/06-custom-data-parts-id-reconciliation)).
+
+## Frontend-Beispiel
+
+```typescript
+'use client';
+import { useChat } from '@ai-sdk/react';
+
+export function Chat() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    onData(data) {
+      // Transient Data Parts (nicht in message.parts gespeichert)
+      console.log('Transient:', data);
+    },
+  });
+
+  return (
+    <div>
+      {messages.map((m) => (
+        <div key={m.id}>
+          {m.parts.map((part, i) => {
+            switch (part.type) {
+              case 'text':
+                return <p key={i}>{part.text}</p>;
+              case 'data':
+                if (part.data.type === 'weather') {
+                  return <WeatherCard key={i} data={part.data} />;
+                }
+                if (part.data.type === 'notification') {
+                  return <NotificationBanner key={i} data={part.data} />;
+                }
+                return null;
+              default:
+                return null;
+            }
+          })}
+        </div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input value={input} onChange={handleInputChange} />
+      </form>
+    </div>
+  );
+}
+```
+
+## Persistent vs Transient
+
+| Eigenschaft | Persistent Data Parts | Transient Data Parts |
+|-------------|----------------------|---------------------|
+| Zugriff | `message.parts` (type `'data'`) | `onData`-Callback in useChat |
+| Persistenz | Ja — Teil der Message-Historie | Nein — nur waehrend des Streams |
+| Use Case | Quellen, Ergebnisse, eingebettete Daten | Ladefortschritt, temporaere Status |
+| ID-Reconciliation | Ja (bei gesetzter ID) | Nein |
+
+## Data Parts filtern
+
+```typescript
+// Alle Weather-Parts einer Message
+const weatherParts = message.parts.filter(
+  (p) => p.type === 'data' && p.data.type === 'weather'
+);
+
+// Letztes Data Part eines bestimmten Typs
+const latestWeather = weatherParts.at(-1);
+```
+
+## Siehe auch
+
+- [Challenge 7.1: Custom Data Parts](/de/level-7-streaming/02-custom-data-parts) — Hands-on mit Data Parts
+- [Challenge 8.2: Streaming Custom Data to Frontend](/de/level-8-workflows/03-streaming-to-frontend) — Data Parts in Workflows
+- [Custom Data Parts streamen](/de/reference/04-custom-data-parts-streaming) — Server-seitige Erstellung
+
+## Quellen
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)
+- [AI SDK: useChat Reference](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat)

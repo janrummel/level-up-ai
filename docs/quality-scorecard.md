@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-09 | Gesamt-Score: **83 / 100**
+> Letztes Update: 2026-03-09 | Gesamt-Score: **92 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -18,8 +18,8 @@ Level 6  █████████░  93%  PASS        ░░░░░░░�
 Level 7  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 8  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 83%
+Ref.     █████████░  90%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+                                                         Gesamt: 92%
 ```
 
 ---
@@ -420,21 +420,34 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Reference — Score: –/100 OFFEN
+## Reference — Score: 90/100 PASS
 
-> 9 Seiten geplant, 0 erstellt
+> Review: 2026-03-09 | 9 Seiten erstellt (DE+EN)
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **23/25** | APIs basieren auf offiziellen AI SDK Docs (ui-message, model-message, stream-text, tools, streaming-data). TypeScript-Typen geprueft. -2: Einige experimentelle APIs (createUIMessageStreamResponse) koennen sich aendern |
+| Didaktische Qualitaet | **22/25** | Referenz-Format (nicht Challenge): kurze Erklaerung, Code-Beispiel, API-Tabelle, Quellen. Konsistent ueber alle 9 Seiten. -3: Kein Challenge-Format mit TRY/COMBINE (bewusste Entscheidung: Referenz, nicht Tutorial) |
+| Operative Tauglichkeit | **22/25** | Code-Beispiele lauffaehig, klare API-Tabellen, "Siehe auch" Verlinkungen zu Challenges. -3: Keine Ausfuehrungsbefehle (Referenz, nicht Uebung) |
+| Quellen & Nachweise | **13/15** | 9/9 Seiten mit Quellen (100%), alle Rang 1 (ai-sdk.dev). -2: Einige Quellen-URLs nicht live verifiziert |
+| Vollstaendigkeit | **10/10** | 9 DE + 9 EN Dateien, alle 9 geplanten Themen abgedeckt, strukturell identisch |
+| **Gesamt** | **90/100** | **PASS** |
+
+### Seiten-Status
 
 | Seite | Status |
 |-------|--------|
-| R1: UI Messages vs Model Messages | Nicht erstellt |
-| R2: Defining Tools | Nicht erstellt |
-| R3: Consume Stream | Nicht erstellt |
-| R4: Custom Data Parts Streaming | Nicht erstellt |
-| R5: Custom Data Parts Stream to Frontend | Nicht erstellt |
-| R6: Custom Data Parts ID Reconciliation | Nicht erstellt |
-| R7: Message Metadata | Nicht erstellt |
-| R8: Streaming Text Parts by Hand | Nicht erstellt |
-| R9: Start and Finish Parts | Nicht erstellt |
+| R1: UI Messages vs Model Messages | Erstellt (DE+EN) |
+| R2: Defining Tools | Erstellt (DE+EN) |
+| R3: Consume Stream | Erstellt (DE+EN) |
+| R4: Custom Data Parts Streaming | Erstellt (DE+EN) |
+| R5: Custom Data Parts Stream to Frontend | Erstellt (DE+EN) |
+| R6: Custom Data Parts ID Reconciliation | Erstellt (DE+EN) |
+| R7: Message Metadata | Erstellt (DE+EN) |
+| R8: Streaming Text Parts by Hand | Erstellt (DE+EN) |
+| R9: Start and Finish Parts | Erstellt (DE+EN) |
 
 ---
 
@@ -451,3 +464,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-09 | Level 7 Review + Fixes (DE+EN): 1 P0 (Retry-Pattern Bug), 4 P1 (Dateinamen, Ausfuehrungsbefehle, erwarteter Output, CLI-vs-Web-Abgrenzung), 3 P2 | 56% → 65% |
 | 2026-03-09 | Level 8 Review + Fixes (DE+EN): 0 P0, 4 P1 (Dateinamen, erwarteter Output, ToolLoopAgent-Referenz, Endlosschleifen-Warnung), 4 P2 | 65% → 74% |
 | 2026-03-09 | Level 9 Review + Fixes (DE+EN): 0 P0, 5 P1 (Dateinamen, erwarteter Output, parameters→inputSchema, Messages-Typ, 37→41 Challenges), 5 P2 | 74% → 83% |
+| 2026-03-09 | Reference-Sektion: 9 Seiten (DE+EN) erstellt, README ersetzt | 83% → 92% |

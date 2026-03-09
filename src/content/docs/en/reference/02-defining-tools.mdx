@@ -1,0 +1,85 @@
+---
+title: "Defining Tools"
+description: "How to define tools with tool(), Zod schemas, and execute functions in AI SDK."
+sidebar:
+  order: 2
+---
+
+## Overview
+
+Tools give an LLM the ability to perform actions beyond text generation. In AI SDK, you define a tool with the `tool()` function, which takes a `description`, an `inputSchema` (Zod or JSON Schema), and an async `execute` function.
+
+The LLM never runs your code directly. It generates a structured tool call with arguments matching your schema. AI SDK validates the arguments, runs your `execute` function, and feeds the result back to the LLM so it can formulate a response.
+
+AI SDK supports three tool categories: **Custom Tools** (you define schema + execute), **Provider-Defined Tools** (schema + execute from a provider like OpenAI), and **Provider-Executed Tools** (execution happens on the provider side, e.g., web search). Most of the time you work with custom tools.
+
+## Defining a Tool
+
+```typescript
+import { tool } from 'ai';
+import { z } from 'zod';
+
+const weatherTool = tool({
+  description: 'Get the weather in a location',
+  inputSchema: z.object({
+    location: z.string().describe('The city name'),
+    unit: z
+      .enum(['celsius', 'fahrenheit'])
+      .optional()
+      .describe('Temperature unit'),
+  }),
+  execute: async ({ location, unit }) => ({
+    location,
+    temperature: 22,
+    unit: unit ?? 'celsius',
+  }),
+});
+```
+
+## Using Tools
+
+Pass tools as a named object to `generateText` or `streamText`. The object keys become the tool names visible to the LLM:
+
+```typescript
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  tools: { weather: weatherTool },
+  prompt: 'What is the weather in Berlin?',
+});
+```
+
+## API Reference
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `description` | `string` | Yes | Tells the LLM when and why to use this tool |
+| `inputSchema` | `ZodSchema \| JSONSchema` | Yes | Validates and types the tool arguments |
+| `execute` | `(args) => Promise<T>` | Yes (custom) | Async function that performs the action |
+
+### toolChoice Options
+
+| Value | Behavior |
+|-------|----------|
+| `'auto'` | LLM decides whether to use a tool (default) |
+| `'required'` | LLM must call at least one tool |
+| `'none'` | Tools disabled, text-only response |
+| `{ type: 'tool', toolName: 'weather' }` | Forces a specific tool |
+
+## Tips
+
+- Use `.describe()` on every Zod field -- it helps the LLM understand what each parameter means.
+- Keep `description` precise. Vague descriptions lead to incorrect tool selection.
+- `execute` is async -- you can make real API calls, query databases, or run any server-side code.
+
+## See also
+
+- [Challenge 3.1: Tool Calling](/en/level-3-agents/02-tool-calling/) -- hands-on tool definition and usage
+- [Challenge 3.4: Tool Loop Agent](/en/level-3-agents/04-tool-loop-agent/) -- multi-step tool usage with `maxSteps`
+
+## Sources
+
+- [AI SDK: Tools and Tool Calling](https://ai-sdk.dev/docs/foundations/tools)
+- [AI SDK: tool() API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool)

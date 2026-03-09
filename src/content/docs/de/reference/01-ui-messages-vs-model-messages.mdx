@@ -1,0 +1,78 @@
+---
+title: "UI Messages vs Model Messages"
+description: "Die zwei Message-Typen im AI SDK v6 — UIMessage fuer das Frontend, ModelMessage fuer LLM-Calls."
+sidebar:
+  order: 1
+---
+
+## Ueberblick
+
+Das AI SDK v6 unterscheidet strikt zwischen zwei Message-Typen. **UIMessage** ist die Waehrung des Frontends — sie enthaelt alles, was die UI braucht: eine eindeutige `id`, strukturierte `parts` und optionale `metadata`. UIMessage ist die Source of Truth fuer den App-State und wird von `useChat` verwaltet.
+
+**ModelMessage** (auch CoreMessage genannt) ist das Format, das an das LLM gesendet wird. Es hat eine andere Struktur: vier Rollen statt drei, und der Content variiert je nach Rolle (String oder Parts-Array). ModelMessages werden nie direkt im Frontend gespeichert — sie existieren nur fuer den LLM-Call.
+
+Die Konvertierung zwischen beiden Typen laeuft ueber zwei Utility-Funktionen: `convertToModelMessages()` wandelt UIMessages in ModelMessages um, `convertToUIMessages()` macht das Gegenteil.
+
+## TypeScript-Typen
+
+```typescript
+// UIMessage — Frontend Source of Truth
+interface UIMessage<METADATA = unknown> {
+  id: string;
+  role: 'system' | 'user' | 'assistant';
+  parts: Array<UIMessagePart>;
+  metadata?: METADATA;
+}
+
+// UIMessagePart-Typen
+type UIMessagePart =
+  | TextUIPart          // { type: 'text', text: string }
+  | ToolUIPart          // { type: 'tool-invocation', toolInvocation: ToolInvocation }
+  | SourceUrlUIPart     // { type: 'source-url', ... }
+  | FileUIPart          // { type: 'file', ... }
+  | StepStartUIPart     // { type: 'step-start' }
+  | ReasoningUIPart     // { type: 'reasoning', ... }
+  | DataUIPart;         // { type: 'data', data: unknown }
+
+// ModelMessage — fuer LLM-Calls
+// Vier Typen: SystemModelMessage, UserModelMessage, AssistantModelMessage, ToolModelMessage
+// Rolle 'tool' existiert nur in ModelMessages, nicht in UIMessages
+```
+
+## Konvertierung
+
+```typescript
+import { convertToModelMessages } from '@ai-sdk/ui-utils';
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+// UIMessages (z.B. von useChat) → ModelMessages fuer streamText
+const modelMessages = await convertToModelMessages(uiMessages);
+
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  messages: modelMessages,
+});
+```
+
+## Vergleich
+
+| Eigenschaft | UIMessage | ModelMessage |
+|-------------|-----------|--------------|
+| Verwendung | Frontend (useChat, UI-Rendering) | Backend (generateText, streamText) |
+| Rollen | `system`, `user`, `assistant` | `system`, `user`, `assistant`, `tool` |
+| Content-Format | `parts`-Array (typisiert) | String oder Parts-Array (rollenabhaengig) |
+| ID | Pflichtfeld (`id: string`) | Kein ID-Feld |
+| Metadata | Optional (`metadata?: METADATA`) | Nicht vorhanden |
+| Source of Truth | Ja — App-State | Nein — nur fuer LLM-Kommunikation |
+
+## Siehe auch
+
+- [Challenge 1.1: Was ist das AI SDK?](/de/level-1-ai-sdk-basics/02-what-is-ai-sdk) — Grundlagen der SDK-Architektur
+- [Challenge 4.3: Persistence](/de/level-4-persistence/04-persistence) — Messages persistent speichern
+
+## Quellen
+
+- [AI SDK: UIMessage Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message)
+- [AI SDK: ModelMessage Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/model-message)
+- [AI SDK: Chatbot Message Types](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot)

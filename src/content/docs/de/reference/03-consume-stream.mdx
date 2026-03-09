@@ -1,0 +1,92 @@
+---
+title: "Streams konsumieren"
+description: "Wie Du textStream, fullStream und die verschiedenen Stream Part Types von streamText nutzt."
+sidebar:
+  order: 3
+---
+
+## Ueberblick
+
+`streamText` gibt ein Result-Objekt zurueck, das zwei AsyncIterables bereitstellt: `textStream` liefert nur Text-Chunks als Strings — ideal fuer einfache Ausgaben. `fullStream` liefert alle Stream Part Types inklusive Tool-Calls, Reasoning, Sources und Step-Grenzen.
+
+Zusaetzlich bietet das Result aggregierte Promises wie `text`, `usage`, `totalUsage`, `finishReason`, `steps`, `toolCalls` und `toolResults`. Diese kannst Du awaiten, um die Gesamtdaten nach Abschluss des Streams zu erhalten.
+
+## textStream — nur Text
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const { textStream } = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Erklaere Streaming in einem Absatz.',
+});
+
+for await (const chunk of textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+## fullStream — alle Part Types
+
+```typescript
+const { fullStream } = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Wie ist das Wetter in Berlin?',
+  tools: { weather: weatherTool },
+  maxSteps: 3,
+});
+
+for await (const part of fullStream) {
+  switch (part.type) {
+    case 'text':
+      console.log('Text:', part.textDelta);
+      break;
+    case 'tool-call':
+      console.log('Tool:', part.toolName, part.args);
+      break;
+    case 'tool-result':
+      console.log('Result:', part.result);
+      break;
+    case 'step-finish':
+      console.log('Step done:', part.finishReason);
+      break;
+  }
+}
+```
+
+## Stream Part Types
+
+| Type | Beschreibung | Wichtige Properties |
+|------|-------------|---------------------|
+| `text` | Text-Delta | `textDelta` |
+| `reasoning` | Reasoning / Chain-of-Thought Text | `textDelta` |
+| `source` | Quellenreferenz | `source` |
+| `tool-call` | Tool-Aufruf | `toolName`, `args`, `toolCallId` |
+| `tool-call-streaming-start` | Start eines gestreamten Tool-Calls | `toolCallId`, `toolName` |
+| `tool-call-delta` | Inkrementelle Tool-Argumente | `argsTextDelta` |
+| `tool-result` | Tool-Ergebnis | `toolName`, `result`, `toolCallId` |
+| `step-start` | Neuer Generierungsschritt beginnt | — |
+| `step-finish` | Schritt abgeschlossen | `finishReason`, `usage`, `isContinued` |
+
+## Aggregierte Promises
+
+| Promise | Typ | Beschreibung |
+|---------|-----|-------------|
+| `text` | `Promise<string>` | Vollstaendiger generierter Text |
+| `usage` | `Promise<Usage>` | Token-Verbrauch des letzten Schritts |
+| `totalUsage` | `Promise<Usage>` | Token-Verbrauch aller Schritte |
+| `finishReason` | `Promise<FinishReason>` | Grund fuer das Stoppen |
+| `steps` | `Promise<StepResult[]>` | Array aller Schritte |
+| `toolCalls` | `Promise<ToolCall[]>` | Alle Tool-Calls des letzten Schritts |
+| `toolResults` | `Promise<ToolResult[]>` | Alle Tool-Ergebnisse des letzten Schritts |
+
+## Siehe auch
+
+- [Challenge 1.4: Streaming Text](/de/level-1-ai-sdk-basics/05-streaming-text) — Erster Stream mit textStream
+- [Level 7: Streaming](/de/level-7-streaming/01-briefing) — Fortgeschrittene Streaming-Patterns
+
+## Quellen
+
+- [AI SDK: streamText Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [AI SDK: Streaming](https://ai-sdk.dev/docs/foundations/streaming)

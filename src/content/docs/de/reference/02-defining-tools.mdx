@@ -1,0 +1,74 @@
+---
+title: "Tools definieren"
+description: "Wie Du Tools mit tool(), Zod-Schemas und Execute-Funktionen im AI SDK definierst."
+sidebar:
+  order: 2
+---
+
+## Ueberblick
+
+Tools erweitern ein LLM um Faehigkeiten, die es allein nicht hat — Datenbank-Abfragen, API-Calls, Berechnungen. Im AI SDK definierst Du ein Tool mit der `tool()`-Funktion, die drei Properties erwartet: `description` (was das Tool tut), `inputSchema` (welche Parameter es akzeptiert) und `execute` (was es ausfuehrt).
+
+Das LLM sieht die `description` und das `inputSchema`, entscheidet ob es das Tool aufrufen will und generiert passende Argumente. Die `execute`-Funktion laeuft dann auf Deinem Server — das LLM fuehrt nie selbst Code aus.
+
+Es gibt drei Tool-Varianten: **Custom Tools** (Du definierst alles selbst), **Provider-Defined Tools** (der Provider liefert das Schema, Du die Ausfuehrung) und **Provider-Executed Tools** (laufen komplett auf Provider-Servern, z.B. Web Search bei OpenAI).
+
+## Code-Beispiel
+
+```typescript
+import { tool } from 'ai';
+import { z } from 'zod';
+
+const weatherTool = tool({
+  description: 'Get the weather in a location',
+  inputSchema: z.object({
+    location: z.string().describe('The city name'),
+    unit: z
+      .enum(['celsius', 'fahrenheit'])
+      .optional()
+      .describe('Temperature unit'),
+  }),
+  execute: async ({ location, unit }) => ({
+    location,
+    temperature: 22,
+    unit: unit ?? 'celsius',
+  }),
+});
+
+// Tools an generateText/streamText uebergeben
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Wie ist das Wetter in Berlin?',
+  tools: { weather: weatherTool },
+});
+```
+
+## API
+
+| Property | Typ | Beschreibung |
+|----------|-----|-------------|
+| `description` | `string` | Erklaerung fuer das LLM, wann und wofuer das Tool genutzt werden soll |
+| `inputSchema` | `ZodSchema \| JSONSchema` | Schema der Eingabeparameter — Zod empfohlen fuer Typsicherheit |
+| `execute` | `(args) => Promise<T>` | Async Funktion, die mit den validierten Argumenten aufgerufen wird |
+
+### Zod-Tipps
+
+| Methode | Zweck |
+|---------|-------|
+| `.describe('...')` | Hilft dem LLM, den Parameter zu verstehen |
+| `.optional()` | Macht den Parameter optional |
+| `.default(value)` | Setzt einen Standardwert |
+| `z.enum([...])` | Beschraenkt auf erlaubte Werte |
+
+## Siehe auch
+
+- [Challenge 3.1: Tool Calling](/de/level-3-agents/02-tool-calling) — Erstes Tool definieren und aufrufen
+- [Challenge 3.4: Tool Loop Agent](/de/level-3-agents/04-tool-loop-agent) — Multi-Step Tool-Ausfuehrung mit maxSteps
+
+## Quellen
+
+- [AI SDK: Tools](https://ai-sdk.dev/docs/foundations/tools)
+- [AI SDK: tool() Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool)

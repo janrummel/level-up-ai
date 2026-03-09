@@ -1,0 +1,111 @@
+---
+title: "Custom Data Parts: ID Reconciliation"
+description: "Wie IDs progressive Updates fuer Data Parts ermoeglichen — Loading States, die sich zu fertigen Ergebnissen entwickeln."
+sidebar:
+  order: 6
+---
+
+## Ueberblick
+
+Wenn Du ein Data Part mit einer ID sendest und spaeter ein weiteres Data Part mit derselben ID, wird das bestehende Part aktualisiert — nicht ein neues angehaengt. Das ermoeglicht progressive Loading States: erst ein Skeleton anzeigen, dann mit echten Daten ersetzen.
+
+Ohne ID-Reconciliation wuerdest Du fuer jeden Status-Wechsel einen neuen Eintrag in `message.parts` bekommen. Mit IDs bleibt es ein einziger Eintrag, der sich vom Loading-State zum fertigen Ergebnis entwickelt. Das haelt die UI sauber und die Message-Historie kompakt.
+
+Dieses Pattern ist besonders nuetzlich fuer Tool-Ergebnisse, die asynchron geladen werden — z.B. eine Wetter-Abfrage, die erst "Lade..." zeigt und dann die Temperatur.
+
+## Server: Progressive Updates senden
+
+```typescript
+import { createUIMessageStreamResponse, streamText } from 'ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  return createUIMessageStreamResponse({
+    execute(writer) {
+      // Loading State senden
+      writer.write({
+        type: 'data',
+        id: 'weather-berlin',                    // ← ID setzen
+        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+      });
+
+      const result = streamText({ model, messages });
+
+      result.mergeIntoDataStream(writer);
+
+      // Spaeter: Update mit echten Daten (gleiche ID)
+      fetchWeather('Berlin').then((weather) => {
+        writer.write({
+          type: 'data',
+          id: 'weather-berlin',                  // ← Gleiche ID → UPDATE
+          data: {
+            type: 'weather',
+            city: 'Berlin',
+            status: 'success',
+            temp: weather.temp,
+          },
+        });
+      });
+    },
+  });
+}
+```
+
+## Frontend: Automatisches Update
+
+```typescript
+// In message.parts gibt es nur EINEN Eintrag fuer 'weather-berlin'
+// — den jeweils aktuellsten Stand
+
+{m.parts.map((part, i) => {
+  if (part.type === 'data' && part.data.type === 'weather') {
+    return part.data.status === 'loading'
+      ? <WeatherSkeleton key={i} city={part.data.city} />
+      : <WeatherCard key={i} data={part.data} />;
+  }
+  return null;
+})}
+```
+
+## Verhalten
+
+| Szenario | Ohne ID | Mit ID |
+|----------|---------|--------|
+| Zweites Data Part gesendet | Neuer Eintrag in `parts` | Bestehender Eintrag aktualisiert |
+| `parts.length` | Waechst mit jedem Send | Bleibt gleich (pro ID) |
+| UI-Rendering | Mehrere Elemente (alt + neu) | Ein Element (aktueller Stand) |
+| Loading → Success | Zwei sichtbare Elemente | Ein Element, das sich aendert |
+
+## Mehrere parallele Updates
+
+```typescript
+// Drei unabhaengige Data Parts mit eigenen IDs
+writer.write({
+  type: 'data',
+  id: 'weather-berlin',
+  data: { type: 'weather', city: 'Berlin', status: 'loading' },
+});
+writer.write({
+  type: 'data',
+  id: 'weather-muenchen',
+  data: { type: 'weather', city: 'Muenchen', status: 'loading' },
+});
+writer.write({
+  type: 'data',
+  id: 'stock-price',
+  data: { type: 'stock', symbol: 'AAPL', status: 'loading' },
+});
+
+// Jedes wird unabhaengig aktualisiert, sobald die Daten da sind
+```
+
+## Siehe auch
+
+- [Challenge 7.1: Custom Data Parts](/de/level-7-streaming/02-custom-data-parts) — Hands-on mit Data Parts
+- [Custom Data Parts streamen](/de/reference/04-custom-data-parts-streaming) — Server-seitige Erstellung
+- [Custom Data Parts im Frontend](/de/reference/05-custom-data-parts-frontend) — Frontend-Konsum
+
+## Quellen
+
+- [AI SDK: Streaming Data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data)

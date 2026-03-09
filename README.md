@@ -1,49 +1,60 @@
-# Starlight Starter Kit: Basics
+# Level Up AI — Vom Vibe Coder zum AI Engineer
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Ein interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SDK v6](https://ai-sdk.dev). 9 Level, 41+ Challenges, Boss Fights und eine Referenz-Sektion — auf Deutsch und Englisch.
+
+## Was ist das?
+
+Ein gamifiziertes Docs-Projekt (Astro Starlight), das die Kernkonzepte von AI Engineering abdeckt:
+
+| Level | Thema | Challenges |
+|-------|-------|------------|
+| 1 | AI SDK Basics | generateText, streamText, Structured Output, System Prompts |
+| 2 | LLM Fundamentals | Tokens, Usage, Context Window, Prompt Caching |
+| 3 | Agents & MCP | Tool Calling, Message Parts, MCP stdio/HTTP, Tool Approval |
+| 4 | Persistence | onFinish, Chat ID, DB Persistence, Message Validation |
+| 5 | Context Engineering | Prompting, Exemplars, RAG, Chain of Thought |
+| 6 | Evals | Evalite, Deterministic/LLM-as-Judge, Datasets, Langfuse |
+| 7 | Streaming | Custom Data Parts, Message Metadata, Stream Transforms |
+| 8 | Workflows | Pipelines, Streaming to Frontend, Custom Loops |
+| 9 | Advanced Patterns | Guardrails, Model Router, Multi-Output, Research Workflow |
+| Ref | Reference | UI/Model Messages, Tools, Streams, Data Parts, Metadata |
+
+## Tech Stack
+
+- [Astro](https://astro.build) + [Starlight](https://starlight.astro.build) (Docs Framework)
+- TypeScript, MDX
+- i18n: Deutsch (default) + English
+- Mermaid Diagramme via [@pasqal-io/starlight-client-mermaid](https://github.com/pasqal-io/starlight-client-mermaid)
+
+## Lokale Entwicklung
+
+```bash
+npm install
+npm run dev        # Dev-Server auf localhost:4321
+npm run build      # Production Build
+npm run preview    # Production Preview
+```
+
+## Struktur
 
 ```
-npm create astro@latest -- --template starlight
+src/content/docs/
+  de/                    # Deutsche Inhalte
+  en/                    # Englische Inhalte
+    level-1-ai-sdk-basics/
+    level-2-llm-fundamentals/
+    ...
+    level-9-advanced/
+    reference/
+    start/
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Jede Challenge folgt dem 6-Step-Pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
 
-## 🚀 Project Structure
+## Quellen
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+Basiert auf dem Open-Source Curriculum von [ai-hero-dev/ai-sdk-v6-crash-course](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course) und den offiziellen Docs von [ai-sdk.dev](https://ai-sdk.dev), [Anthropic](https://docs.anthropic.com), [Evalite](https://github.com/mattpocock/evalite) und [Langfuse](https://langfuse.com).
 
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+## Lizenz
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
-
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Privates Projekt.

@@ -1,0 +1,82 @@
+---
+title: "UI Messages vs Model Messages"
+description: "The two message types in AI SDK v6 — UIMessage for the frontend, ModelMessage (CoreMessage) for the LLM."
+sidebar:
+  order: 1
+---
+
+## Overview
+
+AI SDK v6 uses two distinct message types for different purposes. **UIMessage** is the source of truth for your application state and powers the frontend via `useChat`. **ModelMessage** (also called CoreMessage) is the format that gets sent to the LLM provider.
+
+UIMessage carries rich UI data: an `id`, a `role`, an array of typed `parts` (text, tool invocations, sources, files, reasoning, data), and optional `metadata`. ModelMessage is leaner and provider-oriented, with `role` values that include `'tool'` and content that varies by role.
+
+You convert between the two with `convertToModelMessages()` (async, UIMessage to ModelMessage) and `convertToUIMessages()` (ModelMessage to UIMessage). This separation keeps your UI flexible without polluting what the LLM sees.
+
+## TypeScript Types
+
+```typescript
+interface UIMessage<METADATA = unknown> {
+  id: string;
+  role: 'system' | 'user' | 'assistant';
+  parts: Array<UIMessagePart>;
+  metadata?: METADATA;
+}
+
+// UIMessagePart variants:
+// TextUIPart | ToolUIPart | SourceUrlUIPart | FileUIPart
+// | StepStartUIPart | ReasoningUIPart | DataUIPart
+```
+
+```typescript
+// ModelMessage (CoreMessage) — role determines content shape
+type ModelMessage =
+  | { role: 'system'; content: string }
+  | { role: 'user'; content: string | Array<UserContentPart> }
+  | { role: 'assistant'; content: string | Array<AssistantContentPart> }
+  | { role: 'tool'; content: Array<ToolResultPart> };
+```
+
+## Conversion
+
+```typescript
+import { convertToModelMessages } from '@ai-sdk/ui-utils';
+import { streamText } from 'ai';
+
+// UIMessage[] -> ModelMessage[] (async)
+const modelMessages = await convertToModelMessages(uiMessages);
+
+const result = streamText({
+  model,
+  messages: modelMessages,
+});
+```
+
+```typescript
+import { convertToUIMessages } from '@ai-sdk/ui-utils';
+
+// ModelMessage[] -> UIMessage[]
+const uiMessages = convertToUIMessages(modelMessages);
+```
+
+## Key Differences
+
+| Aspect | UIMessage | ModelMessage (CoreMessage) |
+|--------|-----------|---------------------------|
+| Used in | Frontend (`useChat`) | LLM calls (`generateText`, `streamText`) |
+| Roles | `system`, `user`, `assistant` | `system`, `user`, `assistant`, `tool` |
+| Content | `parts` array (typed) | Varies by role (string or content parts) |
+| Has `id` | Yes | No |
+| Has `metadata` | Yes | No |
+| Source of truth for | App/UI state | Provider communication |
+
+## See also
+
+- [Challenge 1.3: Generating Text](/en/level-1-ai-sdk-basics/04-generating-text/) -- result object and message handling
+- [Challenge 4.3: Persistence](/en/level-4-persistence/04-persistence/) -- storing and restoring UIMessages
+
+## Sources
+
+- [AI SDK: UIMessage Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message)
+- [AI SDK: ModelMessage Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/model-message)
+- [AI SDK: Chatbot with useChat](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot)

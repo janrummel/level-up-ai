@@ -1,0 +1,99 @@
+---
+title: "Consuming Streams"
+description: "How to consume text and full streams from streamText — stream part types and aggregated promises."
+sidebar:
+  order: 3
+---
+
+## Overview
+
+`streamText` returns a result object with two async iterables for consuming the stream: `textStream` (text chunks only) and `fullStream` (all part types). Which one you use depends on whether you need just the text or the full picture including tool calls, reasoning, and metadata.
+
+The result also exposes aggregated promises that resolve when the stream completes: `text`, `usage`, `totalUsage`, `finishReason`, and `steps`. These let you await final values without manually accumulating stream chunks.
+
+Both `textStream` and `fullStream` are consumed with `for await...of`. Once consumed, the stream is exhausted -- you cannot iterate it again. If you need both text streaming and final aggregates, use the promises alongside the stream.
+
+## textStream -- Text Only
+
+```typescript
+import { streamText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const result = streamText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  prompt: 'Explain streaming in 3 sentences.',
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```
+
+## fullStream -- All Part Types
+
+```typescript
+for await (const part of result.fullStream) {
+  switch (part.type) {
+    case 'text-delta':
+      process.stdout.write(part.textDelta);
+      break;
+    case 'reasoning':
+      console.log('Reasoning:', part.textDelta);
+      break;
+    case 'tool-call':
+      console.log('Tool:', part.toolName, part.args);
+      break;
+    case 'tool-result':
+      console.log('Result:', part.result);
+      break;
+    case 'step-start':
+      console.log('Step started');
+      break;
+    case 'step-finish':
+      console.log('Step done:', part.finishReason);
+      break;
+  }
+}
+```
+
+## Stream Part Types
+
+| Type | Key Properties | Description |
+|------|---------------|-------------|
+| `text-delta` | `textDelta` | Incremental text chunk |
+| `reasoning` | `textDelta` | Chain-of-thought reasoning chunk |
+| `source` | `source` | Source citation URL |
+| `tool-call` | `toolName`, `args` | Complete tool invocation |
+| `tool-call-streaming-start` | `toolCallId`, `toolName` | Tool call begins streaming |
+| `tool-call-delta` | `toolCallId`, `argsTextDelta` | Incremental tool call arguments |
+| `tool-result` | `toolName`, `result` | Tool execution result |
+| `step-start` | -- | Generation step begins |
+| `step-finish` | `finishReason`, `usage`, `isContinued` | Generation step completes |
+
+## Aggregated Promises
+
+```typescript
+const result = streamText({ model, prompt });
+
+// Consume the stream first
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+
+// Then await aggregated values
+const finalText = await result.text;
+const usage = await result.usage;
+const totalUsage = await result.totalUsage;
+const reason = await result.finishReason;
+const steps = await result.steps;
+```
+
+## See also
+
+- [Challenge 1.4: Streaming Text](/en/level-1-ai-sdk-basics/05-streaming-text/) -- first streaming exercise
+- [Level 7: Production Streaming](/en/level-7-streaming/01-briefing/) -- advanced streaming patterns
+
+## Sources
+
+- [AI SDK: streamText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [AI SDK: Streaming Text Generation](https://ai-sdk.dev/docs/ai-sdk-core/generating-text#streamtext)
