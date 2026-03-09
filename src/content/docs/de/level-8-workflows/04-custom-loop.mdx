@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-Was wenn Du mehr Kontrolle brauchst als `ToolLoopAgent` bietet — z.B. eigene Abbruchbedingungen, State-Tracking oder Entscheidungen zwischen Loop-Iterationen?
+Was wenn Du mehr Kontrolle brauchst als das eingebaute `maxSteps`/`stopWhen`-Pattern von `generateText` bietet — z.B. eigene Abbruchbedingungen, State-Tracking oder Entscheidungen zwischen Loop-Iterationen?
 
 ## OVERVIEW
 
@@ -35,7 +35,7 @@ Ein Custom Loop gibt Dir volle Kontrolle ueber den Agent-Lifecycle. Du verwaltes
 
 ## WHY
 
-**Ohne Custom Loop:** Du nutzt `ToolLoopAgent` oder `generateText` mit `stopWhen: stepCountIs(N)`. Das reicht fuer Standard-Faelle. Aber: Du kannst nur nach Step-Count abbrechen, keinen eigenen State zwischen Iterationen tracken und keine Entscheidungen basierend auf Tool-Ergebnissen treffen.
+**Ohne Custom Loop:** Du nutzt `generateText` mit `maxSteps` oder `stopWhen: stepCountIs(N)` (aus Level 3). Das reicht fuer Standard-Faelle. Aber: Du kannst nur nach Step-Count abbrechen, keinen eigenen State zwischen Iterationen tracken und keine Entscheidungen basierend auf Tool-Ergebnissen treffen.
 
 **Mit Custom Loop:** Volle Kontrolle ueber den Agent-Lifecycle. Du entscheidest nach jeder Iteration: Weitermachen oder stoppen? Du trackst, welche Tools aufgerufen wurden, wie oft, mit welchen Ergebnissen. Du kannst basierend auf einem bestimmten Tool-Ergebnis abbrechen — nicht nur nach N Steps.
 
@@ -243,6 +243,10 @@ Das ist der Kernvorteil: Du brichst nicht nach N Steps ab, sondern wenn ein best
 
 **Aufgabe:** Baue einen Custom Agent Loop, der trackt wie viele Tool Calls gemacht wurden. Der Loop stoppt, wenn das `save`-Tool aufgerufen wird und `{ saved: true }` zurueckgibt.
 
+Erstelle die Datei `custom-loop.ts` und fuehre sie aus mit `npx tsx custom-loop.ts`.
+
+> **Tipp:** Falls der Loop nicht von selbst endet, brich ihn mit `Ctrl+C` ab. In Challenge 8.4 lernst Du, wie Du das automatisch verhinderst.
+
 ```typescript
 import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -355,6 +359,21 @@ console.log(`\n--- Statistik ---`);
 console.log(`Iterationen: ${iterations}`);
 console.log(`Tool Calls gesamt: ${toolCallCount}`);
 console.log(`Messages im Array: ${messages.length}`);
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+Iteration 1: 1 Tool Calls
+Iteration 2: 2 Tool Calls
+
+Gespeichert (523 Zeichen)
+Save-Tool hat saved: true zurueckgegeben. Loop beendet.
+Iteration 3: 3 Tool Calls
+
+--- Statistik ---
+Iterationen: 3
+Tool Calls gesamt: 3
+Messages im Array: 7
 ```
 
 **Erklaerung:** Der while-Loop laeuft, bis entweder das `save`-Tool `{ saved: true }` zurueckgibt oder `finishReason === 'stop'`. Nach jeder Iteration werden die Response-Messages zum Array gepusht, damit das LLM den vollen Kontext hat. Die Tool Calls werden gezaehlt und am Ende als Statistik ausgegeben.

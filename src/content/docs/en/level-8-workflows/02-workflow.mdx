@@ -189,6 +189,8 @@ The `runStep` helper function encapsulates the shared code: call `generateText`,
 
 **Task:** Build a 3-step content pipeline: research, summarize, translate (to English). Track tokens per step.
 
+Create the file `workflow.ts` and run it with `npx tsx workflow.ts`.
+
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -276,6 +278,18 @@ async function contentPipeline(topic: string) {
 const result = await contentPipeline('Kuenstliche Intelligenz in der Medizin');
 console.log('\n--- Result (English) ---');
 console.log(result.translated);
+```
+
+**Expected output (approximate):**
+```
+research: 342 Tokens
+summarize: 187 Tokens
+translate: 156 Tokens
+
+Total: 685 Tokens
+
+--- Result (English) ---
+[Translated text appears here — varies depending on LLM response]
 ```
 
 **Explanation:** Three specialized steps — each with its own role. Step 1 researches in German, Step 2 summarizes, Step 3 translates to English. Token usage is tracked per step. You can test each step individually by giving it a fixed input.

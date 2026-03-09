@@ -383,6 +383,8 @@ Die Funktion gibt immer ein Ergebnis zurueck — inklusive `breakReason`. Der Ca
 
 **Aufgabe:** Erweitere den Custom Loop aus Challenge 8.3 mit einem Timeout und einem Max-Iterations Guard.
 
+Erstelle die Datei `guarded-loop.ts` und fuehre sie aus mit `npx tsx guarded-loop.ts`.
+
 ```typescript
 import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -537,6 +539,18 @@ console.log('\n--- Ergebnis ---');
 console.log(output.result || 'Kein Ergebnis.');
 console.log(`Abbruchgrund: ${output.breakReason}`);
 console.log(`Stats: ${JSON.stringify(output.stats)}`);
+```
+
+**Erwarteter Output (ungefaehr):**
+```
+Iteration 1: 487 Tokens, 3 Messages
+Iteration 2: 974 Tokens, 5 Messages
+Save-Tool erfolgreich. Loop beendet.
+
+--- Ergebnis ---
+[Recherche-Text erscheint hier]
+Abbruchgrund: save-complete
+Stats: {"iterations":2,"totalTokens":974,"durationMs":4521}
 ```
 
 **Erklaerung:** Zwei Safeguards schuetzen den Loop: Max Iterations (pre-check vor jedem Call) und Timeout (via `AbortController` + manueller Check). Der Loop gibt immer ein Ergebnis zurueck — auch bei Abbruch. Der `breakReason` zeigt an, ob der Agent fertig wurde oder ein Limit gegriffen hat.

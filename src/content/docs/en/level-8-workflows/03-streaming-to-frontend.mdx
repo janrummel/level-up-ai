@@ -235,6 +235,8 @@ In the terminal you'll see the Data Parts as JSON lines and the streamed text �
 
 **Task:** Extend the 3-step pipeline from Challenge 8.1 with progress streaming. Send a Custom Data Part before and after each step.
 
+Create the file `streaming-pipeline.ts` and run it with `npx tsx streaming-pipeline.ts`.
+
 ```typescript
 import { createDataStream, generateText, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -321,7 +323,22 @@ while (true) {
 console.log('\n--- Pipeline finished ---');
 ```
 
-**Explanation:** `createDataStream` opens a mixed channel. `writeData` sends Custom Data Parts (JSON lines) before and after each step. `streamText` + `mergeIntoDataStream` inserts the text stream of the last step. The user sees: progress updates for Steps 1 and 2, then the streamed text from Step 3 — all in real time.
+**Expected output (approximate):**
+```
+2:[{"step":1,"total":3,"label":"Recherche laeuft..."}]
+2:[{"step":1,"total":3,"status":"done","tokens":342}]
+2:[{"step":2,"total":3,"label":"Zusammenfassung..."}]
+2:[{"step":2,"total":3,"status":"done","tokens":187}]
+2:[{"step":3,"total":3,"label":"Uebersetzung..."}]
+0:"The "
+0:"analysis "
+0:"shows..."
+2:[{"step":3,"total":3,"status":"done","tokens":156}]
+
+--- Pipeline finished ---
+```
+
+**Explanation:** `createDataStream` opens a mixed channel. `writeData` sends Custom Data Parts (JSON lines, prefix `2:`) before and after each step. `streamText` + `mergeIntoDataStream` inserts the text stream of the last step (prefix `0:`). The user sees: progress updates for Steps 1 and 2, then the streamed text from Step 3 — all in real time.
 
 </details>
 

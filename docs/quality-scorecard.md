@@ -1,6 +1,6 @@
 # Quality Scorecard — Level Up AI
 
-> Letztes Update: 2026-03-09 | Gesamt-Score: **56 / 100**
+> Letztes Update: 2026-03-09 | Gesamt-Score: **65 / 100**
 >
 > Dieses Dokument wird nach jedem Review aktualisiert. Es ist die zentrale Steuerungsansicht fuer die Qualitaet aller Lerninhalte.
 
@@ -16,10 +16,10 @@ Level 4  █████████░  91%  PASS        ░░░░░░░�
 Level 5  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 6  █████████░  93%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 7  █████████░  91%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Level 8  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Level 8  █████████░  92%  PASS        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Level 9  ░░░░░░░░░░   0%  OFFEN       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 Ref.     ░░░░░░░░░░   0%  OFFEN       (9 Seiten geplant, 0 erstellt)
-                                                         Gesamt: 65%
+                                                         Gesamt: 74%
 ```
 
 ---
@@ -340,9 +340,43 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 
 ---
 
-## Level 8: Workflows — Score: –/100 OFFEN
+## Level 8: Workflows — Score: 92/100 PASS
 
-> Review: ausstehend
+> Review: 2026-03-09 | Fixes: 2026-03-09
+
+### Punktevergabe
+
+| Kategorie | Punkte | Begruendung |
+|-----------|--------|-------------|
+| Fachliche Korrektheit | **24/25** | Alle AI SDK v6 APIs korrekt (generateText, streamText, createDataStream, tool mit inputSchema, AbortController). Kein Code-Bug. -1: `ToolLoopAgent` Referenz war unspezifisch (gefixt zu `maxSteps`/`stopWhen`) |
+| Didaktische Qualitaet | **24/25** | 6-Step 100% konsistent, starke Progression (Workflow→Streaming→Loop→Guards). COMBINE-Vernetzung exzellent. Boss Fight Output-Block erstmalig im Kurs. -1: Custom Loop TRY ohne Safeguard (bewusst, aber Sicherheitshinweis war noetig — gefixt) |
+| Operative Tauglichkeit | **22/25** | Nach Fixes: Dateinamen, npx tsx, erwarteter Output, Projektverzeichnis-Hinweis, Ctrl+C-Tipp, Stream-Consumer-Verweis. -3: Kein Troubleshooting-Abschnitt (konsistentes P2) |
+| Quellen & Nachweise | **12/15** | 6/7 Seiten mit Quellen (86%), alle Rang 1-2. MDN-Quelle fuer AbortController. -3: ai-hero-dev Links nicht live verifiziert, Level Complete ohne Quellen |
+| Vollstaendigkeit | **10/10** | 7 DE + 7 EN Dateien, Briefing+4 Challenges+BossFight+Complete komplett, strukturell identisch |
+| **Gesamt** | **92/100** | **PASS** |
+
+### Checklisten-Ergebnis
+
+| Checkliste | FAIL | WARN | OK | Nach Fix |
+|------------|------|------|-----|----------|
+| A (Experte, 14 Punkte) | 0 | 3 | 11 | 0 FAIL, 2 WARN offen (P2) |
+| B (Anfaenger, 12 Punkte) | 0 | 13 | 50 | 0 FAIL, 3 WARN offen (P2) |
+| C (Level-uebergreifend) | — | — | — | Progression L7→L8 konsistent |
+
+### PASS-Kriterien
+
+- [x] 0 FAIL-Bewertungen nach Fixes
+- [x] Quellen-Abdeckung 86% (>= 80%)
+- [x] Alle Code-Beispiele kompilieren
+- [x] Alle TRY-Bloecke haben Ausfuehrungsbefehl
+- [x] 6-Step-Pattern konsistent
+- [x] DE + EN strukturell identisch
+
+### Offene P2-WARNs (nicht blockierend)
+
+1. Kein Troubleshooting-Abschnitt fuer Level-8-spezifische Fehler
+2. `experimental_transform` Referenz in 8.2 COMBINE (gleiche Frage wie L7)
+3. ai-hero-dev Exercise-Links nicht live verifiziert
 
 ---
 
@@ -381,3 +415,4 @@ Jedes Level wird auf **100 Punkte** bewertet. Der Gesamt-Score ist der Durchschn
 | 2026-03-09 | Level 5 Review + Fixes (DE+EN): 1 P0 (defekte Anthropic-URLs in 8/8 Dateien, docs.anthropic.com→platform.claude.com), 4 P1 (Dateinamen, Befehle, Output, Zuschreibung), 3 P2 | 37% → 46% |
 | 2026-03-09 | Level 6 Review + Fixes (DE+EN): 4 P0 (OPENAI_API_KEY fehlt, pnpm nicht erklaert, Pakete fehlen, Grade E Tabelle falsch), 4 P1 (Dateinamen, Levenshtein-Erklaerung, Projekt-Setup, Langfuse OTel), 4 P2 | 46% → 56% |
 | 2026-03-09 | Level 7 Review + Fixes (DE+EN): 1 P0 (Retry-Pattern Bug), 4 P1 (Dateinamen, Ausfuehrungsbefehle, erwarteter Output, CLI-vs-Web-Abgrenzung), 3 P2 | 56% → 65% |
+| 2026-03-09 | Level 8 Review + Fixes (DE+EN): 0 P0, 4 P1 (Dateinamen, erwarteter Output, ToolLoopAgent-Referenz, Endlosschleifen-Warnung), 4 P2 | 65% → 74% |

@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-What if you need more control than `ToolLoopAgent` provides — e.g., custom termination conditions, state tracking, or decisions between loop iterations?
+What if you need more control than the built-in `maxSteps`/`stopWhen` pattern of `generateText` provides — e.g., custom termination conditions, state tracking, or decisions between loop iterations?
 
 ## OVERVIEW
 
@@ -35,7 +35,7 @@ A custom loop gives you full control over the agent lifecycle. You manage the me
 
 ## WHY
 
-**Without custom loop:** You use `ToolLoopAgent` or `generateText` with `stopWhen: stepCountIs(N)`. That's enough for standard cases. But: you can only break by step count, can't track your own state between iterations, and can't make decisions based on tool results.
+**Without custom loop:** You use `generateText` with `maxSteps` or `stopWhen: stepCountIs(N)` (from Level 3). That's enough for standard cases. But: you can only break by step count, can't track your own state between iterations, and can't make decisions based on tool results.
 
 **With custom loop:** Full control over the agent lifecycle. You decide after each iteration: continue or stop? You track which tools were called, how often, with what results. You can terminate based on a specific tool result — not just after N steps.
 
@@ -243,6 +243,10 @@ This is the core advantage: you don't terminate after N steps, but when a specif
 
 **Task:** Build a custom agent loop that tracks how many tool calls were made. The loop stops when the `save` tool is called and returns `{ saved: true }`.
 
+Create the file `custom-loop.ts` and run it with `npx tsx custom-loop.ts`.
+
+> **Tip:** If the loop doesn't terminate on its own, abort it with `Ctrl+C`. In Challenge 8.4 you'll learn how to prevent this automatically.
+
 ```typescript
 import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -355,6 +359,21 @@ console.log(`\n--- Statistics ---`);
 console.log(`Iterations: ${iterations}`);
 console.log(`Total tool calls: ${toolCallCount}`);
 console.log(`Messages in array: ${messages.length}`);
+```
+
+**Expected output (approximate):**
+```
+Iteration 1: 1 Tool Calls
+Iteration 2: 2 Tool Calls
+
+Saved (523 characters)
+Save tool returned saved: true. Loop terminated.
+Iteration 3: 3 Tool Calls
+
+--- Statistics ---
+Iterations: 3
+Total tool calls: 3
+Messages in array: 7
 ```
 
 **Explanation:** The while loop runs until either the `save` tool returns `{ saved: true }` or `finishReason === 'stop'`. After each iteration, the response messages are pushed to the array so the LLM has full context. Tool calls are counted and output as statistics at the end.
