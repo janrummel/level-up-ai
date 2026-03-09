@@ -3,7 +3,9 @@ title: Willkommen bei Level Up AI
 description: Dein Weg vom Vibe Coder zum AI Engineer — kostenlos, praxisnah, Open Source.
 hero:
   title: Level Up AI
-  tagline: "Vom Vibe Coder zum AI Engineer. Nach 9 Levels baust Du AI-Systeme mit Tool Calling, Evals und Production-Workflows — nicht Copy-Paste aus ChatGPT."
+  tagline: "Vom Vibe Coder zum AI Engineer. 9 Levels, 41 Challenges, 9 Boss Fights — gebaut auf offiziellen Quellen und getesteten Code-Beispielen."
+  image:
+    file: ../../../../assets/hero-graphic.svg
   actions:
     - text: Level 1 starten
       link: /de/level-1-ai-sdk-basics/01-briefing/
@@ -15,30 +17,26 @@ hero:
 template: splash
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Du nutzt AI — aber baust Du auch damit?
 
-Du nutzt ChatGPT taeglich. Du kopierst Code-Snippets. Du promptest besser als die meisten Leute um Dich herum. Aber wenn es darum geht, AI **programmatisch** in ein Projekt einzubauen — SDK, Agents, Tool Calling, Streaming — wird es still.
-
-Das Problem ist nicht mangelnde Intelligenz. Es ist ein **fehlender Lernpfad**. Die offiziellen Docs sind exzellent, aber verstreut. Tutorials zeigen Einzelteile, nie das Gesamtbild. Und teure Kurse verkaufen Dir Wissen, das oeffentlich verfuegbar ist.
-
-Level Up AI gibt Dir die Struktur, die fehlt — **9 Levels, 41 Challenges, jede einzelne gebaut auf offiziellen Quellen und getesteten Code-Beispielen.**
+Du promptest besser als die meisten. Aber wenn es darum geht, AI **programmatisch** einzubauen — SDK, Agents, Tool Calling, Streaming — wird es still. Das Problem ist kein fehlendes Talent. Es ist ein **fehlender Lernpfad.**
 
 ## Nach 9 Levels kannst Du...
 
 <CardGrid>
   <Card title="AI SDK programmatisch nutzen" icon="rocket">
-    Text generieren, streamen und strukturierte Ausgaben produzieren — mit einem SDK fuer alle Provider.
+    Text generieren, streamen, strukturierte Ausgaben — ein SDK fuer alle Provider.
   </Card>
   <Card title="Agents mit Tools und MCP bauen" icon="puzzle">
-    Tool Calling, MCP-Server via stdio und HTTP, Tool Loop Agents — AI wird interaktiv.
+    Tool Calling, MCP-Server, Tool Loop Agents — AI wird interaktiv.
   </Card>
   <Card title="AI-Qualitaet systematisch messen" icon="magnifier">
-    Evals schreiben, LLM-as-Judge einsetzen, Observability mit Langfuse — nicht raten, messen.
+    Evals, LLM-as-Judge, Observability mit Langfuse — nicht raten, messen.
   </Card>
   <Card title="Production-Ready Systeme bauen" icon="star">
-    Streaming-UIs, Multi-Step Workflows, Guardrails, Model Routing — bereit fuer echte User.
+    Streaming-UIs, Workflows, Guardrails, Model Routing — bereit fuer echte User.
   </Card>
 </CardGrid>
 
@@ -48,60 +46,28 @@ Jedes Level folgt einem festen Rhythmus:
 
 <CardGrid>
   <Card title="1. Briefing" icon="open-book">
-    Skill Tree, Lernziele und ein klarer Ueberblick was Dich erwartet.
+    Skill Tree, Lernziele und ein klarer Ueberblick.
   </Card>
   <Card title="2. Challenges" icon="seti:notebook">
-    Jede Challenge in 6 Schritten: THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE.
+    6 Schritte: THINK, OVERVIEW, WHY, WALKTHROUGH, TRY, COMBINE.
   </Card>
   <Card title="3. Boss Fight" icon="warning">
-    Kombiniere alle Bausteine des Levels in einem Projekt — ohne vorgefertigte Loesung.
+    Alle Bausteine in einem Projekt kombinieren — ohne Loesung.
   </Card>
   <Card title="4. Level Complete" icon="approve-check-circle">
-    Zusammenfassung, aktualisierter Skill Tree und Vorschau aufs naechste Level.
+    Zusammenfassung und Vorschau aufs naechste Level.
   </Card>
 </CardGrid>
 
-## 9 Levels — vom ersten API-Call bis zum Production-System
-
-<CardGrid>
-  <LinkCard title="Level 1 — AI SDK Basics" description="6 Challenges · Text generieren, streamen, strukturierte Ausgaben und System Prompts" href="/de/level-1-ai-sdk-basics/01-briefing/" />
-  <LinkCard title="Level 2 — LLM Fundamentals" description="4 Challenges · Tokens, Context Windows, Usage Tracking und Prompt Caching" href="/de/level-2-llm-fundamentals/01-briefing/" />
-  <LinkCard title="Level 3 — Agents & MCP" description="5 Challenges · Tool Calling, MCP via stdio/HTTP, Tool Loop Agent" href="/de/level-3-agents/01-briefing/" />
-  <LinkCard title="Level 4 — Persistence" description="4 Challenges · Callbacks, Chat-IDs, Datenbank-Persistenz, Message-Validierung" href="/de/level-4-persistence/01-briefing/" />
-  <LinkCard title="Level 5 — Context Engineering" description="5 Challenges · Prompt Templates, Exemplars, RAG, Chain of Thought" href="/de/level-5-context-engineering/01-briefing/" />
-  <LinkCard title="Level 6 — Evals" description="5 Challenges · Evalite, deterministische Evals, LLM-as-Judge, Langfuse" href="/de/level-6-evals/01-briefing/" />
-  <LinkCard title="Level 7 — Streaming" description="4 Challenges · Custom Data Parts, Message Metadata, Error Handling" href="/de/level-7-streaming/01-briefing/" />
-  <LinkCard title="Level 8 — Workflows" description="4 Challenges · Multi-Step Workflows, Custom Loops, Frontend-Streaming" href="/de/level-8-workflows/01-briefing/" />
-  <LinkCard title="Level 9 — Advanced Patterns" description="4 Challenges · Guardrails, Model Router, Output-Vergleich, Research Workflow" href="/de/level-9-advanced/01-briefing/" />
-</CardGrid>
-
-## Gebaut auf offiziellen Quellen
-
-Kein erfundenes Wissen. Jede Challenge basiert auf offiziellen Docs und getesteten Code-Beispielen. Quellen sind am Ende jeder Seite verlinkt — Du kannst alles nachpruefen.
-
-<CardGrid>
-  <LinkCard title="Vercel AI SDK" description="Offizielle Dokumentation — die Grundlage fuer Level 1-9" href="https://ai-sdk.dev/docs" />
-  <LinkCard title="Anthropic Docs" description="Prompt Engineering, Token Counting, Prompt Caching" href="https://docs.anthropic.com" />
-  <LinkCard title="Model Context Protocol" description="MCP-Spezifikation — Grundlage fuer Level 3" href="https://modelcontextprotocol.io" />
-  <LinkCard title="ai-hero-dev Exercises" description="Open-Source Referenz-Uebungen (57 Exercises, MIT-Lizenz)" href="https://github.com/ai-hero-dev/ai-sdk-v6-crash-course" />
-  <LinkCard title="Evalite" description="Eval-Framework von Matt Pocock — Grundlage fuer Level 6" href="https://github.com/mattpocock/evalite" />
-  <LinkCard title="Langfuse" description="Open-Source Observability — Tracing und Monitoring fuer LLM-Anwendungen" href="https://langfuse.com" />
-</CardGrid>
-
-## Fuer wen ist Level Up AI?
+## Fuer wen ist das?
 
 <CardGrid>
   <Card title="Das bist Du" icon="approve-check-circle">
-    TypeScript-Entwickler, der AI in echte Projekte einbauen will. "Vibe Coder", der systematisch verstehen will was unter der Haube passiert. Entwickler mit ChatGPT-Erfahrung, aber ohne AI SDK / Agent / Eval-Wissen.
-  </Card>
-  <Card title="Das bist Du nicht" icon="close">
-    Absoluter Programmier-Anfaenger (TypeScript-Grundkenntnisse sind Voraussetzung). Data Scientist oder ML Engineer (hier geht es um Application-Layer AI, nicht Model Training).
+    TypeScript-Dev, der AI in echte Projekte einbauen will. "Vibe Coder", der systematisch verstehen will was unter der Haube passiert.
   </Card>
   <Card title="Was Du brauchst" icon="list-format">
-    Node.js 18+ und TypeScript Grundkenntnisse. Einen API Key (Anthropic, OpenAI, oder Google). Neugier und die Bereitschaft, Dinge kaputt zu machen.
+    Node.js 18+, TypeScript-Grundkenntnisse und einen API Key (Anthropic, OpenAI oder Google).
   </Card>
 </CardGrid>
 
-## Zeitaufwand
-
-**~40-80 Stunden**, im eigenen Tempo. Bei 2-4 Stunden pro Woche bist Du in ca. 3 Monaten durch alle 9 Levels. Jedes Level funktioniert auch einzeln — Du musst nicht alles der Reihe nach machen.
+**Zeitaufwand:** ~40-80 Stunden im eigenen Tempo. Bei 2-4 Stunden pro Woche ca. 3 Monate fuer alle 9 Levels. Jedes Level funktioniert auch einzeln.

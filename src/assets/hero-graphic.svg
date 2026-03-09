@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" fill="none">
+  <defs>
+    <linearGradient id="h-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="h-accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e67e22"/>
+      <stop offset="100%" stop-color="#f1c40f"/>
+    </linearGradient>
+    <linearGradient id="h-blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5B9FE6"/>
+      <stop offset="100%" stop-color="#3A7BD5"/>
+    </linearGradient>
+    <linearGradient id="h-green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#43C67A"/>
+      <stop offset="100%" stop-color="#27AE60"/>
+    </linearGradient>
+    <linearGradient id="h-orange" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0944D"/>
+      <stop offset="100%" stop-color="#E67E22"/>
+    </linearGradient>
+    <linearGradient id="h-red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EF6B6B"/>
+      <stop offset="100%" stop-color="#E74C3C"/>
+    </linearGradient>
+    <filter id="h-glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#e67e22" flood-opacity="0.2"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="h-shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="720" height="360" rx="16" fill="url(#h-bg)"/>
+
+  <!-- Subtle dot grid -->
+  <g opacity="0.06" fill="#fff">
+    <circle cx="60" cy="60" r="1.5"/><circle cx="120" cy="60" r="1.5"/><circle cx="180" cy="60" r="1.5"/><circle cx="240" cy="60" r="1.5"/><circle cx="300" cy="60" r="1.5"/><circle cx="360" cy="60" r="1.5"/><circle cx="420" cy="60" r="1.5"/><circle cx="480" cy="60" r="1.5"/><circle cx="540" cy="60" r="1.5"/><circle cx="600" cy="60" r="1.5"/><circle cx="660" cy="60" r="1.5"/>
+    <circle cx="60" cy="120" r="1.5"/><circle cx="120" cy="120" r="1.5"/><circle cx="180" cy="120" r="1.5"/><circle cx="240" cy="120" r="1.5"/><circle cx="300" cy="120" r="1.5"/><circle cx="360" cy="120" r="1.5"/><circle cx="420" cy="120" r="1.5"/><circle cx="480" cy="120" r="1.5"/><circle cx="540" cy="120" r="1.5"/><circle cx="600" cy="120" r="1.5"/><circle cx="660" cy="120" r="1.5"/>
+    <circle cx="60" cy="180" r="1.5"/><circle cx="120" cy="180" r="1.5"/><circle cx="180" cy="180" r="1.5"/><circle cx="240" cy="180" r="1.5"/><circle cx="300" cy="180" r="1.5"/><circle cx="360" cy="180" r="1.5"/><circle cx="420" cy="180" r="1.5"/><circle cx="480" cy="180" r="1.5"/><circle cx="540" cy="180" r="1.5"/><circle cx="600" cy="180" r="1.5"/><circle cx="660" cy="180" r="1.5"/>
+    <circle cx="60" cy="240" r="1.5"/><circle cx="120" cy="240" r="1.5"/><circle cx="180" cy="240" r="1.5"/><circle cx="240" cy="240" r="1.5"/><circle cx="300" cy="240" r="1.5"/><circle cx="360" cy="240" r="1.5"/><circle cx="420" cy="240" r="1.5"/><circle cx="480" cy="240" r="1.5"/><circle cx="540" cy="240" r="1.5"/><circle cx="600" cy="240" r="1.5"/><circle cx="660" cy="240" r="1.5"/>
+    <circle cx="60" cy="300" r="1.5"/><circle cx="120" cy="300" r="1.5"/><circle cx="180" cy="300" r="1.5"/><circle cx="240" cy="300" r="1.5"/><circle cx="300" cy="300" r="1.5"/><circle cx="360" cy="300" r="1.5"/><circle cx="420" cy="300" r="1.5"/><circle cx="480" cy="300" r="1.5"/><circle cx="540" cy="300" r="1.5"/><circle cx="600" cy="300" r="1.5"/><circle cx="660" cy="300" r="1.5"/>
+  </g>
+
+  <!-- Progression path (curved line) -->
+  <path d="M 80 280 C 160 280, 180 200, 240 180 C 300 160, 340 120, 400 100 C 460 80, 520 60, 600 50" stroke="url(#h-accent)" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4" stroke-dasharray="8 6"/>
+
+  <!-- Level nodes along the path -->
+  <!-- L1 -->
+  <g filter="url(#h-shadow)">
+    <rect x="55" y="255" width="50" height="50" rx="10" fill="url(#h-blue)"/>
+    <text x="80" y="276" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="80" y="294" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">1</text>
+  </g>
+  <!-- L2 -->
+  <g filter="url(#h-shadow)">
+    <rect x="135" y="215" width="50" height="50" rx="10" fill="url(#h-blue)"/>
+    <text x="160" y="236" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="160" y="254" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">2</text>
+  </g>
+  <!-- L3 -->
+  <g filter="url(#h-shadow)">
+    <rect x="215" y="165" width="50" height="50" rx="10" fill="url(#h-green)"/>
+    <text x="240" y="186" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="240" y="204" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">3</text>
+  </g>
+  <!-- L4 -->
+  <g filter="url(#h-shadow)">
+    <rect x="290" y="135" width="50" height="50" rx="10" fill="url(#h-green)"/>
+    <text x="315" y="156" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="315" y="174" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">4</text>
+  </g>
+  <!-- L5 -->
+  <g filter="url(#h-shadow)">
+    <rect x="355" y="105" width="50" height="50" rx="10" fill="url(#h-green)"/>
+    <text x="380" y="126" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="380" y="144" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">5</text>
+  </g>
+  <!-- L6 -->
+  <g filter="url(#h-shadow)">
+    <rect x="425" y="80" width="50" height="50" rx="10" fill="url(#h-orange)"/>
+    <text x="450" y="101" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="450" y="119" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">6</text>
+  </g>
+  <!-- L7 -->
+  <g filter="url(#h-shadow)">
+    <rect x="495" y="60" width="50" height="50" rx="10" fill="url(#h-orange)"/>
+    <text x="520" y="81" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="520" y="99" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">7</text>
+  </g>
+  <!-- L8 -->
+  <g filter="url(#h-shadow)">
+    <rect x="560" y="42" width="50" height="50" rx="10" fill="url(#h-orange)"/>
+    <text x="585" y="63" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="585" y="81" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="18" font-weight="800">8</text>
+  </g>
+  <!-- L9 (final, with glow) -->
+  <g filter="url(#h-glow)">
+    <rect x="625" y="25" width="55" height="55" rx="12" fill="url(#h-red)"/>
+    <text x="652" y="47" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="10" font-weight="600" opacity="0.7">LVL</text>
+    <text x="652" y="68" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="22" font-weight="800">9</text>
+  </g>
+
+  <!-- Labels along the bottom -->
+  <text x="80" y="325" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">SDK Basics</text>
+  <text x="240" y="235" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Agents</text>
+  <text x="380" y="175" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Context Eng.</text>
+  <text x="520" y="130" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Streaming</text>
+  <text x="652" y="100" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Advanced</text>
+
+  <!-- Stats bar at bottom -->
+  <rect x="40" y="330" width="640" height="1" fill="#334155" opacity="0.5"/>
+  <text x="120" y="352" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">
+    <tspan font-weight="700" fill="#e2e8f0">9</tspan> Levels
+  </text>
+  <text x="260" y="352" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">
+    <tspan font-weight="700" fill="#e2e8f0">41</tspan> Challenges
+  </text>
+  <text x="420" y="352" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">
+    <tspan font-weight="700" fill="#e2e8f0">9</tspan> Boss Fights
+  </text>
+  <text x="580" y="352" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">
+    <tspan font-weight="700" fill="#e2e8f0">DE + EN</tspan>
+  </text>
+</svg>

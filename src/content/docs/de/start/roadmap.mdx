@@ -2,79 +2,41 @@
 title: Roadmap
 description: Der Lernpfad im Ueberblick — welches Level baut auf welchem auf?
 ---
-
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import skillTreeSvg from '../../../../assets/skill-tree-roadmap.svg';
 
 # Roadmap
 
 ## Der Skill Tree
 
-```mermaid
-graph LR
-  L1["1: AI SDK\nBasics"]
-  L2["2: LLM\nFundamentals"]
-  L3["3: Agents\n& MCP"]
-  L4["4: Persistence"]
-  L5["5: Context\nEngineering"]
-  L6["6: Evals"]
-  L7["7: Streaming"]
-  L8["8: Workflows"]
-  L9["9: Advanced\nPatterns"]
-
-  L1 --> L2 --> L3 --> L8
-  L1 --> L4
-  L2 --> L5 --> L6 --> L9
-  L1 --> L7 --> L8 --> L9
-
-  style L1 fill:#4A90D9,color:#fff
-  style L2 fill:#4A90D9,color:#fff
-  style L3 fill:#27AE60,color:#fff
-  style L4 fill:#27AE60,color:#fff
-  style L5 fill:#27AE60,color:#fff
-  style L6 fill:#E67E22,color:#fff
-  style L7 fill:#E67E22,color:#fff
-  style L8 fill:#E67E22,color:#fff
-  style L9 fill:#E74C3C,color:#fff
-```
-
-**Legende:** Blau = Grundlagen | Gruen = Aufbau | Orange = Fortgeschritten | Rot = Experte
+<Image src={skillTreeSvg} alt="Skill Tree: 9 Level vom Vibe Coder zum AI Engineer — Grundlagen (blau), Aufbau (gruen), Fortgeschritten (orange), Experte (rot)" width={900} />
 
 ## Empfohlene Lernpfade
 
-### Einsteiger (empfohlen)
+| Pfad | Fuer wen | Levels |
+|------|----------|--------|
+| **Einsteiger** | Kein AI SDK Wissen | Alle Levels der Reihe nach (1–9) |
+| **Fortgeschritten** | Bereits AI SDK Erfahrung | 3, 5, 6, 8, 9 |
+| **Agents & MCP** | Fokus auf Agents und Tools | 1, 3, 4, 8, 9 |
+| **Production** | Fokus auf Qualitaet und Robustheit | 1, 5, 6, 7, 9 |
 
-Level 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+## Level-Uebersicht
 
-Folge den Levels der Reihe nach. Jedes Level baut auf den vorherigen auf.
-
-### Fortgeschrittene (bereits AI SDK Erfahrung)
-
-Level 3 → 5 → 6 → 8 → 9
-
-Ueberspringe die Grundlagen und steige direkt bei Agents oder Context Engineering ein.
-
-### Fokus: Agents & MCP
-
-Level 1 → 3 → 4 → 8 → 9
-
-Direkt zu Agents, Tools und Workflows — die Persistence brauchst Du fuer robuste Agents.
-
-### Fokus: Qualitaet & Production
-
-Level 1 → 5 → 6 → 7 → 9
-
-Context Engineering, Evals und Streaming — alles was Production-Ready AI ausmacht.
-
-## Level-Details
-
-<CardGrid>
-  <LinkCard title="Level 1 — AI SDK Basics" description="6 Challenges · Text generieren, streamen, strukturierte Ausgaben und System Prompts" href="/de/level-1-ai-sdk-basics/01-briefing/" />
-  <LinkCard title="Level 2 — LLM Fundamentals" description="4 Challenges · Tokens, Context Windows, Usage Tracking und Prompt Caching" href="/de/level-2-llm-fundamentals/01-briefing/" />
-  <LinkCard title="Level 3 — Agents & MCP" description="5 Challenges · Tool Calling, MCP via stdio/HTTP, Tool Loop Agent" href="/de/level-3-agents/01-briefing/" />
-  <LinkCard title="Level 4 — Persistence" description="4 Challenges · Callbacks, Chat-IDs, Datenbank-Persistenz, Message-Validierung" href="/de/level-4-persistence/01-briefing/" />
-  <LinkCard title="Level 5 — Context Engineering" description="5 Challenges · Prompt Templates, Exemplars, RAG, Chain of Thought" href="/de/level-5-context-engineering/01-briefing/" />
-  <LinkCard title="Level 6 — Evals" description="5 Challenges · Evalite, deterministische Evals, LLM-as-Judge, Langfuse" href="/de/level-6-evals/01-briefing/" />
-  <LinkCard title="Level 7 — Streaming" description="4 Challenges · Custom Data Parts, Message Metadata, Error Handling" href="/de/level-7-streaming/01-briefing/" />
-  <LinkCard title="Level 8 — Workflows" description="4 Challenges · Multi-Step Workflows, Custom Loops, Frontend-Streaming" href="/de/level-8-workflows/01-briefing/" />
-  <LinkCard title="Level 9 — Advanced Patterns" description="4 Challenges · Guardrails, Model Router, Output-Vergleich, Research Workflow" href="/de/level-9-advanced/01-briefing/" />
-</CardGrid>
+- **[Level 1 — AI SDK Basics](/de/level-1-ai-sdk-basics/01-briefing/)** (6 Challenges)
+  Text generieren, streamen, strukturierte Ausgaben, System Prompts
+- **[Level 2 — LLM Fundamentals](/de/level-2-llm-fundamentals/01-briefing/)** (4 Challenges)
+  Tokens, Context Windows, Usage Tracking, Prompt Caching
+- **[Level 3 — Agents & MCP](/de/level-3-agents/01-briefing/)** (5 Challenges)
+  Tool Calling, MCP via stdio/HTTP, Tool Loop Agent
+- **[Level 4 — Persistence](/de/level-4-persistence/01-briefing/)** (4 Challenges)
+  Callbacks, Chat-IDs, Datenbank-Persistenz, Message-Validierung
+- **[Level 5 — Context Engineering](/de/level-5-context-engineering/01-briefing/)** (5 Challenges)
+  Prompt Templates, Exemplars, RAG, Chain of Thought
+- **[Level 6 — Evals](/de/level-6-evals/01-briefing/)** (5 Challenges)
+  Evalite, deterministische Evals, LLM-as-Judge, Langfuse
+- **[Level 7 — Streaming](/de/level-7-streaming/01-briefing/)** (4 Challenges)
+  Custom Data Parts, Message Metadata, Error Handling
+- **[Level 8 — Workflows](/de/level-8-workflows/01-briefing/)** (4 Challenges)
+  Multi-Step Workflows, Custom Loops, Frontend-Streaming
+- **[Level 9 — Advanced Patterns](/de/level-9-advanced/01-briefing/)** (4 Challenges)
+  Guardrails, Model Router, Output-Vergleich, Research Workflow
