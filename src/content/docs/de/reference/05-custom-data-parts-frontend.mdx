@@ -35,14 +35,10 @@ export function Chat() {
             switch (part.type) {
               case 'text':
                 return <p key={i}>{part.text}</p>;
-              case 'data':
-                if (part.data.type === 'weather') {
-                  return <WeatherCard key={i} data={part.data} />;
-                }
-                if (part.data.type === 'notification') {
-                  return <NotificationBanner key={i} data={part.data} />;
-                }
-                return null;
+              case 'data-weather':
+                return <WeatherCard key={i} data={part.data} />;
+              case 'data-notification':
+                return <NotificationBanner key={i} data={part.data} />;
               default:
                 return null;
             }
@@ -62,7 +58,7 @@ export function Chat() {
 
 | Eigenschaft | Persistent Data Parts | Transient Data Parts |
 |-------------|----------------------|---------------------|
-| Zugriff | `message.parts` (type `'data'`) | `onData`-Callback in useChat |
+| Zugriff | `message.parts` (type `'data-${NAME}'`) | `onData`-Callback in useChat |
 | Persistenz | Ja — Teil der Message-Historie | Nein — nur waehrend des Streams |
 | Use Case | Quellen, Ergebnisse, eingebettete Daten | Ladefortschritt, temporaere Status |
 | ID-Reconciliation | Ja (bei gesetzter ID) | Nein |
@@ -72,7 +68,7 @@ export function Chat() {
 ```typescript
 // Alle Weather-Parts einer Message
 const weatherParts = message.parts.filter(
-  (p) => p.type === 'data' && p.data.type === 'weather'
+  (p) => p.type === 'data-weather'
 );
 
 // Letztes Data Part eines bestimmten Typs

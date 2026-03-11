@@ -49,8 +49,8 @@ Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen f
 Chain of Thought (CoT) bedeutet: Das LLM soll seine Gedanken aufschreiben, bevor es antwortet. Statt direkt das Ergebnis auszugeben, durchlaeuft es erst einen sichtbaren Denkprozess.
 
 ```
-Ohne CoT:  "Was ist 17 * 24?"  →  "408"  (geraten, falsch)
-Mit CoT:   "Was ist 17 * 24?"  →  "17 * 20 = 340, 17 * 4 = 68, 340 + 68 = 408"  →  "408"
+Ohne CoT:  "Was ist 37 * 83?"  →  "2981"  (geraten, falsch — korrekt waere 3071)
+Mit CoT:   "Was ist 37 * 83?"  →  "37 * 80 = 2960, 37 * 3 = 111, 2960 + 111 = 3071"  →  "3071"
 ```
 
 Die Tokens, die das LLM beim Nachdenken generiert, beeinflussen die Qualitaet der eigentlichen Antwort. Der Plan steht im Kontext — und der Kontext steuert, was als naechstes kommt.

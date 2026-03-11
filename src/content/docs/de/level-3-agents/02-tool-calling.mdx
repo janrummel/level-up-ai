@@ -82,6 +82,8 @@ console.log(result.text);
 // → "In Berlin sind es aktuell 22 Grad und es ist sonnig."
 ```
 
+> **Achtung:** `result.text` kann leer sein, wenn das LLM nur einen Tool Call macht und danach keinen Text generiert. Das passiert, wenn `maxSteps` nicht gesetzt ist (Default: 1) — dann stoppt der Call nach dem ersten Tool-Ergebnis, ohne dass das LLM eine Antwort formuliert. Setze `maxSteps: 2` oder hoeher, damit das LLM nach dem Tool Call noch antworten kann.
+
 Das LLM entscheidet selbststaendig, ob es ein Tool nutzt. Bei der Frage "Wie ist das Wetter?" erkennt es, dass es `weather` aufrufen muss. Bei "Was ist TypeScript?" wuerde es direkt antworten.
 
 ### Schicht 3: Tool Choice — Steuerung der Tool-Nutzung

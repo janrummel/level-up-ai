@@ -17,7 +17,7 @@ Die Konvertierung zwischen beiden Typen laeuft ueber zwei Utility-Funktionen: `c
 
 ```typescript
 // UIMessage — Frontend Source of Truth
-interface UIMessage<METADATA = unknown> {
+interface UIMessage<METADATA = unknown, DATA_PARTS = unknown, TOOLS = unknown> {
   id: string;
   role: 'system' | 'user' | 'assistant';
   parts: Array<UIMessagePart>;
@@ -32,7 +32,7 @@ type UIMessagePart =
   | FileUIPart          // { type: 'file', ... }
   | StepStartUIPart     // { type: 'step-start' }
   | ReasoningUIPart     // { type: 'reasoning', ... }
-  | DataUIPart;         // { type: 'data', data: unknown }
+  | DataUIPart;         // { type: 'data-${NAME}', data: ... } — custom Data Parts, z.B. 'data-weather'
 
 // ModelMessage — fuer LLM-Calls
 // Vier Typen: SystemModelMessage, UserModelMessage, AssistantModelMessage, ToolModelMessage
@@ -42,7 +42,7 @@ type UIMessagePart =
 ## Konvertierung
 
 ```typescript
-import { convertToModelMessages } from '@ai-sdk/ui-utils';
+import { convertToModelMessages } from 'ai';
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 

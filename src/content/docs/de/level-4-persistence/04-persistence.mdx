@@ -99,6 +99,10 @@ const result = await generateText({
 });
 ```
 
+:::tip[Production-Tipp: Append-only Pattern]
+In Produktionsumgebungen ist ein Append-only Pattern empfehlenswert: Neue Nachrichten werden angehaengt, bestehende nie ueberschrieben. Das verhindert Datenverlust und erleichtert Debugging.
+:::
+
 ### Schicht 3: Messages laden (Load)
 
 Beim naechsten Request (oder nach Reload) laedt das Backend den bisherigen Verlauf:
@@ -172,12 +176,14 @@ interface Chat {
 interface Message {
   id: string;           // UUID
   chatId: string;       // Foreign Key → chats.id
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant' | 'system' | 'tool';
   content: string;
   tokens: number;       // Token-Verbrauch dieser Message
   createdAt: Date;
 }
 ```
+
+Neben `user` und `assistant` gibt es auch `system` und `tool` — letztere ist relevant wenn du Tool-Calls verwendest (kommt in spaeteren Levels).
 
 Zwei getrennte Tabellen: `chats` fuer Metadaten, `messages` fuer den Inhalt. Verknuepft ueber `chatId`. Das ermoeglicht effiziente Queries wie "alle Chats des Users" oder "Token-Verbrauch pro Chat".
 

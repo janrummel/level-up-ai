@@ -106,7 +106,12 @@ import * as readline from 'readline';
 
 // TODO: Hauptfunktion:
 // 1. User-Input lesen (readline)
-// 2. generateText mit allen Tools, stopWhen, toolCallApproval
+// 2. Agent-Loop:
+//    a) generateText aufrufen
+//    b) result.content auf 'tool-approval-request' Parts pruefen
+//    c) User im Terminal fragen (askUser)
+//    d) tool-approval-response bauen und zu messages pushen
+//    e) generateText erneut aufrufen bis keine Approval Requests mehr
 // 3. Tool Events formatiert ausgeben (onStepFinish)
 // 4. Agent-Verlauf anzeigen (Schritte, Tool Calls, Tokens)
 ```
@@ -118,7 +123,7 @@ Dein Boss Fight ist bestanden, wenn:
 - [ ] Mindestens 3 Tools definiert (search, summarize, saveResults)
 - [ ] `saveResults` hat `needsApproval: true` — User wird vor dem Speichern gefragt
 - [ ] `stopWhen: stepCountIs(n)` begrenzt die Schritte
-- [ ] `toolCallApproval` Handler fragt im Terminal nach Freigabe
+- [ ] Approval Loop: `result.content` wird auf `tool-approval-request` geprueft, User wird gefragt, `tool-approval-response` wird gebaut
 - [ ] Agent nutzt Tools autonom in sinnvoller Reihenfolge (erst suchen, dann zusammenfassen, dann speichern)
 - [ ] Jeder Tool Call wird formatiert im Terminal angezeigt (Name, Parameter, Ergebnis)
 - [ ] Am Ende: Zusammenfassung mit Schritten, Tool Calls und Token-Verbrauch
@@ -143,7 +148,7 @@ Nutze `onStepFinish` fuer die formatierte Ausgabe waehrend der Agent-Ausfuehrung
 <details>
 <summary>Hinweis 3: Approval bei Ablehnung</summary>
 
-Wenn der User einen Tool Call ablehnt (return `'reject'`), bekommt das LLM die Information, dass der Tool Call abgelehnt wurde. Es kann dann darauf reagieren — z.B. die Ergebnisse trotzdem als Text ausgeben, ohne sie zu speichern. Teste beide Pfade: Genehmigung und Ablehnung.
+Wenn der User einen Tool Call ablehnt (`approved: false` im `tool-approval-response` Objekt), bekommt das LLM die Information, dass der Tool Call abgelehnt wurde. Es kann dann darauf reagieren — z.B. die Ergebnisse trotzdem als Text ausgeben, ohne sie zu speichern. Teste beide Pfade: Genehmigung und Ablehnung.
 
 </details>
 

@@ -118,6 +118,12 @@ Antworte in diesem Format:
 
 Selbe Frage, drei Welten. Der System Prompt bestimmt nicht nur den Stil, sondern auch die Tiefe, Perspektive und Struktur der Antwort.
 
+:::caution[System Prompts sind keine Security-Boundary]
+System Prompts steuern das Verhalten des LLMs — aber sie schuetzen nicht vor boesartigen Eingaben. Ein User kann versuchen, den System Prompt zu umgehen ("Ignoriere alle vorherigen Anweisungen..."). Das nennt sich **Prompt Injection**.
+
+System Prompts sind Verhaltensanweisungen, keine Sicherheitsmechanismen. Fuer echten Schutz brauchst Du separate Input-Validation und Guardrails — das lernst Du in [Level 9: Guardrails](/de/level-9-advanced/02-guardrails/).
+:::
+
 ## TRY
 
 **Aufgabe:** Erstelle 3 verschiedene System Prompts fuer 3 verschiedene Rollen. Rufe `generateText` mit demselben User Prompt aber unterschiedlichen System Prompts auf. Vergleiche die Outputs.

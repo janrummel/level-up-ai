@@ -9,7 +9,9 @@ sidebar:
 
 Normalerweise uebernimmt `streamText` das Schreiben von Text Parts automatisch. Aber manchmal brauchst Du mehr Kontrolle: mehrere LLM-Outputs kombinieren, eigenen Text einfuegen oder Text aus Nicht-LLM-Quellen streamen. In diesen Faellen schreibst Du Text Parts manuell ueber `writer.write()`.
 
-Text-Deltas werden ueber `{ type: 'text-delta', textDelta: '...' }` gesendet. Jedes Delta wird an den aktuellen Text-Part in der UI angehaengt. Du kannst manuelle Text-Deltas mit `mergeIntoDataStream()` kombinieren — eigener Text vor, nach oder zwischen LLM-Streams.
+Ein Text-Part in der UI durchlaeuft einen Lifecycle: `text-start` oeffnet einen neuen Text-Part, dann folgen beliebig viele `text-delta` Parts mit den eigentlichen Text-Fragmenten, und `text-end` schliesst den Text-Part ab. Wenn Du `writer.merge()` verwendest, sendet `streamText` diese Lifecycle-Events automatisch. Bei rein manuellem Schreiben ueber `writer.write()` genuegt es, `text-delta` Parts zu senden — der Stream kuemmert sich um Start und Ende.
+
+Du kannst manuelle Text-Deltas mit `writer.merge()` kombinieren — eigener Text vor, nach oder zwischen LLM-Streams.
 
 Dieses Pattern ist besonders nuetzlich fuer Workflow-Szenarien, in denen mehrere LLM-Calls nacheinander ausgefuehrt werden und Du Ueberschriften oder Trennzeichen dazwischen einfuegen willst.
 
@@ -48,7 +50,7 @@ export async function POST(req: Request) {
         messages,
       });
 
-      result.mergeIntoDataStream(writer);
+      writer.merge(result.toUIMessageStream());
       await result;
 
       // Eigener Text nach dem LLM-Stream
@@ -77,7 +79,7 @@ export async function POST(req: Request) {
         model: anthropic('claude-sonnet-4-5-20250514'),
         prompt: 'Fasse zusammen: ...',
       });
-      summary.mergeIntoDataStream(writer);
+      writer.merge(summary.toUIMessageStream());
       await summary;
 
       // Abschnitt 2: Analyse
@@ -87,7 +89,7 @@ export async function POST(req: Request) {
         model: anthropic('claude-sonnet-4-5-20250514'),
         prompt: 'Analysiere: ...',
       });
-      analysis.mergeIntoDataStream(writer);
+      writer.merge(analysis.toUIMessageStream());
       await analysis;
 
       // Abschluss
@@ -97,13 +99,32 @@ export async function POST(req: Request) {
 }
 ```
 
+## Text-Part Lifecycle
+
+Wenn `streamText` ueber `writer.merge()` eingebunden wird, sendet es automatisch die vollstaendige Sequenz:
+
+1. **`text-start`** — Oeffnet einen neuen Text-Part
+2. **`text-delta`** (n-mal) — Sendet Text-Fragmente inkrementell
+3. **`text-end`** — Schliesst den Text-Part ab
+
+Bei manuellen `writer.write()`-Aufrufen mit `text-delta` wird der Lifecycle ebenfalls korrekt gehandhabt.
+
 ## API
 
 | Stream Part | Properties | Beschreibung |
 |-------------|-----------|-------------|
+| `text-start` | — | Oeffnet einen neuen Text-Part |
 | `text-delta` | `textDelta: string` | Textfragment, wird an aktuellen Text-Part angehaengt |
-| `step-start` | — | Markiert den Beginn eines neuen Schritts |
-| `step-finish` | `finishReason`, `usage` | Markiert das Ende eines Schritts |
+| `text-end` | — | Schliesst den aktuellen Text-Part ab |
+| `step-start` | `messageId`, `request`, `warnings` | Markiert den Beginn eines neuen Schritts |
+| `step-finish` | `finishReason`, `usage`, `isContinued` | Markiert das Ende eines Schritts |
+
+### Writer-Methoden
+
+| Methode | Beschreibung |
+|---------|-------------|
+| `writer.write({ type, ... })` | Schreibt einen einzelnen Stream Part |
+| `writer.merge(stream)` | Fuegt einen externen Stream (z.B. `result.toUIMessageStream()`) ein |
 
 ## Siehe auch
 

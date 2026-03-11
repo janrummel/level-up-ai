@@ -7,9 +7,11 @@ sidebar:
 
 ## Ueberblick
 
-In einem Multi-Step-Szenario (z.B. Tool-Call-Loop mit `maxSteps`) durchlaeuft `streamText` mehrere Generierungsschritte. Jeder Schritt wird durch `step-start` und `step-finish` Stream Parts begrenzt. Diese Parts liefern Informationen ueber den Schritt-Typ, den Finish Reason und den Token-Verbrauch pro Schritt.
+In einem Multi-Step-Szenario (z.B. Tool-Call-Loop mit `maxSteps`) durchlaeuft `streamText` mehrere Generierungsschritte. Jeder Schritt wird durch **`step-start`** und **`step-finish`** Stream Parts begrenzt. Der `step-start` Part liefert die `messageId`, Request-Metadaten und Warnings. Der `step-finish` Part liefert `finishReason`, `usage` (Token-Verbrauch), `isContinued`, Response-Metadaten und optional Log Probabilities.
 
-Zusaetzlich gibt es zwei Callbacks: `onStepFinish` feuert nach jedem einzelnen Schritt und liefert per-Step-Daten. `onFinish` feuert einmalig nach Abschluss aller Schritte und liefert aggregierte Daten wie `totalUsage` und das `steps`-Array. In der UI erscheint `StepStartUIPart` als Markierung fuer Multi-Step-Grenzen.
+Zusaetzlich gibt es zwei Callbacks: `onStepFinish` feuert nach jedem einzelnen Schritt und liefert per-Step-Daten. `onFinish` feuert einmalig nach Abschluss aller Schritte und liefert aggregierte Daten wie `totalUsage` und das `steps`-Array.
+
+**Hinweis zur Benennung:** Im `fullStream` heissen die Part-Types `step-start` und `step-finish` (TextStreamPart). Im Stream-Protokoll (Data Stream Protocol) werden sie als `f:` (Start Step) und `e:` (Finish Step) Zeilen uebertragen. In der `UIMessage` existiert nur ein `StepStartUIPart` mit `type: 'step-start'` — ein entsprechendes `step-finish` Part gibt es in UIMessage nicht, da die UI nur die Schritt-Grenzen markiert, nicht deren Abschluss.
 
 ## Callbacks
 
@@ -43,9 +45,9 @@ const result = streamText({
 for await (const part of result.fullStream) {
   switch (part.type) {
     case 'step-start':
-      console.log('--- Neuer Schritt ---');
+      console.log(`--- Neuer Schritt (messageId: ${part.messageId}) ---`);
       break;
-    case 'text':
+    case 'text-delta':
       process.stdout.write(part.textDelta);
       break;
     case 'tool-call':
@@ -57,6 +59,7 @@ for await (const part of result.fullStream) {
     case 'step-finish':
       console.log(`Schritt fertig: ${part.finishReason}`);
       console.log(`Tokens: ${part.usage.totalTokens}`);
+      console.log(`Weiter: ${part.isContinued}`);
       break;
   }
 }
@@ -86,7 +89,7 @@ for await (const part of result.fullStream) {
 
 ## StepStartUIPart
 
-In der UIMessage erscheint `{ type: 'step-start' }` als Part. Damit kannst Du im Frontend visuelle Grenzen zwischen Schritten rendern — z.B. ein Trennzeichen oder eine Schritt-Anzeige.
+In der UIMessage erscheint `StepStartUIPart` mit `{ type: 'step-start' }` als Part. Ein `step-finish` UIMessage Part existiert nicht — nur der Beginn eines Schritts wird in der UI abgebildet. Damit kannst Du im Frontend visuelle Grenzen zwischen Schritten rendern — z.B. ein Trennzeichen oder eine Schritt-Anzeige.
 
 ```typescript
 {m.parts.map((part, i) => {

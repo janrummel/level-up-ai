@@ -11,7 +11,7 @@ Data Parts transportieren strukturierte Daten neben dem LLM-Text im selben Strea
 
 Es gibt zwei Kategorien: **Persistent Data Parts** werden in `message.parts` gespeichert und bleiben Teil der Message-Historie. **Transient Data Parts** sind nur waehrend des Streams ueber den `onData`-Callback verfuegbar und werden nicht persistiert.
 
-Auf der Server-Seite nutzt Du `createUIMessageStreamResponse` (oder `createUIMessageStream`) mit einem `execute`-Callback. Der `writer` bietet eine `write()`-Methode fuer Custom Data Parts und `mergeIntoDataStream()` fuegt den LLM-Stream ein.
+Auf der Server-Seite nutzt Du `createUIMessageStreamResponse` (oder `createUIMessageStream`) mit einem `execute`-Callback. Der `writer` bietet eine `write()`-Methode fuer Custom Data Parts und `writer.merge()` fuegt den LLM-Stream ein.
 
 ## Server-Beispiel
 
@@ -26,8 +26,8 @@ export async function POST(req: Request) {
     execute(writer) {
       // Persistent Data Part (wird in message.parts gespeichert)
       writer.write({
-        type: 'data',
-        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+        type: 'data-weather',
+        data: { city: 'Berlin', status: 'loading' },
       });
 
       const result = streamText({
@@ -35,18 +35,13 @@ export async function POST(req: Request) {
         messages,
         onFinish() {
           writer.write({
-            type: 'data',
-            data: {
-              type: 'weather',
-              city: 'Berlin',
-              status: 'success',
-              temp: 22,
-            },
+            type: 'data-weather',
+            data: { city: 'Berlin', status: 'success', temp: 22 },
           });
         },
       });
 
-      result.mergeIntoDataStream(writer);
+      writer.merge(result.toUIMessageStream());
     },
   });
 }
@@ -73,9 +68,10 @@ type MyUIMessage = UIMessage<
 |---------|-------------|
 | `createUIMessageStreamResponse({ execute })` | Erstellt eine Response mit UI Message Stream |
 | `createUIMessageStream({ execute })` | Erstellt einen rohen UI Message Stream |
-| `writer.write({ type: 'data', data })` | Schreibt ein Persistent Data Part |
-| `writer.write({ type: 'data', data, id })` | Schreibt ein Data Part mit ID (fuer Reconciliation) |
-| `result.mergeIntoDataStream(writer)` | Fuegt den LLM-Stream in den Writer ein |
+| `writer.write({ type: 'data-${NAME}', data })` | Schreibt ein Persistent Data Part |
+| `writer.write({ type: 'data-${NAME}', data, id })` | Schreibt ein Data Part mit ID (fuer Reconciliation) |
+| `writer.write({ ..., transient: true })` | Schreibt ein Transient Data Part (nicht persistiert) |
+| `writer.merge(result.toUIMessageStream())` | Fuegt den LLM-Stream in den Writer ein |
 
 ## Siehe auch
 

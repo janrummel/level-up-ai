@@ -63,7 +63,7 @@ Beide sind korrekt, aber keiner matcht den `expected`-Wert exakt. `Levenshtein` 
 
 ### Schicht 2: Die Score-Skala
 
-Der Factuality Scorer nutzt eine 5-stufige Skala:
+Der Factuality Scorer nutzt eine 5-stufige Skala von A bis E. **Achtung:** Das sind keine Schulnoten! Im deutschen Schulsystem waere A = 1 = sehr gut. Hier beschreiben die Buchstaben verschiedene *Verhaeltnisse* zwischen Antwort und Referenz — A ist nicht die beste Note, C (Identical) hat den hoechsten Score:
 
 | Grade | Bedeutung | Score | Beschreibung |
 |-------|-----------|-------|-------------|
@@ -185,6 +185,15 @@ LLM-as-Judge ist maechtig, aber nicht kostenlos:
 | **Flexibilitaet** | Nur exakte Checks | Offene Bewertungen |
 
 **Faustregel:** Wenn Du die Bewertung als `if`-Statement schreiben kannst, nimm einen deterministischen Scorer. Wenn nicht, nimm LLM-as-Judge.
+
+:::caution[Bekannte Biases bei LLM-as-Judge]
+LLM-Judges sind nicht objektiv. Drei haeufige Verzerrungen, die Du kennen solltest:
+- **Position Bias:** LLMs bevorzugen tendenziell die erste oder letzte Option in einer Liste — die Reihenfolge beeinflusst die Bewertung.
+- **Verbosity Bias:** Laengere Antworten werden oft hoeher bewertet, auch wenn sie nicht inhaltlich besser sind.
+- **Self-Enhancement Bias:** Modelle bewerten Outputs, die von demselben Modell stammen, tendenziell besser.
+
+Gegenstrategien: Reihenfolge randomisieren, verschiedene Judge-Modelle testen, und Rationales kritisch lesen.
+:::
 
 ## TRY
 

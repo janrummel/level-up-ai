@@ -126,9 +126,9 @@ async function classifyTask(input: string) {
 - "complex": Analyse, Vergleich, Argumentation, kreatives Schreiben
 - "code": Code schreiben, debuggen, reviewen, erklaeren`,
     prompt: input,
-    experimental_output: Output.enum(['simple', 'complex', 'code']),  // ← Aus Level 1.5
+    output: Output.enum(['simple', 'complex', 'code']),  // ← Aus Level 1.5
   });
-  return result.experimental_output;
+  return result.output;
 }
 
 // Schritt 2: Modell basierend auf Klassifikation waehlen
@@ -163,7 +163,11 @@ Zwei LLM-Calls statt einem — aber der erste (Klassifikation) ist extrem guenst
 
 ### Schicht 4: Kostenvergleich
 
-Was bringt Model Routing konkret? Eine Uebersicht der Modellkosten (Stand Anfang 2026):
+Was bringt Model Routing konkret? Eine Uebersicht der Modellkosten:
+
+:::note[Preise Stand: Maerz 2025]
+Modellpreise aendern sich regelmaessig — pruefe die aktuellen Preise auf den jeweiligen Provider-Seiten ([Anthropic](https://docs.anthropic.com/en/docs/about-claude/models), [Google AI](https://ai.google.dev/gemini-api/docs/models)) bevor Du Kosten kalkulierst.
+:::
 
 | Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) | Staerke |
 |--------|----------------------|------------------------|---------|
@@ -235,9 +239,9 @@ async function classifyTask(input: string) {
 - "complex": Analyse, Vergleich, Argumentation
 - "code": Code schreiben, debuggen, erklaeren`,
     prompt: input,
-    experimental_output: Output.enum(['simple', 'complex', 'code']),
+    output: Output.enum(['simple', 'complex', 'code']),
   });
-  return result.experimental_output;
+  return result.output;
 }
 
 function selectModel(classification: 'simple' | 'complex' | 'code') {

@@ -94,20 +94,25 @@ Die XML-Struktur allein ist statisch. Um sie wiederverwendbar zu machen, nutzt D
 
 ```typescript
 // Template Literal: Variablen werden zur Laufzeit eingesetzt
+// Die ${...}-Ausdruecke werden durch die config-Werte ersetzt:
+//   config.role        → Rolle dynamisch
+//   config.audience    → Zielgruppe dynamisch
+//   config.tone        → Ton dynamisch
+//   config.outputFormat → Format dynamisch
 const systemPrompt = `
 <task-context>
-Du bist ein ${config.role}.                // ← Variable: Rolle dynamisch
-Deine Zielgruppe: ${config.audience}.      // ← Variable: Zielgruppe dynamisch
+Du bist ein ${config.role}.
+Deine Zielgruppe: ${config.audience}.
 </task-context>
 
 <rules>
-- Schreibe ${config.tone}                  // ← Variable: Ton dynamisch
+- Schreibe ${config.tone}
 - Fachbegriffe beim ersten Auftreten erklaeren
 - Keine Annahmen ohne Kennzeichnung
 </rules>
 
 <output-format>
-Formatiere Deine Antwort als: ${config.outputFormat}  // ← Variable: Format dynamisch
+Formatiere Deine Antwort als: ${config.outputFormat}
 </output-format>
 `;
 ```

@@ -67,7 +67,7 @@ Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provid
 
 ## Voraussetzungen
 
-- **Node.js 18+** und **npm** installiert — pruefe mit `node -v` und `npm -v`
+- **Node.js 20+** und **npm** installiert — pruefe mit `node -v` und `npm -v`
 - **TypeScript Grundkenntnisse** — Typen, Interfaces, async/await
 - **Erfahrung mit ChatGPT oder aehnlichem** — Du weisst, was ein LLM ist und was es kann
 - **Ein API-Key** fuer mindestens einen Provider:
@@ -75,7 +75,7 @@ Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provid
   - [OpenAI Platform](https://platform.openai.com/) — API-Key unter "API Keys" erstellen
   - [Google AI Studio](https://aistudio.google.com/) — API-Key erstellen
 
-> Alle Provider bieten ein kostenloses Startguthaben oder Free Tier. Fuer Level 1 reicht ein einzelner API-Key.
+> Die meisten Provider bieten ein kostenloses Startguthaben oder Free Tier. Fuer Level 1 reicht ein einzelner API-Key.
 
 ## Bevor Du loslegst
 
@@ -88,7 +88,7 @@ npm install ai @ai-sdk/anthropic zod
 npm install -D tsx typescript
 ```
 
-Erstelle eine `.env`-Datei fuer Deinen API-Key (wird von `tsx` automatisch geladen):
+Erstelle eine `.env`-Datei fuer Deinen API-Key:
 
 ```bash
 echo 'ANTHROPIC_API_KEY=sk-ant-dein-key-hier' > .env
@@ -97,10 +97,10 @@ echo 'ANTHROPIC_API_KEY=sk-ant-dein-key-hier' > .env
 So fuehrst Du Deine TypeScript-Dateien aus:
 
 ```bash
-npx tsx challenge-1-1.ts
+npx tsx --env-file=.env challenge-1-1.ts
 ```
 
-> `tsx` ist ein TypeScript-Runner, der `.ts`-Dateien direkt ausfuehrt — ohne `tsconfig.json`, ohne Build-Schritt, mit automatischer `.env`-Unterstuetzung.
+> `tsx` ist ein TypeScript-Runner, der `.ts`-Dateien direkt ausfuehrt — ohne `tsconfig.json`, ohne Build-Schritt. Mit `--env-file=.env` werden Deine Umgebungsvariablen geladen (Node.js 20+ Feature). Alternativ kannst Du `dotenv` installieren (`npm install dotenv`) und am Anfang Deiner Datei `import 'dotenv/config'` einfuegen.
 
 ### Troubleshooting
 

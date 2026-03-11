@@ -44,6 +44,12 @@ User Input durchlaeuft zuerst einen Input-Guardrail (Injection-Check, PII-Erkenn
 
 ## WALKTHROUGH
 
+:::caution[Didaktischer Startpunkt — nicht Production-Ready]
+Die folgenden Keyword-basierten Checks sind ein **didaktischer Startpunkt**, um das Guardrail-Pattern zu verstehen. In Production nutzt Du ML-basierte Classifier oder spezialisierte APIs (z.B. OpenAI Moderation API, Anthropics eingebaute Safety-Layer) fuer robustere Erkennung. Keyword-Matching ist leicht zu umgehen.
+
+LLM-Provider haben bereits eingebaute Safety-Layer: Anthropics **Constitutional AI** filtert schaedliche Outputs, OpenAIs **Content Policy** blockt problematische Inhalte. Custom-Guardrails schuetzen Deine **Anwendungslogik** zusaetzlich — z.B. Domainspezifische Regeln, PII-Erkennung, Format-Validierung.
+:::
+
 ### Schicht 1: Input-Guardrails
 
 Die erste Verteidigungslinie — pruefe den User-Input bevor er das LLM erreicht. Drei Checks: Prompt Injection, PII-Erkennung, Content-Filter.
@@ -81,7 +87,9 @@ function checkContent(input: string): boolean {
 
 Drei separate Checks mit jeweils einer klaren Aufgabe. Alle geben `true` fuer sichere Eingaben zurueck, `false` fuer problematische. Durch die Trennung kannst Du jeden Check einzeln testen und erweitern.
 
-> **Production-Hinweis:** Diese Keyword-basierten Checks sind ein Startpunkt. In Production nutzt Du ML-basierte Classifier oder spezialisierte APIs (z.B. OpenAI Moderation API) fuer robustere Erkennung.
+:::caution[False Positives bei String-Matching]
+Beachte: Einfache String-Matching-Guardrails koennen false positives erzeugen — z.B. wuerde `'hack'` auch `'hackathon'` blockieren, und `'exploit'` auch `'Wir exploiten diese Luecke nicht'`. In Production brauchst Du differenziertere Ansaetze wie Wortgrenzen-Matching (`\bhack\b`), Tokenisierung oder ML-basierte Classifier.
+:::
 
 ### Schicht 2: Output-Guardrails
 
@@ -111,8 +119,8 @@ function checkFormat(output: string, expectedFormat?: 'json' | 'markdown'): bool
   return true;  // ← Kein Format erwartet, alles ok
 }
 
-// Toxizitaets-Check — einfache Keyword-basierte Pruefung
-function checkToxicity(output: string): boolean {
+// Meta-Refusal-Check — erkennt wenn das LLM seine eigene Natur referenziert
+function checkMetaRefusal(output: string): boolean {
   const toxicPatterns = [
     'ich kann nicht',         // ← Refusal erkennen
     'als ki-modell',          // ← Meta-Antworten erkennen
@@ -127,7 +135,7 @@ function checkToxicity(output: string): boolean {
 }
 ```
 
-Output-Guardrails pruefen drei Dimensionen: Laenge (nicht zu kurz, nicht zu lang), Format (valides JSON wenn erwartet) und Inhalt (keine unerwuenschten Meta-Antworten).
+Output-Guardrails pruefen drei Dimensionen: Laenge (nicht zu kurz, nicht zu lang), Format (valides JSON wenn erwartet) und Meta-Refusals (erkennen wenn das LLM sich weigert oder seine AI-Natur referenziert).
 
 ### Schicht 3: Integration in den Workflow
 
@@ -165,7 +173,7 @@ async function safeGenerate(userMessage: string) {
   if (!checkFormat(result.text)) {
     throw new Error('Output rejected: Invalid format');
   }
-  checkToxicity(result.text);  // ← Warnung, kein Abbruch
+  checkMetaRefusal(result.text);  // ← Warnung, kein Abbruch
 
   return result.text;  // ← Nur sichere Antworten kommen hier an
 }

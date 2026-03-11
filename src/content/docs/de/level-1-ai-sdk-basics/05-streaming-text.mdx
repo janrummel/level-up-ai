@@ -101,6 +101,8 @@ Die wichtigsten Event-Typen:
 | `error` | Bei einem Fehler | `part.error` |
 | `tool-call` | LLM ruft ein Tool auf | `part.toolName`, `part.args` (Level 3) |
 
+> **`finishReason`:** Die moeglichen Werte sind `stop` (Modell ist fertig), `length` (max. Tokens erreicht), `content-filter`, `tool-calls`, `error` und `other`. Die vollstaendige Liste findest du in der [AI SDK Dokumentation](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text#finish-reason).
+
 ### Schicht 4: toUIMessageStreamResponse — Vorschau auf spaetere Levels
 
 Fuer Web-APIs (z.B. Next.js) gibt es `toUIMessageStreamResponse()`. Damit wird der Stream direkt in eine HTTP Response umgewandelt:

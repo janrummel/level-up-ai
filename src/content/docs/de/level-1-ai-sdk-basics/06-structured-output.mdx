@@ -40,7 +40,7 @@ Oben: Mit Zod Schema und `Output.object` bekommst Du ein typisiertes Objekt. Unt
 
 **Ohne Structured Output:** Du bittest das LLM um JSON, bekommst manchmal valides JSON, manchmal Freitext mit Markdown-Codeblock drumherum. `JSON.parse` bricht, Du baust Regex-Hacks, die Extraktion ist fragil. Jede Aenderung im Prompt kann das Format brechen.
 
-**Mit Output API:** Das AI SDK garantiert Dir ein valides, typisiertes Objekt. Kein Parsing, kein Regex, kein `any`. Du definierst ein Zod Schema, und `result.output` hat genau die Typen, die Du definiert hast.
+**Mit Output API:** Das AI SDK sorgt in der Regel dafuer, dass Du ein valides, typisiertes Objekt bekommst. Kein Parsing, kein Regex, kein `any`. Du definierst ein Zod Schema, und `result.output` hat genau die Typen, die Du definiert hast.
 
 ## WALKTHROUGH
 

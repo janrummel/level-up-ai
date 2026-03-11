@@ -48,6 +48,8 @@ Evalite und die Autoevals-Bibliothek als Dev-Dependencies installieren:
 pnpm add -D evalite vitest autoevals ai @ai-sdk/openai zod
 ```
 
+> **Warum Vitest?** Evalite baut auf Vitest auf — es ist eine Peer Dependency, nicht optional. Evalite nutzt Vitest's Test Runner, Watch Mode und Reporter-Infrastruktur. Die `.eval.ts` Dateikonvention funktioniert analog zu `.test.ts` bei Vitest.
+
 Dann ein Script in der `package.json` einrichten:
 
 ```json
@@ -102,7 +104,7 @@ evalite('My First Eval', {
 1. `data` liefert Test-Cases (Input + erwarteter Output)
 2. `task` wird pro Test-Case mit dem `input` ausgefuehrt
 3. `scorers` vergleichen den tatsaechlichen Output mit dem `expected`-Wert
-4. Ergebnisse werden in SQLite gespeichert (`node_modules/.evalite`)
+4. Ergebnisse werden gespeichert (standardmaessig in-memory; fuer persistente Speicherung konfigurierst Du SQLite via `createSqliteStorage` in einer `evalite.config.ts`)
 5. Dashboard zeigt Scores unter `http://localhost:3006`
 
 ### Schicht 4: data als async Function

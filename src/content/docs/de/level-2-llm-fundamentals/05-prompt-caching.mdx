@@ -70,11 +70,11 @@ Wichtig: Der Cache funktioniert nur fuer den **Anfang** (Prefix) des Requests. S
 
 Nicht alle Provider unterstuetzen Prompt Caching:
 
-| Provider | Caching | Min. Prefix-Laenge | Cache-Dauer |
-|----------|---------|-------------------|-------------|
-| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) | 5 Minuten (TTL — Time To Live, danach verfaellt der Cache) |
-| Google (Gemini) | Ja | variabel | variabel |
-| OpenAI | Automatisch | 1.024 Tokens | bis zu 1 Stunde |
+| Provider | Caching | Min. Prefix-Laenge | Cache-Dauer | Cache-Read-Rabatt |
+|----------|---------|-------------------|-------------|-------------------|
+| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) | 5 Minuten (TTL — Time To Live, danach verfaellt der Cache) | 90% guenstiger |
+| Google (Gemini) | Ja | variabel | variabel | variabel |
+| OpenAI | Automatisch | 1.024 Tokens | bis zu 1 Stunde | 50% guenstiger |
 
 Anthropic hat eine Mindestlaenge fuer den Cache-Prefix. Kurze System Prompts unter 1.024 Tokens werden nicht gecacht. Das ist ein bewusster Tradeoff — der Overhead fuer das Caching lohnt sich nur bei laengeren Prefixes.
 
@@ -142,6 +142,20 @@ console.log('Completion Tokens:', result2.usage.completionTokens);
 ```
 
 Beim zweiten Request solltest Du niedrigere effektive Kosten sehen, weil der System Prompt aus dem Cache gelesen wird.
+
+Um den Cache-Hit tatsaechlich zu verifizieren, lies die Cache-Metriken aus `providerMetadata` aus:
+
+```typescript
+// Cache-Metriken aus providerMetadata auslesen (Anthropic-spezifisch)
+const cacheMetrics = result2.providerMetadata?.anthropic;
+console.log('Cache Creation Tokens:', cacheMetrics?.cacheCreationInputTokens ?? 0);
+console.log('Cache Read Tokens:', cacheMetrics?.cacheReadInputTokens ?? 0);
+// Beim zweiten Request: cacheReadInputTokens > 0 = Cache Hit!
+```
+
+:::note[Cache-TTL-Erneuerung]
+Die TTL (Time To Live) wird bei jedem Cache-Hit erneuert. Solange regelmaessig Requests mit demselben Prefix kommen, bleibt der Cache aktiv. Erst wenn 5 Minuten (Anthropic) ohne Cache-Hit vergehen, verfaellt der Cache.
+:::
 
 ### Schicht 4: Cache-Kosten berechnen
 

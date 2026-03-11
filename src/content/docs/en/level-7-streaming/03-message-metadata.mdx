@@ -113,10 +113,14 @@ const result = streamText({
 });
 
 return result.toUIMessageStreamResponse({
-  messageMetadata: {                                  // ← Metadata for the response
-    generatedAt: Date.now(),
-    modelId: 'claude-sonnet-4-5-20250514',
-    cached: false,
+  messageMetadata: ({ part }) => {                    // ← Callback, not object!
+    if (part.type === 'start') {
+      return {
+        generatedAt: Date.now(),
+        modelId: 'claude-sonnet-4-5-20250514',
+        cached: false,
+      };
+    }
   },
 });
 ```

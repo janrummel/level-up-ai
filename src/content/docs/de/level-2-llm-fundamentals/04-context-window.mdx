@@ -56,6 +56,8 @@ Verschiedene Modelle haben verschiedene Limits:
 
 200.000 Tokens klingt viel, aber in einer Chat-Anwendung summiert sich jede Nachricht. Ein System Prompt mit Tool-Definitionen kann leicht 2.000-5.000 Tokens verbrauchen — bei jedem einzelnen Call.
 
+> **Reasoning/Thinking Tokens:** Modelle wie Claude mit "Extended Thinking" oder OpenAI o3 nutzen zusaetzliche **Reasoning-Tokens**, um intern Schritt fuer Schritt zu denken, bevor sie antworten. Diese Tokens sind im Output nicht sichtbar, beanspruchen aber trotzdem das Context Window und zaehlen zu den Output-Tokens (= Kosten). Bei aktiviertem Extended Thinking kann ein einzelner Call tausende zusaetzliche Tokens verbrauchen. Das ist relevant fuer die Planung der verfuegbaren Kapazitaet — reserviere genuegend Platz fuer Reasoning, wenn Du diese Features nutzt.
+
 ### Schicht 2: Was zaehlt alles rein?
 
 Alles, was zum LLM geht, verbraucht Context-Window-Platz:
@@ -85,6 +87,8 @@ const result = await generateText({
 ```
 
 Die Rechnung: `system` + alle `messages` + Tool-Definitionen + `maxTokens` muss kleiner sein als das Context Window. Wenn Du `maxTokens` nicht setzt, reserviert das Modell einen Standardwert.
+
+> **`prompt` vs. `messages`:** In den bisherigen Challenges hast Du `prompt` genutzt — ein einzelner String fuer eine einzelne Frage. `messages` ist ein Array von Nachrichten mit `role` und `content`, das einen ganzen Chat-Verlauf abbildet. Beide Parameter schliessen sich gegenseitig aus: Nutze `prompt` fuer einzelne Anfragen und `messages` fuer Konversationen mit Verlauf.
 
 ### Schicht 3: Was passiert bei Ueberschreitung?
 
@@ -172,6 +176,27 @@ async function summarizeOldMessages(
   return result.text;                                          // ← Zusammenfassung als Kontext
 }
 ```
+
+:::note[Model-Parameter: temperature und topP]
+Neben dem Context Window gibt es weitere Parameter, die das LLM-Verhalten steuern:
+
+**temperature** (0.0 – 1.0+): Kontrolliert die Zufaelligkeit der Antwort.
+- `temperature: 0` — deterministisch, immer die wahrscheinlichste Antwort. Ideal fuer Code, Fakten, Analysen.
+- `temperature: 1` — kreativer, mehr Variation. Gut fuer Brainstorming, kreatives Schreiben.
+- Hoehe Werte (>1) erhoehen die Zufaelligkeit weiter, aber auch das Risiko von Unsinn.
+
+**topP** (0.0 – 1.0): Begrenzt die Auswahl auf die wahrscheinlichsten Tokens, deren kumulative Wahrscheinlichkeit `topP` erreicht. `topP: 0.1` = nur die Top-10% der Tokens werden beruecksichtigt.
+
+```typescript
+const result = await generateText({
+  model: anthropic('claude-sonnet-4-5-20250514'),
+  temperature: 0,    // ← Deterministisch — ideal fuer Code-Reviews
+  prompt: 'Review diesen Code: ...',
+});
+```
+
+**Faustregel:** Nutze `temperature: 0` fuer Aufgaben die Praezision erfordern. Erhoehe temperature nur bewusst fuer kreative Aufgaben. In den meisten Faellen brauchst Du `topP` nicht zu aendern.
+:::
 
 ## TRY
 

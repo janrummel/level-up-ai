@@ -18,7 +18,7 @@ Du hast Deinen ersten autonomen Agenten gebaut — einen Research Agent, der sel
 - **Tools im Frontend:** Message Parts (`text`, `tool-call`, `tool-result`) fuer transparente UIs. `fullStream` liefert alle Events fuer Loading States und Tool-spezifische Darstellung.
 - **Tool Loop Agent:** Multi-Step Agents mit `stopWhen: stepCountIs(n)`. Das LLM iteriert autonom durch den Agentic Loop — Tool Call, Execute, Result, naechster Schritt — bis die Aufgabe erledigt ist.
 - **MCP (Model Context Protocol):** Standardisiertes Protokoll fuer externe Tool-Server. `createMCPClient` mit HTTP oder stdio Transport, `client.tools()` laedt alle verfuegbaren Tools automatisch.
-- **Tool Approval:** Human-in-the-Loop mit `needsApproval`. Statisch (`true`) oder dynamisch (async Funktion). `toolCallApproval` Handler fuer kontrollierte Ausfuehrung kritischer Operationen.
+- **Tool Approval:** Human-in-the-Loop mit `needsApproval`. Statisch (`true`) oder dynamisch (async Funktion). Message-basiertes 2-Call Pattern mit `tool-approval-request` und `tool-approval-response` fuer kontrollierte Ausfuehrung kritischer Operationen.
 
 ## Aktualisierter Skill Tree
 

@@ -199,13 +199,13 @@ async function processingPhase(researchResult: string, topic: string) {
     model: anthropic('claude-sonnet-4-5-20250514'),
     system: `Erstelle einen strukturierten Report aus der folgenden Zusammenfassung.`,
     prompt: summary.text,
-    experimental_output: Output.object({ schema: ReportSchema }),
+    output: Output.object({ schema: ReportSchema }),
   });
 
   console.log(`Structuring: ${structured.usage.totalTokens} tokens`);
 
   return {
-    report: structured.experimental_output,
+    report: structured.output,
     totalTokens: summary.usage.totalTokens + structured.usage.totalTokens,
   };
 }

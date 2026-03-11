@@ -22,30 +22,29 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   return createUIMessageStreamResponse({
-    execute(writer) {
+    execute: async (writer) => {
       // Loading State senden
       writer.write({
-        type: 'data',
+        type: 'data-weather',                    // ← Custom Type mit data- Prefix
         id: 'weather-berlin',                    // ← ID setzen
-        data: { type: 'weather', city: 'Berlin', status: 'loading' },
+        data: { city: 'Berlin', status: 'loading' },
       });
 
       const result = streamText({ model, messages });
 
-      result.mergeIntoDataStream(writer);
+      // LLM-Stream in den Writer mergen
+      writer.merge(result.toUIMessageStream());
 
       // Spaeter: Update mit echten Daten (gleiche ID)
-      fetchWeather('Berlin').then((weather) => {
-        writer.write({
-          type: 'data',
-          id: 'weather-berlin',                  // ← Gleiche ID → UPDATE
-          data: {
-            type: 'weather',
-            city: 'Berlin',
-            status: 'success',
-            temp: weather.temp,
-          },
-        });
+      const weather = await fetchWeather('Berlin');
+      writer.write({
+        type: 'data-weather',                    // ← Gleicher Type
+        id: 'weather-berlin',                    // ← Gleiche ID → UPDATE
+        data: {
+          city: 'Berlin',
+          status: 'success',
+          temp: weather.temp,
+        },
       });
     },
   });
@@ -59,7 +58,7 @@ export async function POST(req: Request) {
 // — den jeweils aktuellsten Stand
 
 {m.parts.map((part, i) => {
-  if (part.type === 'data' && part.data.type === 'weather') {
+  if (part.type === 'data-weather') {
     return part.data.status === 'loading'
       ? <WeatherSkeleton key={i} city={part.data.city} />
       : <WeatherCard key={i} data={part.data} />;
@@ -82,19 +81,19 @@ export async function POST(req: Request) {
 ```typescript
 // Drei unabhaengige Data Parts mit eigenen IDs
 writer.write({
-  type: 'data',
+  type: 'data-weather',
   id: 'weather-berlin',
-  data: { type: 'weather', city: 'Berlin', status: 'loading' },
+  data: { city: 'Berlin', status: 'loading' },
 });
 writer.write({
-  type: 'data',
+  type: 'data-weather',
   id: 'weather-muenchen',
-  data: { type: 'weather', city: 'Muenchen', status: 'loading' },
+  data: { city: 'Muenchen', status: 'loading' },
 });
 writer.write({
-  type: 'data',
+  type: 'data-stock',
   id: 'stock-price',
-  data: { type: 'stock', symbol: 'AAPL', status: 'loading' },
+  data: { symbol: 'AAPL', status: 'loading' },
 });
 
 // Jedes wird unabhaengig aktualisiert, sobald die Daten da sind

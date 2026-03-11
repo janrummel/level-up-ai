@@ -88,13 +88,26 @@ console.log(result.usage);
 
 `promptTokens` sind die Tokens, die Du zum LLM schickst. `completionTokens` sind die Tokens, die das LLM generiert. Beide zusammen ergeben `totalTokens` — und beide kosten Geld, aber zu unterschiedlichen Preisen.
 
+> **Pre-Request Token Counting:** Du kannst Tokens auch **vor** einem API-Call zaehlen — z.B. mit [`client.messages.countTokens()`](https://docs.anthropic.com/en/docs/build-with-claude/token-counting) im Anthropic SDK. Das hilft, Kosten vorherzusagen und Context-Window-Limits einzuhalten, bevor du Geld ausgibst.
+>
+> ```typescript
+> import Anthropic from '@anthropic-ai/sdk';
+> const client = new Anthropic();
+>
+> const tokenCount = await client.messages.countTokens({
+>   model: 'claude-sonnet-4-5-20250514',
+>   messages: [{ role: 'user', content: 'Dein Prompt hier...' }],
+> });
+> console.log('Input tokens:', tokenCount.input_tokens);
+> ```
+
 ### Schicht 4: Input- vs. Output-Tokens — unterschiedliche Preise
 
 Die meisten Provider berechnen Input und Output unterschiedlich:
 
 | Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) |
 |--------|----------------------|------------------------|
-| Claude Sonnet 4 | $3.00 | $15.00 |
+| Claude Sonnet 4.5 | $3.00 | $15.00 |
 | GPT-4o | $2.50 | $10.00 |
 | Gemini 2.5 Flash | $0.15 | $0.60 |
 

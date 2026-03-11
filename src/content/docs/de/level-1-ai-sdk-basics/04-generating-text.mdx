@@ -133,6 +133,34 @@ const result = await generateText({
 
 `onFinish` wird einmal am Ende aufgerufen. `onStepFinish` wird nach jedem einzelnen Schritt aufgerufen — relevant bei Tool Calls, wenn mehrere LLM-Aufrufe hintereinander passieren (das lernst Du in Level 3).
 
+:::note[Error Handling bei generateText]
+API-Calls koennen fehlschlagen — Netzwerkfehler, ungueltige API Keys, Rate Limits. Wrappe `generateText` immer in einen `try/catch`:
+
+```typescript
+import { generateText, APICallError } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
+try {
+  const result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    prompt: 'Erklaere TypeScript.',
+  });
+  console.log(result.text);
+} catch (error) {
+  if (APICallError.isInstance(error)) {
+    console.error(`API-Fehler: ${error.message} (Status: ${error.statusCode})`);
+    if (error.statusCode === 429) {
+      console.error('Rate Limit erreicht — warte kurz und versuche es erneut.');
+    }
+  } else {
+    throw error;  // Unbekannte Fehler weiterwerfen
+  }
+}
+```
+
+`APICallError` ist die AI SDK Fehlerklasse fuer fehlgeschlagene Provider-Calls. Ueber `statusCode` erkennst Du den Typ: `401` = falscher API Key, `429` = Rate Limit, `500` = Server-Fehler. Bei Rate Limits hilft ein kurzes Warten vor dem Retry.
+:::
+
 ## TRY
 
 **Aufgabe:** Generiere Text mit `system` + `prompt`, logge das vollstaendige Result-Objekt und implementiere einen `onFinish` Callback.

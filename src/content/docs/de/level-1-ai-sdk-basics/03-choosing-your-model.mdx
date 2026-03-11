@@ -15,29 +15,39 @@ Woran entscheidest Du, welches LLM Du fuer eine Aufgabe nutzt — Kosten, Qualit
 graph TD
   subgraph HIER["Du bist HIER: Modell-Auswahl"]
     Aufgabe["Aufgabe"] --> Einfach{"Einfach?"}
+    Aufgabe --> Standard{"Standard?"}
     Aufgabe --> Komplex{"Komplex?"}
-    Aufgabe --> Code{"Code?"}
-    Einfach -->|Ja| Flash["Flash-Modell<br/>guenstig, schnell<br/>gemini-2.5-flash"]
-    Komplex -->|Ja| Pro["Pro-Modell<br/>teurer, besser<br/>claude-sonnet-4-5-20250514"]
-    Code -->|Ja| CodeModel["Code-Modell<br/>spezialisiert<br/>z.B. claude-sonnet"]
+    Einfach -->|Ja| Flash["Flash/Haiku<br/>guenstig, schnell<br/>gemini-2.5-flash, claude-haiku"]
+    Standard -->|Ja| Mid["Balanced<br/>Qualitaet + Speed<br/>claude-sonnet, gpt-4o"]
+    Komplex -->|Ja| Top["Frontier<br/>max. Qualitaet<br/>claude-opus, o3"]
   end
   style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
   style Aufgabe fill:#4A90D9,color:#fff
   style Einfach fill:#27AE60,color:#fff
+  style Standard fill:#27AE60,color:#fff
   style Komplex fill:#27AE60,color:#fff
-  style Code fill:#27AE60,color:#fff
   style Flash fill:#E67E22,color:#fff
-  style Pro fill:#E67E22,color:#fff
-  style CodeModel fill:#E67E22,color:#fff
+  style Mid fill:#E67E22,color:#fff
+  style Top fill:#E67E22,color:#fff
 ```
 
-Die Modell-Auswahl ist eine bewusste Entscheidung: Welches Modell passt zu welcher Aufgabe? Das AI SDK macht den Wechsel trivial — nur Import und Model-Zeile aendern sich.
+Die Modell-Auswahl ist eine bewusste Entscheidung: Welches Modell passt zu welcher Aufgabe? Die meisten Provider bieten drei Modell-Tiers an:
+
+| Tier | Beispiele | Staerke | Einsatz |
+|------|-----------|---------|---------|
+| **Flash/Haiku** | Gemini Flash, Claude Haiku | Schnell, guenstig | Einfache Tasks, Klassifikation, Extraktion |
+| **Balanced** | Claude Sonnet, GPT-4o | Gute Qualitaet bei moderaten Kosten | Alltagsaufgaben, Code, Analyse |
+| **Frontier** | Claude Opus, o3 | Hoechste Qualitaet | Komplexes Reasoning, schwierige Probleme |
+
+> **Wichtig:** "Sonnet" ist kein Synonym fuer "Pro". Claude Sonnet ist ein eigenes Modell im mittleren Tier — schnell und kosteneffizient, aber nicht das leistungsfaehigste Modell von Anthropic. Das waere Claude Opus.
+
+Das AI SDK macht den Wechsel zwischen diesen Tiers trivial — nur Import und Model-Zeile aendern sich.
 
 ## WHY
 
 **Ohne bewusste Modell-Wahl:** Du nutzt immer dasselbe Modell. Zu teuer fuer einfache Aufgaben (Titel generieren mit dem staerksten Modell), zu schlecht fuer komplexe Aufgaben (Code-Review mit dem guenstigsten Modell). Deine AI-Kosten explodieren oder Deine Qualitaet leidet.
 
-**Mit bewusster Modell-Wahl:** Du nutzt das optimale Modell fuer jede Aufgabe. Flash-Modelle fuer einfache Tasks, Pro-Modelle fuer komplexe. Das AI SDK macht den Wechsel so einfach, dass Du verschiedene Modelle in einer Anwendung mischen kannst.
+**Mit bewusster Modell-Wahl:** Du nutzt das optimale Modell fuer jede Aufgabe. Flash/Haiku-Modelle fuer einfache Tasks, Balanced-Modelle wie Sonnet fuer den Alltag, Frontier-Modelle fuer die schwierigsten Probleme. Das AI SDK macht den Wechsel so einfach, dass Du verschiedene Modelle in einer Anwendung mischen kannst.
 
 ## WALKTHROUGH
 
@@ -197,8 +207,8 @@ Tokens: 102
 ```mermaid
 graph TD
   Task["Aufgabe"] --> Select["selectModel()"]
-  Select --> Simple["Flash-Modell"]
-  Select --> Complex["Pro-Modell"]
+  Select --> Simple["Flash/Haiku"]
+  Select --> Complex["Balanced/Frontier"]
   Simple --> GT["generateText()"]
   Complex --> GT
   GT --> Result["Result"]
@@ -222,7 +232,7 @@ function selectModel(task: string): LanguageModel {
   if (task.includes('zusammenfassen') || task.includes('uebersetzen')) {
     return google('gemini-2.5-flash');
   }
-  // Komplexe Aufgaben: Pro-Modell (teurer, besser)
+  // Standard-Aufgaben: Balanced-Modell (Qualitaet + Speed)
   return anthropic('claude-sonnet-4-5-20250514');
 }
 ```

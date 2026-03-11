@@ -88,6 +88,8 @@ graph TB
 
 ## Anforderungen
 
+### Pflicht — das muss Dein System koennen
+
 1. **Input Guardrails** (Challenge 9.1) — Pruefe jeden User-Input auf Prompt Injection und PII bevor die Pipeline startet. Ungueltige Eingaben werden mit einer klaren Fehlermeldung abgelehnt.
 
 2. **Model Router** (Challenge 9.2) — Nutze fuer jede Phase der Pipeline das optimale Modell. Research: guenstiges Flash-Modell. Analyse und Formatierung: starkes Sonnet/Opus-Modell. Klassifikation: kleinstes verfuegbares Modell.
@@ -98,13 +100,15 @@ graph TB
 
 5. **Output Guardrails** (Challenge 9.1) — Pruefe den finalen Report auf Laenge, Format und Inhalt. Leere oder zu lange Outputs werden abgefangen.
 
-6. **Comparing Outputs** (Challenge 9.3) — Fuer den finalen Report: Generiere die Zusammenfassung mit 2 verschiedenen Modellen parallel und waehle das bessere Ergebnis (per einfachem Scorer oder LLM-as-a-Judge).
+6. **Usage Tracking** (Level 2.2) — Tracke den Token-Verbrauch pro Phase und gesamt. Berechne geschaetzte Kosten.
 
-7. **Streaming** (Level 7 + 8.2) — Streame den finalen Report in Echtzeit. Sende Progress Data Parts fuer jede Phase der Pipeline. (Nutze `createDataStream` + `writeData` wie in Challenge 8.2.)
+7. **Structured Output** (Level 1.5) — Der Report wird als typisiertes Objekt mit Zod Schema zurueckgegeben (Titel, Zusammenfassung, Kernaussagen, Fazit).
 
-8. **Usage Tracking** (Level 2.2) — Tracke den Token-Verbrauch pro Phase und gesamt. Berechne geschaetzte Kosten.
+### Bonus — fuer den Extra-Kick
 
-9. **Structured Output** (Level 1.5) — Der Report wird als typisiertes Objekt mit Zod Schema zurueckgegeben (Titel, Zusammenfassung, Kernaussagen, Fazit).
+8. **Comparing Outputs** (Challenge 9.3) — Fuer den finalen Report: Generiere die Zusammenfassung mit 2 verschiedenen Modellen parallel und waehle das bessere Ergebnis (per einfachem Scorer oder LLM-as-a-Judge).
+
+9. **Streaming** (Level 7 + 8.2) — Streame den finalen Report in Echtzeit. Sende Progress Data Parts fuer jede Phase der Pipeline. (Nutze `createDataStream` + `writeData` wie in Challenge 8.2.)
 
 10. **Eval Coverage** (Level 6) — Schreibe mindestens 2 Evalite-Tests: einen der prueft ob der Report die erwarteten Abschnitte hat, und einen der die Laenge der Zusammenfassung bewertet.
 
@@ -148,7 +152,7 @@ const ReportSchema = z.object({
 
 ## Bewertungskriterien
 
-Dein Boss Fight ist bestanden, wenn:
+### Pflicht — Dein Boss Fight ist bestanden, wenn:
 
 - [ ] Input-Guardrails pruefen auf Prompt Injection und PII
 - [ ] Model Router waehlt unterschiedliche Modelle fuer Research vs. Analysis
@@ -157,8 +161,13 @@ Dein Boss Fight ist bestanden, wenn:
 - [ ] Workflow verkettet mindestens 2 sequentielle `generateText`-Calls
 - [ ] System Prompts nutzen XML-Struktur (Context Engineering)
 - [ ] Output-Guardrails pruefen den finalen Report
-- [ ] Comparing Outputs generiert mit mindestens 2 Modellen parallel und waehlt das bessere Ergebnis
 - [ ] Token-Verbrauch wird pro Phase und gesamt getrackt
+- [ ] Structured Output mit Zod Schema
+
+### Bonus — fuer die Kuer:
+
+- [ ] Comparing Outputs generiert mit mindestens 2 Modellen parallel und waehlt das bessere Ergebnis
+- [ ] Streaming mit Progress Data Parts fuer jede Pipeline-Phase
 - [ ] Mindestens ein Evalite-Test prueft die Pipeline-Qualitaet
 
 ## Hinweise

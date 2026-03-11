@@ -50,6 +50,10 @@ graph LR
   style L9 fill:#E67E22,color:#fff
 ```
 
+:::note[Kosten-Hinweis]
+Dieses Level nutzt mehrere Provider (Anthropic, Google, OpenAI) und macht viele parallele API-Calls — besonders bei Model Routing und Comparing Outputs. Pruefe Dein Guthaben auf dem [Anthropic Dashboard](https://console.anthropic.com) und den Dashboards der anderen Provider, bevor Du startest.
+:::
+
 ## Was Du lernst
 
 - **Guardrails** — Input- und Output-Checks die Prompt Injection, PII-Leaks und toxische Ausgaben verhindern
@@ -72,6 +76,17 @@ Das konkrete Problem: Du willst ein AI-System das sicher, kosteneffizient und qu
 - Empfohlen: **Level 2** (Token-Kosten), **Level 6** (Evals), **Level 7** (Streaming)
 
 > **Projektverzeichnis:** Erstelle einen neuen Ordner `level-9-advanced/` und arbeite dort.
+
+> **Zusaetzliche Provider installieren:** Dieses Level nutzt neben Anthropic auch Google und OpenAI Modelle (fuer Model Routing und Comparing Outputs). Installiere die zusaetzlichen Provider:
+> ```bash
+> npm install @ai-sdk/google @ai-sdk/openai
+> ```
+> Du brauchst API Keys fuer alle genutzten Provider. Setze sie in Deiner `.env`-Datei:
+> ```
+> ANTHROPIC_API_KEY=sk-ant-...
+> GOOGLE_GENERATIVE_AI_API_KEY=...
+> OPENAI_API_KEY=sk-...
+> ```
 
 > **Skip-Hinweis:** Du implementierst bereits Guardrails, routest automatisch zwischen Modellen und nutzt LLM-as-a-Judge fuer Qualitaetsvergleiche? Spring direkt zur [Boss Fight](/de/level-9-advanced/06-boss-fight/) und baue ein Production-Ready AI-System.
 

@@ -155,10 +155,10 @@ Bewerte die folgenden LLM-Outputs nach:
 3. Verstaendlichkeit — Ist die Erklaerung klar?
 Vergib Scores von 1-10 und begruende Deine Bewertung.`,
     prompt: `<task>${prompt}</task>\n\n${formattedOutputs}`,
-    experimental_output: Output.object({ schema: JudgmentSchema }),
+    output: Output.object({ schema: JudgmentSchema }),
   });
 
-  return judgment.experimental_output;
+  return judgment.output;
 }
 
 // Nutzung

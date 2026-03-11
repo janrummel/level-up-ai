@@ -34,7 +34,7 @@ graph LR
 
 **Ohne `onFinish`:** Du musst Ergebnisse manuell nach dem `await` speichern. Das funktioniert, aber wenn zwischen `generateText` und Deinem Speicher-Code ein Fehler passiert, sind die Daten weg. Kein automatisches Logging, kein Audit Trail, kein Token-Tracking "out of the box".
 
-**Mit `onFinish`:** Das Speichern passiert automatisch, direkt nachdem das LLM fertig ist. Der Callback wird garantiert aufgerufen — egal was danach im Code passiert. Du hast einen zentralen Ort fuer Logging, Analytics und Persistence.
+**Mit `onFinish`:** Das Speichern passiert automatisch, direkt nachdem das LLM fertig ist. Der Callback wird nach erfolgreicher Completion aufgerufen. Du hast einen zentralen Ort fuer Logging, Analytics und Persistence.
 
 ## WALKTHROUGH
 

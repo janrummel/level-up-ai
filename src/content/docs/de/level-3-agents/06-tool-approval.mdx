@@ -87,15 +87,18 @@ const deleteFileTool = tool({
 
 Die `needsApproval`-Funktion bekommt die gleichen Parameter wie `execute`. Sie gibt `true` zurueck, wenn eine Freigabe noetig ist, und `false`, wenn das Tool direkt ausgefuehrt werden darf.
 
-### Schicht 3: Approval Flow mit generateText
+### Schicht 3: Approval Flow mit generateText — das 2-Call Pattern
 
-Bei `generateText` wird der Approval Flow ueber die `toolCallApproval` Option gesteuert:
+Das AI SDK v6 hat **keinen** `toolCallApproval` Callback. Stattdessen nutzt es ein **message-basiertes 2-Call Pattern**: Du rufst `generateText` auf, pruefst das Ergebnis auf Approval Requests, fragst den User, und rufst `generateText` erneut mit der Antwort auf.
 
 ```typescript
-import { generateText, tool, stepCountIs } from 'ai';
+import {
+  generateText, tool, stepCountIs,
+  type ModelMessage, type ToolApprovalResponse,
+} from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
-import * as readline from 'readline';                    // ← Node.js builtin, keine Installation noetig
+import * as readline from 'readline';
 
 const readFileTool = tool({
   description: 'Read a file from the filesystem',
@@ -132,23 +135,64 @@ function askUser(question: string): Promise<boolean> {
   });
 }
 
-const result = await generateText({
+const tools = { readFile: readFileTool, deleteFile: deleteFileTool };
+const messages: ModelMessage[] = [
+  { role: 'user', content: 'Lies die Datei /tmp/test.txt und loesche sie danach.' },
+];
+
+// Loop: generateText aufrufen, Approvals verarbeiten, erneut aufrufen
+let result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  tools: { readFile: readFileTool, deleteFile: deleteFileTool },
+  tools,
   stopWhen: stepCountIs(5),
-  prompt: 'Lies die Datei /tmp/test.txt und loesche sie danach.',
-  toolCallApproval: async ({ toolCall }) => {            // ← Approval Handler
-    const approved = await askUser(
-      `Agent will ${toolCall.toolName}(${JSON.stringify(toolCall.args)}) ausfuehren. Erlauben? (y/n): `
-    );
-    return approved ? 'approve' : 'reject';              // ← 'approve' oder 'reject'
-  },
+  messages,
 });
+
+// Antwort-Messages in den Verlauf uebernehmen
+messages.push(...result.response.messages);
+
+// Pruefen ob Approval Requests vorhanden sind
+while (result.content.some(part => part.type === 'tool-approval-request')) {
+  const approvals: ToolApprovalResponse[] = [];
+
+  for (const part of result.content) {
+    if (part.type === 'tool-approval-request') {
+      const approved = await askUser(
+        `Agent will ${part.toolCall.toolName}(${JSON.stringify(part.toolCall.input)}) ausfuehren. Erlauben? (y/n): `
+      );
+      approvals.push({
+        type: 'tool-approval-response',
+        approvalId: part.approvalId,                     // ← Verknuepft Request und Response
+        approved,
+        reason: approved ? 'User hat genehmigt' : 'User hat abgelehnt',
+      });
+    }
+  }
+
+  // Approval-Antworten als Tool-Message anhaengen
+  messages.push({ role: 'tool', content: approvals });
+
+  // Erneut aufrufen — bei Genehmigung wird das Tool jetzt ausgefuehrt
+  result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    tools,
+    stopWhen: stepCountIs(5),
+    messages,
+  });
+
+  messages.push(...result.response.messages);
+}
 
 console.log(result.text);
 ```
 
-`toolCallApproval` wird nur fuer Tools mit `needsApproval` aufgerufen. Tools ohne `needsApproval` werden weiterhin automatisch ausgefuehrt. Die Funktion muss `'approve'` oder `'reject'` zurueckgeben.
+So funktioniert das Pattern:
+
+1. **Erster Aufruf:** `generateText` erkennt, dass `deleteFile` eine Freigabe braucht. Statt das Tool auszufuehren, kommt ein `tool-approval-request` in `result.content` zurueck.
+2. **Approval Request pruefen:** Jeder Request hat eine `approvalId` und den `toolCall` (mit `toolName` und `input`).
+3. **User fragen:** Du fragst den User und baust ein `ToolApprovalResponse`-Objekt mit der gleichen `approvalId`.
+4. **Zweiter Aufruf:** Du haengst die Approvals als `{ role: 'tool', content: approvals }` an die Messages und rufst `generateText` erneut auf.
+5. **Loop:** Bei Genehmigung wird das Tool ausgefuehrt. Bei Ablehnung reagiert das LLM darauf. Die `while`-Schleife faengt auch Faelle ab, in denen der Agent nach der ersten Runde weitere Approval-pflichtige Tools aufrufen will.
 
 ### Schicht 4: Das Dangerous/Safe Tool Pattern
 
@@ -219,10 +263,13 @@ const tools = {
 
 **Datei:** `challenge-3-5.ts`
 
-**Aufgabe:** Baue ein File-Management-Tool-Set mit einem `readFile` (sicher) und einem `deleteFile` (mit Approval). Simuliere den Approval Flow im Terminal.
+**Aufgabe:** Baue ein File-Management-Tool-Set mit einem `readFile` (sicher) und einem `deleteFile` (mit Approval). Implementiere den message-basierten Approval Flow mit dem 2-Call Pattern.
 
 ```typescript
-import { generateText, tool, stepCountIs } from 'ai';
+import {
+  generateText, tool, stepCountIs,
+  type ModelMessage, type ToolApprovalResponse,
+} from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 import * as readline from 'readline';
@@ -242,27 +289,38 @@ import * as readline from 'readline';
 // - Fragt im Terminal nach Freigabe
 // - Gibt true/false zurueck
 
-// TODO 4: Nutze generateText mit toolCallApproval
-// - tools: { readFile, deleteFile }
-// - stopWhen: stepCountIs(5)
-// - toolCallApproval: Fragt den User bei kritischen Tools
-// - prompt: 'Lies /tmp/notes.txt und loesche die Datei danach.'
+// TODO 4: Erstelle messages Array (ModelMessage[]) mit dem User-Prompt
+// - 'Lies /tmp/notes.txt und loesche die Datei danach.'
 
-// TODO 5: Logge result.text und alle Tool Calls
+// TODO 5: Erster generateText-Aufruf mit tools, stopWhen, messages
+// - messages.push(...result.response.messages)
+
+// TODO 6: While-Loop: result.content auf 'tool-approval-request' pruefen
+// - Fuer jeden Request: User fragen, ToolApprovalResponse bauen
+// - Approvals als { role: 'tool', content: approvals } an messages anhaengen
+// - generateText erneut aufrufen mit aktualisierten messages
+
+// TODO 7: Logge result.text und alle Steps
 ```
 
 **Checkliste:**
 - [ ] `readFileTool` ohne Approval definiert
 - [ ] `deleteFileTool` mit `needsApproval: true` definiert
 - [ ] `askUser()` Hilfsfunktion implementiert
-- [ ] `toolCallApproval` Handler gibt `'approve'` oder `'reject'` zurueck
+- [ ] Erster `generateText`-Aufruf mit `messages` Array
+- [ ] `result.content` auf `tool-approval-request` geprueft
+- [ ] `ToolApprovalResponse` mit `approvalId` gebaut
+- [ ] Zweiter `generateText`-Aufruf mit Approval-Antworten in Messages
 - [ ] Bei "Nein": Tool wird nicht ausgefuehrt, Agent reagiert darauf
 
 <details>
 <summary>Loesung anzeigen</summary>
 
 ```typescript
-import { generateText, tool, stepCountIs } from 'ai';
+import {
+  generateText, tool, stepCountIs,
+  type ModelMessage, type ToolApprovalResponse,
+} from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 import * as readline from 'readline';
@@ -304,32 +362,71 @@ function askUser(question: string): Promise<boolean> {
   });
 }
 
-const { text, steps } = await generateText({
+const tools = { readFile: readFileTool, deleteFile: deleteFileTool };
+const messages: ModelMessage[] = [
+  { role: 'user', content: 'Lies die Datei /tmp/notes.txt und loesche sie danach.' },
+];
+
+// Erster Aufruf — readFile wird direkt ausgefuehrt,
+// deleteFile erzeugt einen Approval Request
+let result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  tools: { readFile: readFileTool, deleteFile: deleteFileTool },
+  tools,
   stopWhen: stepCountIs(5),
-  prompt: 'Lies die Datei /tmp/notes.txt und loesche sie danach.',
-  toolCallApproval: async ({ toolCall }) => {
-    console.log(`\n--- Approval Request ---`);
-    console.log(`Tool: ${toolCall.toolName}`);
-    console.log(`Parameter: ${JSON.stringify(toolCall.args)}`);
-    const approved = await askUser('Ausfuehren? (y/n): ');
-    console.log(approved ? 'Genehmigt.' : 'Abgelehnt.');
-    return approved ? 'approve' : 'reject';
-  },
+  messages,
 });
 
-const allToolCalls = steps.flatMap(s => s.toolCalls);
+messages.push(...result.response.messages);
+
+// Loop: Solange Approval Requests kommen, User fragen und erneut aufrufen
+while (result.content.some(part => part.type === 'tool-approval-request')) {
+  const approvals: ToolApprovalResponse[] = [];
+
+  for (const part of result.content) {
+    if (part.type === 'tool-approval-request') {
+      console.log(`\n--- Approval Request ---`);
+      console.log(`Tool: ${part.toolCall.toolName}`);
+      console.log(`Parameter: ${JSON.stringify(part.toolCall.input)}`);
+
+      const approved = await askUser('Ausfuehren? (y/n): ');
+      console.log(approved ? 'Genehmigt.' : 'Abgelehnt.');
+
+      approvals.push({
+        type: 'tool-approval-response',
+        approvalId: part.approvalId,
+        approved,
+        reason: approved ? 'User hat genehmigt' : 'User hat abgelehnt',
+      });
+    }
+  }
+
+  // Approval-Antworten an Messages anhaengen
+  messages.push({ role: 'tool', content: approvals });
+
+  // Erneut aufrufen — Tool wird jetzt ausgefuehrt (oder abgelehnt)
+  result = await generateText({
+    model: anthropic('claude-sonnet-4-5-20250514'),
+    tools,
+    stopWhen: stepCountIs(5),
+    messages,
+  });
+
+  messages.push(...result.response.messages);
+}
+
+// Ergebnis ausgeben
 console.log('\n=== Ergebnis ===');
-console.log(`Schritte: ${steps.length}`);
+console.log(`Schritte: ${result.steps.length}`);
+
+const allToolCalls = result.steps.flatMap(s => s.toolCalls);
 console.log(`Tool Calls: ${allToolCalls.length}`);
 for (const call of allToolCalls) {
   console.log(`  - ${call.toolName}(${JSON.stringify(call.args)})`);
 }
-console.log(`\nAntwort: ${text}`);
+console.log(`\nAntwort: ${result.text}`);
 ```
 
-**Erklaerung:** Der Agent liest zuerst `/tmp/notes.txt` (automatisch, kein Approval noetig) und versucht dann die Datei zu loeschen. Beim `deleteFile` Call greift der Approval Guard: Der User wird im Terminal gefragt. Bei "y" wird geloescht, bei "n" bekommt das LLM die Ablehnung und reagiert darauf — z.B. mit "Die Datei wurde nicht geloescht, da die Aktion abgelehnt wurde."
+**Erklaerung:** Der Agent liest zuerst `/tmp/notes.txt` (automatisch, kein Approval noetig) und versucht dann die Datei zu loeschen. Beim `deleteFile` Call greift `needsApproval: true`: Statt das Tool auszufuehren, gibt `generateText` einen `tool-approval-request` in `result.content` zurueck. Dein Code fragt den User im Terminal. Bei "y" wird eine genehmigende `ToolApprovalResponse` gebaut und als Tool-Message angehaengt. Der zweite `generateText`-Aufruf fuehrt das Tool dann aus. Bei "n" bekommt das LLM die Ablehnung und reagiert darauf — z.B. mit "Die Datei wurde nicht geloescht, da die Aktion abgelehnt wurde."
 
 **Ausfuehren:** `npx tsx challenge-3-5.ts`
 
@@ -342,9 +439,8 @@ Ausfuehren? (y/n): y
 Genehmigt.
 
 === Ergebnis ===
-Schritte: 2
-Tool Calls: 2
-  - readFile({"path":"/tmp/notes.txt"})
+Schritte: 1
+Tool Calls: 1
   - deleteFile({"path":"/tmp/notes.txt"})
 
 Antwort: Die Datei /tmp/notes.txt wurde gelesen und anschliessend geloescht.
@@ -383,7 +479,7 @@ graph LR
 1. Nimm den Agent aus Challenge 3.3 mit `searchTool` und `summarizeTool`
 2. Fuege ein `saveResultsTool` hinzu mit `needsApproval: true`
 3. Prompt: "Recherchiere TypeScript, fasse zusammen und speichere die Ergebnisse in /tmp/research.txt."
-4. Der Agent soll erst recherchieren und zusammenfassen (automatisch), dann vor dem Speichern fragen
+4. Implementiere den 2-Call Loop: Erster `generateText`-Aufruf, dann `result.content` auf `tool-approval-request` pruefen, User fragen, `ToolApprovalResponse` bauen, zweiter Aufruf
 5. Logge ob der User die Speicherung genehmigt oder abgelehnt hat
 
 **Optional Stretch Goal:** Implementiere dynamisches Approval: `needsApproval` als Funktion, die nur bei Pfaden ausserhalb von `/tmp/` eine Freigabe verlangt. Teste mit verschiedenen Pfaden.

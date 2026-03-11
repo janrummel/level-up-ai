@@ -4,6 +4,8 @@ import starlight from '@astrojs/starlight';
 import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
 
 export default defineConfig({
+	site: 'https://janrummel.github.io',
+	base: '/level-up-ai',
 	redirects: {
 		'/': '/de/start/welcome/',
 		'/de/': '/de/start/welcome/',

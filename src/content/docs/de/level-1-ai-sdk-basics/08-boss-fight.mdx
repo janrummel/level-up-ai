@@ -31,6 +31,8 @@ Ich bin Dein AI-Assistent. Ich kann Dir bei Fragen helfen...
 
 > **Erwartete Dauer:** 30-45 Minuten. Erstelle eine Datei `chat.ts` und starte mit `npx tsx chat.ts`.
 
+> **Wichtig:** Jeder `generateText`/`streamText` Call ist **zustandslos** — das LLM erinnert sich nicht an vorherige Nachrichten. Wenn Du einen Chat bauen willst, musst Du den gesamten Nachrichtenverlauf bei jedem Call als `messages` Array mitschicken. Ohne das antwortet das LLM auf jede Nachricht, als waere es die erste.
+
 Dieses Projekt verbindet alle sechs Bausteine:
 
 ```mermaid

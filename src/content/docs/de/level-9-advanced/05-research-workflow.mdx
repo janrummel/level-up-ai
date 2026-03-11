@@ -84,7 +84,7 @@ import { z } from 'zod';
 // search-Tool — simuliert Websuche (in Production: echte API)
 const searchTool = tool({
   description: 'Suche nach Informationen zu einem Thema',
-  inputSchema: z.object({
+  parameters: z.object({
     query: z.string().describe('Der Suchbegriff'),
   }),
   execute: async ({ query }) => {
@@ -99,6 +99,7 @@ async function researchPhase(topic: string) {
   let totalTokens = 0;
   let iterations = 0;
   let breakReason = 'complete';
+  let researchResult = 'Keine Ergebnisse gefunden.';
 
   const messages: any[] = [ // ← any[] weil AI SDK Messages verschiedene Content-Typen haben
     {
@@ -137,7 +138,12 @@ Wenn Du genug Informationen hast, fasse die Ergebnisse zusammen.`,
       messages.push(...result.response.messages);
 
       // Break Condition: LLM ist fertig (kein Tool Call mehr)
-      if (result.finishReason === 'stop') break;
+      if (result.finishReason === 'stop') {
+        // result.text der letzten Iteration enthaelt den finalen Text —
+        // sicherer als lastAssistant.content, das bei Tool-Calls ein Array ist
+        researchResult = result.text || 'Keine Ergebnisse gefunden.';
+        break;
+      }
     }
   } catch (error) {
     if (error.name === 'AbortError') {
@@ -148,12 +154,6 @@ Wenn Du genug Informationen hast, fasse die Ergebnisse zusammen.`,
   } finally {
     clearTimeout(timeout);
   }
-
-  // Letzten Text-Output extrahieren
-  const lastAssistant = messages.filter(m => m.role === 'assistant').pop();
-  const researchResult = typeof lastAssistant?.content === 'string'
-    ? lastAssistant.content
-    : 'Keine Ergebnisse gefunden.';
 
   console.log(`Research: ${iterations} Iterationen, ${totalTokens} Tokens, Grund: ${breakReason}`);
   return { result: researchResult, iterations, totalTokens, breakReason };
@@ -199,13 +199,13 @@ async function processingPhase(researchResult: string, topic: string) {
     model: anthropic('claude-sonnet-4-5-20250514'),
     system: `Erstelle einen strukturierten Report aus der folgenden Zusammenfassung.`,
     prompt: summary.text,
-    experimental_output: Output.object({ schema: ReportSchema }),
+    output: Output.object({ schema: ReportSchema }),
   });
 
   console.log(`Strukturierung: ${structured.usage.totalTokens} Tokens`);
 
   return {
-    report: structured.experimental_output,
+    report: structured.output,
     totalTokens: summary.usage.totalTokens + structured.usage.totalTokens,
   };
 }
@@ -342,7 +342,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 // search-Tool (simuliert)
 const searchTool = tool({
   description: 'Suche nach Informationen',
-  inputSchema: z.object({ query: z.string() }),
+  parameters: z.object({ query: z.string() }),
   execute: async ({ query }) => {
     console.log(`  Suche: "${query}"`);
     return `Suchergebnisse fuer "${query}": AI wird in der Medizin fuer Diagnostik, Medikamentenentwicklung und personalisierte Therapie eingesetzt. Aktuelle Studien zeigen 30% schnellere Diagnosen durch AI-Unterstuetzung.`;
