@@ -1,10 +1,14 @@
 # Level Up AI — Vom Vibe Coder zum AI Engineer
 
-Ein interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SDK v6](https://ai-sdk.dev). 9 Level, 41+ Challenges, Boss Fights und eine Referenz-Sektion — auf Deutsch und Englisch.
+> **[janrummel.github.io/level-up-ai](https://janrummel.github.io/level-up-ai/)**
 
-## Was ist das?
+Ein kostenloser, interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SDK v6](https://ai-sdk.dev). 9 Level, 41+ Challenges, Boss Fights und eine Referenz-Sektion — auf Deutsch und Englisch.
 
-Ein gamifiziertes Docs-Projekt (Astro Starlight), das die Kernkonzepte von AI Engineering abdeckt:
+## Warum?
+
+Vibe Coding bringt dich schnell zu einem Prototypen — aber nicht zu Production-Code. Dieser Kurs schliesst die Luecke: Du lernst Schritt fuer Schritt, wie AI-Anwendungen wirklich funktionieren und wie du sie robust baust.
+
+## Inhalt
 
 | Level | Thema | Challenges |
 |-------|-------|------------|
@@ -19,12 +23,7 @@ Ein gamifiziertes Docs-Projekt (Astro Starlight), das die Kernkonzepte von AI En
 | 9 | Advanced Patterns | Guardrails, Model Router, Multi-Output, Research Workflow |
 | Ref | Reference | UI/Model Messages, Tools, Streams, Data Parts, Metadata |
 
-## Tech Stack
-
-- [Astro](https://astro.build) + [Starlight](https://starlight.astro.build) (Docs Framework)
-- TypeScript, MDX
-- i18n: Deutsch (default) + English
-- Mermaid Diagramme via [@pasqal-io/starlight-client-mermaid](https://github.com/pasqal-io/starlight-client-mermaid)
+Jede Challenge folgt dem 6-Step-Pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
 
 ## Lokale Entwicklung
 
@@ -32,24 +31,11 @@ Ein gamifiziertes Docs-Projekt (Astro Starlight), das die Kernkonzepte von AI En
 npm install
 npm run dev        # Dev-Server auf localhost:4321
 npm run build      # Production Build
-npm run preview    # Production Preview
 ```
 
-## Struktur
+## Tech Stack
 
-```
-src/content/docs/
-  de/                    # Deutsche Inhalte
-  en/                    # Englische Inhalte
-    level-1-ai-sdk-basics/
-    level-2-llm-fundamentals/
-    ...
-    level-9-advanced/
-    reference/
-    start/
-```
-
-Jede Challenge folgt dem 6-Step-Pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
+[Astro](https://astro.build) + [Starlight](https://starlight.astro.build), TypeScript, MDX, i18n (DE/EN)
 
 ## Quellen
 
@@ -57,4 +43,4 @@ Basiert auf dem Open-Source Curriculum von [ai-hero-dev/ai-sdk-v6-crash-course](
 
 ## Lizenz
 
-Privates Projekt.
+MIT
