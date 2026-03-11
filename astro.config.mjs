@@ -7,9 +7,9 @@ export default defineConfig({
 	site: 'https://janrummel.github.io',
 	base: '/level-up-ai',
 	redirects: {
-		'/': '/de/start/welcome/',
-		'/de/': '/de/start/welcome/',
-		'/en/': '/en/start/welcome/',
+		'/': '/level-up-ai/de/start/welcome/',
+		'/de/': '/level-up-ai/de/start/welcome/',
+		'/en/': '/level-up-ai/en/start/welcome/',
 	},
 	integrations: [
 		starlight({
