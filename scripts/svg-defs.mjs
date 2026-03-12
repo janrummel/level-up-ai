@@ -2,6 +2,14 @@
  * Shared SVG <defs> module for Level Up AI diagram generation.
  * Provides gradients, glow filters, shadow filter, and arrow marker
  * used across all SVG templates (skill-tree, flow, sequence).
+ *
+ * Color palette mirrors CSS tokens in src/custom-styles.css:
+ *   --lua-blue:   #4A90D9  →  grad-input  / glow-blue
+ *   --lua-green:  #27AE60  →  grad-process / glow-green
+ *   --lua-orange: #E67E22  →  grad-output / glow-orange
+ *   --lua-red:    #E74C3C  →  grad-warning / glow-red
+ *   --lua-bg-deep:#1a1a2e  →  (not used here, see hero-graphic.svg)
+ * Keep both files in sync when changing colors.
  */
 
 /**

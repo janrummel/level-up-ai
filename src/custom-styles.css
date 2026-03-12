@@ -1,36 +1,49 @@
 /* Level Up AI — Custom Theme */
 
 /* ============================================
-   1. COLOR SCHEME — Tech/Gaming Feel
+   0. DESIGN TOKENS — Shared Color Palette
+   These tokens are mirrored in scripts/svg-defs.mjs
+   for SVG diagram generation. Keep both in sync.
    ============================================ */
 
 :root {
-  --sl-color-accent-low: #1a1a2e;
-  --sl-color-accent: #e67e22;
+  /* Core palette — fixed across themes */
+  --lua-blue: #4A90D9;
+  --lua-green: #27AE60;
+  --lua-orange: #E67E22;
+  --lua-red: #E74C3C;
+  --lua-purple: #8e44ad;
+  --lua-teal: #16a085;
+  --lua-yellow: #f1c40f;
+  --lua-bg-deep: #1a1a2e;
+
+  /* Starlight overrides */
+  --sl-color-accent-low: var(--lua-bg-deep);
+  --sl-color-accent: var(--lua-orange);
   --sl-color-accent-high: #fad390;
-  --sl-color-text-accent: #e67e22;
+  --sl-color-text-accent: var(--lua-orange);
   --sl-hue-orange: 30;
-  /* Darker sidebar */
   --sl-color-bg-sidebar: rgba(10, 10, 20, 0.6);
-  /* Better code block contrast */
   --sl-color-bg-inline-code: rgba(230, 126, 34, 0.1);
+
+  color-scheme: dark;
 }
 
 [data-theme='light'] {
   --sl-color-accent-low: #fef0db;
   --sl-color-accent: #d35400;
-  --sl-color-accent-high: #1a1a2e;
+  --sl-color-accent-high: var(--lua-bg-deep);
   --sl-color-text-accent: #d35400;
   --sl-color-bg-sidebar: rgba(254, 240, 219, 0.3);
   --sl-color-bg-inline-code: rgba(211, 84, 0, 0.08);
 }
 
 /* ============================================
-   0. SITE TITLE GRADIENT
+   1. SITE TITLE GRADIENT
    ============================================ */
 
 .site-title span {
-  background: linear-gradient(135deg, #e67e22, #f1c40f);
+  background: linear-gradient(135deg, var(--lua-orange), var(--lua-yellow));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -40,29 +53,28 @@
 /* Sidebar group labels — level difficulty colors */
 nav .top-level > li:nth-child(2) summary, /* L1 */
 nav .top-level > li:nth-child(3) summary { /* L2 */
-  border-left: 3px solid #4A90D9;
+  border-left: 3px solid var(--lua-blue);
   padding-left: 0.5rem;
 }
 nav .top-level > li:nth-child(4) summary, /* L3 */
 nav .top-level > li:nth-child(5) summary, /* L4 */
 nav .top-level > li:nth-child(6) summary { /* L5 */
-  border-left: 3px solid #27AE60;
+  border-left: 3px solid var(--lua-green);
   padding-left: 0.5rem;
 }
 nav .top-level > li:nth-child(7) summary, /* L6 */
 nav .top-level > li:nth-child(8) summary { /* L7 */
-  border-left: 3px solid #E67E22;
+  border-left: 3px solid var(--lua-orange);
   padding-left: 0.5rem;
 }
 nav .top-level > li:nth-child(9) summary, /* L8 */
 nav .top-level > li:nth-child(10) summary { /* L9 */
-  border-left: 3px solid #E74C3C;
+  border-left: 3px solid var(--lua-red);
   padding-left: 0.5rem;
 }
 
 /* ============================================
    2. CHALLENGE SECTION MARKERS
-   Targets h2 by auto-generated ID
    ============================================ */
 
 /* Shared base style for all section markers */
@@ -85,9 +97,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* THINK — Purple: activate prior knowledge */
 .sl-markdown-content h2#think {
-  background: linear-gradient(135deg, rgba(142, 68, 173, 0.15), rgba(142, 68, 173, 0.05));
-  border-left: 4px solid #8e44ad;
-  color: #8e44ad;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-purple) 15%, transparent),
+    color-mix(in srgb, var(--lua-purple) 5%, transparent));
+  border-left: 4px solid var(--lua-purple);
+  color: var(--lua-purple);
 }
 .sl-markdown-content h2#think::before {
   content: '💭';
@@ -95,9 +109,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* OVERVIEW — Blue: the big picture */
 .sl-markdown-content h2#overview {
-  background: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
-  border-left: 4px solid #4a90d9;
-  color: #4a90d9;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-blue) 15%, transparent),
+    color-mix(in srgb, var(--lua-blue) 5%, transparent));
+  border-left: 4px solid var(--lua-blue);
+  color: var(--lua-blue);
 }
 .sl-markdown-content h2#overview::before {
   content: '🗺️';
@@ -105,9 +121,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* WHY — Red/Orange: the problem */
 .sl-markdown-content h2#why {
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(231, 76, 60, 0.05));
-  border-left: 4px solid #e74c3c;
-  color: #e74c3c;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-red) 15%, transparent),
+    color-mix(in srgb, var(--lua-red) 5%, transparent));
+  border-left: 4px solid var(--lua-red);
+  color: var(--lua-red);
 }
 .sl-markdown-content h2#why::before {
   content: '❓';
@@ -115,9 +133,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* WALKTHROUGH — Green: step by step */
 .sl-markdown-content h2#walkthrough {
-  background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(39, 174, 96, 0.05));
-  border-left: 4px solid #27ae60;
-  color: #27ae60;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-green) 15%, transparent),
+    color-mix(in srgb, var(--lua-green) 5%, transparent));
+  border-left: 4px solid var(--lua-green);
+  color: var(--lua-green);
 }
 .sl-markdown-content h2#walkthrough::before {
   content: '📖';
@@ -125,9 +145,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* TRY — Orange: hands-on */
 .sl-markdown-content h2#try {
-  background: linear-gradient(135deg, rgba(230, 126, 34, 0.15), rgba(230, 126, 34, 0.05));
-  border-left: 4px solid #e67e22;
-  color: #e67e22;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-orange) 15%, transparent),
+    color-mix(in srgb, var(--lua-orange) 5%, transparent));
+  border-left: 4px solid var(--lua-orange);
+  color: var(--lua-orange);
 }
 .sl-markdown-content h2#try::before {
   content: '🛠️';
@@ -135,15 +157,17 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 
 /* COMBINE — Teal: connect the dots */
 .sl-markdown-content h2#combine {
-  background: linear-gradient(135deg, rgba(22, 160, 133, 0.15), rgba(22, 160, 133, 0.05));
-  border-left: 4px solid #16a085;
-  color: #16a085;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-teal) 15%, transparent),
+    color-mix(in srgb, var(--lua-teal) 5%, transparent));
+  border-left: 4px solid var(--lua-teal);
+  color: var(--lua-teal);
 }
 .sl-markdown-content h2#combine::before {
   content: '🧩';
 }
 
-/* Light mode adjustments */
+/* Light mode adjustments for better contrast */
 [data-theme='light'] .sl-markdown-content h2#think { color: #6c3483; }
 [data-theme='light'] .sl-markdown-content h2#overview { color: #2e6da4; }
 [data-theme='light'] .sl-markdown-content h2#why { color: #c0392b; }
@@ -159,7 +183,7 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 .sl-markdown-content:has(h2#das-szenario),
 .sl-markdown-content:has(h2#the-scenario) {
   border-top: 3px solid transparent;
-  border-image: linear-gradient(90deg, #e74c3c, #e67e22, #e74c3c) 1;
+  border-image: linear-gradient(90deg, var(--lua-red), var(--lua-orange), var(--lua-red)) 1;
   padding-top: 1.5rem;
 }
 
@@ -171,10 +195,12 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.05));
-  border-left: 4px solid #e74c3c;
-  border-right: 4px solid #e67e22;
-  color: #e74c3c;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-red) 20%, transparent),
+    color-mix(in srgb, var(--lua-red) 5%, transparent));
+  border-left: 4px solid var(--lua-red);
+  border-right: 4px solid var(--lua-orange);
+  color: var(--lua-red);
   font-size: var(--sl-text-h3);
   letter-spacing: 0.03em;
 }
@@ -229,7 +255,7 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 .sl-markdown-content:has(h2#what-youve-learned),
 .sl-markdown-content:has(h2#what-you-learned) {
   border-top: 3px solid transparent;
-  border-image: linear-gradient(90deg, #27ae60, #f1c40f, #27ae60) 1;
+  border-image: linear-gradient(90deg, var(--lua-green), var(--lua-yellow), var(--lua-green)) 1;
   padding-top: 1.5rem;
 }
 
@@ -242,10 +268,12 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.05));
-  border-left: 4px solid #27ae60;
-  border-right: 4px solid #f1c40f;
-  color: #27ae60;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-green) 20%, transparent),
+    color-mix(in srgb, var(--lua-green) 5%, transparent));
+  border-left: 4px solid var(--lua-green);
+  border-right: 4px solid var(--lua-yellow);
+  color: var(--lua-green);
   font-size: var(--sl-text-h3);
   letter-spacing: 0.03em;
 }
@@ -263,9 +291,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(192, 57, 43, 0.05));
-  border-left: 4px solid #e74c3c;
-  color: #e74c3c;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-red) 15%, transparent),
+    color-mix(in srgb, var(--lua-red) 5%, transparent));
+  border-left: 4px solid var(--lua-red);
+  color: var(--lua-red);
 }
 .sl-markdown-content h2#anforderungen::before,
 .sl-markdown-content h2#requirements::before {
@@ -279,9 +309,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(230, 126, 34, 0.15), rgba(230, 126, 34, 0.05));
-  border-left: 4px solid #e67e22;
-  color: #e67e22;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-orange) 15%, transparent),
+    color-mix(in srgb, var(--lua-orange) 5%, transparent));
+  border-left: 4px solid var(--lua-orange);
+  color: var(--lua-orange);
 }
 .sl-markdown-content h2#bewertungskriterien::before,
 .sl-markdown-content h2#evaluation-criteria::before {
@@ -296,9 +328,11 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
-  border-left: 4px solid #4a90d9;
-  color: #4a90d9;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--lua-blue) 15%, transparent),
+    color-mix(in srgb, var(--lua-blue) 5%, transparent));
+  border-left: 4px solid var(--lua-blue);
+  color: var(--lua-blue);
 }
 .sl-markdown-content h2#naechstes-level::before,
 .sl-markdown-content h2#next-level::before {
@@ -325,22 +359,32 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
   margin-bottom: 1rem;
 }
 
-/* Force dark mode as default via Starlight's color-scheme */
-:root {
-  color-scheme: dark;
-}
-
 /* Welcome page section headings — accent gradient */
 [data-page-type="splash"] .sl-markdown-content h2 {
-  background: linear-gradient(135deg, #e67e22, #f1c40f);
+  background: linear-gradient(135deg, var(--lua-orange), var(--lua-yellow));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-top: 3rem;
 }
 [data-theme='light'] [data-page-type="splash"] .sl-markdown-content h2 {
-  background: linear-gradient(135deg, #d35400, #e67e22);
+  background: linear-gradient(135deg, #d35400, var(--lua-orange));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ============================================
+   8. ACCESSIBILITY — Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
