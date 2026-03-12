@@ -92,6 +92,9 @@ function getSubgraphGroups(current, variant) {
  * @returns {string} SVG markup
  */
 export function generateSkillTree({ level, variant }) {
+  if (typeof level !== 'number' || Number.isNaN(level) || level < 1 || level > 9) {
+    throw new Error(`Invalid level "${level}". Expected a number 1-9.`);
+  }
   if (variant !== 'briefing' && variant !== 'complete') {
     throw new Error(`Unknown variant "${variant}". Expected "briefing" or "complete".`);
   }

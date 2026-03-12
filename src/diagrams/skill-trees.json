@@ -1,0 +1,20 @@
+[
+  { "level": 1, "variant": "briefing" },
+  { "level": 1, "variant": "complete" },
+  { "level": 2, "variant": "briefing" },
+  { "level": 2, "variant": "complete" },
+  { "level": 3, "variant": "briefing" },
+  { "level": 3, "variant": "complete" },
+  { "level": 4, "variant": "briefing" },
+  { "level": 4, "variant": "complete" },
+  { "level": 5, "variant": "briefing" },
+  { "level": 5, "variant": "complete" },
+  { "level": 6, "variant": "briefing" },
+  { "level": 6, "variant": "complete" },
+  { "level": 7, "variant": "briefing" },
+  { "level": 7, "variant": "complete" },
+  { "level": 8, "variant": "briefing" },
+  { "level": 8, "variant": "complete" },
+  { "level": 9, "variant": "briefing" },
+  { "level": 9, "variant": "complete" }
+]
