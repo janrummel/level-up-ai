@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" fill="none" role="img" aria-label="Skill Tree Roadmap — 9 Level vom Vibe Coder zum AI Engineer">
+  <title>Skill Tree Roadmap</title>
+  <desc>Interaktive Roadmap mit 9 Leveln in 4 Schwierigkeitsstufen: Grundlagen (blau), Aufbau (gruen), Fortgeschritten (orange) und Experte (rot). Zeigt Abhaengigkeiten zwischen den Leveln.</desc>
   <defs>
     <!-- Gradients for level tiers -->
     <linearGradient id="grad-basics" x1="0" y1="0" x2="0" y2="1">

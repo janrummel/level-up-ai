@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" fill="none" role="img" aria-label="Level Up AI Lernpfad — 9 Level vom Vibe Coder zum AI Engineer">
+  <title>Level Up AI Lernpfad</title>
+  <desc>Visualisierung des Lernpfads mit 9 aufsteigenden Leveln von SDK Basics bis Advanced, dargestellt als Fortschrittskurve mit farbcodierten Schwierigkeitsstufen.</desc>
   <defs>
     <linearGradient id="h-bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0f172a"/>

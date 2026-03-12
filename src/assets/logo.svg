@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" role="img" aria-label="Level Up AI Logo">
   <defs>
     <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#e67e22"/>
       <stop offset="100%" stop-color="#f1c40f"/>
     </linearGradient>
   </defs>
+  <title>Level Up AI</title>
   <!-- Arrow icon -->
   <rect width="36" height="36" x="2" y="2" rx="6" fill="#1a1a2e"/>
   <path d="M20 8 L28 18 H24.5 L24.5 32 H15.5 L15.5 18 H12 Z" fill="url(#lg)"/>

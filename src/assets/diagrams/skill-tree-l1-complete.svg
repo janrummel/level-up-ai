@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 140">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 140" role="img" aria-label="Skill Tree — Level 1 AI SDK Basics abgeschlossen">
+<title>Skill Tree — Level 1 AI SDK Basics abgeschlossen</title>
+<desc>Horizontaler Skill Tree mit 9 Leveln. Level 1 bis 1 sind freigeschaltet. Level 2 ist als naechstes verfuegbar.</desc>
 <defs>
   <!-- Gradients -->
   <linearGradient id="grad-input" x1="0" y1="0" x2="0" y2="1">

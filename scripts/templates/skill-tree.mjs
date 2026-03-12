@@ -101,10 +101,20 @@ export function generateSkillTree({ level, variant }) {
   const current = Math.max(1, Math.min(9, level));
   const parts = [];
 
+  const levelName = LEVELS[current - 1].replace('&amp;', '&');
+  const titleText = variant === 'briefing'
+    ? `Skill Tree — Level ${current} ${levelName} ist das aktuelle Level`
+    : `Skill Tree — Level ${current} ${levelName} abgeschlossen`;
+  const descText = variant === 'briefing'
+    ? `Horizontaler Skill Tree mit 9 Leveln. Level ${current} (${levelName}) ist aktiv hervorgehoben. Vorherige Level sind freigeschaltet, folgende gesperrt.`
+    : `Horizontaler Skill Tree mit 9 Leveln. Level 1 bis ${current} sind freigeschaltet. ${current < 9 ? `Level ${current + 1} ist als naechstes verfuegbar.` : ''}`;
+
   // SVG open
   parts.push(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_W} ${VIEWBOX_H}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_W} ${VIEWBOX_H}" role="img" aria-label="${titleText}">`,
   );
+  parts.push(`<title>${titleText}</title>`);
+  parts.push(`<desc>${descText}</desc>`);
 
   // Defs
   parts.push(getSvgDefs());
