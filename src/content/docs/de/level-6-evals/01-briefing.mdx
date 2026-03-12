@@ -50,16 +50,16 @@ Das konkrete Problem: LLM-Ausgaben sind nicht deterministisch. Derselbe Prompt k
 Beachte: LLM-basierte Evals (wie LLM-as-Judge) verursachen zusaetzliche API-Calls und damit Kosten. Pro Eval-Durchlauf wird mindestens ein weiterer API-Call pro Testfall gemacht — einmal fuer die Task und einmal fuer den Judge. Plane das in Dein Budget ein, besonders bei groesseren Datasets.
 :::
 
-> **Skip-Hinweis:** Du arbeitest bereits mit Evalite oder einem anderen Eval-Framework und kennst den Unterschied zwischen deterministischen und LLM-as-Judge Scorern? Spring direkt zur [Boss Fight](/de/level-6-evals/07-boss-fight/) und baue eine komplette Eval-Pipeline.
+> **Skip-Hinweis:** Du arbeitest bereits mit Evalite oder einem anderen Eval-Framework und kennst den Unterschied zwischen deterministischen und LLM-as-Judge Scorern? Spring direkt zur [Boss Fight](../07-boss-fight/) und baue eine komplette Eval-Pipeline.
 
 ## Challenges
 
 <CardGrid>
-  <LinkCard title="6.1 — Evalite Basics" description="Installation, `.eval.ts` Dateikonvention, evalite() Grundstruktur" href="/de/level-6-evals/02-evalite-basics/" />
-  <LinkCard title="6.2 — Deterministic Eval" description="Inline Scorer, createScorer, Levenshtein, Contains-Check" href="/de/level-6-evals/03-deterministic-eval/" />
-  <LinkCard title="6.3 — LLM-as-a-Judge" description="Factuality Scorer, Score-Skala A-E, Rationale" href="/de/level-6-evals/04-llm-as-judge/" />
-  <LinkCard title="6.4 — Dataset Management" description="Repraesentative Datasets, Edge Cases, Dataset Critiquing" href="/de/level-6-evals/05-dataset-management/" />
-  <LinkCard title="6.5 — Langfuse Basics" description="Traces, Generations, Scores, Production-Monitoring" href="/de/level-6-evals/06-langfuse/" />
+  <LinkCard title="6.1 — Evalite Basics" description="Installation, `.eval.ts` Dateikonvention, evalite() Grundstruktur" href="../02-evalite-basics/" />
+  <LinkCard title="6.2 — Deterministic Eval" description="Inline Scorer, createScorer, Levenshtein, Contains-Check" href="../03-deterministic-eval/" />
+  <LinkCard title="6.3 — LLM-as-a-Judge" description="Factuality Scorer, Score-Skala A-E, Rationale" href="../04-llm-as-judge/" />
+  <LinkCard title="6.4 — Dataset Management" description="Repraesentative Datasets, Edge Cases, Dataset Critiquing" href="../05-dataset-management/" />
+  <LinkCard title="6.5 — Langfuse Basics" description="Traces, Generations, Scores, Production-Monitoring" href="../06-langfuse/" />
 </CardGrid>
 
 ## Boss Fight

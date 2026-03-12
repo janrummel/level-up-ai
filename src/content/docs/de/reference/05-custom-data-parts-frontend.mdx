@@ -11,7 +11,7 @@ Persistent Data Parts landen in `message.parts` und koennen ueber den Part-Typ g
 
 Transient Data Parts sind nicht in `message.parts` enthalten. Sie werden ueber den `onData`-Callback in `useChat` empfangen und eignen sich fuer fluechtige Informationen wie Ladefortschritt oder temporaere Statusmeldungen, die nicht in der Chat-Historie erscheinen sollen.
 
-Progressive Updates funktionieren ueber IDs: Wenn der Server ein Data Part mit derselben ID erneut sendet, wird das bestehende Part aktualisiert statt ein neues hinzugefuegt (siehe [ID Reconciliation](/de/reference/06-custom-data-parts-id-reconciliation)).
+Progressive Updates funktionieren ueber IDs: Wenn der Server ein Data Part mit derselben ID erneut sendet, wird das bestehende Part aktualisiert statt ein neues hinzugefuegt (siehe [ID Reconciliation](../06-custom-data-parts-id-reconciliation/)).
 
 ## Frontend-Beispiel
 
@@ -77,9 +77,9 @@ const latestWeather = weatherParts.at(-1);
 
 ## Siehe auch
 
-- [Challenge 7.1: Custom Data Parts](/de/level-7-streaming/02-custom-data-parts) — Hands-on mit Data Parts
-- [Challenge 8.2: Streaming Custom Data to Frontend](/de/level-8-workflows/03-streaming-to-frontend) — Data Parts in Workflows
-- [Custom Data Parts streamen](/de/reference/04-custom-data-parts-streaming) — Server-seitige Erstellung
+- [Challenge 7.1: Custom Data Parts](../../level-7-streaming/02-custom-data-parts/) — Hands-on mit Data Parts
+- [Challenge 8.2: Streaming Custom Data to Frontend](../../level-8-workflows/03-streaming-to-frontend/) — Data Parts in Workflows
+- [Custom Data Parts streamen](../04-custom-data-parts-streaming/) — Server-seitige Erstellung
 
 ## Quellen
 
