@@ -103,7 +103,7 @@ export function generateSkillTree({ level, variant }) {
 
   // SVG open
   parts.push(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_W} ${VIEWBOX_H}" width="${VIEWBOX_W}" height="${VIEWBOX_H}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_W} ${VIEWBOX_H}">`,
   );
 
   // Defs
@@ -111,7 +111,7 @@ export function generateSkillTree({ level, variant }) {
 
   // Background
   parts.push(
-    `<rect width="${VIEWBOX_W}" height="${VIEWBOX_H}" fill="#0f172a" rx="12"/>`,
+    `<rect width="${VIEWBOX_W}" height="${VIEWBOX_H}" fill="#0f172a" rx="16"/>`,
   );
 
   // Subgraph labels

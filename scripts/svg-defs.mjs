@@ -13,7 +13,7 @@ export function getSvgDefs() {
   <!-- Gradients -->
   <linearGradient id="grad-input" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#5B9FE6"/>
-    <stop offset="100%" stop-color="#4A90D9"/>
+    <stop offset="100%" stop-color="#3A7BD5"/>
   </linearGradient>
   <linearGradient id="grad-process" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#43C67A"/>
@@ -35,7 +35,7 @@ export function getSvgDefs() {
   <!-- Glow filters -->
   <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
     <feGaussianBlur stdDeviation="4" result="blur"/>
-    <feFlood flood-color="#4A90D9" flood-opacity="0.3"/>
+    <feFlood flood-color="#3A7BD5" flood-opacity="0.3"/>
     <feComposite in2="blur" operator="in"/>
     <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
