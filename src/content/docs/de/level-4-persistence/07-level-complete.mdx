@@ -7,6 +7,9 @@ sidebar:
     text: 'Complete'
     variant: 'success'
 ---
+import { Image } from 'astro:assets';
+import skillTree from '../../../../assets/diagrams/skill-tree-l4-complete.svg';
+
 
 ## Level 4 abgeschlossen!
 
@@ -21,42 +24,7 @@ Dein Chat-System hat jetzt ein Gedaechtnis. Es speichert, laedt und validiert â€
 
 ## Aktualisierter Skill Tree
 
-```mermaid
-graph LR
-  subgraph "Freigeschaltet"
-    L1["Level 1: AI SDK Basics"]
-    L2["Level 2: LLM Fundamentals"]
-    L3["Level 3: Agents & MCP"]
-    L4["Level 4: Persistence"]
-  end
-  subgraph NEXT["Naechstes Level"]
-    L5["Level 5: Context Engineering"]
-  end
-  subgraph "Gesperrt"
-    L6["Level 6: Evals"]
-    L7["Level 7: Streaming"]
-    L8["Level 8: Workflows"]
-    L9["Level 9: Advanced Patterns"]
-  end
-  L1 --> L2
-  L2 --> L3
-  L3 --> L4
-  L4 --> L5
-  L5 -.-> L6
-  L6 -.-> L7
-  L7 -.-> L8
-  L8 -.-> L9
-  style L1 fill:#27AE60,color:#fff
-  style L2 fill:#27AE60,color:#fff
-  style L3 fill:#27AE60,color:#fff
-  style L4 fill:#27AE60,color:#fff
-  style NEXT fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style L5 fill:#E67E22,color:#fff
-  style L6 fill:#95a5a6,color:#fff
-  style L7 fill:#95a5a6,color:#fff
-  style L8 fill:#95a5a6,color:#fff
-  style L9 fill:#95a5a6,color:#fff
-```
+<Image src={skillTree} alt="Skill Tree â€” Level 4 Persistence abgeschlossen, Level 5 Context Engineering ist das naechste Level" />
 
 ## Naechstes Level
 

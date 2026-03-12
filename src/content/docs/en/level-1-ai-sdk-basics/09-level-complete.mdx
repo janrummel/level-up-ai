@@ -7,6 +7,9 @@ sidebar:
     text: 'Complete'
     variant: 'success'
 ---
+import { Image } from 'astro:assets';
+import skillTree from '../../../../assets/diagrams/skill-tree-l1-complete.svg';
+
 
 You've built an interactive CLI chat that streams text, delivers structured JSON output and dynamically selects models. These six building blocks form the foundation for everything that follows.
 
@@ -21,42 +24,7 @@ You've built an interactive CLI chat that streams text, delivers structured JSON
 
 ## Updated Skill Tree
 
-```mermaid
-graph LR
-  subgraph "Unlocked"
-    L1["Level 1: AI SDK Basics"]
-  end
-  subgraph NEXT["Next Level"]
-    L2["Level 2: LLM Fundamentals"]
-  end
-  subgraph "Locked"
-    L3["Level 3: Agents & MCP"]
-    L4["Level 4: Persistence"]
-    L5["Level 5: Context Engineering"]
-    L6["Level 6: Evals"]
-    L7["Level 7: Streaming"]
-    L8["Level 8: Workflows"]
-    L9["Level 9: Advanced Patterns"]
-  end
-  L1 --> L2
-  L2 -.-> L3
-  L3 -.-> L4
-  L4 -.-> L5
-  L5 -.-> L6
-  L6 -.-> L7
-  L7 -.-> L8
-  L8 -.-> L9
-  style L1 fill:#27AE60,color:#fff
-  style NEXT fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style L2 fill:#E67E22,color:#fff
-  style L3 fill:#95a5a6,color:#fff
-  style L4 fill:#95a5a6,color:#fff
-  style L5 fill:#95a5a6,color:#fff
-  style L6 fill:#95a5a6,color:#fff
-  style L7 fill:#95a5a6,color:#fff
-  style L8 fill:#95a5a6,color:#fff
-  style L9 fill:#95a5a6,color:#fff
-```
+<Image src={skillTree} alt="Skill Tree — Level 1 AI SDK Basics complete, Level 2 LLM Fundamentals is the next level" />
 
 ## Next Level
 

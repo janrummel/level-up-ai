@@ -8,6 +8,8 @@ sidebar:
     variant: 'success'
 ---
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import skillTree from '../../../../assets/diagrams/skill-tree-l3-briefing.svg';
 
 ## TL;DR
 
@@ -15,42 +17,7 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Skill Tree
 
-```mermaid
-graph LR
-  subgraph "Unlocked"
-    L1["Level 1: AI SDK Basics"]
-    L2["Level 2: LLM Fundamentals"]
-  end
-  subgraph HIER["Current Level"]
-    L3["Level 3: Agents & MCP"]
-  end
-  subgraph "Locked"
-    L4["Level 4: Persistence"]
-    L5["Level 5: Context Engineering"]
-    L6["Level 6: Evals"]
-    L7["Level 7: Streaming"]
-    L8["Level 8: Workflows"]
-    L9["Level 9: Advanced Patterns"]
-  end
-  L1 --> L2
-  L2 --> L3
-  L3 -.-> L4
-  L4 -.-> L5
-  L5 -.-> L6
-  L6 -.-> L7
-  L7 -.-> L8
-  L8 -.-> L9
-  style L1 fill:#27AE60,color:#fff
-  style L2 fill:#27AE60,color:#fff
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style L3 fill:#E67E22,color:#fff
-  style L4 fill:#95a5a6,color:#fff
-  style L5 fill:#95a5a6,color:#fff
-  style L6 fill:#95a5a6,color:#fff
-  style L7 fill:#95a5a6,color:#fff
-  style L8 fill:#95a5a6,color:#fff
-  style L9 fill:#95a5a6,color:#fff
-```
+<Image src={skillTree} alt="Skill Tree — Level 3 Agents & MCP is the current level" />
 
 ## What you'll learn
 

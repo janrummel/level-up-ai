@@ -8,6 +8,8 @@ sidebar:
     variant: 'caution'
 ---
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import skillTree from '../../../../assets/diagrams/skill-tree-l7-briefing.svg';
 
 ## TL;DR
 
@@ -15,42 +17,7 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Skill Tree
 
-```mermaid
-graph LR
-  subgraph "Freigeschaltet"
-    L1["Level 1: AI SDK Basics"]
-    L2["Level 2: LLM Fundamentals"]
-    L3["Level 3: Agents & MCP"]
-    L4["Level 4: Persistence"]
-    L5["Level 5: Context Engineering"]
-    L6["Level 6: Evals"]
-  end
-  subgraph HIER["Aktuelles Level"]
-    L7["Level 7: Streaming"]
-  end
-  subgraph "Gesperrt"
-    L8["Level 8: Workflows"]
-    L9["Level 9: Advanced Patterns"]
-  end
-  L1 --> L2
-  L2 --> L3
-  L3 --> L4
-  L4 --> L5
-  L5 --> L6
-  L6 --> L7
-  L7 -.-> L8
-  L8 -.-> L9
-  style L1 fill:#27AE60,color:#fff
-  style L2 fill:#27AE60,color:#fff
-  style L3 fill:#27AE60,color:#fff
-  style L4 fill:#27AE60,color:#fff
-  style L5 fill:#27AE60,color:#fff
-  style L6 fill:#27AE60,color:#fff
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style L7 fill:#E67E22,color:#fff
-  style L8 fill:#95a5a6,color:#fff
-  style L9 fill:#95a5a6,color:#fff
-```
+<Image src={skillTree} alt="Skill Tree — Level 7 Streaming ist das aktuelle Level" />
 
 :::note[Kosten-Hinweis]
 In diesem Level machst Du deutlich mehr API-Calls als bisher — Streaming bedeutet haeufigere Interaktion mit der API. Behalte Dein [Anthropic Dashboard](https://console.anthropic.com) im Blick, um die Kosten zu kontrollieren.

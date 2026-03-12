@@ -8,6 +8,8 @@ sidebar:
     variant: 'danger'
 ---
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import skillTree from '../../../../assets/diagrams/skill-tree-l9-briefing.svg';
 
 ## TL;DR
 
@@ -15,40 +17,7 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Skill Tree
 
-```mermaid
-graph LR
-  subgraph "Freigeschaltet"
-    L1["Level 1: AI SDK Basics"]
-    L2["Level 2: LLM Fundamentals"]
-    L3["Level 3: Agents & MCP"]
-    L4["Level 4: Persistence"]
-    L5["Level 5: Context Engineering"]
-    L6["Level 6: Evals"]
-    L7["Level 7: Streaming"]
-    L8["Level 8: Workflows"]
-  end
-  subgraph HIER["Aktuelles Level"]
-    L9["Level 9: Advanced Patterns"]
-  end
-  L1 --> L2
-  L2 --> L3
-  L3 --> L4
-  L4 --> L5
-  L5 --> L6
-  L6 --> L7
-  L7 --> L8
-  L8 --> L9
-  style L1 fill:#27AE60,color:#fff
-  style L2 fill:#27AE60,color:#fff
-  style L3 fill:#27AE60,color:#fff
-  style L4 fill:#27AE60,color:#fff
-  style L5 fill:#27AE60,color:#fff
-  style L6 fill:#27AE60,color:#fff
-  style L7 fill:#27AE60,color:#fff
-  style L8 fill:#27AE60,color:#fff
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style L9 fill:#E67E22,color:#fff
-```
+<Image src={skillTree} alt="Skill Tree — Level 9 Advanced ist das aktuelle Level" />
 
 :::note[Kosten-Hinweis]
 Dieses Level nutzt mehrere Provider (Anthropic, Google, OpenAI) und macht viele parallele API-Calls — besonders bei Model Routing und Comparing Outputs. Pruefe Dein Guthaben auf dem [Anthropic Dashboard](https://console.anthropic.com) und den Dashboards der anderen Provider, bevor Du startest.
