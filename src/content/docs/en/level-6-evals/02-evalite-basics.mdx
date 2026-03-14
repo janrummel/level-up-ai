@@ -4,6 +4,9 @@ description: "Set up Evalite and write your first automated eval for LLM outputs
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c1-combine.svg';
 
 ## THINK
 
@@ -11,24 +14,7 @@ How do you test whether your LLM system gives good answers — manually read thr
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  File[".eval.ts File"] --> Data["data<br/>(Input + Expected)"]
-  Data --> Task["task<br/>(LLM Call)"]
-  Task --> Scorers["scorers<br/>(Evaluation)"]
-  Scorers --> Dashboard["Score Dashboard<br/>localhost:3006"]
-  subgraph HIER["You are HERE: evalite()"]
-    Data
-    Task
-    Scorers
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style File fill:#4A90D9,color:#fff
-  style Data fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Scorers fill:#27AE60,color:#fff
-  style Dashboard fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt=".eval.ts file feeds into data (Input + Expected), task (LLM Call), and scorers (Evaluation) — the evalite() core — which produces results in the Score Dashboard at localhost:3006" />
 
 `evalite()` takes three things: **data** (what goes in and what should come out), **task** (the function under test), and **scorers** (how the output is evaluated). Results are stored in a local SQLite database and displayed in the browser dashboard.
 
@@ -225,22 +211,7 @@ evalite('Greeting Eval', {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["prompt"] --> GT["generateText()<br/>(Level 1.3)"]
-  System["system"] --> GT
-  GT --> Output["result.text"]
-  Output --> Scorer["Levenshtein<br/>Scorer"]
-  Expected["expected"] --> Scorer
-  Scorer --> Score["Score 0-1"]
-  style Prompt fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Expected fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Scorer fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Score fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="prompt and system flow into generateText() (Level 1.3) producing result.text, which together with expected goes through the Levenshtein Scorer to produce a Score 0-1" />
 
 **Exercise:** Use `generateText` from Level 1.3 as the `task` function in an Evalite eval. Test whether an LLM correctly names capital cities.
 

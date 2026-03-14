@@ -4,6 +4,9 @@ description: "Build fast, cheap scorers without an LLM — string comparisons, c
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c2-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ Not every evaluation needs an LLM — sometimes a string comparison is enough. W
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Question{"Exact answer<br/>expected?"}
-  Question -->|Yes| Det["Deterministic Scorer<br/>fast, cheap, reproducible"]
-  Question -->|No| LLM["LLM-as-a-Judge<br/>flexible, more expensive, Challenge 6.3"]
-  Det --> Inline["Inline Scorer<br/>(Ad-hoc function)"]
-  Det --> Create["createScorer<br/>(Reusable)"]
-  Det --> Auto["Autoevals<br/>(Levenshtein etc.)"]
-  subgraph HIER["You are HERE: Deterministic Scorer"]
-    Det
-    Inline
-    Create
-    Auto
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Question fill:#4A90D9,color:#fff
-  style Det fill:#27AE60,color:#fff
-  style LLM fill:#95a5a6,color:#fff
-  style Inline fill:#E67E22,color:#fff
-  style Create fill:#E67E22,color:#fff
-  style Auto fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Decision tree: Exact answer expected? Yes leads to Deterministic Scorer (Inline Scorer, createScorer, Autoevals), No leads to LLM-as-a-Judge (Challenge 6.3)" />
 
 The decision is simple: Is there a single correct answer? Then deterministic. Is the answer open-ended? Then LLM-as-Judge (next challenge).
 
@@ -262,24 +244,7 @@ evalite('Capital Cities', {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Data["data<br/>(6.1)"] --> Task["task()"]
-  Task --> Output["Output"]
-  Output --> S1["containsKeyword"]
-  Output --> S2["Levenshtein"]
-  Expected["expected"] --> S1
-  Expected --> S2
-  S1 --> Scores["Scores in<br/>Dashboard"]
-  S2 --> Scores
-  style Data fill:#4A90D9,color:#fff
-  style Expected fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style S1 fill:#27AE60,color:#fff
-  style S2 fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Scores fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="data (6.1) flows through task() to Output, which together with expected is evaluated by containsKeyword and Levenshtein, resulting in Scores in the Dashboard" />
 
 **Exercise:** Extend your eval from Challenge 6.1 with the `containsKeyword` scorer. Now use a real LLM call as the `task` instead of a simulated answer.
 

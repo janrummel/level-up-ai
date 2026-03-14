@@ -1,0 +1,22 @@
+{
+  "id": "l6-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "prompt", "role": "input" },
+    { "id": "System", "label": "system", "role": "input" },
+    { "id": "Expected", "label": "expected", "role": "input" },
+    { "id": "GT", "label": ["generateText()", "(Level 1.3)"], "role": "process" },
+    { "id": "Scorer", "label": ["Levenshtein", "Scorer"], "role": "process" },
+    { "id": "Output", "label": "result.text", "role": "output" },
+    { "id": "Score", "label": "Score 0-1", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "GT" },
+    { "from": "System", "to": "GT" },
+    { "from": "GT", "to": "Output" },
+    { "from": "Output", "to": "Scorer" },
+    { "from": "Expected", "to": "Scorer" },
+    { "from": "Scorer", "to": "Score" }
+  ],
+  "groups": []
+}

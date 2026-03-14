@@ -1,0 +1,24 @@
+{
+  "id": "l6-c5-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "App", "label": "Production App", "role": "input" },
+    { "id": "LLM", "label": "LLM Call", "role": "process" },
+    { "id": "Langfuse", "label": "Langfuse Trace", "role": "process" },
+    { "id": "Dashboard", "label": "Dashboard", "role": "output" },
+    { "id": "Latenz", "label": "Latenz", "role": "output" },
+    { "id": "Kosten", "label": "Kosten", "role": "output" },
+    { "id": "Qualitaet", "label": "Qualitaet", "role": "output" }
+  ],
+  "edges": [
+    { "from": "App", "to": "LLM" },
+    { "from": "LLM", "to": "Langfuse" },
+    { "from": "Langfuse", "to": "Dashboard" },
+    { "from": "Dashboard", "to": "Latenz" },
+    { "from": "Dashboard", "to": "Kosten" },
+    { "from": "Dashboard", "to": "Qualitaet" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Langfuse", "nodes": ["Langfuse", "Dashboard"], "style": "highlight" }
+  ]
+}

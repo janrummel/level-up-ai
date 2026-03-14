@@ -4,6 +4,9 @@ description: "Baue einen Factuality Scorer, bei dem ein LLM die Ausgabe eines an
 sidebar:
   order: 4
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c3-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ Wie bewertest Du, ob eine Zusammenfassung "gut" ist — wenn es keine eindeutig 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Input["Input"] --> Task["task()"]
-  Task --> Output["Output"]
-  Output --> Judge["Judge LLM"]
-  Expected["Expected"] --> Judge
-  Judge --> Structured["Structured Score<br/>(A-E)"]
-  Structured --> Numeric["Numeric Score<br/>(0-1)"]
-  subgraph HIER["Du bist HIER: LLM-as-a-Judge"]
-    Judge
-    Structured
-    Numeric
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Input fill:#4A90D9,color:#fff
-  style Expected fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Structured fill:#E67E22,color:#fff
-  style Numeric fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Input fliesst durch task() zu Output, der zusammen mit Expected an den Judge LLM geht, der einen Structured Score (A-E) erzeugt, der in einen Numeric Score (0-1) umgerechnet wird" />
 
 Das Prinzip: Ein zweites LLM (der "Judge") bekommt den Output und den erwarteten Wert und bewertet, wie faktisch korrekt die Antwort ist. Das Ergebnis ist ein strukturierter Score mit einer Begruendung (Rationale).
 
@@ -319,24 +301,7 @@ Im Dashboard siehst Du die Rationale, die erklaert, warum der Judge so entschied
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Data["data<br/>(6.1)"] --> Task["task()"]
-  Task --> Output["Output"]
-  Output --> Det["Contains Keyword<br/>(6.2)"]
-  Output --> Judge["Factuality<br/>(6.3)"]
-  Expected["expected"] --> Det
-  Expected --> Judge
-  Det --> Scores["Scores im<br/>Dashboard"]
-  Judge --> Scores
-  style Data fill:#4A90D9,color:#fff
-  style Expected fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Det fill:#27AE60,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Scores fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="data (6.1) fliesst durch task() zu Output, der zusammen mit expected durch Contains Keyword (6.2) und Factuality (6.3) bewertet wird und als Scores im Dashboard endet" />
 
 **Uebung:** Kombiniere einen deterministischen Scorer (Challenge 6.2) mit dem Factuality Scorer (Challenge 6.3) in einer Eval. Teste mit einem echten LLM-Call.
 

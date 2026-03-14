@@ -7,6 +7,8 @@ sidebar:
     text: 'Boss Fight'
     variant: 'danger'
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-boss-overview.svg';
 
 ## The Scenario
 
@@ -27,28 +29,7 @@ Title:  "New Chat"
 
 This project connects all five building blocks:
 
-```mermaid
-graph LR
-  Dataset["Dataset<br/>(6.4)"] --> Task["generateText<br/>(6.1)"]
-  Trace["traceAISDKModel<br/>(6.1)"] --> Task
-  System["System Prompt"] --> Task
-  Task --> Title["Generated Title"]
-  Title --> Det["Deterministic Scorer<br/>(6.2)"]
-  Title --> Judge["LLM-as-Judge<br/>(6.3)"]
-  Det --> Dashboard["Evalite Dashboard"]
-  Judge --> Dashboard
-  Dashboard --> |"Score Analysis"| Iterate["Prompt Iteration"]
-  Iterate --> |"Improve"| System
-  style Dataset fill:#4A90D9,color:#fff
-  style Trace fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Title fill:#E67E22,color:#fff
-  style Det fill:#27AE60,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Dashboard fill:#E67E22,color:#fff
-  style Iterate fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Dataset (6.4), traceAISDKModel (6.1), and System Prompt feed into generateText (6.1), the Generated Title is evaluated by Deterministic Scorer (6.2) and LLM-as-Judge (6.3), the Evalite Dashboard shows the Score Analysis and Prompt Iteration improves the System Prompt" />
 
 ## Requirements
 

@@ -4,6 +4,11 @@ description: "Verstehe Production-Observability fuer LLM-Anwendungen — Traces,
 sidebar:
   order: 6
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c5-overview.svg';
+import traceDiagram from '../../../../assets/diagrams/l6-c5-trace.svg';
+import workflowDiagram from '../../../../assets/diagrams/l6-c5-workflow.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c5-combine.svg';
 
 ## THINK
 
@@ -11,27 +16,7 @@ Deine Evals laufen lokal — aber was passiert mit LLM-Calls in Production? Wie 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  App["Production App"] --> LLM["LLM Call"]
-  LLM --> Langfuse["Langfuse Trace"]
-  Langfuse --> Dashboard["Dashboard"]
-  Dashboard --> Latenz["Latenz"]
-  Dashboard --> Kosten["Kosten"]
-  Dashboard --> Qualitaet["Qualitaet"]
-  subgraph HIER["Du bist HIER: Langfuse"]
-    Langfuse
-    Dashboard
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style App fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Langfuse fill:#27AE60,color:#fff
-  style Dashboard fill:#E67E22,color:#fff
-  style Latenz fill:#E67E22,color:#fff
-  style Kosten fill:#E67E22,color:#fff
-  style Qualitaet fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Production App sendet LLM Call, der in einem Langfuse Trace erfasst wird, der im Dashboard Latenz, Kosten und Qualitaet anzeigt" />
 
 Langfuse ist ein Open-Source Observability-Tool fuer LLM-Anwendungen. Es erfasst jeden LLM-Call in Production und zeigt Dir Latenz, Token-Kosten und Qualitaet in einem Dashboard. Wie Datadog oder Sentry — aber speziell fuer LLMs.
 
@@ -47,21 +32,7 @@ Langfuse ist ein Open-Source Observability-Tool fuer LLM-Anwendungen. Es erfasst
 
 Langfuse organisiert Daten in drei Ebenen:
 
-```mermaid
-graph TD
-  Trace["Trace<br/>Ein kompletter User-Request"]
-  Trace --> Gen1["Generation 1<br/>System Prompt + User Input → LLM"]
-  Trace --> Gen2["Generation 2<br/>Tool Call → LLM"]
-  Trace --> Gen3["Generation 3<br/>Final Answer → LLM"]
-  Gen1 --> Score1["Score<br/>Factuality: 0.8"]
-  Gen3 --> Score2["Score<br/>Latency: 2.1s"]
-  style Trace fill:#4A90D9,color:#fff
-  style Gen1 fill:#27AE60,color:#fff
-  style Gen2 fill:#27AE60,color:#fff
-  style Gen3 fill:#27AE60,color:#fff
-  style Score1 fill:#E67E22,color:#fff
-  style Score2 fill:#E67E22,color:#fff
-```
+<Image src={traceDiagram} alt="Ein Trace (kompletter User-Request) enthaelt Generation 1 (System Prompt + User Input), Generation 2 (Tool Call) und Generation 3 (Final Answer), wobei Generation 1 einen Factuality Score 0.8 und Generation 3 einen Latency Score 2.1s hat" />
 
 | Konzept | Was | Beispiel |
 |---------|-----|---------|
@@ -168,26 +139,7 @@ Das Langfuse Dashboard bietet:
 
 Evalite und Langfuse sind komplementaer — sie decken verschiedene Phasen ab:
 
-```mermaid
-graph LR
-  subgraph "Development"
-    Evalite["Evalite<br/>Lokale Evals"]
-    Code["Code aendern"] --> Evalite
-    Evalite --> Score["Score<br/>vergleichen"]
-    Score --> Code
-  end
-  subgraph "Production"
-    App["App"] --> Langfuse["Langfuse<br/>Monitoring"]
-    Langfuse --> Alert["Alerts bei<br/>Score-Drop"]
-    Alert --> Code
-  end
-  style Evalite fill:#27AE60,color:#fff
-  style Code fill:#4A90D9,color:#fff
-  style Score fill:#E67E22,color:#fff
-  style App fill:#4A90D9,color:#fff
-  style Langfuse fill:#27AE60,color:#fff
-  style Alert fill:#E74C3C,color:#fff
-```
+<Image src={workflowDiagram} alt="Development-Loop: Code aendern, Evalite (Lokale Evals), Score vergleichen, zurueck zu Code. Production-Loop: App, Langfuse Monitoring, Alerts bei Score-Drop, die Code-Aenderungen ausloesen" />
 
 | Aspekt | Evalite | Langfuse |
 |--------|---------|---------|
@@ -231,21 +183,7 @@ Falls Du trotzdem hands-on arbeiten willst: Langfuse bietet ein [Quickstart-Guid
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Dev["Development"] --> Evalite["Evalite<br/>(6.1-6.4)"]
-  Evalite --> Improve["Prompt<br/>verbessern"]
-  Improve --> Deploy["Deploy"]
-  Deploy --> Langfuse["Langfuse<br/>(6.5)"]
-  Langfuse --> Monitor["Monitoring"]
-  Monitor --> |"Score sinkt"| Dev
-  style Dev fill:#4A90D9,color:#fff
-  style Evalite fill:#27AE60,color:#fff
-  style Improve fill:#27AE60,color:#fff
-  style Deploy fill:#27AE60,color:#fff
-  style Langfuse fill:#27AE60,color:#fff
-  style Monitor fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Development fuehrt zu Evalite (6.1-6.4), dann Prompt verbessern, Deploy, Langfuse (6.5), Monitoring — bei sinkendem Score fuehrt der Weg zurueck zu Development" />
 
 **Uebung:** Zeichne fuer Dich den Eval-Driven Development Workflow auf:
 

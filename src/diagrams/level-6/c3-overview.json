@@ -1,0 +1,24 @@
+{
+  "id": "l6-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": "Input", "role": "input" },
+    { "id": "Expected", "label": "Expected", "role": "input" },
+    { "id": "Task", "label": "task()", "role": "process" },
+    { "id": "Judge", "label": "Judge LLM", "role": "process" },
+    { "id": "Structured", "label": ["Structured Score", "(A-E)"], "role": "output" },
+    { "id": "Numeric", "label": ["Numeric Score", "(0-1)"], "role": "output" },
+    { "id": "Output", "label": "Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "Task" },
+    { "from": "Task", "to": "Output" },
+    { "from": "Output", "to": "Judge" },
+    { "from": "Expected", "to": "Judge" },
+    { "from": "Judge", "to": "Structured" },
+    { "from": "Structured", "to": "Numeric" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: LLM-as-a-Judge", "nodes": ["Judge", "Structured", "Numeric"], "style": "highlight" }
+  ]
+}

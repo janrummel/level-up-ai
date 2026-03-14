@@ -1,0 +1,22 @@
+{
+  "id": "l6-c2-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Question", "label": ["Exakte Antwort", "erwartet?"], "role": "input" },
+    { "id": "Det", "label": ["Deterministic Scorer", "schnell, guenstig, reproduzierbar"], "role": "process" },
+    { "id": "LLM", "label": ["LLM-as-a-Judge", "flexibel, teurer, Challenge 6.3"], "role": "neutral" },
+    { "id": "Inline", "label": ["Inline Scorer", "(Ad-hoc Funktion)"], "role": "output" },
+    { "id": "Create", "label": ["createScorer", "(Wiederverwendbar)"], "role": "output" },
+    { "id": "Auto", "label": ["Autoevals", "(Levenshtein etc.)"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Question", "to": "Det", "label": "Ja" },
+    { "from": "Question", "to": "LLM", "label": "Nein" },
+    { "from": "Det", "to": "Inline" },
+    { "from": "Det", "to": "Create" },
+    { "from": "Det", "to": "Auto" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Deterministic Scorer", "nodes": ["Det", "Inline", "Create", "Auto"], "style": "highlight" }
+  ]
+}

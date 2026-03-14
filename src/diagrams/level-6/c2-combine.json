@@ -1,0 +1,24 @@
+{
+  "id": "l6-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Data", "label": ["data", "(6.1)"], "role": "input" },
+    { "id": "Expected", "label": "expected", "role": "input" },
+    { "id": "Task", "label": "task()", "role": "process" },
+    { "id": "S1", "label": "containsKeyword", "role": "process" },
+    { "id": "S2", "label": "Levenshtein", "role": "process" },
+    { "id": "Output", "label": "Output", "role": "output" },
+    { "id": "Scores", "label": ["Scores im", "Dashboard"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Data", "to": "Task" },
+    { "from": "Task", "to": "Output" },
+    { "from": "Output", "to": "S1" },
+    { "from": "Output", "to": "S2" },
+    { "from": "Expected", "to": "S1" },
+    { "from": "Expected", "to": "S2" },
+    { "from": "S1", "to": "Scores" },
+    { "from": "S2", "to": "Scores" }
+  ],
+  "groups": []
+}

@@ -1,0 +1,21 @@
+{
+  "id": "l6-c5-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Dev", "label": "Development", "role": "input" },
+    { "id": "Evalite", "label": ["Evalite", "(6.1-6.4)"], "role": "process" },
+    { "id": "Improve", "label": ["Prompt", "verbessern"], "role": "process" },
+    { "id": "Deploy", "label": "Deploy", "role": "process" },
+    { "id": "Langfuse", "label": ["Langfuse", "(6.5)"], "role": "process" },
+    { "id": "Monitor", "label": "Monitoring", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Dev", "to": "Evalite" },
+    { "from": "Evalite", "to": "Improve" },
+    { "from": "Improve", "to": "Deploy" },
+    { "from": "Deploy", "to": "Langfuse" },
+    { "from": "Langfuse", "to": "Monitor" },
+    { "from": "Monitor", "to": "Dev", "label": "Score sinkt" }
+  ],
+  "groups": []
+}

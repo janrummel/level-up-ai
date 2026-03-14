@@ -4,6 +4,9 @@ description: "Richte Evalite ein und schreibe Deine erste automatisierte Eval fu
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c1-combine.svg';
 
 ## THINK
 
@@ -11,24 +14,7 @@ Wie testest Du, ob Dein LLM-System gute Antworten gibt — manuell jedes Mal dur
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  File[".eval.ts Datei"] --> Data["data<br/>(Input + Expected)"]
-  Data --> Task["task<br/>(LLM Call)"]
-  Task --> Scorers["scorers<br/>(Bewertung)"]
-  Scorers --> Dashboard["Score Dashboard<br/>localhost:3006"]
-  subgraph HIER["Du bist HIER: evalite()"]
-    Data
-    Task
-    Scorers
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style File fill:#4A90D9,color:#fff
-  style Data fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Scorers fill:#27AE60,color:#fff
-  style Dashboard fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt=".eval.ts Datei liefert Input, der durch data (Input + Expected), task (LLM Call) und scorers (Bewertung) fliesst und im Score Dashboard auf localhost:3006 landet — das Dreieck aus data, task und scorers ist der evalite()-Kern" />
 
 `evalite()` nimmt drei Dinge: **data** (was rein geht und was rauskommen soll), **task** (die zu testende Funktion) und **scorers** (wie bewertet wird). Die Ergebnisse landen in einer lokalen SQLite-Datenbank und werden im Browser-Dashboard angezeigt.
 
@@ -227,22 +213,7 @@ evalite('Greeting Eval', {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["prompt"] --> GT["generateText()<br/>(Level 1.3)"]
-  System["system"] --> GT
-  GT --> Output["result.text"]
-  Output --> Scorer["Levenshtein<br/>Scorer"]
-  Expected["expected"] --> Scorer
-  Scorer --> Score["Score 0-1"]
-  style Prompt fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Expected fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Scorer fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Score fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="prompt und system fliessen in generateText() (Level 1.3), das result.text liefert, der zusammen mit expected durch den Levenshtein Scorer zu einem Score 0-1 fuehrt" />
 
 **Uebung:** Nutze `generateText` aus Level 1.3 als `task`-Funktion in einer Evalite-Eval. Teste, ob ein LLM Hauptstaedte korrekt benennt.
 

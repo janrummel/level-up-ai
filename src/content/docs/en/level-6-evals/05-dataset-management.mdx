@@ -4,6 +4,9 @@ description: "Build representative, diverse test datasets and learn how to syste
 sidebar:
   order: 5
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l6-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l6-c4-combine.svg';
 
 ## THINK
 
@@ -11,23 +14,7 @@ How many test cases do you need — and how do you know if they're good enough? 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Seed["Seed Data<br/>collect"] --> Evaluate["Evaluate<br/>run"]
-  Evaluate --> Critique["Critique<br/>assess data"]
-  Critique --> Improve["Improve<br/>add data"]
-  Improve --> Evaluate
-  subgraph HIER["You are HERE: Dataset Management"]
-    Seed
-    Critique
-    Improve
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Seed fill:#4A90D9,color:#fff
-  style Evaluate fill:#27AE60,color:#fff
-  style Critique fill:#E67E22,color:#fff
-  style Improve fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Dataset management cycle: Seed Data collect, Evaluate run, Critique (assess data), Improve (add data) leads back to Evaluate — an iterative loop for improving test data quality" />
 
 Dataset management is a cycle: You collect seed data, run evals, assess the quality of your test data, add missing cases, and evaluate again. The data gets better with each iteration.
 
@@ -315,21 +302,7 @@ evalite('Chat Titles', {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Dataset["Dataset<br/>(6.4)"] --> Task["task()"]
-  Task --> Output["Output"]
-  Output --> Det["Deterministic<br/>(6.2)"]
-  Output --> Judge["Factuality<br/>(6.3)"]
-  Det --> Dashboard["Dashboard"]
-  Judge --> Dashboard
-  style Dataset fill:#4A90D9,color:#fff
-  style Task fill:#27AE60,color:#fff
-  style Det fill:#27AE60,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Dashboard fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Dataset (6.4) flows through task() to Output, which is evaluated by Deterministic (6.2) and Factuality (6.3), both feeding into the Dashboard" />
 
 **Exercise:** Use your chat title dataset (6.4) with the scorers from Challenge 6.2 and 6.3.
 

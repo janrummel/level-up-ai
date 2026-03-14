@@ -1,0 +1,20 @@
+{
+  "id": "l6-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "File", "label": ".eval.ts Datei", "role": "input" },
+    { "id": "Data", "label": ["data", "(Input + Expected)"], "role": "input" },
+    { "id": "Task", "label": ["task", "(LLM Call)"], "role": "process" },
+    { "id": "Scorers", "label": ["scorers", "(Bewertung)"], "role": "process" },
+    { "id": "Dashboard", "label": ["Score Dashboard", "localhost:3006"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "File", "to": "Data" },
+    { "from": "Data", "to": "Task" },
+    { "from": "Task", "to": "Scorers" },
+    { "from": "Scorers", "to": "Dashboard" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: evalite()", "nodes": ["Data", "Task", "Scorers"], "style": "highlight" }
+  ]
+}

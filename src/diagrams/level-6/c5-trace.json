@@ -1,0 +1,20 @@
+{
+  "id": "l6-c5-trace",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Trace", "label": ["Trace", "Ein kompletter User-Request"], "role": "input" },
+    { "id": "Gen1", "label": ["Generation 1", "System Prompt + User Input → LLM"], "role": "process" },
+    { "id": "Gen2", "label": ["Generation 2", "Tool Call → LLM"], "role": "process" },
+    { "id": "Gen3", "label": ["Generation 3", "Final Answer → LLM"], "role": "process" },
+    { "id": "Score1", "label": ["Score", "Factuality: 0.8"], "role": "output" },
+    { "id": "Score2", "label": ["Score", "Latency: 2.1s"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Trace", "to": "Gen1" },
+    { "from": "Trace", "to": "Gen2" },
+    { "from": "Trace", "to": "Gen3" },
+    { "from": "Gen1", "to": "Score1" },
+    { "from": "Gen3", "to": "Score2" }
+  ],
+  "groups": []
+}

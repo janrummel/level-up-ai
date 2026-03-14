@@ -1,0 +1,24 @@
+{
+  "id": "l6-c5-workflow",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Code", "label": "Code aendern", "role": "input" },
+    { "id": "App", "label": "App", "role": "input" },
+    { "id": "Evalite", "label": ["Evalite", "Lokale Evals"], "role": "process" },
+    { "id": "Langfuse", "label": ["Langfuse", "Monitoring"], "role": "process" },
+    { "id": "Score", "label": ["Score", "vergleichen"], "role": "output" },
+    { "id": "Alert", "label": ["Alerts bei", "Score-Drop"], "role": "warning" }
+  ],
+  "edges": [
+    { "from": "Code", "to": "Evalite" },
+    { "from": "Evalite", "to": "Score" },
+    { "from": "Score", "to": "Code" },
+    { "from": "App", "to": "Langfuse" },
+    { "from": "Langfuse", "to": "Alert" },
+    { "from": "Alert", "to": "Code" }
+  ],
+  "groups": [
+    { "id": "dev", "label": "Development", "nodes": ["Code", "Evalite", "Score"], "style": "default" },
+    { "id": "prod", "label": "Production", "nodes": ["App", "Langfuse", "Alert"], "style": "default" }
+  ]
+}

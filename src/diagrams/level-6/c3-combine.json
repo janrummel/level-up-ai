@@ -1,0 +1,24 @@
+{
+  "id": "l6-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Data", "label": ["data", "(6.1)"], "role": "input" },
+    { "id": "Expected", "label": "expected", "role": "input" },
+    { "id": "Task", "label": "task()", "role": "process" },
+    { "id": "Det", "label": ["Contains Keyword", "(6.2)"], "role": "process" },
+    { "id": "Judge", "label": ["Factuality", "(6.3)"], "role": "process" },
+    { "id": "Output", "label": "Output", "role": "output" },
+    { "id": "Scores", "label": ["Scores im", "Dashboard"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Data", "to": "Task" },
+    { "from": "Task", "to": "Output" },
+    { "from": "Output", "to": "Det" },
+    { "from": "Output", "to": "Judge" },
+    { "from": "Expected", "to": "Det" },
+    { "from": "Expected", "to": "Judge" },
+    { "from": "Det", "to": "Scores" },
+    { "from": "Judge", "to": "Scores" }
+  ],
+  "groups": []
+}

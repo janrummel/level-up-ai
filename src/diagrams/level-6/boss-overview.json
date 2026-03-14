@@ -1,0 +1,28 @@
+{
+  "id": "l6-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Dataset", "label": ["Dataset", "(6.4)"], "role": "input" },
+    { "id": "Trace", "label": ["traceAISDKModel", "(6.1)"], "role": "input" },
+    { "id": "System", "label": "System Prompt", "role": "input" },
+    { "id": "Task", "label": ["generateText", "(6.1)"], "role": "process" },
+    { "id": "Det", "label": ["Deterministic Scorer", "(6.2)"], "role": "process" },
+    { "id": "Judge", "label": ["LLM-as-Judge", "(6.3)"], "role": "process" },
+    { "id": "Title", "label": "Generated Title", "role": "output" },
+    { "id": "Dashboard", "label": "Evalite Dashboard", "role": "output" },
+    { "id": "Iterate", "label": "Prompt Iteration", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Dataset", "to": "Task" },
+    { "from": "Trace", "to": "Task" },
+    { "from": "System", "to": "Task" },
+    { "from": "Task", "to": "Title" },
+    { "from": "Title", "to": "Det" },
+    { "from": "Title", "to": "Judge" },
+    { "from": "Det", "to": "Dashboard" },
+    { "from": "Judge", "to": "Dashboard" },
+    { "from": "Dashboard", "to": "Iterate", "label": "Score-Analyse" },
+    { "from": "Iterate", "to": "System", "label": "Verbessern" }
+  ],
+  "groups": []
+}

@@ -1,0 +1,21 @@
+{
+  "id": "l6-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Dataset", "label": ["Dataset", "(6.4)"], "role": "input" },
+    { "id": "Task", "label": "task()", "role": "process" },
+    { "id": "Det", "label": ["Deterministic", "(6.2)"], "role": "process" },
+    { "id": "Judge", "label": ["Factuality", "(6.3)"], "role": "process" },
+    { "id": "Output", "label": "Output", "role": "output" },
+    { "id": "Dashboard", "label": "Dashboard", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Dataset", "to": "Task" },
+    { "from": "Task", "to": "Output" },
+    { "from": "Output", "to": "Det" },
+    { "from": "Output", "to": "Judge" },
+    { "from": "Det", "to": "Dashboard" },
+    { "from": "Judge", "to": "Dashboard" }
+  ],
+  "groups": []
+}

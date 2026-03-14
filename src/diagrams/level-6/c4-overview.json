@@ -1,0 +1,19 @@
+{
+  "id": "l6-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Seed", "label": ["Seed Data", "sammeln"], "role": "input" },
+    { "id": "Evaluate", "label": ["Evaluate", "ausfuehren"], "role": "process" },
+    { "id": "Critique", "label": ["Critique", "Daten bewerten"], "role": "output" },
+    { "id": "Improve", "label": ["Improve", "Daten ergaenzen"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Seed", "to": "Evaluate" },
+    { "from": "Evaluate", "to": "Critique" },
+    { "from": "Critique", "to": "Improve" },
+    { "from": "Improve", "to": "Evaluate" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Dataset Management", "nodes": ["Seed", "Critique", "Improve"], "style": "highlight" }
+  ]
+}
