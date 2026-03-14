@@ -1,0 +1,24 @@
+{
+  "id": "l9-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "Prompt", "role": "input" },
+    { "id": "Par", "label": ["Parallel", "Calls (9.3)"], "role": "process" },
+    { "id": "RA", "label": "Result A", "role": "output" },
+    { "id": "RB", "label": "Result B", "role": "output" },
+    { "id": "RC", "label": "Result C", "role": "output" },
+    { "id": "Eval", "label": ["Evalite", "Scorer (6.x)"], "role": "process" },
+    { "id": "Report", "label": ["Vergleichs-", "Report"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "Par" },
+    { "from": "Par", "to": "RA" },
+    { "from": "Par", "to": "RB" },
+    { "from": "Par", "to": "RC" },
+    { "from": "RA", "to": "Eval" },
+    { "from": "RB", "to": "Eval" },
+    { "from": "RC", "to": "Eval" },
+    { "from": "Eval", "to": "Report" }
+  ],
+  "groups": []
+}

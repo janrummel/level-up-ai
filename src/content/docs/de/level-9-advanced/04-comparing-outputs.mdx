@@ -11,25 +11,11 @@ Wie findest Du heraus, welches Modell die beste Antwort gibt — ohne jede Antwo
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Prompt["Same Prompt"] --> A["Model A"]
-  Prompt --> B["Model B"]
-  Prompt --> C["Model C"]
-  subgraph HIER["Du bist HIER: Comparing Outputs"]
-    A --> Judge{"Judge LLM"}
-    B --> Judge
-    C --> Judge
-  end
-  Judge --> Best["Best Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Prompt fill:#4A90D9,color:#fff
-  style A fill:#27AE60,color:#fff
-  style B fill:#27AE60,color:#fff
-  style C fill:#27AE60,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Best fill:#E67E22,color:#fff
-```
+import l9C3Overview from '../../../../assets/diagrams/l9-c3-overview.svg';
+import l9C3Combine from '../../../../assets/diagrams/l9-c3-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C3Overview} alt="Overview: Same Prompt zu Model A, B, C (alle Prozess in Gruppe), alle zu Judge LLM, dann zu Best Output" />
 
 Derselbe Prompt geht parallel an mehrere Modelle. Alle Ergebnisse werden gesammelt und von einem Judge-LLM bewertet. Das beste Ergebnis wird zurueckgegeben.
 
@@ -346,24 +332,7 @@ Gewinner: Gemini Flash (5 Keywords, 256 Zeichen)
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> Par["Parallel<br/>Calls (9.3)"]
-  Par --> RA["Result A"]
-  Par --> RB["Result B"]
-  Par --> RC["Result C"]
-  RA --> Eval["Evalite<br/>Scorer (6.x)"]
-  RB --> Eval
-  RC --> Eval
-  Eval --> Report["Vergleichs-<br/>Report"]
-  style Prompt fill:#4A90D9,color:#fff
-  style Par fill:#27AE60,color:#fff
-  style RA fill:#E67E22,color:#fff
-  style RB fill:#E67E22,color:#fff
-  style RC fill:#E67E22,color:#fff
-  style Eval fill:#27AE60,color:#fff
-  style Report fill:#E67E22,color:#fff
-```
+<Image src={l9C3Combine} alt="Combine: Prompt zu Parallel Calls, dann zu Result A, B, C, alle zu Evalite Scorer, dann zu Vergleichs-Report" />
 
 **Uebung:** Kombiniere Comparing Outputs mit dem Eval-Framework aus Level 6. Statt eines einmaligen Vergleichs:
 

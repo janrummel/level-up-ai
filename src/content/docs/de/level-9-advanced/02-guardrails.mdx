@@ -11,28 +11,11 @@ Was passiert, wenn ein User Deinem LLM sagt: "Ignoriere alle vorherigen Anweisun
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  User["User Input"] --> IG
-  subgraph HIER["Du bist HIER: Guardrails"]
-    IG{"Input<br/>Guardrail"}
-    LLM["LLM"]
-    OG{"Output<br/>Guardrail"}
-    IG -->|Valid| LLM
-    LLM --> OG
-  end
-  IG -->|Invalid| Rejected["Rejected"]
-  OG -->|Safe| Output["Safe Output"]
-  OG -->|Toxic| Filtered["Filtered"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style User fill:#4A90D9,color:#fff
-  style IG fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OG fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Rejected fill:#E74C3C,color:#fff
-  style Filtered fill:#E74C3C,color:#fff
-```
+import l9C1Overview from '../../../../assets/diagrams/l9-c1-overview.svg';
+import l9C1Combine from '../../../../assets/diagrams/l9-c1-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C1Overview} alt="Overview: User Input als Input, Input Guardrail und LLM und Output Guardrail als Prozess in Gruppe, Rejected und Filtered als Warning, Safe Output als Output" />
 
 User Input durchlaeuft zuerst einen Input-Guardrail (Injection-Check, PII-Erkennung). Nur valide Eingaben erreichen das LLM. Nach der Generierung prueft ein Output-Guardrail das Ergebnis auf Toxizitaet, Formatfehler und Laenge. Unsichere Ergebnisse werden gefiltert.
 
@@ -387,20 +370,7 @@ TypeScript ist eine typisierte Obermenge von JavaScript...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Input["User Input"] --> IG["Input<br/>Guardrail (9.1)"]
-  IG --> CE["Context<br/>Engineering (5.x)"]
-  CE --> LLM["LLM"]
-  LLM --> OG["Output<br/>Guardrail (9.1)"]
-  OG --> Output["Safe Output"]
-  style Input fill:#4A90D9,color:#fff
-  style IG fill:#27AE60,color:#fff
-  style CE fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OG fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={l9C1Combine} alt="Combine: User Input zu Input Guardrail zu Context Engineering zu LLM zu Output Guardrail zu Safe Output" />
 
 **Uebung:** Kombiniere Guardrails mit Context Engineering aus Level 5. Baue einen System Prompt mit einer XML-strukturierten Rules Section, die das LLM zusaetzlich zu den Code-Guardrails absichert:
 

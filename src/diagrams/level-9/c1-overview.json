@@ -1,0 +1,24 @@
+{
+  "id": "l9-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "User", "label": "User Input", "role": "input" },
+    { "id": "IG", "label": ["Input", "Guardrail"], "role": "process" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "OG", "label": ["Output", "Guardrail"], "role": "process" },
+    { "id": "Rejected", "label": "Rejected", "role": "warning" },
+    { "id": "Output", "label": "Safe Output", "role": "output" },
+    { "id": "Filtered", "label": "Filtered", "role": "warning" }
+  ],
+  "edges": [
+    { "from": "User", "to": "IG" },
+    { "from": "IG", "to": "LLM", "label": "Valid" },
+    { "from": "LLM", "to": "OG" },
+    { "from": "IG", "to": "Rejected", "label": "Invalid" },
+    { "from": "OG", "to": "Output", "label": "Safe" },
+    { "from": "OG", "to": "Filtered", "label": "Toxic" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Guardrails", "nodes": ["IG", "LLM", "OG"], "style": "highlight" }
+  ]
+}

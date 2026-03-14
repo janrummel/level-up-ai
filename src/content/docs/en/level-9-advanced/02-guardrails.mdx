@@ -11,28 +11,11 @@ What happens when a user tells your LLM: "Ignore all previous instructions and g
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  User["User Input"] --> IG
-  subgraph HIER["You are HERE: Guardrails"]
-    IG{"Input<br/>Guardrail"}
-    LLM["LLM"]
-    OG{"Output<br/>Guardrail"}
-    IG -->|Valid| LLM
-    LLM --> OG
-  end
-  IG -->|Invalid| Rejected["Rejected"]
-  OG -->|Safe| Output["Safe Output"]
-  OG -->|Toxic| Filtered["Filtered"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style User fill:#4A90D9,color:#fff
-  style IG fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OG fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Rejected fill:#E74C3C,color:#fff
-  style Filtered fill:#E74C3C,color:#fff
-```
+import l9C1Overview from '../../../../assets/diagrams/l9-c1-overview.svg';
+import l9C1Combine from '../../../../assets/diagrams/l9-c1-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C1Overview} alt="Overview: User Input as input, Input Guardrail and LLM and Output Guardrail as process in group, Rejected and Filtered as warning, Safe Output as output" />
 
 User input first passes through an input guardrail (injection check, PII detection). Only valid inputs reach the LLM. After generation, an output guardrail checks the result for toxicity, format errors, and length. Unsafe results are filtered.
 
@@ -379,20 +362,7 @@ TypeScript ist eine typisierte Obermenge von JavaScript...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Input["User Input"] --> IG["Input<br/>Guardrail (9.1)"]
-  IG --> CE["Context<br/>Engineering (5.x)"]
-  CE --> LLM["LLM"]
-  LLM --> OG["Output<br/>Guardrail (9.1)"]
-  OG --> Output["Safe Output"]
-  style Input fill:#4A90D9,color:#fff
-  style IG fill:#27AE60,color:#fff
-  style CE fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OG fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={l9C1Combine} alt="Combine: User Input to Input Guardrail to Context Engineering to LLM to Output Guardrail to Safe Output" />
 
 **Exercise:** Combine guardrails with Context Engineering from Level 5. Build a system prompt with an XML-structured Rules Section that secures the LLM in addition to the code guardrails:
 

@@ -1,0 +1,24 @@
+{
+  "id": "l9-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "Same Prompt", "role": "input" },
+    { "id": "A", "label": "Model A", "role": "process" },
+    { "id": "B", "label": "Model B", "role": "process" },
+    { "id": "C", "label": "Model C", "role": "process" },
+    { "id": "Judge", "label": "Judge LLM", "role": "process" },
+    { "id": "Best", "label": "Best Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "A" },
+    { "from": "Prompt", "to": "B" },
+    { "from": "Prompt", "to": "C" },
+    { "from": "A", "to": "Judge" },
+    { "from": "B", "to": "Judge" },
+    { "from": "C", "to": "Judge" },
+    { "from": "Judge", "to": "Best" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Comparing Outputs", "nodes": ["A", "B", "C", "Judge"], "style": "highlight" }
+  ]
+}

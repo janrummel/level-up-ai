@@ -11,22 +11,11 @@ Would you use the same model for the question "What time is it?" as for "Analyze
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Input["User Input"] --> Analyze{"Analyze<br/>Input"}
-  Analyze -->|Simple| Flash["Flash Model<br/>(cheap)"]
-  Analyze -->|Complex| Pro["Pro Model<br/>(expensive)"]
-  Analyze -->|Code| Code["Code Model<br/>(specialized)"]
-  Flash --> Output["Output"]
-  Pro --> Output
-  Code --> Output
-  style Input fill:#4A90D9,color:#fff
-  style Analyze fill:#27AE60,color:#fff
-  style Flash fill:#27AE60,color:#fff
-  style Pro fill:#E67E22,color:#fff
-  style Code fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+import l9C2Overview from '../../../../assets/diagrams/l9-c2-overview.svg';
+import l9C2Combine from '../../../../assets/diagrams/l9-c2-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C2Overview} alt="Overview: User Input to Analyze Input, then to Flash Model (Simple), Pro Model (Complex), or Code Model (Code), all to Output" />
 
 The input is analyzed and classified. Simple tasks go to a fast, cheap flash model. Complex tasks to a powerful pro model. Code tasks to a specialized code model. Result: optimal price-performance ratio.
 
@@ -300,20 +289,7 @@ Response: function sortNumbers(arr: number[]): number[]...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Input["User Input"] --> Router["Model<br/>Router (9.2)"]
-  Router --> Model["Selected<br/>Model"]
-  Model --> Result["Result"]
-  Result --> Track["Usage<br/>Tracking (2.2)"]
-  Track --> Log["Cost Log"]
-  style Input fill:#4A90D9,color:#fff
-  style Router fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-  style Track fill:#27AE60,color:#fff
-  style Log fill:#E67E22,color:#fff
-```
+<Image src={l9C2Combine} alt="Combine: User Input to Model Router to Selected Model to Result to Usage Tracking to Cost Log" />
 
 **Exercise:** Combine the Model Router with Usage Tracking from Level 2.2. Build a system that:
 

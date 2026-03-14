@@ -1,0 +1,20 @@
+{
+  "id": "l9-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "IG", "label": ["Input", "Guardrail (9.1)"], "role": "process" },
+    { "id": "CE", "label": ["Context", "Engineering (5.x)"], "role": "process" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "OG", "label": ["Output", "Guardrail (9.1)"], "role": "process" },
+    { "id": "Output", "label": "Safe Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "IG" },
+    { "from": "IG", "to": "CE" },
+    { "from": "CE", "to": "LLM" },
+    { "from": "LLM", "to": "OG" },
+    { "from": "OG", "to": "Output" }
+  ],
+  "groups": []
+}

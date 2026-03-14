@@ -1,0 +1,40 @@
+{
+  "id": "l9-boss-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "IG", "label": ["Input Guardrails", "(9.1)"], "role": "warning" },
+    { "id": "Router1", "label": ["Model Router", "(9.2)"], "role": "process" },
+    { "id": "Loop", "label": ["Custom Loop (8.3)", "+ Tools (3.1)"], "role": "process" },
+    { "id": "BC", "label": ["Break Conditions", "(8.4)"], "role": "warning" },
+    { "id": "WF", "label": ["Workflow (8.1)", "+ Context Eng. (5.x)"], "role": "process" },
+    { "id": "SO", "label": ["Structured Output", "(1.5)"], "role": "process" },
+    { "id": "OG", "label": ["Output Guardrails", "(9.1)"], "role": "warning" },
+    { "id": "Compare", "label": ["Comparing", "Outputs (9.3)"], "role": "process" },
+    { "id": "Stream", "label": "Stream (7.x)", "role": "process" },
+    { "id": "Report", "label": "Report", "role": "output" },
+    { "id": "Track", "label": ["Usage Tracking", "(2.2)"], "role": "process" },
+    { "id": "Eval", "label": ["Eval Coverage", "(6.x)"], "role": "process" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "IG" },
+    { "from": "IG", "to": "Router1" },
+    { "from": "Router1", "to": "Loop" },
+    { "from": "Loop", "to": "BC" },
+    { "from": "BC", "to": "WF" },
+    { "from": "WF", "to": "SO" },
+    { "from": "SO", "to": "OG" },
+    { "from": "OG", "to": "Compare" },
+    { "from": "Compare", "to": "Stream" },
+    { "from": "Stream", "to": "Report" },
+    { "from": "Loop", "to": "Track" },
+    { "from": "WF", "to": "Track" },
+    { "from": "Compare", "to": "Track" },
+    { "from": "Track", "to": "Eval" }
+  ],
+  "groups": [
+    { "id": "Research", "label": "Phase 1: Research", "nodes": ["Router1", "Loop", "BC"], "style": "highlight" },
+    { "id": "Process", "label": "Phase 2: Processing", "nodes": ["WF", "SO"], "style": "highlight" },
+    { "id": "Quality", "label": "Phase 3: Quality", "nodes": ["OG", "Compare"], "style": "highlight" }
+  ]
+}

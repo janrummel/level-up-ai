@@ -11,39 +11,11 @@ How do you build an end-to-end AI system that autonomously researches, summarize
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Topic["Topic"] --> R
-  subgraph HIER["You are HERE: Research Workflow"]
-    subgraph Phase1["Research Phase"]
-      R["Agent Loop<br/>(8.3 + Tools 3.1)"]
-      BC["Break<br/>Conditions (8.4)"]
-      R --> BC
-    end
-    subgraph Phase2["Processing Phase"]
-      WF["Workflow<br/>(8.1)"]
-      CE["Context<br/>Engineering (5.x)"]
-      WF --> CE
-    end
-    subgraph Phase3["Quality Phase"]
-      GR["Guardrails<br/>(9.1)"]
-      MR["Model<br/>Router (9.2)"]
-      GR --> MR
-    end
-  end
-  Phase1 --> Phase2
-  Phase2 --> Phase3
-  Phase3 --> Report["Report"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Topic fill:#4A90D9,color:#fff
-  style R fill:#27AE60,color:#fff
-  style BC fill:#E74C3C,color:#fff
-  style WF fill:#27AE60,color:#fff
-  style CE fill:#27AE60,color:#fff
-  style GR fill:#27AE60,color:#fff
-  style MR fill:#27AE60,color:#fff
-  style Report fill:#E67E22,color:#fff
-```
+import l9C4Overview from '../../../../assets/diagrams/l9-c4-overview.svg';
+import l9C4Combine from '../../../../assets/diagrams/l9-c4-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C4Overview} alt="Overview: Topic as input, Agent Loop, Break Conditions, Workflow, Context Engineering, Guardrails, Model Router as processes in group, Report as output" />
 
 Three phases: Research (Agent Loop with tools and break conditions), Processing (Workflow with Context Engineering), and Quality (Guardrails and Model Router). Concepts from 8 different levels come together.
 
@@ -438,33 +410,7 @@ AI in der Medizin — Report
 
 ## COMBINE
 
-```mermaid
-graph LR
-  L1["Structured<br/>Output (1.5)"]
-  L2["Token<br/>Tracking (2.2)"]
-  L3["Tools (3.1)"]
-  L5["Context<br/>Engineering (5.x)"]
-  L6["Evals (6.x)"]
-  L8["Workflows (8.x)"]
-  L9["Guardrails +<br/>Router (9.x)"]
-  L1 --> Pipeline["Research<br/>Pipeline"]
-  L2 --> Pipeline
-  L3 --> Pipeline
-  L5 --> Pipeline
-  L6 --> Pipeline
-  L8 --> Pipeline
-  L9 --> Pipeline
-  Pipeline --> Production["Production-Ready<br/>AI System"]
-  style L1 fill:#27AE60,color:#fff
-  style L2 fill:#27AE60,color:#fff
-  style L3 fill:#27AE60,color:#fff
-  style L5 fill:#27AE60,color:#fff
-  style L6 fill:#27AE60,color:#fff
-  style L8 fill:#27AE60,color:#fff
-  style L9 fill:#E67E22,color:#fff
-  style Pipeline fill:#27AE60,color:#fff
-  style Production fill:#E67E22,color:#fff
-```
+<Image src={l9C4Combine} alt="Combine: All level concepts (1.5, 2.2, 3.1, 5.x, 6.x, 8.x, 9.x) flow into Research Pipeline, Pipeline to Production-Ready AI System" />
 
 This is the big picture. You now have all the building blocks to create production-ready AI systems:
 

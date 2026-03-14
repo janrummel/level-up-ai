@@ -40,51 +40,10 @@ Your system should feel like this:
 
 This project connects all 9 levels:
 
-```mermaid
-graph TB
-  Input["User Input"] --> IG["Input Guardrails<br/>(9.1)"]
+import l9BossOverview from '../../../../assets/diagrams/l9-boss-overview.svg';
+import { Image } from 'astro:assets';
 
-  subgraph Pipeline["Production-Ready Pipeline"]
-    IG --> Router1["Model Router<br/>(9.2)"]
-
-    subgraph Research["Phase 1: Research"]
-      Router1 --> Loop["Custom Loop (8.3)<br/>+ Tools (3.1)"]
-      Loop --> BC["Break Conditions<br/>(8.4)"]
-    end
-
-    subgraph Process["Phase 2: Processing"]
-      BC --> WF["Workflow (8.1)<br/>+ Context Eng. (5.x)"]
-      WF --> SO["Structured Output<br/>(1.5)"]
-    end
-
-    subgraph Quality["Phase 3: Quality"]
-      SO --> OG["Output Guardrails<br/>(9.1)"]
-      OG --> Compare["Comparing<br/>Outputs (9.3)"]
-    end
-  end
-
-  Compare --> Stream["Stream (7.x)"]
-  Stream --> Report["Report"]
-
-  Loop -.-> Track["Usage Tracking<br/>(2.2)"]
-  WF -.-> Track
-  Compare -.-> Track
-  Track -.-> Eval["Eval Coverage<br/>(6.x)"]
-
-  style Input fill:#4A90D9,color:#fff
-  style IG fill:#E74C3C,color:#fff
-  style Router1 fill:#27AE60,color:#fff
-  style Loop fill:#27AE60,color:#fff
-  style BC fill:#E74C3C,color:#fff
-  style WF fill:#27AE60,color:#fff
-  style SO fill:#27AE60,color:#fff
-  style OG fill:#E74C3C,color:#fff
-  style Compare fill:#27AE60,color:#fff
-  style Stream fill:#27AE60,color:#fff
-  style Report fill:#E67E22,color:#fff
-  style Track fill:#27AE60,color:#fff
-  style Eval fill:#27AE60,color:#fff
-```
+<Image src={l9BossOverview} alt="Boss Fight Overview: User Input to Input Guardrails, then Pipeline with Research Phase (Model Router, Custom Loop, Break Conditions), Processing Phase (Workflow, Structured Output), Quality Phase (Output Guardrails, Comparing Outputs), to Stream and Report; Usage Tracking and Evals as cross-cutting concerns" />
 
 ## Requirements
 

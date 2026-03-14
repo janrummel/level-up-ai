@@ -1,0 +1,26 @@
+{
+  "id": "l9-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "L1", "label": ["Structured", "Output (1.5)"], "role": "process" },
+    { "id": "L2", "label": ["Token", "Tracking (2.2)"], "role": "process" },
+    { "id": "L3", "label": "Tools (3.1)", "role": "process" },
+    { "id": "L5", "label": ["Context", "Engineering (5.x)"], "role": "process" },
+    { "id": "L6", "label": "Evals (6.x)", "role": "process" },
+    { "id": "L8", "label": "Workflows (8.x)", "role": "process" },
+    { "id": "L9", "label": ["Guardrails +", "Router (9.x)"], "role": "output" },
+    { "id": "Pipeline", "label": ["Research", "Pipeline"], "role": "process" },
+    { "id": "Production", "label": ["Production-Ready", "AI System"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "L1", "to": "Pipeline" },
+    { "from": "L2", "to": "Pipeline" },
+    { "from": "L3", "to": "Pipeline" },
+    { "from": "L5", "to": "Pipeline" },
+    { "from": "L6", "to": "Pipeline" },
+    { "from": "L8", "to": "Pipeline" },
+    { "from": "L9", "to": "Pipeline" },
+    { "from": "Pipeline", "to": "Production" }
+  ],
+  "groups": []
+}

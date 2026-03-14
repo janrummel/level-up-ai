@@ -1,0 +1,20 @@
+{
+  "id": "l9-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "Router", "label": ["Model", "Router (9.2)"], "role": "process" },
+    { "id": "Model", "label": ["Gewahltes", "Modell"], "role": "process" },
+    { "id": "Result", "label": "Result", "role": "output" },
+    { "id": "Track", "label": ["Usage", "Tracking (2.2)"], "role": "process" },
+    { "id": "Log", "label": "Cost Log", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "Router" },
+    { "from": "Router", "to": "Model" },
+    { "from": "Model", "to": "Result" },
+    { "from": "Result", "to": "Track" },
+    { "from": "Track", "to": "Log" }
+  ],
+  "groups": []
+}

@@ -11,25 +11,11 @@ How do you find out which model gives the best answer — without reading every 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Prompt["Same Prompt"] --> A["Model A"]
-  Prompt --> B["Model B"]
-  Prompt --> C["Model C"]
-  subgraph HIER["You are HERE: Comparing Outputs"]
-    A --> Judge{"Judge LLM"}
-    B --> Judge
-    C --> Judge
-  end
-  Judge --> Best["Best Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Prompt fill:#4A90D9,color:#fff
-  style A fill:#27AE60,color:#fff
-  style B fill:#27AE60,color:#fff
-  style C fill:#27AE60,color:#fff
-  style Judge fill:#27AE60,color:#fff
-  style Best fill:#E67E22,color:#fff
-```
+import l9C3Overview from '../../../../assets/diagrams/l9-c3-overview.svg';
+import l9C3Combine from '../../../../assets/diagrams/l9-c3-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C3Overview} alt="Overview: Same Prompt to Model A, B, C (all process in group), all to Judge LLM, then to Best Output" />
 
 The same prompt goes to multiple models in parallel. All results are collected and evaluated by a judge LLM. The best result is returned.
 
@@ -346,24 +332,7 @@ Winner: Gemini Flash (5 keywords, 256 characters)
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> Par["Parallel<br/>Calls (9.3)"]
-  Par --> RA["Result A"]
-  Par --> RB["Result B"]
-  Par --> RC["Result C"]
-  RA --> Eval["Evalite<br/>Scorer (6.x)"]
-  RB --> Eval
-  RC --> Eval
-  Eval --> Report["Comparison<br/>Report"]
-  style Prompt fill:#4A90D9,color:#fff
-  style Par fill:#27AE60,color:#fff
-  style RA fill:#E67E22,color:#fff
-  style RB fill:#E67E22,color:#fff
-  style RC fill:#E67E22,color:#fff
-  style Eval fill:#27AE60,color:#fff
-  style Report fill:#E67E22,color:#fff
-```
+<Image src={l9C3Combine} alt="Combine: Prompt to Parallel Calls, then to Result A, B, C, all to Evalite Scorer, then to Comparison Report" />
 
 **Exercise:** Combine Comparing Outputs with the eval framework from Level 6. Instead of a one-time comparison:
 

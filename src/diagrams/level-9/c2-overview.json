@@ -1,0 +1,22 @@
+{
+  "id": "l9-c2-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "Analyze", "label": ["Input", "analysieren"], "role": "process" },
+    { "id": "Flash", "label": ["Flash-Modell", "(guenstig)"], "role": "process" },
+    { "id": "Pro", "label": ["Pro-Modell", "(teuer)"], "role": "output" },
+    { "id": "Code", "label": ["Code-Modell", "(spezialisiert)"], "role": "process" },
+    { "id": "Output", "label": "Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "Analyze" },
+    { "from": "Analyze", "to": "Flash", "label": "Einfach" },
+    { "from": "Analyze", "to": "Pro", "label": "Komplex" },
+    { "from": "Analyze", "to": "Code", "label": "Code" },
+    { "from": "Flash", "to": "Output" },
+    { "from": "Pro", "to": "Output" },
+    { "from": "Code", "to": "Output" }
+  ],
+  "groups": []
+}

@@ -1,0 +1,26 @@
+{
+  "id": "l9-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Topic", "label": "Topic", "role": "input" },
+    { "id": "R", "label": ["Agent Loop", "(8.3 + Tools 3.1)"], "role": "process" },
+    { "id": "BC", "label": ["Break", "Conditions (8.4)"], "role": "warning" },
+    { "id": "WF", "label": ["Workflow", "(8.1)"], "role": "process" },
+    { "id": "CE", "label": ["Context", "Engineering (5.x)"], "role": "process" },
+    { "id": "GR", "label": ["Guardrails", "(9.1)"], "role": "process" },
+    { "id": "MR", "label": ["Model", "Router (9.2)"], "role": "process" },
+    { "id": "Report", "label": "Report", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Topic", "to": "R" },
+    { "from": "R", "to": "BC" },
+    { "from": "BC", "to": "WF" },
+    { "from": "WF", "to": "CE" },
+    { "from": "CE", "to": "GR" },
+    { "from": "GR", "to": "MR" },
+    { "from": "MR", "to": "Report" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Research Workflow", "nodes": ["R", "BC", "WF", "CE", "GR", "MR"], "style": "highlight" }
+  ]
+}

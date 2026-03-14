@@ -11,22 +11,11 @@ Wuerdest Du fuer die Frage "Wie spaet ist es?" dasselbe Modell nutzen wie fuer "
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Input["User Input"] --> Analyze{"Input<br/>analysieren"}
-  Analyze -->|Einfach| Flash["Flash-Modell<br/>(guenstig)"]
-  Analyze -->|Komplex| Pro["Pro-Modell<br/>(teuer)"]
-  Analyze -->|Code| Code["Code-Modell<br/>(spezialisiert)"]
-  Flash --> Output["Output"]
-  Pro --> Output
-  Code --> Output
-  style Input fill:#4A90D9,color:#fff
-  style Analyze fill:#27AE60,color:#fff
-  style Flash fill:#27AE60,color:#fff
-  style Pro fill:#E67E22,color:#fff
-  style Code fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+import l9C2Overview from '../../../../assets/diagrams/l9-c2-overview.svg';
+import l9C2Combine from '../../../../assets/diagrams/l9-c2-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l9C2Overview} alt="Overview: User Input zu Input analysieren, dann zu Flash-Modell (Einfach), Pro-Modell (Komplex) oder Code-Modell (Code), alle zu Output" />
 
 Der Input wird analysiert und klassifiziert. Einfache Aufgaben gehen an ein schnelles, guenstiges Flash-Modell. Komplexe Aufgaben an ein starkes Pro-Modell. Code-Aufgaben an ein spezialisiertes Code-Modell. Ergebnis: optimales Preis-Leistungs-Verhaeltnis.
 
@@ -304,20 +293,7 @@ Antwort: function sortNumbers(arr: number[]): number[]...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Input["User Input"] --> Router["Model<br/>Router (9.2)"]
-  Router --> Model["Gewahltes<br/>Modell"]
-  Model --> Result["Result"]
-  Result --> Track["Usage<br/>Tracking (2.2)"]
-  Track --> Log["Cost Log"]
-  style Input fill:#4A90D9,color:#fff
-  style Router fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-  style Track fill:#27AE60,color:#fff
-  style Log fill:#E67E22,color:#fff
-```
+<Image src={l9C2Combine} alt="Combine: User Input zu Model Router zu Gewahltes Modell zu Result zu Usage Tracking zu Cost Log" />
 
 **Uebung:** Kombiniere den Model Router mit Usage Tracking aus Level 2.2. Baue ein System das:
 
