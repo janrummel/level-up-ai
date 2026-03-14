@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c1-overview.svg';
 import combineDiagram from '../../../../assets/diagrams/l3-c1-combine.svg';
 
 ## THINK
@@ -14,20 +15,7 @@ What if an LLM could not only generate text, but also perform actions — e.g. c
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant User as User
-  participant LLM as LLM
-  participant Tool as Weather API
-
-  User->>LLM: "What's the weather in Berlin?"
-  rect rgba(230, 126, 34, 0.1)
-    Note over LLM,Tool: You are HERE: Tool Calling
-    LLM->>Tool: tool call: getWeather({ location: "Berlin" })
-    Tool-->>LLM: { temperature: 22, condition: "sunny" }
-  end
-  LLM-->>User: "In Berlin it's 22 degrees and sunny."
-```
+<Image src={overviewDiagram} alt="User asks LLM, LLM calls weather API, API responds, LLM formulates answer" />
 
 The LLM recognizes that it can't answer the weather question from its own knowledge. It generates a **tool call** — a structured request to a function. The function is executed, the result goes back to the LLM, and the LLM formulates a natural response from it.
 

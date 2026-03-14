@@ -1,0 +1,23 @@
+{
+  "id": "l7-c1-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "Frontend", "label": "Frontend", "role": "input" },
+    { "id": "Server", "label": "API Route", "role": "process" },
+    { "id": "LLM", "label": "LLM Provider", "role": "process" }
+  ],
+  "messages": [
+    { "from": "Frontend", "to": "Server", "label": "POST /api/chat", "style": "solid" },
+    { "from": "Server", "to": "LLM", "label": "streamText()", "style": "solid" },
+    { "type": "rect", "label": "Stream Events", "style": "highlight", "messages": [
+      { "from": "LLM", "to": "Server", "label": "text-delta: \"Die Analyse\"", "style": "dashed" },
+      { "from": "LLM", "to": "Server", "label": "text-delta: \" zeigt...\"", "style": "dashed" },
+      { "type": "note", "over": "Server", "text": "custom-data: { progress: 1/3 }" },
+      { "from": "LLM", "to": "Server", "label": "text-delta: \" Ergebnis:\"", "style": "dashed" },
+      { "type": "note", "over": "Server", "text": "custom-data: { progress: 2/3 }" },
+      { "from": "LLM", "to": "Server", "label": "text-delta: \" fertig.\"", "style": "dashed" },
+      { "type": "note", "over": "Server", "text": "custom-data: { progress: 3/3 }" }
+    ]},
+    { "from": "Server", "to": "Frontend", "label": "UI Message Stream", "style": "dashed" }
+  ]
+}

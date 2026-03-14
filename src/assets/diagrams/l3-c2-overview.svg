@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 449" role="img" aria-label="l3-c2-overview">
+  <defs>
+  <!-- Gradients -->
+  <linearGradient id="grad-input" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#5B9FE6"/>
+    <stop offset="100%" stop-color="#3A7BD5"/>
+  </linearGradient>
+  <linearGradient id="grad-process" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#43C67A"/>
+    <stop offset="100%" stop-color="#27AE60"/>
+  </linearGradient>
+  <linearGradient id="grad-output" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#F0944D"/>
+    <stop offset="100%" stop-color="#E67E22"/>
+  </linearGradient>
+  <linearGradient id="grad-warning" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#EF6B6B"/>
+    <stop offset="100%" stop-color="#E74C3C"/>
+  </linearGradient>
+  <linearGradient id="grad-neutral" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#64748b"/>
+    <stop offset="100%" stop-color="#475569"/>
+  </linearGradient>
+
+  <!-- Glow filters -->
+  <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#3A7BD5" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#27AE60" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E67E22" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E74C3C" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <!-- Shadow filter -->
+  <filter id="shadow">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/>
+  </filter>
+
+  <!-- Arrow marker -->
+  <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#64748b"/>
+  </marker>
+</defs>
+  <rect width="620" height="449" fill="#0f172a" rx="16"/>
+  <line x1="90" y1="56" x2="90" y2="383" stroke="#334155" stroke-dasharray="4 4" stroke-width="1"/>
+  <line x1="310" y1="56" x2="310" y2="383" stroke="#334155" stroke-dasharray="4 4" stroke-width="1"/>
+  <line x1="530" y1="56" x2="530" y2="383" stroke="#334155" stroke-dasharray="4 4" stroke-width="1"/>
+  <rect x="25" y="108" width="570" height="225" rx="8" fill="rgba(230,126,34,0.08)" stroke="#E67E22" stroke-dasharray="5 5" stroke-width="1.5"/>
+  <text x="35" y="122" fill="#E67E22" font-size="10" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Du bist HIER: Frontend-Integration</text>
+  <line x1="90" y1="81" x2="310" y2="81" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="200" y="75" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">&quot;Wie ist das Wetter in Berlin?&quot;</text>
+  <line x1="310" y1="131" x2="90" y2="131" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="200" y="125" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">tool-call Event: getWeather(...)</text>
+  <rect x="25" y="158" width="130" height="20" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="90" y="171" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="system-ui, -apple-system, sans-serif">UI zeigt: &quot;Wetter wird abgefragt...&quot;</text>
+  <line x1="310" y1="195" x2="530" y2="195" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="420" y="189" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">execute getWeather</text>
+  <line x1="530" y1="227" x2="310" y2="227" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="420" y="221" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">{ temperature: 22, condition: &quot;sunny&quot; }</text>
+  <line x1="310" y1="259" x2="90" y2="259" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="200" y="253" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">tool-result Event: { temperature: 22 }</text>
+  <rect x="25" y="286" width="130" height="20" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="90" y="299" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="system-ui, -apple-system, sans-serif">UI zeigt: Wetter-Karte mit 22 Grad</text>
+  <line x1="310" y1="336" x2="90" y2="336" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="200" y="330" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="system-ui, -apple-system, sans-serif">text Event: &quot;In Berlin sind es 22 Grad.&quot;</text>
+  <rect x="30" y="20" width="120" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+  <text x="90" y="43" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">User / UI</text>
+  <rect x="250" y="20" width="120" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+  <text x="310" y="43" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">LLM</text>
+  <rect x="470" y="20" width="120" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+  <text x="530" y="43" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Tool</text>
+  <rect x="30" y="383" width="120" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+  <text x="90" y="406" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">User / UI</text>
+  <rect x="250" y="383" width="120" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+  <text x="310" y="406" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">LLM</text>
+  <rect x="470" y="383" width="120" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+  <text x="530" y="406" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Tool</text>
+</svg>

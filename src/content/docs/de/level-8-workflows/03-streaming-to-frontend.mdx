@@ -4,6 +4,8 @@ description: "Streame Workflow-Fortschritt in Echtzeit ans Frontend — Custom D
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l8-c2-overview.svg';
 
 ## THINK
 
@@ -11,43 +13,7 @@ Wenn ein Workflow 3 Schritte hat und jeder Schritt 5-10 Sekunden dauert — wie 
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant UI as Frontend
-  participant API as Workflow API
-  participant LLM as LLM Provider
-
-  UI->>API: POST /api/pipeline
-  API->>LLM: Step 1: Research
-
-  rect rgba(230, 126, 34, 0.1)
-    Note over API,UI: Custom Data Parts
-    API-->>UI: data: { step: 1, label: "Recherche..." }
-    LLM-->>API: research result
-    API-->>UI: data: { step: 1, status: "done" }
-  end
-
-  API->>LLM: Step 2: Summarize
-  rect rgba(39, 174, 96, 0.1)
-    API-->>UI: data: { step: 2, label: "Zusammenfassung..." }
-    LLM-->>API: summary result
-    API-->>UI: data: { step: 2, status: "done" }
-  end
-
-  API->>LLM: Step 3: Format
-  rect rgba(74, 144, 217, 0.1)
-    API-->>UI: data: { step: 3, label: "Formatierung..." }
-    LLM-->>API: formatted result
-
-    subgraph HIER["Du bist HIER"]
-      Note over UI: UI zeigt Fortschritt<br/>+ finalen Text
-    end
-  end
-
-  API-->>UI: text-stream: formatted result
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-```
+<Image src={overviewDiagram} alt="Workflow API fuehrt 3 Steps aus und streamt Fortschritt und Ergebnisse zum Frontend" />
 
 Statt 30 Sekunden Stille bekommt der User nach jedem Step ein Update. Die ersten zwei Steps laufen im Hintergrund (nur Fortschritt), der dritte Step streamt den Text direkt ins UI.
 
@@ -345,7 +311,6 @@ console.log('\n--- Pipeline beendet ---');
 ## COMBINE
 
 import l8C2Combine from '../../../../assets/diagrams/l8-c2-combine.svg';
-import { Image } from 'astro:assets';
 
 <Image src={l8C2Combine} alt="Combine: Topic in 3-Step Pipeline, dann createDataStream mit Progress Data Parts und streamText, beides ins Frontend" />
 

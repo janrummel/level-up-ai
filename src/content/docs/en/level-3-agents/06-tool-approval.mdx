@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c5-overview.svg';
 import combineDiagram from '../../../../assets/diagrams/l3-c5-combine.svg';
 
 ## THINK
@@ -14,26 +15,7 @@ Would you let an agent delete files, send emails, or modify data in a database w
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant LLM as LLM
-  participant Guard as Approval Guard
-  participant User as User
-  participant Tool as Tool
-
-  LLM->>Guard: Tool Call: deleteFile("/important.txt")
-  rect rgba(230, 126, 34, 0.1)
-    Note over Guard,User: You are HERE: Tool Approval
-    Guard->>User: "Agent wants to delete /important.txt. Allow?"
-    User-->>Guard: "Yes" / "No"
-  end
-  alt Approved
-    Guard->>Tool: execute deleteFile
-    Tool-->>LLM: "File deleted"
-  else Rejected
-    Guard-->>LLM: "Tool call rejected"
-  end
-```
+<Image src={overviewDiagram} alt="LLM wants to execute tool, approval guard asks user, if approved tool executes, if rejected tool is denied" />
 
 Between tool call and tool execution sits an **approval guard**. When a tool is marked as critical, the guard asks the user for permission before the tool is executed. This is human-in-the-loop — the human retains control over dangerous actions.
 

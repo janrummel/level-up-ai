@@ -1,0 +1,21 @@
+{
+  "id": "l3-c2-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "User", "label": "User / UI", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "Tool", "label": "Tool", "role": "output" }
+  ],
+  "messages": [
+    { "from": "User", "to": "LLM", "label": "\"Wie ist das Wetter in Berlin?\"", "style": "solid" },
+    { "type": "rect", "label": "Du bist HIER: Frontend-Integration", "style": "highlight", "messages": [
+      { "from": "LLM", "to": "User", "label": "tool-call Event: getWeather(...)", "style": "dashed" },
+      { "type": "note", "over": "User", "text": "UI zeigt: \"Wetter wird abgefragt...\"" },
+      { "from": "LLM", "to": "Tool", "label": "execute getWeather", "style": "solid" },
+      { "from": "Tool", "to": "LLM", "label": "{ temperature: 22, condition: \"sunny\" }", "style": "dashed" },
+      { "from": "LLM", "to": "User", "label": "tool-result Event: { temperature: 22 }", "style": "dashed" },
+      { "type": "note", "over": "User", "text": "UI zeigt: Wetter-Karte mit 22 Grad" }
+    ]},
+    { "from": "LLM", "to": "User", "label": "text Event: \"In Berlin sind es 22 Grad.\"", "style": "dashed" }
+  ]
+}

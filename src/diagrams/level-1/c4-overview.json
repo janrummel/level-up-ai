@@ -1,0 +1,21 @@
+{
+  "id": "l1-c4-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "Code", "label": "Dein Code", "role": "input" },
+    { "id": "SDK", "label": "AI SDK", "role": "process" },
+    { "id": "LLM", "label": "LLM Provider", "role": "process" }
+  ],
+  "messages": [
+    { "from": "Code", "to": "SDK", "label": "streamText({ prompt })", "style": "solid" },
+    { "from": "SDK", "to": "LLM", "label": "API Request", "style": "solid" },
+    { "type": "rect", "label": "Du bist HIER: Streaming", "style": "highlight", "messages": [
+      { "from": "LLM", "to": "SDK", "label": "text-delta: \"Es\"", "style": "dashed" },
+      { "from": "LLM", "to": "SDK", "label": "text-delta: \" war\"", "style": "dashed" },
+      { "from": "LLM", "to": "SDK", "label": "text-delta: \" einmal\"", "style": "dashed" },
+      { "from": "LLM", "to": "SDK", "label": "text-delta: \"...\"", "style": "dashed" },
+      { "from": "LLM", "to": "SDK", "label": "finish", "style": "dashed" }
+    ]},
+    { "from": "SDK", "to": "Code", "label": "Chunks werden sofort weitergeleitet", "style": "dashed" }
+  ]
+}

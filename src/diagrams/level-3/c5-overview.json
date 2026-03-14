@@ -1,0 +1,23 @@
+{
+  "id": "l3-c5-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "Guard", "label": "Approval Guard", "role": "output" },
+    { "id": "User", "label": "User", "role": "input" },
+    { "id": "Tool", "label": "Tool", "role": "process" }
+  ],
+  "messages": [
+    { "from": "LLM", "to": "Guard", "label": "Tool Call: deleteFile(\"/important.txt\")", "style": "solid" },
+    { "type": "rect", "label": "Du bist HIER: Tool Approval", "style": "highlight", "messages": [
+      { "from": "Guard", "to": "User", "label": "\"Agent will ... loeschen. Erlauben?\"", "style": "solid" },
+      { "from": "User", "to": "Guard", "label": "\"Ja\" / \"Nein\"", "style": "dashed" }
+    ]},
+    { "type": "alt", "ifLabel": "Genehmigt", "elseLabel": "Abgelehnt", "ifMessages": [
+      { "from": "Guard", "to": "Tool", "label": "execute deleteFile", "style": "solid" },
+      { "from": "Tool", "to": "LLM", "label": "\"Datei geloescht\"", "style": "dashed" }
+    ], "elseMessages": [
+      { "from": "Guard", "to": "LLM", "label": "\"Tool-Aufruf abgelehnt\"", "style": "dashed" }
+    ]}
+  ]
+}

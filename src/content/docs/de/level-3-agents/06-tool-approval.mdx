@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c5-overview.svg';
 import combineDiagram from '../../../../assets/diagrams/l3-c5-combine.svg';
 
 ## THINK
@@ -14,26 +15,7 @@ Wuerdest Du einem Agenten erlauben, ohne Rueckfrage Dateien zu loeschen, E-Mails
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant LLM as LLM
-  participant Guard as Approval Guard
-  participant User as User
-  participant Tool as Tool
-
-  LLM->>Guard: Tool Call: deleteFile("/important.txt")
-  rect rgba(230, 126, 34, 0.1)
-    Note over Guard,User: Du bist HIER: Tool Approval
-    Guard->>User: "Agent will /important.txt loeschen. Erlauben?"
-    User-->>Guard: "Ja" / "Nein"
-  end
-  alt Genehmigt
-    Guard->>Tool: execute deleteFile
-    Tool-->>LLM: "Datei geloescht"
-  else Abgelehnt
-    Guard-->>LLM: "Tool-Aufruf abgelehnt"
-  end
-```
+<Image src={overviewDiagram} alt="LLM will Tool ausfuehren, Approval Guard fragt User, bei Genehmigung wird Tool ausgefuehrt, bei Ablehnung abgelehnt" />
 
 Zwischen Tool Call und Tool Execution sitzt ein **Approval Guard**. Wenn ein Tool als kritisch markiert ist, fragt der Guard den User um Erlaubnis, bevor das Tool ausgefuehrt wird. Das ist Human-in-the-Loop — der Mensch behaelt die Kontrolle ueber gefaehrliche Aktionen.
 

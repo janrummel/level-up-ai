@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c2-overview.svg';
 import combineDiagram from '../../../../assets/diagrams/l3-c2-combine.svg';
 
 ## THINK
@@ -14,24 +15,7 @@ When an LLM calls a tool — how do you show that to the user in the UI? Does th
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant User as User / UI
-  participant LLM as LLM
-  participant Tool as Tool
-
-  User->>LLM: "What's the weather in Berlin?"
-  rect rgba(230, 126, 34, 0.1)
-    Note over User,Tool: You are HERE: Frontend Integration
-    LLM-->>User: tool-call Event: getWeather({ location: "Berlin" })
-    Note over User: UI shows: "Fetching weather..."
-    LLM->>Tool: execute getWeather
-    Tool-->>LLM: { temperature: 22, condition: "sunny" }
-    LLM-->>User: tool-result Event: { temperature: 22 }
-    Note over User: UI shows: Weather card with 22 degrees
-  end
-  LLM-->>User: text Event: "It's 22 degrees in Berlin."
-```
+<Image src={overviewDiagram} alt="LLM sends tool-call and tool-result events to UI, UI shows loading state and result card" />
 
 When streaming, you don't just get text events — you also get `tool-call` and `tool-result` events. You can use these in the frontend to display loading states, tool-specific UIs, and transparent intermediate steps.
 

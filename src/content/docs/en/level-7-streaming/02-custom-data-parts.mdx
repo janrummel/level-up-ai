@@ -4,6 +4,8 @@ description: "Transport structured data alongside text in the stream — progres
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l7-c1-overview.svg';
 
 ## THINK
 
@@ -11,34 +13,7 @@ What if you want to transport structured data alongside text in the stream — e
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant Client as Frontend
-  participant Server as API Route
-  participant LLM as LLM Provider
-
-  Client->>Server: POST /api/chat
-  Server->>LLM: streamText()
-
-  rect rgba(230, 126, 34, 0.1)
-    Note over Server,LLM: Stream Events
-    LLM-->>Server: text-delta: "The analysis"
-    LLM-->>Server: text-delta: " shows..."
-    Note over Server: custom-data: { progress: 1/3 }
-    LLM-->>Server: text-delta: " Result:"
-    Note over Server: custom-data: { progress: 2/3 }
-    LLM-->>Server: text-delta: " done."
-    Note over Server: custom-data: { progress: 3/3 }
-  end
-
-  subgraph HERE["You are HERE: Custom Data Parts"]
-    Note over Client: UI renders text AND<br/>progress bar
-  end
-
-  Server-->>Client: UI Message Stream
-
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-```
+<Image src={overviewDiagram} alt="Frontend, API route and LLM stream text-deltas with custom data parts for progress display" />
 
 The stream doesn't just carry text chunks. Custom Data Parts let you send structured data — progress, sources, status — alongside the text to the frontend.
 
@@ -281,7 +256,6 @@ console.log('\n--- Stream beendet ---');
 ## COMBINE
 
 import l7C1Combine from '../../../../assets/diagrams/l7-c1-combine.svg';
-import { Image } from 'astro:assets';
 
 <Image src={l7C1Combine} alt="Combine: User Prompt and Status Parts flow through streamText() and createDataStream() into the Frontend UI" />
 

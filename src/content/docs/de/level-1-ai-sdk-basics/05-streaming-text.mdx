@@ -5,6 +5,7 @@ sidebar:
   order: 5
 ---
 import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c4-overview.svg';
 import combineDiagram from '../../../../assets/diagrams/l1-c4-combine.svg';
 
 ## THINK
@@ -13,27 +14,7 @@ Warum siehst Du in ChatGPT die Antwort Wort fuer Wort statt alles auf einmal? Un
 
 ## OVERVIEW
 
-```mermaid
-sequenceDiagram
-  participant Client as Dein Code
-  participant Server as AI SDK
-  participant LLM as LLM Provider
-
-  Client->>Server: streamText({ prompt })
-  Server->>LLM: API Request
-
-  rect rgba(230, 126, 34, 0.1)
-    Note over Server,LLM: Du bist HIER: Streaming
-    LLM-->>Server: start
-    LLM-->>Server: text-delta: "Es"
-    LLM-->>Server: text-delta: " war"
-    LLM-->>Server: text-delta: " einmal"
-    LLM-->>Server: text-delta: "..."
-    LLM-->>Server: finish
-  end
-
-  Server-->>Client: Chunks werden sofort weitergeleitet
-```
+<Image src={overviewDiagram} alt="streamText sendet Prompt an LLM, LLM streamt text-delta Chunks zurueck an den Code" />
 
 Das LLM generiert Token fuer Token. Mit `streamText` bekommst Du jeden Token sofort, statt auf die komplette Antwort zu warten. Die gestrichelten Pfeile zeigen: Daten fliessen stueckweise zurueck.
 

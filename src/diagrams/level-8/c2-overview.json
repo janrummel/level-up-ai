@@ -1,0 +1,30 @@
+{
+  "id": "l8-c2-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "UI", "label": "Frontend", "role": "input" },
+    { "id": "API", "label": "Workflow API", "role": "process" },
+    { "id": "LLM", "label": "LLM Provider", "role": "process" }
+  ],
+  "messages": [
+    { "from": "UI", "to": "API", "label": "POST /api/pipeline", "style": "solid" },
+    { "from": "API", "to": "LLM", "label": "Step 1: Research", "style": "solid" },
+    { "type": "rect", "label": "Custom Data Parts", "style": "highlight", "messages": [
+      { "from": "API", "to": "UI", "label": "data: { step: 1, label: \"Recherche...\" }", "style": "dashed" },
+      { "from": "LLM", "to": "API", "label": "research result", "style": "dashed" },
+      { "from": "API", "to": "UI", "label": "data: { step: 1, status: \"done\" }", "style": "dashed" }
+    ]},
+    { "from": "API", "to": "LLM", "label": "Step 2: Summarize", "style": "solid" },
+    { "type": "rect", "label": "Step 2", "style": "process", "messages": [
+      { "from": "API", "to": "UI", "label": "data: { step: 2, label: \"Zusammenfassung...\" }", "style": "dashed" },
+      { "from": "LLM", "to": "API", "label": "summary result", "style": "dashed" },
+      { "from": "API", "to": "UI", "label": "data: { step: 2, status: \"done\" }", "style": "dashed" }
+    ]},
+    { "from": "API", "to": "LLM", "label": "Step 3: Format", "style": "solid" },
+    { "type": "rect", "label": "Step 3", "style": "input", "messages": [
+      { "from": "API", "to": "UI", "label": "data: { step: 3, label: \"Formatierung...\" }", "style": "dashed" },
+      { "from": "LLM", "to": "API", "label": "formatted result", "style": "dashed" }
+    ]},
+    { "from": "API", "to": "UI", "label": "text-stream: formatted result", "style": "dashed" }
+  ]
+}

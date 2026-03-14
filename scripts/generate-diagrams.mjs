@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 
 import { generateSkillTree } from './templates/skill-tree.mjs';
 import { generateFlow } from './templates/flow.mjs';
+import { generateSequence } from './templates/sequence.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,6 +44,7 @@ console.log(`Generated ${skillTreeCount} skill tree SVG(s) → ${OUTPUT_DIR}`);
 import { readdirSync } from 'fs';
 
 let flowCount = 0;
+let seqCount = 0;
 const diagramsDir = join(PROJECT_ROOT, 'src', 'diagrams');
 
 // Glob level-*/c*-*.json
@@ -56,7 +58,11 @@ for (const dir of levelDirs) {
 
   for (const file of jsonFiles) {
     const data = JSON.parse(readFileSync(join(levelPath, file), 'utf8'));
-    if (data.nodes) {
+    if (data.type === 'sequence' || data.participants) {
+      const svg = generateSequence(data);
+      writeFileSync(join(OUTPUT_DIR, `${data.id}.svg`), svg, 'utf8');
+      seqCount++;
+    } else if (data.nodes) {
       const svg = generateFlow(data);
       writeFileSync(join(OUTPUT_DIR, `${data.id}.svg`), svg, 'utf8');
       flowCount++;
@@ -65,8 +71,9 @@ for (const dir of levelDirs) {
 }
 
 console.log(`Generated ${flowCount} flow diagram SVG(s) → ${OUTPUT_DIR}`);
+console.log(`Generated ${seqCount} sequence diagram SVG(s) → ${OUTPUT_DIR}`);
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-const totalCount = skillTreeCount + flowCount;
+const totalCount = skillTreeCount + flowCount + seqCount;
 console.log(`\nTotal diagrams generated: ${totalCount}`);

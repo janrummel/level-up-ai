@@ -1,0 +1,17 @@
+{
+  "id": "l3-c1-overview",
+  "type": "sequence",
+  "participants": [
+    { "id": "User", "label": "User", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "Tool", "label": "Weather API", "role": "output" }
+  ],
+  "messages": [
+    { "from": "User", "to": "LLM", "label": "\"Wie ist das Wetter in Berlin?\"", "style": "solid" },
+    { "type": "rect", "label": "Du bist HIER: Tool Calling", "style": "highlight", "messages": [
+      { "from": "LLM", "to": "Tool", "label": "tool call: getWeather({ location: \"Berlin\" })", "style": "solid" },
+      { "from": "Tool", "to": "LLM", "label": "{ temperature: 22, condition: \"sunny\" }", "style": "dashed" }
+    ]},
+    { "from": "LLM", "to": "User", "label": "\"In Berlin sind es 22 Grad und sonnig.\"", "style": "dashed" }
+  ]
+}
