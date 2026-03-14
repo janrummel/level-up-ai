@@ -8,6 +8,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 import { generateSkillTree } from './templates/skill-tree.mjs';
+import { generateFlow } from './templates/flow.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,15 +38,35 @@ for (const entry of skillTreesData) {
 
 console.log(`Generated ${skillTreeCount} skill tree SVG(s) → ${OUTPUT_DIR}`);
 
-// ─── Flow Diagrams (TODO) ──────────────────────────────────────────────────────
-// Placeholder: flow diagram generation will be added here once the
-// flow-diagram template and data file are created.
-// Example:
-//   import { generateFlowDiagram } from './templates/flow-diagram.mjs';
-//   const flowData = JSON.parse(readFileSync(...));
-//   for (const entry of flowData) { ... }
+// ─── Flow Diagrams ───────────────────────────────────────────────────────────
+
+import { readdirSync } from 'fs';
+
+let flowCount = 0;
+const diagramsDir = join(PROJECT_ROOT, 'src', 'diagrams');
+
+// Glob level-*/c*-*.json
+const levelDirs = readdirSync(diagramsDir, { withFileTypes: true })
+  .filter(d => d.isDirectory() && d.name.startsWith('level-'));
+
+for (const dir of levelDirs) {
+  const levelPath = join(diagramsDir, dir.name);
+  const jsonFiles = readdirSync(levelPath)
+    .filter(f => f.endsWith('.json') && f.match(/^c\d+.*\.json$|^boss.*\.json$/));
+
+  for (const file of jsonFiles) {
+    const data = JSON.parse(readFileSync(join(levelPath, file), 'utf8'));
+    if (data.nodes) {
+      const svg = generateFlow(data);
+      writeFileSync(join(OUTPUT_DIR, `${data.id}.svg`), svg, 'utf8');
+      flowCount++;
+    }
+  }
+}
+
+console.log(`Generated ${flowCount} flow diagram SVG(s) → ${OUTPUT_DIR}`);
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-const totalCount = skillTreeCount;
+const totalCount = skillTreeCount + flowCount;
 console.log(`\nTotal diagrams generated: ${totalCount}`);
