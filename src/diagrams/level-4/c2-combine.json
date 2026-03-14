@@ -1,0 +1,22 @@
+{
+  "id": "l4-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "FE", "label": "Frontend", "role": "input" },
+    { "id": "ID", "label": "chatId", "role": "input" },
+    { "id": "Msgs", "label": "messages", "role": "input" },
+    { "id": "Handler", "label": "API Handler", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "OF", "label": "onFinish", "role": "output" },
+    { "id": "Store", "label": ["chatStore", "(nach chatId)"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "FE", "to": "ID" },
+    { "from": "FE", "to": "Msgs" },
+    { "from": "ID", "to": "Handler" },
+    { "from": "Msgs", "to": "Handler" },
+    { "from": "Handler", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Store" }
+  ]
+}

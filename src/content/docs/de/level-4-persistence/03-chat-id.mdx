@@ -5,31 +5,17 @@ sidebar:
   order: 3
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c2-combine.svg';
+
 ## THINK
 
 Wie weiss Dein Backend, zu welchem Chat eine neue Nachricht gehoert?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  FE["Frontend"]
-  subgraph HIER["Du bist HIER: Chat ID"]
-    ID["chatId"]
-  end
-  FE --> ID
-  ID --> API["API Handler"]
-  Msgs["messages"] --> API
-  API --> LLM["generateText()"]
-  LLM --> Resp["Response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style FE fill:#4A90D9,color:#fff
-  style ID fill:#E67E22,color:#fff
-  style Msgs fill:#4A90D9,color:#fff
-  style API fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Frontend sendet chatId an API Handler, messages gehen auch an API Handler, generateText gibt Response zurueck" />
 
 Jeder Chat braucht eine eindeutige ID. Das Frontend generiert sie beim Start eines neuen Chats und schickt sie mit jedem Request mit. Das Backend nutzt die ID, um Messages zuzuordnen, Verlaeufe zu laden und Sessions zu verwalten.
 
@@ -217,23 +203,7 @@ Chat e5f6a7b8...: 1 Messages
 
 ## COMBINE
 
-```mermaid
-graph LR
-  FE["Frontend"] --> ID["chatId"]
-  FE --> Msgs["messages"]
-  ID --> Handler["API Handler"]
-  Msgs --> Handler
-  Handler --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Store["chatStore\n(nach chatId)"]
-  style FE fill:#4A90D9,color:#fff
-  style ID fill:#4A90D9,color:#fff
-  style Msgs fill:#4A90D9,color:#fff
-  style Handler fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#E67E22,color:#fff
-  style Store fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Frontend sendet chatId und messages an API Handler, generateText, onFinish speichert in chatStore nach chatId" />
 
 **Uebung:** Verbinde Chat ID mit `onFinish` — speichere die Assistant-Antwort im `onFinish` Callback, gruppiert nach Chat ID.
 

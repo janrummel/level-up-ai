@@ -5,31 +5,17 @@ sidebar:
   order: 3
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c2-combine.svg';
+
 ## THINK
 
 How does your backend know which chat a new message belongs to?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  FE["Frontend"]
-  subgraph HIER["You are HERE: Chat ID"]
-    ID["chatId"]
-  end
-  FE --> ID
-  ID --> API["API Handler"]
-  Msgs["messages"] --> API
-  API --> LLM["generateText()"]
-  LLM --> Resp["Response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style FE fill:#4A90D9,color:#fff
-  style ID fill:#E67E22,color:#fff
-  style Msgs fill:#4A90D9,color:#fff
-  style API fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Frontend sends chatId to API handler, messages also go to API handler, generateText returns response" />
 
 Every chat needs a unique ID. The frontend generates it when starting a new chat and sends it along with every request. The backend uses the ID to assign messages, load history, and manage sessions.
 
@@ -217,23 +203,7 @@ Chat e5f6a7b8...: 1 Messages
 
 ## COMBINE
 
-```mermaid
-graph LR
-  FE["Frontend"] --> ID["chatId"]
-  FE --> Msgs["messages"]
-  ID --> Handler["API Handler"]
-  Msgs --> Handler
-  Handler --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Store["chatStore\n(by chatId)"]
-  style FE fill:#4A90D9,color:#fff
-  style ID fill:#4A90D9,color:#fff
-  style Msgs fill:#4A90D9,color:#fff
-  style Handler fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#E67E22,color:#fff
-  style Store fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Frontend sends chatId and messages to API handler, generateText, onFinish saves to chatStore by chatId" />
 
 **Exercise:** Connect Chat ID with `onFinish` — save the assistant response in the `onFinish` callback, grouped by chat ID.
 

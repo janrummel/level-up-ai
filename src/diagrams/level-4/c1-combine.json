@@ -1,0 +1,19 @@
+{
+  "id": "l4-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "OF", "label": "onFinish", "role": "output" },
+    { "id": "Track", "label": "Usage Tracker", "role": "output" },
+    { "id": "Log", "label": "Audit Log", "role": "output" },
+    { "id": "Text", "label": "result.text", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Track" },
+    { "from": "OF", "to": "Log" },
+    { "from": "GT", "to": "Text" }
+  ]
+}

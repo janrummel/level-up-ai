@@ -1,0 +1,21 @@
+{
+  "id": "l4-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "FE", "label": "Frontend", "role": "input" },
+    { "id": "Val", "label": "Validate", "role": "output" },
+    { "id": "Err", "label": "400 Error", "role": "warning" },
+    { "id": "Load", "label": "loadMessages()", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "OF", "label": "onFinish", "role": "process" },
+    { "id": "Save", "label": "saveMessages()", "role": "output" }
+  ],
+  "edges": [
+    { "from": "FE", "to": "Val" },
+    { "from": "Val", "to": "Load" },
+    { "from": "Val", "to": "Err" },
+    { "from": "Load", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Save" }
+  ]
+}

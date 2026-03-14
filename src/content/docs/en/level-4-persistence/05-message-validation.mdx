@@ -5,28 +5,17 @@ sidebar:
   order: 5
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c4-combine.svg';
+
 ## THINK
 
 Can you trust the message your frontend sends to the backend?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  FE["Frontend Message"] --> Val
-  subgraph HIER["You are HERE: Validation"]
-    Val{"Validation"}
-  end
-  Val -->|valid| LLM["generateText()"]
-  Val -->|invalid| Err["Error Response"]
-  LLM --> DB["Save to DB"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style FE fill:#4A90D9,color:#fff
-  style Val fill:#E67E22,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Err fill:#E74C3C,color:#fff
-  style DB fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Frontend message is validated, if valid to generateText and save to DB, if invalid error response" />
 
 Before a message is sent to the LLM or saved to the database, it must be validated. A Zod schema defines the expected structure. Invalid messages are caught before they can cause damage.
 
@@ -310,22 +299,7 @@ testCases.forEach((tc, i) => {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  FE["Frontend"] --> Val{"Validate"}
-  Val -->|valid| Load["loadMessages()"]
-  Val -->|invalid| Err["400 Error"]
-  Load --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Save["saveMessages()"]
-  style FE fill:#4A90D9,color:#fff
-  style Val fill:#E67E22,color:#fff
-  style Err fill:#E74C3C,color:#fff
-  style Load fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style Save fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Frontend is validated, if valid loadMessages, generateText, onFinish, saveMessages; if invalid 400 error" />
 
 **Exercise:** Integrate validation into the persistence flow — validate messages BEFORE they are saved to the database.
 

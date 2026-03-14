@@ -1,0 +1,17 @@
+{
+  "id": "l4-c1-timing",
+  "direction": "LR",
+  "nodes": [
+    { "id": "A", "label": "generateText() startet", "role": "input" },
+    { "id": "B", "label": "LLM generiert", "role": "process" },
+    { "id": "C", "label": "Completion fertig", "role": "process" },
+    { "id": "D", "label": "onFinish feuert", "role": "output" },
+    { "id": "E", "label": "await resolved", "role": "output" }
+  ],
+  "edges": [
+    { "from": "A", "to": "B" },
+    { "from": "B", "to": "C" },
+    { "from": "C", "to": "D" },
+    { "from": "D", "to": "E" }
+  ]
+}

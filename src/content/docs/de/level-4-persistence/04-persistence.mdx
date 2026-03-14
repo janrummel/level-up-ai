@@ -5,34 +5,18 @@ sidebar:
   order: 4
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c3-overview.svg';
+import cycleDiagram from '../../../../assets/diagrams/l4-c3-cycle.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c3-combine.svg';
+
 ## THINK
 
 Was passiert mit Deinem Chat-Verlauf wenn Du die Seite neu laedst?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  User["User Message"] --> API["API Handler"]
-  API --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  subgraph HIER["Du bist HIER: Persistence"]
-    OF --> Save["DB: Save"]
-    Load["DB: Load"] --> API
-  end
-  Save --> DB[("Database")]
-  DB --> Load
-  GT --> Resp["Response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style User fill:#4A90D9,color:#fff
-  style API fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style Save fill:#E67E22,color:#fff
-  style Load fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="User Message an API Handler, generateText, onFinish speichert in DB, DB Load fuettert API Handler" />
 
 Persistence bedeutet: Messages werden nach jedem LLM-Call gespeichert und beim naechsten Request (oder nach einem Reload) wieder geladen. Der Chat "erinnert sich" an alles, was vorher gesagt wurde.
 
@@ -48,15 +32,7 @@ Persistence bedeutet: Messages werden nach jedem LLM-Call gespeichert und beim n
 
 Der vollstaendige Cycle besteht aus drei Schritten:
 
-```mermaid
-graph TD
-  A["1. Load: Messages aus DB laden"] --> B["2. Generate: LLM mit Verlauf aufrufen"]
-  B --> C["3. Save: Neue Messages in DB speichern"]
-  C --> A
-  style A fill:#4A90D9,color:#fff
-  style B fill:#27AE60,color:#fff
-  style C fill:#E67E22,color:#fff
-```
+<Image src={cycleDiagram} alt="Persistence-Cycle: 1. Load Messages aus DB, 2. Generate LLM mit Verlauf, 3. Save neue Messages in DB" />
 
 1. **Load:** Vor dem LLM-Call die bisherigen Messages aus der Datenbank laden
 2. **Generate:** `generateText` mit den geladenen Messages + der neuen User-Message aufrufen
@@ -313,27 +289,7 @@ Messages: 4
 
 ## COMBINE
 
-```mermaid
-graph LR
-  FE["Frontend"] --> ID["chatId"]
-  ID --> Load["loadMessages()"]
-  Load --> DB[("Database")]
-  DB --> Msgs["History"]
-  Msgs --> GT["generateText()"]
-  NewMsg["Neue Message"] --> GT
-  GT --> OF["onFinish"]
-  OF --> Save["saveMessages()"]
-  Save --> DB
-  style FE fill:#4A90D9,color:#fff
-  style ID fill:#4A90D9,color:#fff
-  style NewMsg fill:#4A90D9,color:#fff
-  style Load fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style Save fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style Msgs fill:#27AE60,color:#fff
-```
+<Image src={combineDiagram} alt="Frontend sendet chatId, loadMessages laedt History aus DB, mit neuer Message in generateText, onFinish speichert via saveMessages in DB" />
 
 **Uebung:** Verbinde Persistence mit Chat ID — lade einen Chat by ID, fuege neue Messages hinzu und speichere alles.
 

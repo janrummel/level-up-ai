@@ -8,6 +8,9 @@ sidebar:
     variant: 'danger'
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-boss-overview.svg';
+
 ## Das Szenario
 
 Du baust ein **Chat-System mit vollstaendigem Persistence-Cycle** — ein Programm, das eine Chat-ID generiert, Nachrichten validiert, nach jedem LLM-Call speichert und nach einem simulierten Reload den Verlauf laedt und das Gespraech nahtlos fortsetzt.
@@ -44,25 +47,7 @@ Assistant: Basierend auf unserer Diskussion ueber TypeScript...
 
 Dieses Projekt kombiniert alle vier Bausteine aus Level 4:
 
-```mermaid
-graph LR
-  ID["Chat ID<br/>(4.2)"] --> Val["Validation<br/>(4.4)"]
-  Val -->|valid| Load["Load History"]
-  Val -->|invalid| Err["Error"]
-  Load --> GT["generateText()"]
-  GT --> OF["onFinish<br/>(4.1)"]
-  OF --> Save["Persistence<br/>(4.3)"]
-  Save --> DB[("Database")]
-  DB --> Load
-  style ID fill:#4A90D9,color:#fff
-  style Val fill:#27AE60,color:#fff
-  style Load fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#E67E22,color:#fff
-  style Save fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style Err fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="Chat ID fliesst in Validation, bei valid Load History, generateText, onFinish, Persistence, Database; bei invalid Error" />
 
 ## Anforderungen
 

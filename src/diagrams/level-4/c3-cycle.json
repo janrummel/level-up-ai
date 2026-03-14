@@ -1,0 +1,14 @@
+{
+  "id": "l4-c3-cycle",
+  "direction": "TD",
+  "nodes": [
+    { "id": "A", "label": ["1. Load:", "Messages aus DB laden"], "role": "input" },
+    { "id": "B", "label": ["2. Generate:", "LLM mit Verlauf aufrufen"], "role": "process" },
+    { "id": "C", "label": ["3. Save:", "Neue Messages in DB speichern"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "A", "to": "B" },
+    { "from": "B", "to": "C" },
+    { "from": "C", "to": "A" }
+  ]
+}

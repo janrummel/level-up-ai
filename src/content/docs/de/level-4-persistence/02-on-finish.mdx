@@ -5,28 +5,18 @@ sidebar:
   order: 2
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c1-overview.svg';
+import timingDiagram from '../../../../assets/diagrams/l4-c1-timing.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c1-combine.svg';
+
 ## THINK
 
 Wie speicherst Du das Ergebnis eines LLM-Calls — NACHDEM er fertig ist, aber BEVOR die Response an den User zurueckgeht?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  P["prompt"] --> GT["generateText()"]
-  GT --> CB
-  subgraph HIER["Du bist HIER: onFinish"]
-    CB["onFinish Callback"]
-  end
-  CB --> DB["DB / Logging"]
-  CB --> Resp["Response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style P fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style CB fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="prompt fliesst in generateText, onFinish Callback sendet an DB/Logging und Response" />
 
 `generateText` ruft nach der vollstaendigen Completion einen `onFinish` Callback auf. In diesem Callback hast Du Zugriff auf `text`, `usage`, `finishReason` und die vollstaendige `response` — der perfekte Ort, um Ergebnisse zu speichern, Tokens zu tracken oder Logs zu schreiben.
 
@@ -70,18 +60,7 @@ Der Callback bekommt ein Objekt mit den wichtigsten Properties (die vollstaendig
 
 Der Timing ist entscheidend:
 
-```mermaid
-graph LR
-  A["generateText() startet"] --> B["LLM generiert"]
-  B --> C["Completion fertig"]
-  C --> D["onFinish feuert"]
-  D --> E["await resolved"]
-  style A fill:#4A90D9,color:#fff
-  style B fill:#27AE60,color:#fff
-  style C fill:#27AE60,color:#fff
-  style D fill:#E67E22,color:#fff
-  style E fill:#E67E22,color:#fff
-```
+<Image src={timingDiagram} alt="generateText startet, LLM generiert, Completion fertig, onFinish feuert, await resolved" />
 
 `onFinish` wird aufgerufen, **nachdem** die Completion fertig ist und **bevor** das `await` resolved. Das bedeutet: Dein Speicher-Code im Callback laeuft, bevor der restliche Code nach `await generateText(...)` ausgefuehrt wird.
 
@@ -270,20 +249,7 @@ Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["prompt"] --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Track["Usage Tracker"]
-  OF --> Log["Audit Log"]
-  GT --> Text["result.text"]
-  style Prompt fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#E67E22,color:#fff
-  style Track fill:#E67E22,color:#fff
-  style Log fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="prompt fliesst in generateText, onFinish sendet an Usage Tracker und Audit Log, result.text als Ausgabe" />
 
 **Uebung:** Verbinde `onFinish` mit dem Usage Tracking aus Level 2. Baue einen einfachen Cost Tracker, der im `onFinish` Callback die Kosten pro Request berechnet und kumuliert.
 

@@ -5,28 +5,18 @@ sidebar:
   order: 2
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c1-overview.svg';
+import timingDiagram from '../../../../assets/diagrams/l4-c1-timing.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c1-combine.svg';
+
 ## THINK
 
 How do you save the result of an LLM call — AFTER it finishes, but BEFORE the response goes back to the user?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  P["prompt"] --> GT["generateText()"]
-  GT --> CB
-  subgraph HIER["You are HERE: onFinish"]
-    CB["onFinish Callback"]
-  end
-  CB --> DB["DB / Logging"]
-  CB --> Resp["Response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style P fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style CB fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="prompt flows to generateText, onFinish callback sends to DB/logging and response" />
 
 `generateText` calls an `onFinish` callback after the full completion. In this callback you have access to `text`, `usage`, `finishReason`, and the full `response` — the perfect place to save results, track tokens, or write logs.
 
@@ -70,18 +60,7 @@ The callback receives an object with the most important properties (see the [gen
 
 The timing is critical:
 
-```mermaid
-graph LR
-  A["generateText() starts"] --> B["LLM generates"]
-  B --> C["Completion finished"]
-  C --> D["onFinish fires"]
-  D --> E["await resolved"]
-  style A fill:#4A90D9,color:#fff
-  style B fill:#27AE60,color:#fff
-  style C fill:#27AE60,color:#fff
-  style D fill:#E67E22,color:#fff
-  style E fill:#E67E22,color:#fff
-```
+<Image src={timingDiagram} alt="generateText starts, LLM generates, completion finished, onFinish fires, await resolved" />
 
 `onFinish` is called **after** the completion finishes and **before** the `await` resolves. This means: Your save code in the callback runs before the remaining code after `await generateText(...)` executes.
 
@@ -270,20 +249,7 @@ The main difference between let and const lies in reassignment...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["prompt"] --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Track["Usage Tracker"]
-  OF --> Log["Audit Log"]
-  GT --> Text["result.text"]
-  style Prompt fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#E67E22,color:#fff
-  style Track fill:#E67E22,color:#fff
-  style Log fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="prompt flows to generateText, onFinish sends to usage tracker and audit log, result.text as output" />
 
 **Exercise:** Connect `onFinish` with the usage tracking from Level 2. Build a simple cost tracker that calculates and accumulates costs per request in the `onFinish` callback.
 

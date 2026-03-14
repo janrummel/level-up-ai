@@ -1,0 +1,20 @@
+{
+  "id": "l4-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "FE", "label": "Frontend Message", "role": "input" },
+    { "id": "Val", "label": "Validation", "role": "output" },
+    { "id": "LLM", "label": "generateText()", "role": "process" },
+    { "id": "Err", "label": "Error Response", "role": "warning" },
+    { "id": "DB", "label": "Save to DB", "role": "output" }
+  ],
+  "edges": [
+    { "from": "FE", "to": "Val" },
+    { "from": "Val", "to": "LLM" },
+    { "from": "Val", "to": "Err" },
+    { "from": "LLM", "to": "DB" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Validation", "nodes": ["Val"], "style": "highlight" }
+  ]
+}

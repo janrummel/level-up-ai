@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1482 177" role="img" aria-label="l4-c3-combine">
+  <defs>
+  <!-- Gradients -->
+  <linearGradient id="grad-input" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#5B9FE6"/>
+    <stop offset="100%" stop-color="#3A7BD5"/>
+  </linearGradient>
+  <linearGradient id="grad-process" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#43C67A"/>
+    <stop offset="100%" stop-color="#27AE60"/>
+  </linearGradient>
+  <linearGradient id="grad-output" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#F0944D"/>
+    <stop offset="100%" stop-color="#E67E22"/>
+  </linearGradient>
+  <linearGradient id="grad-warning" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#EF6B6B"/>
+    <stop offset="100%" stop-color="#E74C3C"/>
+  </linearGradient>
+  <linearGradient id="grad-neutral" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#64748b"/>
+    <stop offset="100%" stop-color="#475569"/>
+  </linearGradient>
+
+  <!-- Glow filters -->
+  <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#3A7BD5" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#27AE60" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E67E22" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E74C3C" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <!-- Shadow filter -->
+  <filter id="shadow">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/>
+  </filter>
+
+  <!-- Arrow marker -->
+  <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#64748b"/>
+  </marker>
+</defs>
+  <rect width="1482" height="177" fill="#0f172a" rx="16"/>
+  <!-- Groups -->
+  
+  <!-- Edges -->
+  <path d="M 140,69.5 L 170,69.5 L 200,69.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 300,69.5 L 330,69.5 L 360,69.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 510,69.5 L 540,69.5 L 570,69.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 649.0909090909091,87.5 L 700,119 L 746,119" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 846,119 L 892,119 L 935.0327868852459,106.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 862,58 L 892,58 L 935.0327868852459,70.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 1072,88.5 L 1102,88.5 L 1132,88.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 1232,88.5 L 1262,88.5 L 1292,83.07142857142857" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 1328.8181818181818,51.5 L 1262,20 L 1182,20 L 1102,20 L 997,20 L 892,20 L 796,20 L 700,20 L 649.0909090909091,51.5" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <!-- Nodes -->
+  <rect x="40" y="51.5" width="100" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+      <text x="90" y="73.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Frontend</text>
+    <rect x="200" y="51.5" width="100" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+      <text x="250" y="73.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">chatId</text>
+    <rect x="360" y="51.5" width="150" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="435" y="73.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">loadMessages()</text>
+    <rect x="570" y="51.5" width="100" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="620" y="73.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Database</text>
+    <rect x="746" y="101" width="100" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="796" y="123" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">History</text>
+    <rect x="922" y="70.5" width="150" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="997" y="92.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">generateText()</text>
+    <rect x="730" y="40" width="132" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+      <text x="796" y="62" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Neue Message</text>
+    <rect x="1132" y="70.5" width="100" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="1182" y="92.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">onFinish</text>
+    <rect x="1292" y="51.5" width="150" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="1367" y="73.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">saveMessages()</text>
+</svg>

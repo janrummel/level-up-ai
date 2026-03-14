@@ -5,28 +5,17 @@ sidebar:
   order: 5
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l4-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l4-c4-combine.svg';
+
 ## THINK
 
 Kannst Du der Nachricht vertrauen, die Dein Frontend ans Backend schickt?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  FE["Frontend Message"] --> Val
-  subgraph HIER["Du bist HIER: Validation"]
-    Val{"Validation"}
-  end
-  Val -->|valid| LLM["generateText()"]
-  Val -->|invalid| Err["Error Response"]
-  LLM --> DB["Save to DB"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style FE fill:#4A90D9,color:#fff
-  style Val fill:#E67E22,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Err fill:#E74C3C,color:#fff
-  style DB fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Frontend Message wird validiert, bei valid zu generateText und Save to DB, bei invalid Error Response" />
 
 Bevor eine Nachricht ans LLM geschickt oder in der Datenbank gespeichert wird, muss sie validiert werden. Ein Zod Schema definiert die erwartete Struktur. Ungueltige Messages werden abgefangen, bevor sie Schaden anrichten.
 
@@ -307,22 +296,7 @@ testCases.forEach((tc, i) => {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  FE["Frontend"] --> Val{"Validate"}
-  Val -->|valid| Load["loadMessages()"]
-  Val -->|invalid| Err["400 Error"]
-  Load --> GT["generateText()"]
-  GT --> OF["onFinish"]
-  OF --> Save["saveMessages()"]
-  style FE fill:#4A90D9,color:#fff
-  style Val fill:#E67E22,color:#fff
-  style Err fill:#E74C3C,color:#fff
-  style Load fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style Save fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Frontend wird validiert, bei valid loadMessages, generateText, onFinish, saveMessages; bei invalid 400 Error" />
 
 **Uebung:** Integriere Validation in den Persistence-Flow — validiere Messages BEVOR sie in die Datenbank gespeichert werden.
 

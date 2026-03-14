@@ -1,0 +1,20 @@
+{
+  "id": "l4-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "P", "label": "prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "CB", "label": "onFinish Callback", "role": "output" },
+    { "id": "DB", "label": "DB / Logging", "role": "output" },
+    { "id": "Resp", "label": "Response", "role": "output" }
+  ],
+  "edges": [
+    { "from": "P", "to": "GT" },
+    { "from": "GT", "to": "CB" },
+    { "from": "CB", "to": "DB" },
+    { "from": "CB", "to": "Resp" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: onFinish", "nodes": ["CB"], "style": "highlight" }
+  ]
+}

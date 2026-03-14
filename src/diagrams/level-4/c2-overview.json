@@ -1,0 +1,22 @@
+{
+  "id": "l4-c2-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "FE", "label": "Frontend", "role": "input" },
+    { "id": "ID", "label": "chatId", "role": "output" },
+    { "id": "Msgs", "label": "messages", "role": "input" },
+    { "id": "API", "label": "API Handler", "role": "process" },
+    { "id": "LLM", "label": "generateText()", "role": "process" },
+    { "id": "Resp", "label": "Response", "role": "output" }
+  ],
+  "edges": [
+    { "from": "FE", "to": "ID" },
+    { "from": "ID", "to": "API" },
+    { "from": "Msgs", "to": "API" },
+    { "from": "API", "to": "LLM" },
+    { "from": "LLM", "to": "Resp" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Chat ID", "nodes": ["ID"], "style": "highlight" }
+  ]
+}

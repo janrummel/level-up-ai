@@ -1,0 +1,26 @@
+{
+  "id": "l4-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "FE", "label": "Frontend", "role": "input" },
+    { "id": "ID", "label": "chatId", "role": "input" },
+    { "id": "Load", "label": "loadMessages()", "role": "process" },
+    { "id": "DB", "label": "Database", "role": "output" },
+    { "id": "Msgs", "label": "History", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "NewMsg", "label": "Neue Message", "role": "input" },
+    { "id": "OF", "label": "onFinish", "role": "process" },
+    { "id": "Save", "label": "saveMessages()", "role": "output" }
+  ],
+  "edges": [
+    { "from": "FE", "to": "ID" },
+    { "from": "ID", "to": "Load" },
+    { "from": "Load", "to": "DB" },
+    { "from": "DB", "to": "Msgs" },
+    { "from": "Msgs", "to": "GT" },
+    { "from": "NewMsg", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Save" },
+    { "from": "Save", "to": "DB" }
+  ]
+}

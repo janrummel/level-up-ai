@@ -1,0 +1,24 @@
+{
+  "id": "l4-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "ID", "label": ["Chat ID", "(4.2)"], "role": "input" },
+    { "id": "Val", "label": ["Validation", "(4.4)"], "role": "process" },
+    { "id": "Err", "label": "Error", "role": "warning" },
+    { "id": "Load", "label": "Load History", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "OF", "label": ["onFinish", "(4.1)"], "role": "output" },
+    { "id": "Save", "label": ["Persistence", "(4.3)"], "role": "output" },
+    { "id": "DB", "label": "Database", "role": "output" }
+  ],
+  "edges": [
+    { "from": "ID", "to": "Val" },
+    { "from": "Val", "to": "Load" },
+    { "from": "Val", "to": "Err" },
+    { "from": "Load", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Save" },
+    { "from": "Save", "to": "DB" },
+    { "from": "DB", "to": "Load" }
+  ]
+}

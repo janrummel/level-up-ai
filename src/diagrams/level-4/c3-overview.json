@@ -1,0 +1,27 @@
+{
+  "id": "l4-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "User", "label": "User Message", "role": "input" },
+    { "id": "API", "label": "API Handler", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "OF", "label": "onFinish", "role": "process" },
+    { "id": "Save", "label": "DB: Save", "role": "output" },
+    { "id": "Load", "label": "DB: Load", "role": "output" },
+    { "id": "DB", "label": "Database", "role": "output" },
+    { "id": "Resp", "label": "Response", "role": "output" }
+  ],
+  "edges": [
+    { "from": "User", "to": "API" },
+    { "from": "API", "to": "GT" },
+    { "from": "GT", "to": "OF" },
+    { "from": "OF", "to": "Save" },
+    { "from": "Save", "to": "DB" },
+    { "from": "DB", "to": "Load" },
+    { "from": "Load", "to": "API" },
+    { "from": "GT", "to": "Resp" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Persistence", "nodes": ["OF", "Save", "Load"], "style": "highlight" }
+  ]
+}
