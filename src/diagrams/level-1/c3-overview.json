@@ -1,0 +1,26 @@
+{
+  "id": "l1-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "P", "label": "prompt", "role": "input" },
+    { "id": "S", "label": "system", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Text", "label": "result.text", "role": "output" },
+    { "id": "Usage", "label": "result.usage", "role": "output" },
+    { "id": "FR", "label": "result.finishReason", "role": "output" },
+    { "id": "Steps", "label": "result.steps", "role": "output" },
+    { "id": "Resp", "label": "result.response", "role": "output" }
+  ],
+  "edges": [
+    { "from": "P", "to": "GT" },
+    { "from": "S", "to": "GT" },
+    { "from": "GT", "to": "Text" },
+    { "from": "GT", "to": "Usage" },
+    { "from": "GT", "to": "FR" },
+    { "from": "GT", "to": "Steps" },
+    { "from": "GT", "to": "Resp" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: generateText", "nodes": ["GT"], "style": "highlight" }
+  ]
+}
