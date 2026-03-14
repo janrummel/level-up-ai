@@ -1,0 +1,21 @@
+{
+  "id": "l2-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Task", "label": "Aufgabe", "role": "input" },
+    { "id": "SM", "label": "selectModel()", "role": "process" },
+    { "id": "Model", "label": "Modell", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Usage", "label": "result.usage", "role": "output" },
+    { "id": "Calc", "label": "calculateCost()", "role": "process" },
+    { "id": "Log", "label": "Kosten-Log", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Task", "to": "SM" },
+    { "from": "SM", "to": "Model" },
+    { "from": "Model", "to": "GT" },
+    { "from": "GT", "to": "Usage" },
+    { "from": "Usage", "to": "Calc" },
+    { "from": "Calc", "to": "Log" }
+  ]
+}

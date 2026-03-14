@@ -1,0 +1,19 @@
+{
+  "id": "l2-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "SP", "label": ["System Prompt", "(cached)"], "role": "process" },
+    { "id": "UP", "label": "User Prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Usage", "label": "result.usage", "role": "output" },
+    { "id": "Calc", "label": "calculateCost()", "role": "process" },
+    { "id": "CacheCalc", "label": ["Cache-Aware", "Kostenberechnung"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "SP", "to": "GT" },
+    { "from": "UP", "to": "GT" },
+    { "from": "GT", "to": "Usage" },
+    { "from": "Usage", "to": "Calc" },
+    { "from": "Calc", "to": "CacheCalc" }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "l2-c2-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Result", "label": "result", "role": "process" },
+    { "id": "Usage", "label": "result.usage", "role": "output" },
+    { "id": "PT", "label": "promptTokens", "role": "output" },
+    { "id": "CT", "label": "completionTokens", "role": "output" },
+    { "id": "TT", "label": "totalTokens", "role": "output" },
+    { "id": "Cost", "label": ["Kosten-", "berechnung"], "role": "process" },
+    { "id": "EUR", "label": "$0.0024", "role": "output" }
+  ],
+  "edges": [
+    { "from": "GT", "to": "Result" },
+    { "from": "Result", "to": "Usage" },
+    { "from": "Usage", "to": "PT" },
+    { "from": "Usage", "to": "CT" },
+    { "from": "Usage", "to": "TT" },
+    { "from": "PT", "to": "Cost" },
+    { "from": "CT", "to": "Cost" },
+    { "from": "Cost", "to": "EUR" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Usage Tracking", "nodes": ["GT", "Result", "Usage", "PT", "CT", "TT"], "style": "highlight" }
+  ]
+}

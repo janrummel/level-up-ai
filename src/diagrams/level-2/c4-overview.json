@@ -1,0 +1,26 @@
+{
+  "id": "l2-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "SP1", "label": ["System Prompt", "(2000 Tokens)"], "role": "input" },
+    { "id": "UP1", "label": "User Prompt", "role": "input" },
+    { "id": "LLM1", "label": "LLM", "role": "process" },
+    { "id": "SP2", "label": ["System Prompt", "(aus Cache!)"], "role": "process" },
+    { "id": "UP2", "label": "User Prompt", "role": "input" },
+    { "id": "LLM2", "label": "LLM", "role": "process" },
+    { "id": "C1", "label": "Voller Preis", "role": "warning" },
+    { "id": "C2", "label": "90% guenstiger", "role": "process" }
+  ],
+  "edges": [
+    { "from": "SP1", "to": "LLM1" },
+    { "from": "UP1", "to": "LLM1" },
+    { "from": "LLM1", "to": "C1" },
+    { "from": "SP2", "to": "LLM2" },
+    { "from": "UP2", "to": "LLM2" },
+    { "from": "LLM2", "to": "C2" }
+  ],
+  "groups": [
+    { "id": "first", "label": "1. Request (kein Cache)", "nodes": ["SP1", "UP1", "LLM1"], "style": "default" },
+    { "id": "second", "label": "2. Request (Cache Hit)", "nodes": ["SP2", "UP2", "LLM2"], "style": "default" }
+  ]
+}

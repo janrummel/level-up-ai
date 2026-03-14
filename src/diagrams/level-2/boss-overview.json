@@ -1,0 +1,24 @@
+{
+  "id": "l2-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": ["System + User", "Prompt"], "role": "input" },
+    { "id": "Count", "label": ["Token", "Counting", "(2.1)"], "role": "process" },
+    { "id": "Check", "label": ["Context Window", "Check", "(2.3)"], "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Truncate", "label": "Truncation", "role": "output" },
+    { "id": "Usage", "label": ["Usage", "Tracking", "(2.2)"], "role": "output" },
+    { "id": "Cache", "label": ["Cache", "Tracking", "(2.4)"], "role": "output" },
+    { "id": "Report", "label": ["Session", "Report"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "Count" },
+    { "from": "Count", "to": "Check" },
+    { "from": "Check", "to": "GT" },
+    { "from": "Check", "to": "Truncate" },
+    { "from": "Truncate", "to": "GT" },
+    { "from": "GT", "to": "Usage" },
+    { "from": "Usage", "to": "Cache" },
+    { "from": "Cache", "to": "Report" }
+  ]
+}

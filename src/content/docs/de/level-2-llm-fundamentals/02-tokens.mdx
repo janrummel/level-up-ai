@@ -5,31 +5,17 @@ sidebar:
   order: 2
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c1-combine.svg';
+
 ## THINK
 
 Liest ein LLM Woerter wie Du — oder sieht es etwas ganz anderes?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["Du bist HIER: Tokenisierung"]
-    Text["'Hallo Welt'"] --> Tokenizer["Tokenizer"]
-    Tokenizer --> IDs["[39756, 96480]"]
-    IDs --> LLM["LLM"]
-    LLM --> OutIDs["[15339, 1917]"]
-    OutIDs --> Detokenizer["Detokenizer"]
-  end
-  Detokenizer --> Output["'Hello World'"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Text fill:#4A90D9,color:#fff
-  style Tokenizer fill:#27AE60,color:#fff
-  style IDs fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OutIDs fill:#27AE60,color:#fff
-  style Detokenizer fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Text wird tokenisiert zu IDs, LLM verarbeitet sie, Detokenizer erzeugt Output-Text" />
 
 Ein LLM liest keinen Text. Es arbeitet mit Token IDs — Zahlen, die fuer Textfragmente (Subword Units) stehen. Der Tokenizer zerlegt Deinen Input in diese Fragmente, das LLM verarbeitet die IDs und der Detokenizer setzt die Ausgabe-IDs wieder zu lesbarem Text zusammen.
 
@@ -216,20 +202,7 @@ Die genauen Zahlen variieren bei jedem Aufruf (LLM-Output ist nicht deterministi
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Aufgabe"] --> SM["selectModel()"]
-  SM --> Model["Modell"]
-  Model --> GT["generateText()"]
-  GT --> Usage["result.usage"]
-  Usage --> Tokens["Token-Vergleich"]
-  style Task fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Tokens fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurueck, Token-Vergleich" />
 
 **Uebung:** Kombiniere Token-Counting mit der Modell-Auswahl aus Level 1. Stelle denselben Prompt an zwei verschiedene Modelle und vergleiche den Token-Verbrauch.
 

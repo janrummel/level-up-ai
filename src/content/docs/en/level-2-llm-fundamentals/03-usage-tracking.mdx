@@ -5,34 +5,17 @@ sidebar:
   order: 3
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c2-combine.svg';
+
 ## THINK
 
 What does a single LLM call cost — and how do you find out?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HERE["You are HERE: Usage Tracking"]
-    GT["generateText()"] --> Result["result"]
-    Result --> Usage["result.usage"]
-    Usage --> PT["promptTokens"]
-    Usage --> CT["completionTokens"]
-    Usage --> TT["totalTokens"]
-  end
-  PT --> Cost["Cost<br/>calculation"]
-  CT --> Cost
-  Cost --> EUR["$0.0024"]
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style GT fill:#27AE60,color:#fff
-  style Result fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style PT fill:#E67E22,color:#fff
-  style CT fill:#E67E22,color:#fff
-  style TT fill:#E67E22,color:#fff
-  style Cost fill:#27AE60,color:#fff
-  style EUR fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="generateText returns result with usage object: promptTokens, completionTokens, totalTokens flow to cost calculation" />
 
 Every `generateText` call returns a `usage` object that tells you exactly how many tokens were consumed. Using the provider's prices, you can calculate the cost per call.
 
@@ -275,22 +258,7 @@ Total: 0.001230 USD
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Task"] --> SM["selectModel()"]
-  SM --> Model["Model"]
-  Model --> GT["generateText()"]
-  GT --> Usage["result.usage"]
-  Usage --> Calc["calculateCost()"]
-  Calc --> Log["Cost log"]
-  style Task fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Calc fill:#27AE60,color:#fff
-  style Log fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Task flows to selectModel to model, generateText returns result.usage, calculateCost computes cost log" />
 
 **Exercise:** Extend the `selectModel` function from Level 1.2 with automatic cost tracking. Every call should log its costs.
 

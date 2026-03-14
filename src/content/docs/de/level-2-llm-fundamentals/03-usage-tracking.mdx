@@ -5,34 +5,17 @@ sidebar:
   order: 3
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c2-combine.svg';
+
 ## THINK
 
 Was kostet ein einzelner LLM-Call — und wie findest Du das heraus?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["Du bist HIER: Usage Tracking"]
-    GT["generateText()"] --> Result["result"]
-    Result --> Usage["result.usage"]
-    Usage --> PT["promptTokens"]
-    Usage --> CT["completionTokens"]
-    Usage --> TT["totalTokens"]
-  end
-  PT --> Cost["Kosten-<br/>berechnung"]
-  CT --> Cost
-  Cost --> EUR["$0.0024"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style GT fill:#27AE60,color:#fff
-  style Result fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style PT fill:#E67E22,color:#fff
-  style CT fill:#E67E22,color:#fff
-  style TT fill:#E67E22,color:#fff
-  style Cost fill:#27AE60,color:#fff
-  style EUR fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="generateText gibt result mit usage-Objekt zurueck: promptTokens, completionTokens, totalTokens fliessen in Kostenberechnung" />
 
 Jeder `generateText`-Call gibt ein `usage`-Objekt zurueck, das Dir genau sagt, wie viele Tokens verbraucht wurden. Mit den Preisen des Providers rechnest Du daraus die Kosten pro Call.
 
@@ -275,22 +258,7 @@ Gesamt: 0.001230 USD
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Aufgabe"] --> SM["selectModel()"]
-  SM --> Model["Modell"]
-  Model --> GT["generateText()"]
-  GT --> Usage["result.usage"]
-  Usage --> Calc["calculateCost()"]
-  Calc --> Log["Kosten-Log"]
-  style Task fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Calc fill:#27AE60,color:#fff
-  style Log fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurueck, calculateCost berechnet Kosten-Log" />
 
 **Uebung:** Erweitere die `selectModel`-Funktion aus Level 1.2 um automatisches Cost-Tracking. Jeder Call soll seine Kosten loggen.
 

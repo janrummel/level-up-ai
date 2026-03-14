@@ -1,0 +1,24 @@
+{
+  "id": "l2-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Text", "label": "'Hallo Welt'", "role": "input" },
+    { "id": "Tokenizer", "label": "Tokenizer", "role": "process" },
+    { "id": "IDs", "label": "[39756, 96480]", "role": "process" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "OutIDs", "label": "[15339, 1917]", "role": "process" },
+    { "id": "Detokenizer", "label": "Detokenizer", "role": "process" },
+    { "id": "Output", "label": "'Hello World'", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Text", "to": "Tokenizer" },
+    { "from": "Tokenizer", "to": "IDs" },
+    { "from": "IDs", "to": "LLM" },
+    { "from": "LLM", "to": "OutIDs" },
+    { "from": "OutIDs", "to": "Detokenizer" },
+    { "from": "Detokenizer", "to": "Output" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Tokenisierung", "nodes": ["Text", "Tokenizer", "IDs", "LLM", "OutIDs", "Detokenizer"], "style": "highlight" }
+  ]
+}

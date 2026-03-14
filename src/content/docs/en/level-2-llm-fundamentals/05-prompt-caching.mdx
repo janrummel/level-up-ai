@@ -5,36 +5,17 @@ sidebar:
   order: 5
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c4-combine.svg';
+
 ## THINK
 
 When you send the same System Prompt with every request — does the provider charge full price every time?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HERE["You are HERE: Prompt Caching"]
-    subgraph First["1st Request (no cache)"]
-      SP1["System Prompt<br/>(2000 Tokens)"] --> LLM1["LLM"]
-      UP1["User Prompt"] --> LLM1
-    end
-    subgraph Second["2nd Request (Cache Hit)"]
-      SP2["System Prompt<br/>(from cache!)"] --> LLM2["LLM"]
-      UP2["User Prompt"] --> LLM2
-    end
-  end
-  LLM1 --> C1["Full price"]
-  LLM2 --> C2["90% cheaper"]
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style SP1 fill:#4A90D9,color:#fff
-  style UP1 fill:#4A90D9,color:#fff
-  style LLM1 fill:#27AE60,color:#fff
-  style SP2 fill:#27AE60,color:#fff
-  style UP2 fill:#4A90D9,color:#fff
-  style LLM2 fill:#27AE60,color:#fff
-  style C1 fill:#E74C3C,color:#fff
-  style C2 fill:#27AE60,color:#fff
-```
+<Image src={overviewDiagram} alt="Comparison: first request without cache at full price, second request with cache hit 90% cheaper" />
 
 On the first request, the System Prompt is processed normally and stored in the cache. From the second request on, the provider recognizes the identical prefix and reads it from the cache — at a fraction of the cost.
 
@@ -339,20 +320,7 @@ The `promptTokens` counts are similar because tokens are still counted. You can 
 
 ## COMBINE
 
-```mermaid
-graph LR
-  SP["System Prompt<br/>(cached)"] --> GT["generateText()"]
-  UP["User Prompt"] --> GT
-  GT --> Usage["result.usage"]
-  Usage --> Calc["calculateCost()"]
-  Calc --> CacheCalc["Cache-aware<br/>cost calculation"]
-  style SP fill:#27AE60,color:#fff
-  style UP fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Calc fill:#27AE60,color:#fff
-  style CacheCalc fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="System prompt (cached) and user prompt flow to generateText, result.usage to calculateCost, then cache-aware cost calculation" />
 
 **Exercise:** Extend the Cost Calculator from Challenge 2.2 with cache awareness.
 

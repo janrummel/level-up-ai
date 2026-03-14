@@ -8,6 +8,9 @@ sidebar:
     variant: 'danger'
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-boss-overview.svg';
+
 ## Das Szenario
 
 Du baust einen **Token-Budget-Rechner** — ein Tool, das vor jedem LLM-Call prueft, ob der Request ins Budget passt. Der Rechner kombiniert alle vier Bausteine aus Level 2: Token-Counting, Kostenberechnung, Context-Window-Check und Cache-Tracking.
@@ -28,25 +31,7 @@ Dein Tool soll sich so anfuehlen:
 
 Dieses Projekt verbindet alle vier Bausteine:
 
-```mermaid
-graph LR
-  Input["System + User<br/>Prompt"] --> Count["Token<br/>Counting<br/>(2.1)"]
-  Count --> Check["Context Window<br/>Check<br/>(2.3)"]
-  Check -->|Passt| GT["generateText()"]
-  Check -->|Zu gross| Truncate["Truncation"]
-  Truncate --> GT
-  GT --> Usage["Usage<br/>Tracking<br/>(2.2)"]
-  Usage --> Cache["Cache<br/>Tracking<br/>(2.4)"]
-  Cache --> Report["Session<br/>Report"]
-  style Input fill:#4A90D9,color:#fff
-  style Count fill:#27AE60,color:#fff
-  style Check fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Truncate fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Cache fill:#E67E22,color:#fff
-  style Report fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="System und User Prompt fliessen in Token Counting, Context Window Check, generateText, Usage Tracking, Cache Tracking, Session Report" />
 
 ## Anforderungen
 

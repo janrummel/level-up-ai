@@ -1,0 +1,20 @@
+{
+  "id": "l2-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Messages", "label": "Messages", "role": "input" },
+    { "id": "System", "label": "System Prompt", "role": "input" },
+    { "id": "Check", "label": "Context Check", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Truncate", "label": "truncateMessages()", "role": "output" },
+    { "id": "Usage", "label": "result.usage", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Messages", "to": "Check" },
+    { "from": "System", "to": "Check" },
+    { "from": "Check", "to": "GT" },
+    { "from": "Check", "to": "Truncate" },
+    { "from": "Truncate", "to": "GT" },
+    { "from": "GT", "to": "Usage" }
+  ]
+}

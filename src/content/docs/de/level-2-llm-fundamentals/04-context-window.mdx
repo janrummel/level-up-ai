@@ -5,33 +5,17 @@ sidebar:
   order: 4
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c3-combine.svg';
+
 ## THINK
 
 Was passiert wenn Du einem LLM einen Roman schickst — kann es den komplett lesen?
 
 ## OVERVIEW
 
-```mermaid
-graph TB
-  subgraph HIER["Du bist HIER: Context Window"]
-    subgraph Window["Context Window (z.B. 200K Tokens)"]
-      System["System Prompt"]
-      Messages["Messages / Chat-Verlauf"]
-      Tools["Tool-Definitionen"]
-      Output["Platz fuer Output"]
-    end
-  end
-  Overflow["Mehr als 200K?"] -->|Ja| Error["Fehler / Truncation"]
-  Window --> Overflow
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Window fill:none,stroke:#4A90D9,stroke-width:2px
-  style System fill:#4A90D9,color:#fff
-  style Messages fill:#4A90D9,color:#fff
-  style Tools fill:#4A90D9,color:#fff
-  style Output fill:#E67E22,color:#fff
-  style Overflow fill:#27AE60,color:#fff
-  style Error fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="Context Window enthaelt System Prompt, Messages, Tool-Definitionen und Platz fuer Output; bei Ueberschreitung Fehler oder Truncation" />
 
 Das Context Window ist ein fester Rahmen — alles was das LLM gleichzeitig "sehen" kann. System Prompt, Chat-Verlauf, Tool-Definitionen UND der Platz fuer die Antwort muessen zusammen hineinpassen. Wenn nicht, gibt es Fehler oder Informationsverlust.
 
@@ -323,21 +307,7 @@ Dieses Beispiel bleibt weit unter dem Limit. In einer echten Chat-Anwendung mit 
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Messages["Messages"] --> Check["Context Check"]
-  System["System Prompt"] --> Check
-  Check -->|OK| GT["generateText()"]
-  Check -->|Zu voll| Truncate["truncateMessages()"]
-  Truncate --> GT
-  GT --> Usage["result.usage"]
-  style Messages fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Check fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Truncate fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Messages und System Prompt fliessen in Context Check, bei OK zu generateText, bei zu voll zu truncateMessages, dann result.usage" />
 
 **Uebung:** Baue einen Context Manager, der vor jedem Call prueft, ob der Input ins Context Window passt, und bei Ueberschreitung automatisch alte Messages entfernt.
 

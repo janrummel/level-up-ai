@@ -5,31 +5,17 @@ sidebar:
   order: 2
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l2-c1-combine.svg';
+
 ## THINK
 
 Does an LLM read words the way you do — or does it see something entirely different?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HERE["You are HERE: Tokenization"]
-    Text["'Hallo Welt'"] --> Tokenizer["Tokenizer"]
-    Tokenizer --> IDs["[39756, 96480]"]
-    IDs --> LLM["LLM"]
-    LLM --> OutIDs["[15339, 1917]"]
-    OutIDs --> Detokenizer["Detokenizer"]
-  end
-  Detokenizer --> Output["'Hello World'"]
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Text fill:#4A90D9,color:#fff
-  style Tokenizer fill:#27AE60,color:#fff
-  style IDs fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OutIDs fill:#27AE60,color:#fff
-  style Detokenizer fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Text is tokenized to IDs, LLM processes them, detokenizer produces output text" />
 
 An LLM doesn't read text. It works with Token IDs — numbers that represent text fragments (Subword Units). The tokenizer breaks your input into these fragments, the LLM processes the IDs, and the detokenizer reassembles the output IDs into readable text.
 
@@ -203,20 +189,7 @@ The exact numbers vary with each call (LLM output is non-deterministic), but the
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Task"] --> SM["selectModel()"]
-  SM --> Model["Model"]
-  Model --> GT["generateText()"]
-  GT --> Usage["result.usage"]
-  Usage --> Tokens["Token comparison"]
-  style Task fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Tokens fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Task flows to selectModel to model, generateText returns result.usage, token comparison" />
 
 **Exercise:** Combine token counting with model selection from Level 1. Send the same prompt to two different models and compare token usage.
 

@@ -8,6 +8,9 @@ sidebar:
     variant: 'danger'
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l2-boss-overview.svg';
+
 ## The scenario
 
 You're building a **Token Budget Calculator** — a tool that checks before every LLM call whether the request fits within budget. The calculator combines all four building blocks from Level 2: token counting, cost calculation, Context Window check, and cache tracking.
@@ -28,25 +31,7 @@ Your tool should feel like this:
 
 This project connects all four building blocks:
 
-```mermaid
-graph LR
-  Input["System + User<br/>Prompt"] --> Count["Token<br/>Counting<br/>(2.1)"]
-  Count --> Check["Context Window<br/>Check<br/>(2.3)"]
-  Check -->|Fits| GT["generateText()"]
-  Check -->|Too large| Truncate["Truncation"]
-  Truncate --> GT
-  GT --> Usage["Usage<br/>Tracking<br/>(2.2)"]
-  Usage --> Cache["Cache<br/>Tracking<br/>(2.4)"]
-  Cache --> Report["Session<br/>Report"]
-  style Input fill:#4A90D9,color:#fff
-  style Count fill:#27AE60,color:#fff
-  style Check fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Truncate fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style Cache fill:#E67E22,color:#fff
-  style Report fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="System and user prompt flow to token counting, context window check, generateText, usage tracking, cache tracking, session report" />
 
 ## Requirements
 

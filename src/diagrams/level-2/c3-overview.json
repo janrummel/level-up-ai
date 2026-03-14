@@ -1,0 +1,22 @@
+{
+  "id": "l2-c3-overview",
+  "direction": "TB",
+  "nodes": [
+    { "id": "System", "label": "System Prompt", "role": "input" },
+    { "id": "Messages", "label": ["Messages /", "Chat-Verlauf"], "role": "input" },
+    { "id": "Tools", "label": "Tool-Definitionen", "role": "input" },
+    { "id": "Output", "label": "Platz fuer Output", "role": "output" },
+    { "id": "Overflow", "label": "Mehr als 200K?", "role": "process" },
+    { "id": "Error", "label": ["Fehler /", "Truncation"], "role": "warning" }
+  ],
+  "edges": [
+    { "from": "System", "to": "Output" },
+    { "from": "Messages", "to": "Output" },
+    { "from": "Tools", "to": "Output" },
+    { "from": "Output", "to": "Overflow" },
+    { "from": "Overflow", "to": "Error" }
+  ],
+  "groups": [
+    { "id": "window", "label": "Context Window (z.B. 200K Tokens)", "nodes": ["System", "Messages", "Tools", "Output"], "style": "highlight" }
+  ]
+}
