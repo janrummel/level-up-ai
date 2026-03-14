@@ -1,0 +1,26 @@
+{
+  "id": "l3-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "User Prompt", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "TC", "label": "Tool?", "role": "process" },
+    { "id": "S", "label": ["search", "(3.1)"], "role": "process" },
+    { "id": "C", "label": ["calculator", "(3.1)"], "role": "process" },
+    { "id": "Final", "label": "Final", "role": "output" },
+    { "id": "Text", "label": "Antwort", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "LLM" },
+    { "from": "LLM", "to": "TC" },
+    { "from": "TC", "to": "S" },
+    { "from": "TC", "to": "C" },
+    { "from": "S", "to": "LLM" },
+    { "from": "C", "to": "LLM" },
+    { "from": "TC", "to": "Final" },
+    { "from": "Final", "to": "Text" }
+  ],
+  "groups": [
+    { "id": "agent", "label": "Agentic Loop (3.3)", "nodes": ["LLM", "TC", "S", "C", "Final"], "style": "default" }
+  ]
+}

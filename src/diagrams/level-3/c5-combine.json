@@ -1,0 +1,29 @@
+{
+  "id": "l3-c5-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "Prompt", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "TC", "label": "Tool?", "role": "process" },
+    { "id": "Safe", "label": ["readFile", "search"], "role": "process" },
+    { "id": "Check", "label": "Approval?", "role": "output" },
+    { "id": "Exec", "label": "execute()", "role": "process" },
+    { "id": "Reject", "label": "Abgelehnt", "role": "warning" },
+    { "id": "Text", "label": "Antwort", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "LLM" },
+    { "from": "LLM", "to": "TC" },
+    { "from": "TC", "to": "Safe" },
+    { "from": "TC", "to": "Check" },
+    { "from": "Check", "to": "Exec" },
+    { "from": "Check", "to": "Reject" },
+    { "from": "Safe", "to": "LLM" },
+    { "from": "Exec", "to": "LLM" },
+    { "from": "Reject", "to": "LLM" },
+    { "from": "LLM", "to": "Text" }
+  ],
+  "groups": [
+    { "id": "agent", "label": "Agent mit Approval", "nodes": ["LLM", "TC", "Safe", "Check", "Exec", "Reject"], "style": "default" }
+  ]
+}

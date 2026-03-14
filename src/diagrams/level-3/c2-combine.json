@@ -1,0 +1,23 @@
+{
+  "id": "l3-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "User Prompt", "role": "input" },
+    { "id": "System", "label": ["System Prompt", "(1.6)"], "role": "input" },
+    { "id": "ST", "label": ["streamText()", "(1.4)"], "role": "process" },
+    { "id": "FS", "label": "fullStream", "role": "process" },
+    { "id": "TD", "label": "text-delta", "role": "output" },
+    { "id": "TC", "label": "tool-call", "role": "output" },
+    { "id": "TR", "label": "tool-result", "role": "output" },
+    { "id": "FI", "label": "finish", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "ST" },
+    { "from": "System", "to": "ST" },
+    { "from": "ST", "to": "FS" },
+    { "from": "FS", "to": "TD" },
+    { "from": "FS", "to": "TC" },
+    { "from": "FS", "to": "TR" },
+    { "from": "FS", "to": "FI" }
+  ]
+}

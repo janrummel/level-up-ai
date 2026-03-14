@@ -1,0 +1,25 @@
+{
+  "id": "l3-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "System", "label": ["System Prompt", "(1.6)"], "role": "input" },
+    { "id": "Prompt", "label": "User Prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "TC", "label": "Tool Call?", "role": "process" },
+    { "id": "Exec", "label": "execute()", "role": "process" },
+    { "id": "Result", "label": "Tool Result", "role": "output" },
+    { "id": "Text", "label": "result.text", "role": "output" }
+  ],
+  "edges": [
+    { "from": "System", "to": "GT" },
+    { "from": "Prompt", "to": "GT" },
+    { "from": "GT", "to": "TC" },
+    { "from": "TC", "to": "Exec" },
+    { "from": "Exec", "to": "Result" },
+    { "from": "Result", "to": "GT" },
+    { "from": "TC", "to": "Text" }
+  ],
+  "groups": [
+    { "id": "toolcalling", "label": "Tool Calling (3.1)", "nodes": ["GT", "TC", "Exec", "Result", "Text"], "style": "default" }
+  ]
+}

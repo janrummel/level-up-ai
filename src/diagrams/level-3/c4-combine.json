@@ -1,0 +1,24 @@
+{
+  "id": "l3-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "Prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Loop", "label": ["Tool Loop", "(3.3)"], "role": "process" },
+    { "id": "MCP", "label": ["MCP Client", "(3.4)"], "role": "process" },
+    { "id": "Local", "label": ["Lokales Tool", "(3.1)"], "role": "process" },
+    { "id": "Server", "label": "MCP Server", "role": "output" },
+    { "id": "Text", "label": "Antwort", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "GT" },
+    { "from": "GT", "to": "Loop" },
+    { "from": "Loop", "to": "MCP" },
+    { "from": "Loop", "to": "Local" },
+    { "from": "MCP", "to": "Server" },
+    { "from": "Server", "to": "MCP" },
+    { "from": "MCP", "to": "Loop" },
+    { "from": "Local", "to": "Loop" },
+    { "from": "Loop", "to": "Text" }
+  ]
+}

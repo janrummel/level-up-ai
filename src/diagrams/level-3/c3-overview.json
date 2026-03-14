@@ -1,0 +1,23 @@
+{
+  "id": "l3-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Start", "label": "Prompt", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "Check", "label": "Tool Call?", "role": "process" },
+    { "id": "Exec", "label": "Execute Tool", "role": "process" },
+    { "id": "Result", "label": "Tool Result", "role": "output" },
+    { "id": "Final", "label": "Final Answer", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Start", "to": "LLM" },
+    { "from": "LLM", "to": "Check" },
+    { "from": "Check", "to": "Exec" },
+    { "from": "Exec", "to": "Result" },
+    { "from": "Result", "to": "LLM" },
+    { "from": "Check", "to": "Final" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Agentic Loop", "nodes": ["LLM", "Check", "Exec", "Result"], "style": "highlight" }
+  ]
+}

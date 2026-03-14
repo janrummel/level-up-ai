@@ -1,0 +1,28 @@
+{
+  "id": "l3-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "App", "label": "AI App", "role": "input" },
+    { "id": "Client", "label": "MCP Client", "role": "process" },
+    { "id": "Protocol", "label": "MCP Protocol", "role": "process" },
+    { "id": "Server1", "label": ["MCP Server:", "Dateien"], "role": "process" },
+    { "id": "Server2", "label": ["MCP Server:", "Datenbank"], "role": "process" },
+    { "id": "Server3", "label": ["MCP Server:", "Web API"], "role": "process" },
+    { "id": "FS", "label": "Filesystem", "role": "output" },
+    { "id": "DB", "label": "PostgreSQL", "role": "output" },
+    { "id": "API", "label": "REST API", "role": "output" }
+  ],
+  "edges": [
+    { "from": "App", "to": "Client" },
+    { "from": "Client", "to": "Protocol" },
+    { "from": "Protocol", "to": "Server1" },
+    { "from": "Protocol", "to": "Server2" },
+    { "from": "Protocol", "to": "Server3" },
+    { "from": "Server1", "to": "FS" },
+    { "from": "Server2", "to": "DB" },
+    { "from": "Server3", "to": "API" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: MCP", "nodes": ["Client", "Protocol"], "style": "highlight" }
+  ]
+}

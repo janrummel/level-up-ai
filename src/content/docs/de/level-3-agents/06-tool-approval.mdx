@@ -5,6 +5,9 @@ sidebar:
   order: 6
 ---
 
+import { Image } from 'astro:assets';
+import combineDiagram from '../../../../assets/diagrams/l3-c5-combine.svg';
+
 ## THINK
 
 Wuerdest Du einem Agenten erlauben, ohne Rueckfrage Dateien zu loeschen, E-Mails zu versenden oder Daten in einer Datenbank zu aendern?
@@ -450,29 +453,7 @@ Antwort: Die Datei /tmp/notes.txt wurde gelesen und anschliessend geloescht.
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> Agent
-  subgraph Agent["Agent mit Approval"]
-    LLM["LLM"] --> TC{"Tool?"}
-    TC -->|Safe| Safe["readFile<br/>search"]
-    TC -->|Dangerous| Check{"Approval?"}
-    Check -->|Ja| Exec["execute()"]
-    Check -->|Nein| Reject["Abgelehnt"]
-    Safe --> LLM
-    Exec --> LLM
-    Reject --> LLM
-  end
-  LLM --> Text["Antwort"]
-  style Prompt fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style TC fill:#27AE60,color:#fff
-  style Safe fill:#27AE60,color:#fff
-  style Check fill:#E67E22,color:#fff
-  style Exec fill:#27AE60,color:#fff
-  style Reject fill:#E74C3C,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Prompt startet Agent, LLM waehlt sichere oder gefaehrliche Tools, gefaehrliche brauchen Approval, bei Ablehnung zurueck zum LLM" />
 
 **Uebung:** Erweitere den Research Agent aus Challenge 3.3 um einen Approval-Schritt fuer das Speichern von Ergebnissen.
 

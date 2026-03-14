@@ -1,0 +1,30 @@
+{
+  "id": "l3-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "LLM", "label": ["LLM +", "System Prompt"], "role": "process" },
+    { "id": "Loop", "label": ["Tool Loop", "(3.3)"], "role": "process" },
+    { "id": "S", "label": ["Search Tool", "(3.1 / 3.4 MCP)"], "role": "process" },
+    { "id": "Sum", "label": ["Summarize Tool", "(3.1)"], "role": "process" },
+    { "id": "Approval", "label": ["Approval", "(3.5)"], "role": "output" },
+    { "id": "Save", "label": "Save Tool", "role": "process" },
+    { "id": "Output", "label": ["Formatierte", "Ausgabe (3.2)"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "LLM" },
+    { "from": "LLM", "to": "Loop" },
+    { "from": "Loop", "to": "S" },
+    { "from": "Loop", "to": "Sum" },
+    { "from": "Loop", "to": "Approval" },
+    { "from": "Approval", "to": "Save" },
+    { "from": "S", "to": "LLM" },
+    { "from": "Sum", "to": "LLM" },
+    { "from": "Save", "to": "LLM" },
+    { "from": "Approval", "to": "LLM" },
+    { "from": "Loop", "to": "Output" }
+  ],
+  "groups": [
+    { "id": "agent", "label": "Research Agent", "nodes": ["LLM", "Loop", "S", "Sum", "Approval", "Save"], "style": "default" }
+  ]
+}

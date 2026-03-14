@@ -5,36 +5,17 @@ sidebar:
   order: 4
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l3-c3-combine.svg';
+
 ## THINK
 
 Was wenn ein LLM mehrere Tools nacheinander aufrufen muss, um eine Aufgabe zu loesen — z.B. erst suchen, dann zusammenfassen, dann berechnen?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Start["Prompt"] --> LLM["LLM"]
-  LLM --> Check{"Tool Call?"}
-  Check -->|Ja| Exec["Execute Tool"]
-  Exec --> Result["Tool Result"]
-  Result --> LLM
-  Check -->|Nein| Final["Final Answer"]
-
-  subgraph HIER["Du bist HIER: Agentic Loop"]
-    LLM
-    Check
-    Exec
-    Result
-  end
-
-  style Start fill:#4A90D9,color:#fff
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style LLM fill:#27AE60,color:#fff
-  style Check fill:#27AE60,color:#fff
-  style Exec fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-  style Final fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Prompt startet LLM, LLM prueft ob Tool Call noetig, wenn ja Execute Tool und zurueck zum LLM, wenn nein Final Answer" />
 
 Das ist der **Agentic Loop**: Das LLM generiert → prueft ob es ein Tool braucht → fuehrt das Tool aus → schickt das Ergebnis zurueck → generiert erneut. Das wiederholt sich, bis das LLM eine finale Antwort hat oder ein Limit erreicht ist.
 
@@ -330,26 +311,7 @@ TypeScript ist eine von Microsoft entwickelte Programmiersprache...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["User Prompt"] --> Agent
-  subgraph Agent["Agentic Loop (3.3)"]
-    LLM["LLM"] --> TC{"Tool?"}
-    TC -->|search| S["search<br/>(3.1)"]
-    TC -->|calculate| C["calculator<br/>(3.1)"]
-    S --> LLM
-    C --> LLM
-    TC -->|Nein| Final["Final"]
-  end
-  Final --> Text["Antwort"]
-  style Prompt fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style TC fill:#27AE60,color:#fff
-  style S fill:#27AE60,color:#fff
-  style C fill:#27AE60,color:#fff
-  style Final fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="User Prompt startet Agentic Loop: LLM waehlt zwischen search, calculator oder Final Answer" />
 
 **Uebung:** Erweitere den Research Agent um das Calculator-Tool aus Challenge 3.1. Der Agent soll sowohl recherchieren als auch rechnen koennen.
 

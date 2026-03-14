@@ -5,6 +5,9 @@ sidebar:
   order: 2
 ---
 
+import { Image } from 'astro:assets';
+import combineDiagram from '../../../../assets/diagrams/l3-c1-combine.svg';
+
 ## THINK
 
 What if an LLM could not only generate text, but also perform actions — e.g. check the weather, run a calculation, or query a database?
@@ -217,25 +220,7 @@ Tool Results: [{ result: { operation: 'multiply', a: 42, b: 17, result: 714 } }]
 
 ## COMBINE
 
-```mermaid
-graph LR
-  System["System Prompt<br/>(1.6)"] --> GT
-  Prompt["User Prompt"] --> GT
-  subgraph "Tool Calling (3.1)"
-    GT["generateText()"] --> TC["Tool Call?"]
-    TC -->|Yes| Exec["execute()"]
-    Exec --> Result["Tool Result"]
-    Result --> GT
-    TC -->|No| Text["result.text"]
-  end
-  style System fill:#4A90D9,color:#fff
-  style Prompt fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style TC fill:#27AE60,color:#fff
-  style Exec fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="System prompt and user prompt flow to generateText, tool call decision, execute returns tool result, or directly result.text" />
 
 **Exercise:** Combine a tool with a system prompt from Challenge 1.6. Give the LLM a role and a tool at the same time.
 

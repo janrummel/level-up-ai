@@ -5,39 +5,17 @@ sidebar:
   order: 5
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l3-c4-combine.svg';
+
 ## THINK
 
 How do you connect your LLM to external services — without building a custom integration for each one? What if there were a standardized protocol that every tool server speaks?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  App["AI App"] --> Client["MCP Client"]
-  Client --> Protocol["MCP Protocol"]
-  Protocol --> Server1["MCP Server:<br/>Files"]
-  Protocol --> Server2["MCP Server:<br/>Database"]
-  Protocol --> Server3["MCP Server:<br/>Web API"]
-  Server1 --> FS["Filesystem"]
-  Server2 --> DB["PostgreSQL"]
-  Server3 --> API["REST API"]
-
-  subgraph HIER["You are HERE: MCP"]
-    Client
-    Protocol
-  end
-
-  style App fill:#4A90D9,color:#fff
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Client fill:#27AE60,color:#fff
-  style Protocol fill:#27AE60,color:#fff
-  style Server1 fill:#27AE60,color:#fff
-  style Server2 fill:#27AE60,color:#fff
-  style Server3 fill:#27AE60,color:#fff
-  style FS fill:#E67E22,color:#fff
-  style DB fill:#E67E22,color:#fff
-  style API fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="AI app connects via MCP client and protocol to three MCP servers for files, database and web API" />
 
 **MCP** (Model Context Protocol) is an open protocol that standardizes communication between AI applications and tool servers. An MCP client in your app connects to any number of MCP servers — each server provides tools that your LLM can use.
 
@@ -305,25 +283,7 @@ Tool Calls: [{ toolName: 'echo', args: { message: 'Hello from MCP!' } }]
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> GT["generateText()"]
-  GT --> Loop{"Tool Loop<br/>(3.3)"}
-  Loop -->|MCP Tool| MCP["MCP Client<br/>(3.4)"]
-  Loop -->|Local| Local["Local Tool<br/>(3.1)"]
-  MCP --> Server["MCP Server"]
-  Server --> MCP
-  MCP --> Loop
-  Local --> Loop
-  Loop -->|Done| Text["Answer"]
-  style Prompt fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Loop fill:#27AE60,color:#fff
-  style MCP fill:#27AE60,color:#fff
-  style Local fill:#27AE60,color:#fff
-  style Server fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Prompt flows to generateText, tool loop chooses between MCP client and local tool, MCP connects to server" />
 
 **Exercise:** Combine MCP tools with the agentic loop from Challenge 3.3. Use MCP tools as part of a multi-step agent.
 

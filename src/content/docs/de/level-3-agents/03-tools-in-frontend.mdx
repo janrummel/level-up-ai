@@ -5,6 +5,9 @@ sidebar:
   order: 3
 ---
 
+import { Image } from 'astro:assets';
+import combineDiagram from '../../../../assets/diagrams/l3-c2-combine.svg';
+
 ## THINK
 
 Wenn ein LLM ein Tool aufruft — wie zeigst Du das dem User im UI? Sieht er nur die finale Antwort, oder auch was zwischendurch passiert?
@@ -297,24 +300,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["User Prompt"] --> ST["streamText()<br/>(1.4)"]
-  System["System Prompt<br/>(1.6)"] --> ST
-  ST --> FS["fullStream"]
-  FS --> TD["text-delta"]
-  FS --> TC["tool-call"]
-  FS --> TR["tool-result"]
-  FS --> FI["finish"]
-  style Prompt fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style ST fill:#27AE60,color:#fff
-  style FS fill:#27AE60,color:#fff
-  style TD fill:#E67E22,color:#fff
-  style TC fill:#E67E22,color:#fff
-  style TR fill:#E67E22,color:#fff
-  style FI fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="User Prompt und System Prompt fliessen in streamText, fullStream liefert text-delta, tool-call, tool-result und finish Events" />
 
 **Uebung:** Kombiniere das Tool-Event-Rendering mit `streamText` aus Challenge 1.4. Baue eine formatierte Terminal-Ausgabe, die Text und Tool-Events visuell unterscheidet.
 

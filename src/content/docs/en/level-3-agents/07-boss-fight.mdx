@@ -8,6 +8,9 @@ sidebar:
     variant: 'danger'
 ---
 
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l3-boss-overview.svg';
+
 ## The Scenario
 
 You're building a **Research Agent** — a terminal program that autonomously researches a topic, summarizes results, and saves them after human approval. The agent combines all five building blocks from Level 3.
@@ -41,30 +44,7 @@ TypeScript 5.8 brings the following new features: ...
 
 This project connects all five building blocks:
 
-```mermaid
-graph LR
-  Input["User Input"] --> Agent
-  subgraph Agent["Research Agent"]
-    LLM["LLM +<br/>System Prompt"] --> Loop{"Tool Loop<br/>(3.3)"}
-    Loop -->|search| S["Search Tool<br/>(3.1 / 3.4 MCP)"]
-    Loop -->|summarize| Sum["Summarize Tool<br/>(3.1)"]
-    Loop -->|save| Approval{"Approval<br/>(3.5)"}
-    Approval -->|Yes| Save["Save Tool"]
-    S --> LLM
-    Sum --> LLM
-    Save --> LLM
-    Approval -->|No| LLM
-  end
-  Loop -->|Done| Output["Formatted<br/>Output (3.2)"]
-  style Input fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Loop fill:#27AE60,color:#fff
-  style S fill:#27AE60,color:#fff
-  style Sum fill:#27AE60,color:#fff
-  style Approval fill:#E67E22,color:#fff
-  style Save fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="User input starts research agent: LLM uses tool loop with search, summarize and save (with approval), formatted output at end" />
 
 ## Requirements
 
