@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
 
 export default defineConfig({
 	site: 'https://janrummel.github.io',
@@ -19,7 +18,7 @@ export default defineConfig({
 				de: { label: 'Deutsch', lang: 'de' },
 				en: { label: 'English', lang: 'en' },
 			},
-			plugins: [starlightClientMermaid()],
+			plugins: [],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/janrummel/level-up-ai' }],
 			customCss: ['/src/custom-styles.css'],
 			sidebar: [
