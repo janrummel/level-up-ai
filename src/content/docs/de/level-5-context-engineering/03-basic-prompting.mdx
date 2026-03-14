@@ -4,6 +4,9 @@ description: "Verwandle vage Prompts in klare, strukturierte Anweisungen mit dem
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c2-combine.svg';
 
 ## THINK
 
@@ -11,34 +14,7 @@ Was ist der Unterschied zwischen "Fasse das zusammen" und einem Prompt mit klare
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph "Ohne Struktur"
-    VP["Vager Prompt<br/>'Fasse zusammen'"] --> LLM1["LLM"]
-    LLM1 --> BAD["Unvorhersehbar<br/>Mal Liste, mal Absatz"]
-  end
-  subgraph HIER["Du bist HIER: Basic Prompting"]
-    subgraph "Mit XML Tags"
-      TC2["&lt;task-context&gt;"] --> SP["Strukturierter<br/>Prompt"]
-      R2["&lt;rules&gt;"] --> SP
-      TA2["&lt;the-ask&gt;"] --> SP
-      OF2["&lt;output-format&gt;"] --> SP
-      SP --> LLM2["LLM"]
-      LLM2 --> GOOD["Konsistent<br/>Reproduzierbar"]
-    end
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style VP fill:#E74C3C,color:#fff
-  style BAD fill:#E74C3C,color:#fff
-  style TC2 fill:#27AE60,color:#fff
-  style R2 fill:#27AE60,color:#fff
-  style TA2 fill:#27AE60,color:#fff
-  style OF2 fill:#27AE60,color:#fff
-  style SP fill:#27AE60,color:#fff
-  style LLM1 fill:#27AE60,color:#fff
-  style LLM2 fill:#27AE60,color:#fff
-  style GOOD fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Links: vager Prompt fuehrt zu unvorhersehbaren LLM-Ausgaben. Rechts (Basic Prompting): XML Tags (task-context, rules, the-ask, output-format) erzeugen einen strukturierten Prompt der zu konsistenten, reproduzierbaren Ergebnissen fuehrt" />
 
 Links: Ein vager Prompt fuehrt zu unvorhersehbaren Ergebnissen. Rechts: Ein strukturierter Prompt mit XML Tags liefert konsistente, reproduzierbare Ausgaben.
 
@@ -286,20 +262,7 @@ TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Vers
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig"] --> BSP["buildSystemPrompt()"]
-  Input["User Input"] --> Prompt["Strukturierter Prompt<br/>mit XML Tags"]
-  BSP --> Call["generateText()"]
-  Prompt --> Call
-  Call --> Output["Konsistenter Output"]
-  style Config fill:#4A90D9,color:#fff
-  style Input fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Prompt fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig fliesst in buildSystemPrompt, User Input in einen strukturierten Prompt mit XML Tags, beide fliessen in generateText und erzeugen konsistenten Output" />
 
 **Uebung:** Kombiniere den strukturierten Prompt mit dem Template aus Challenge 5.1. Baue eine `buildPrompt`-Funktion, die beides vereint:
 

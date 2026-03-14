@@ -1,0 +1,38 @@
+{
+  "id": "l5-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "V", "label": ["Variables", "(role, audience, tone)"], "role": "input" },
+    { "id": "TC", "label": "<task-context>", "role": "process" },
+    { "id": "BD", "label": "<background-data>", "role": "process" },
+    { "id": "EX", "label": "<examples>", "role": "process" },
+    { "id": "R", "label": "<rules>", "role": "process" },
+    { "id": "CH", "label": "<conversation-history>", "role": "process" },
+    { "id": "TA", "label": "<the-ask>", "role": "process" },
+    { "id": "OF", "label": "<output-format>", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "OUT", "label": "Konsistenter Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "V", "to": "TC" },
+    { "from": "V", "to": "BD" },
+    { "from": "V", "to": "EX" },
+    { "from": "V", "to": "R" },
+    { "from": "V", "to": "CH" },
+    { "from": "V", "to": "TA" },
+    { "from": "V", "to": "OF" },
+    { "from": "TC", "to": "GT" },
+    { "from": "BD", "to": "GT" },
+    { "from": "EX", "to": "GT" },
+    { "from": "R", "to": "GT" },
+    { "from": "CH", "to": "GT" },
+    { "from": "TA", "to": "GT" },
+    { "from": "OF", "to": "GT" },
+    { "from": "GT", "to": "LLM" },
+    { "from": "LLM", "to": "OUT" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Prompt Template", "nodes": ["TC", "BD", "EX", "R", "CH", "TA", "OF"], "style": "highlight" }
+  ]
+}

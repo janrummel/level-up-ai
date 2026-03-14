@@ -1,0 +1,29 @@
+{
+  "id": "l5-c2-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "VP", "label": ["Vager Prompt", "'Fasse zusammen'"], "role": "warning" },
+    { "id": "LLM1", "label": "LLM", "role": "process" },
+    { "id": "BAD", "label": ["Unvorhersehbar", "Mal Liste, mal Absatz"], "role": "warning" },
+    { "id": "TC2", "label": "<task-context>", "role": "process" },
+    { "id": "R2", "label": "<rules>", "role": "process" },
+    { "id": "TA2", "label": "<the-ask>", "role": "process" },
+    { "id": "OF2", "label": "<output-format>", "role": "process" },
+    { "id": "SP", "label": ["Strukturierter", "Prompt"], "role": "process" },
+    { "id": "LLM2", "label": "LLM", "role": "process" },
+    { "id": "GOOD", "label": ["Konsistent", "Reproduzierbar"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "VP", "to": "LLM1" },
+    { "from": "LLM1", "to": "BAD" },
+    { "from": "TC2", "to": "SP" },
+    { "from": "R2", "to": "SP" },
+    { "from": "TA2", "to": "SP" },
+    { "from": "OF2", "to": "SP" },
+    { "from": "SP", "to": "LLM2" },
+    { "from": "LLM2", "to": "GOOD" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Basic Prompting", "nodes": ["TC2", "R2", "TA2", "OF2", "SP", "LLM2", "GOOD"], "style": "highlight" }
+  ]
+}

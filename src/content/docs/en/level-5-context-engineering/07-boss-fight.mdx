@@ -7,6 +7,8 @@ sidebar:
     text: 'Boss Fight'
     variant: 'danger'
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-boss-overview.svg';
 
 ## The Scenario
 
@@ -14,20 +16,7 @@ You are building a **Documentation Assistant** — an AI system that analyses te
 
 This project combines all five building blocks from Level 5:
 
-```mermaid
-graph LR
-  T["Template<br/>(5.1)"] --> XML["XML Structure<br/>(5.2)"]
-  XML --> EX["Exemplars<br/>(5.3)"]
-  EX --> RAG["RAG Data<br/>(5.4)"]
-  RAG --> CoT["Chain of Thought<br/>(5.5)"]
-  CoT --> OUT["Documentation<br/>Assistant"]
-  style T fill:#4A90D9,color:#fff
-  style XML fill:#27AE60,color:#fff
-  style EX fill:#27AE60,color:#fff
-  style RAG fill:#27AE60,color:#fff
-  style CoT fill:#27AE60,color:#fff
-  style OUT fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="The five Level 5 building blocks in sequence: Template (5.1) leads to XML Structure (5.2), then Exemplars (5.3), RAG Data (5.4) and Chain of Thought (5.5) — together they form the Documentation Assistant" />
 
 ## Requirements
 

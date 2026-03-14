@@ -4,6 +4,9 @@ description: "Lerne, System Prompts als wiederverwendbare Templates mit XML Tags
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c1-combine.svg';
 
 ## THINK
 
@@ -11,36 +14,7 @@ Wenn Du einen System Prompt schreibst — wie stellst Du sicher, dass er bei 20 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["Du bist HIER: Prompt Template"]
-    subgraph Template["Prompt Template"]
-      TC["&lt;task-context&gt;"]
-      BD["&lt;background-data&gt;"]
-      EX["&lt;examples&gt;"]
-      R["&lt;rules&gt;"]
-      CH["&lt;conversation-history&gt;"]
-      TA["&lt;the-ask&gt;"]
-      OF["&lt;output-format&gt;"]
-    end
-  end
-  V["Variables<br/>(role, audience, tone)"] --> Template
-  Template --> GT["generateText()"]
-  GT --> LLM["LLM"]
-  LLM --> OUT["Konsistenter Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style V fill:#4A90D9,color:#fff
-  style TC fill:#27AE60,color:#fff
-  style BD fill:#27AE60,color:#fff
-  style EX fill:#27AE60,color:#fff
-  style R fill:#27AE60,color:#fff
-  style CH fill:#27AE60,color:#fff
-  style TA fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OUT fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Variables (role, audience, tone) fliessen in ein Prompt Template mit XML Tags (task-context, background-data, examples, rules, conversation-history, the-ask, output-format), das dann generateText und LLM zu konsistentem Output fuehrt" />
 
 Das Diagramm zeigt die Kernidee: Ein Prompt Template definiert eine feste Struktur mit XML Tags. Variablen werden dynamisch injiziert. Das Ergebnis ist ein konsistenter, wiederverwendbarer Prompt fuer beliebig viele API-Calls.
 
@@ -279,18 +253,7 @@ Context Engineering ist die systematische Gestaltung des Inputs...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  V["Variables"] --> T["buildSystemPrompt()"]
-  T --> ST["streamText()"]
-  ST --> Stream["Text Stream"]
-  Stream --> Terminal["Terminal Output"]
-  style V fill:#4A90D9,color:#fff
-  style T fill:#27AE60,color:#fff
-  style ST fill:#27AE60,color:#fff
-  style Stream fill:#E67E22,color:#fff
-  style Terminal fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Variables fliessen in buildSystemPrompt, dann in streamText, das einen Text Stream erzeugt der als Terminal Output ausgegeben wird" />
 
 **Uebung:** Nutze Dein Template jetzt mit `streamText` statt `generateText`. Streame die Antwort ins Terminal.
 

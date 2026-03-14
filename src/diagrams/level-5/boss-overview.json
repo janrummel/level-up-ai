@@ -1,0 +1,20 @@
+{
+  "id": "l5-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "T", "label": ["Template", "(5.1)"], "role": "input" },
+    { "id": "XML", "label": ["XML Struktur", "(5.2)"], "role": "process" },
+    { "id": "EX", "label": ["Exemplars", "(5.3)"], "role": "process" },
+    { "id": "RAG", "label": ["RAG Data", "(5.4)"], "role": "process" },
+    { "id": "CoT", "label": ["Chain of Thought", "(5.5)"], "role": "process" },
+    { "id": "OUT", "label": ["Documentation", "Assistant"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "T", "to": "XML" },
+    { "from": "XML", "to": "EX" },
+    { "from": "EX", "to": "RAG" },
+    { "from": "RAG", "to": "CoT" },
+    { "from": "CoT", "to": "OUT" }
+  ],
+  "groups": []
+}

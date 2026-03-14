@@ -4,6 +4,9 @@ description: "Nutze konkrete Input-Output-Beispiele, um dem LLM zu zeigen, was D
 sidebar:
   order: 4
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c3-combine.svg';
 
 ## THINK
 
@@ -11,26 +14,7 @@ Wie wuerdest Du einem neuen Mitarbeiter einen bestimmten Schreibstil erklaeren â
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph Prompt["Prompt mit Exemplars"]
-    TC["&lt;task-context&gt;"]
-    subgraph HIER["Du bist HIER: Exemplars"]
-      EX["&lt;examples&gt;<br/>input/output Paare"]
-    end
-    TA["&lt;the-ask&gt;"]
-  end
-  Input["Neuer Input"] --> Prompt
-  Prompt --> LLM["LLM"]
-  LLM --> OUT["Konsistenter Output<br/>im gewuenschten Stil"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style TC fill:#27AE60,color:#fff
-  style EX fill:#E67E22,color:#fff
-  style TA fill:#27AE60,color:#fff
-  style Input fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OUT fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Neuer Input fliesst in einen Prompt mit task-context, dem hervorgehobenen examples-Tag (input/output Paare) und the-ask, der dann ins LLM geht und konsistenten Output im gewuenschten Stil erzeugt" />
 
 Der `<examples>`-Tag ist der Baustein, der in dieser Challenge hinzukommt. Er enthaelt konkrete Input-Output-Paare, an denen sich das LLM orientiert. Zusammen mit `<task-context>` und `<the-ask>` aus den vorherigen Challenges ergibt sich ein Prompt, der konsistente Ergebnisse im gewuenschten Stil liefert.
 
@@ -230,20 +214,7 @@ console.log(result.text); // Erwartete Ausgabe: "neutral"
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig"] --> BSP["buildSystemPrompt()"]
-  Exemplars["Exemplars Array"] --> Template["Prompt Template<br/>mit examples-Slot"]
-  BSP --> Call["generateText()"]
-  Template --> Call
-  Call --> Output["Konsistenter Output"]
-  style Config fill:#4A90D9,color:#fff
-  style Exemplars fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Template fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig fliesst in buildSystemPrompt, Exemplars Array in ein Prompt Template mit examples-Slot, beide fliessen in generateText und erzeugen konsistenten Output" />
 
 **Uebung:** Erweitere das Template aus Challenge 5.1 um einen `examples`-Slot. Baue eine Funktion, die Exemplars als Parameter akzeptiert und ins Template einfuegt.
 

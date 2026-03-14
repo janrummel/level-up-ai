@@ -4,6 +4,9 @@ description: "Bringe das LLM dazu, Schritt fuer Schritt nachzudenken — fuer na
 sidebar:
   order: 6
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c5-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c5-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ Wenn Du eine komplexe Rechenaufgabe loest — rechnest Du im Kopf oder schreibst
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph "Direkt (ohne CoT)"
-    Q1["Frage"] --> LLM1["LLM"]
-    LLM1 --> A1["Antwort"]
-  end
-  subgraph HIER["Du bist HIER: Chain of Thought"]
-    subgraph "Mit Chain of Thought"
-      Q2["Frage"] --> LLM2["LLM denkt<br/>Schritt fuer Schritt"]
-      LLM2 --> TH["thinking-instructions<br/>+ output-format"]
-      TH --> A2["Nachvollziehbare<br/>Antwort"]
-    end
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Q1 fill:#4A90D9,color:#fff
-  style LLM1 fill:#27AE60,color:#fff
-  style A1 fill:#E74C3C,color:#fff
-  style Q2 fill:#4A90D9,color:#fff
-  style LLM2 fill:#27AE60,color:#fff
-  style TH fill:#27AE60,color:#fff
-  style A2 fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Links: direkte Frage ans LLM ergibt fehleranfaellige Antwort (rot). Rechts (Chain of Thought): Frage geht ins LLM das Schritt fuer Schritt denkt, durch thinking-instructions und output-format gefuehrt, und eine nachvollziehbare Antwort liefert" />
 
 Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen fehleranfaellig (rot). Rechts: Mit `<thinking-instructions>` und `<output-format>` denkt das LLM zuerst nach. Die Antwort ist nachvollziehbar und basiert auf Zwischenschritten.
 
@@ -292,24 +274,7 @@ for await (const chunk of result.textStream) {
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig<br/>(5.1)"] --> BSP["buildFullPrompt()"]
-  XML["XML Struktur<br/>(5.2)"] --> BSP
-  Exemplars["Exemplars<br/>(5.3)"] --> BSP
-  Data["Externe Daten<br/>(5.4)"] --> BSP
-  CoT["Chain of Thought<br/>(5.5)"] --> BSP
-  BSP --> Call["generateText()"]
-  Call --> Output["Strukturierte<br/>Antwort"]
-  style Config fill:#4A90D9,color:#fff
-  style XML fill:#4A90D9,color:#fff
-  style Exemplars fill:#4A90D9,color:#fff
-  style Data fill:#4A90D9,color:#fff
-  style CoT fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig (5.1), XML Struktur (5.2), Exemplars (5.3), Externe Daten (5.4) und Chain of Thought (5.5) fliessen alle in buildFullPrompt, dann in generateText und erzeugen eine strukturierte Antwort" />
 
 **Uebung:** Baue einen vollstaendigen Prompt der ALLE 5 Konzepte dieses Levels vereint: Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + RAG (5.4) + Chain of Thought (5.5). Das ist die Vorbereitung fuer die Boss Fight.
 

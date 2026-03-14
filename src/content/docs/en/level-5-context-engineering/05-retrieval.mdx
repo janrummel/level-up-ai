@@ -4,6 +4,9 @@ description: "Dynamically load external knowledge into the prompt to prevent hal
 sidebar:
   order: 5
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c4-combine.svg';
 
 ## THINK
 
@@ -11,25 +14,7 @@ What happens when you ask an LLM about current news? How does it know whether it
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Q["User Question"] --> R["Search External<br/>Source"]
-  subgraph HIER["You are HERE: Retrieval"]
-    R --> F["Find Relevant<br/>Data"]
-    F --> P["Insert into Prompt<br/>&lt;background-data&gt;"]
-  end
-  P --> LLM["LLM answers"]
-  LLM --> A["Source-based<br/>Answer"]
-  Q -.-> NOPE["Without RAG:<br/>Hallucination"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Q fill:#4A90D9,color:#fff
-  style R fill:#4A90D9,color:#fff
-  style F fill:#4A90D9,color:#fff
-  style P fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style A fill:#E67E22,color:#fff
-  style NOPE fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="RAG data flow: User Question triggers a search in an external source, relevant data is found and inserted as background-data into the prompt, LLM responds with a source-based answer. Without RAG (dashed line) hallucination is likely" />
 
 The diagram shows the RAG data flow: A user question is not sent directly to the LLM — first, relevant data is loaded from an external source and inserted into the prompt via the `<background-data>` tag. Without this step (dashed line) hallucination is likely.
 
@@ -307,22 +292,7 @@ Source: https://www.aihero.dev/
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig<br/>(5.1)"] --> BSP["buildSystemPrompt()"]
-  XML["XML Structure<br/>(5.2)"] --> BSP
-  Exemplars["Exemplars<br/>(5.3)"] --> BSP
-  Data["External Data<br/>(5.4)"] --> BSP
-  BSP --> Call["generateText()"]
-  Call --> Output["Source-based<br/>Answer"]
-  style Config fill:#4A90D9,color:#fff
-  style XML fill:#4A90D9,color:#fff
-  style Exemplars fill:#4A90D9,color:#fff
-  style Data fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig (5.1), XML Structure (5.2), Exemplars (5.3) and External Data (5.4) all flow into buildSystemPrompt, then into generateText to produce a source-based answer" />
 
 **Exercise:** Now build a complete RAG system that combines Template (5.1) + XML Structure (5.2) + Exemplars (5.3) + Retrieval (5.4). Create a `buildRAGPrompt` function that unifies all four concepts.
 

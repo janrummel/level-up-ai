@@ -1,0 +1,24 @@
+{
+  "id": "l5-c4-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Q", "label": "User-Frage", "role": "input" },
+    { "id": "R", "label": ["Externe Quelle", "durchsuchen"], "role": "input" },
+    { "id": "F", "label": ["Relevante Daten", "finden"], "role": "input" },
+    { "id": "P", "label": ["In Prompt einfuegen", "<background-data>"], "role": "process" },
+    { "id": "LLM", "label": "LLM antwortet", "role": "process" },
+    { "id": "A", "label": ["Quellenbasierte", "Antwort"], "role": "output" },
+    { "id": "NOPE", "label": ["Ohne RAG:", "Halluzination"], "role": "warning" }
+  ],
+  "edges": [
+    { "from": "Q", "to": "R" },
+    { "from": "R", "to": "F" },
+    { "from": "F", "to": "P" },
+    { "from": "P", "to": "LLM" },
+    { "from": "LLM", "to": "A" },
+    { "from": "Q", "to": "NOPE" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Retrieval", "nodes": ["R", "F", "P"], "style": "highlight" }
+  ]
+}

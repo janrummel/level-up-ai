@@ -1,0 +1,20 @@
+{
+  "id": "l5-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Config", "label": "PromptConfig", "role": "input" },
+    { "id": "Input", "label": "User Input", "role": "input" },
+    { "id": "BSP", "label": "buildSystemPrompt()", "role": "process" },
+    { "id": "Prompt", "label": ["Strukturierter Prompt", "mit XML Tags"], "role": "process" },
+    { "id": "Call", "label": "generateText()", "role": "process" },
+    { "id": "Output", "label": "Konsistenter Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Config", "to": "BSP" },
+    { "from": "Input", "to": "Prompt" },
+    { "from": "BSP", "to": "Call" },
+    { "from": "Prompt", "to": "Call" },
+    { "from": "Call", "to": "Output" }
+  ],
+  "groups": []
+}

@@ -4,6 +4,9 @@ description: "Turn vague prompts into clear, structured instructions using a pro
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c2-combine.svg';
 
 ## THINK
 
@@ -11,34 +14,7 @@ What is the difference between "Summarise this" and a prompt with a clear role, 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph "Without Structure"
-    VP["Vague Prompt<br/>'Summarise this'"] --> LLM1["LLM"]
-    LLM1 --> BAD["Unpredictable<br/>Sometimes a list, sometimes a paragraph"]
-  end
-  subgraph HIER["You are HERE: Basic Prompting"]
-    subgraph "With XML Tags"
-      TC2["&lt;task-context&gt;"] --> SP["Structured<br/>Prompt"]
-      R2["&lt;rules&gt;"] --> SP
-      TA2["&lt;the-ask&gt;"] --> SP
-      OF2["&lt;output-format&gt;"] --> SP
-      SP --> LLM2["LLM"]
-      LLM2 --> GOOD["Consistent<br/>Reproducible"]
-    end
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style VP fill:#E74C3C,color:#fff
-  style BAD fill:#E74C3C,color:#fff
-  style TC2 fill:#27AE60,color:#fff
-  style R2 fill:#27AE60,color:#fff
-  style TA2 fill:#27AE60,color:#fff
-  style OF2 fill:#27AE60,color:#fff
-  style SP fill:#27AE60,color:#fff
-  style LLM1 fill:#27AE60,color:#fff
-  style LLM2 fill:#27AE60,color:#fff
-  style GOOD fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Left: vague prompt leads to unpredictable LLM output. Right (Basic Prompting): XML tags (task-context, rules, the-ask, output-format) produce a structured prompt that yields consistent, reproducible results" />
 
 Left: A vague prompt leads to unpredictable results. Right: A structured prompt with XML tags delivers consistent, reproducible outputs.
 
@@ -286,20 +262,7 @@ TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Vers
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig"] --> BSP["buildSystemPrompt()"]
-  Input["User Input"] --> Prompt["Structured Prompt<br/>with XML Tags"]
-  BSP --> Call["generateText()"]
-  Prompt --> Call
-  Call --> Output["Consistent Output"]
-  style Config fill:#4A90D9,color:#fff
-  style Input fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Prompt fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig flows into buildSystemPrompt, User Input into a Structured Prompt with XML Tags, both feed into generateText to produce consistent output" />
 
 **Exercise:** Combine the structured prompt with the template from Challenge 5.1. Build a `buildPrompt` function that unifies both:
 

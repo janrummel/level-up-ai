@@ -1,0 +1,18 @@
+{
+  "id": "l5-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "V", "label": "Variables", "role": "input" },
+    { "id": "T", "label": "buildSystemPrompt()", "role": "process" },
+    { "id": "ST", "label": "streamText()", "role": "process" },
+    { "id": "Stream", "label": "Text Stream", "role": "output" },
+    { "id": "Terminal", "label": "Terminal Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "V", "to": "T" },
+    { "from": "T", "to": "ST" },
+    { "from": "ST", "to": "Stream" },
+    { "from": "Stream", "to": "Terminal" }
+  ],
+  "groups": []
+}

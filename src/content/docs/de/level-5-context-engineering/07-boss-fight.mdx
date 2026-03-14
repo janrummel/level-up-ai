@@ -7,6 +7,8 @@ sidebar:
     text: 'Boss Fight'
     variant: 'danger'
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-boss-overview.svg';
 
 ## Das Szenario
 
@@ -14,20 +16,7 @@ Du baust einen **Documentation Assistant** — ein AI-System, das technische Dok
 
 Dieses Projekt kombiniert alle fuenf Bausteine aus Level 5:
 
-```mermaid
-graph LR
-  T["Template<br/>(5.1)"] --> XML["XML Struktur<br/>(5.2)"]
-  XML --> EX["Exemplars<br/>(5.3)"]
-  EX --> RAG["RAG Data<br/>(5.4)"]
-  RAG --> CoT["Chain of Thought<br/>(5.5)"]
-  CoT --> OUT["Documentation<br/>Assistant"]
-  style T fill:#4A90D9,color:#fff
-  style XML fill:#27AE60,color:#fff
-  style EX fill:#27AE60,color:#fff
-  style RAG fill:#27AE60,color:#fff
-  style CoT fill:#27AE60,color:#fff
-  style OUT fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Die fuenf Level-5-Bausteine in Sequenz: Template (5.1) fuehrt zu XML Struktur (5.2), dann Exemplars (5.3), RAG Data (5.4) und Chain of Thought (5.5) — zusammen ergeben sie den Documentation Assistant" />
 
 ## Anforderungen
 

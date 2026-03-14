@@ -4,6 +4,9 @@ description: "Lade externes Wissen dynamisch in den Prompt, um Halluzinationen z
 sidebar:
   order: 5
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c4-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c4-combine.svg';
 
 ## THINK
 
@@ -11,25 +14,7 @@ Was passiert, wenn Du ein LLM nach aktuellen Nachrichten fragst? Woher weiss es,
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Q["User-Frage"] --> R["Externe Quelle<br/>durchsuchen"]
-  subgraph HIER["Du bist HIER: Retrieval"]
-    R --> F["Relevante Daten<br/>finden"]
-    F --> P["In Prompt einfuegen<br/>&lt;background-data&gt;"]
-  end
-  P --> LLM["LLM antwortet"]
-  LLM --> A["Quellenbasierte<br/>Antwort"]
-  Q -.-> NOPE["Ohne RAG:<br/>Halluzination"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Q fill:#4A90D9,color:#fff
-  style R fill:#4A90D9,color:#fff
-  style F fill:#4A90D9,color:#fff
-  style P fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style A fill:#E67E22,color:#fff
-  style NOPE fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="RAG-Datenfluss: User-Frage loest Suche in externer Quelle aus, relevante Daten werden gefunden und als background-data in den Prompt eingefuegt, LLM antwortet quellenbasiert. Ohne RAG (gestrichelte Linie) droht Halluzination" />
 
 Das Diagramm zeigt den RAG-Datenfluss: Eine User-Frage wird nicht direkt ans LLM geschickt — zuerst werden relevante Daten aus einer externen Quelle geladen und im `<background-data>`-Tag in den Prompt eingefuegt. Ohne diesen Schritt (gestrichelte Linie) droht Halluzination.
 
@@ -307,22 +292,7 @@ According to the website (https://www.aihero.dev/), Guillermo Rauch, CEO of Verc
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Config["PromptConfig<br/>(5.1)"] --> BSP["buildSystemPrompt()"]
-  XML["XML Struktur<br/>(5.2)"] --> BSP
-  Exemplars["Exemplars<br/>(5.3)"] --> BSP
-  Data["Externe Daten<br/>(5.4)"] --> BSP
-  BSP --> Call["generateText()"]
-  Call --> Output["Quellenbasierte<br/>Antwort"]
-  style Config fill:#4A90D9,color:#fff
-  style XML fill:#4A90D9,color:#fff
-  style Exemplars fill:#4A90D9,color:#fff
-  style Data fill:#4A90D9,color:#fff
-  style BSP fill:#27AE60,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="PromptConfig (5.1), XML Struktur (5.2), Exemplars (5.3) und Externe Daten (5.4) fliessen alle in buildSystemPrompt, dann in generateText und erzeugen eine quellenbasierte Antwort" />
 
 **Uebung:** Baue jetzt ein vollstaendiges RAG-System das Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + Retrieval (5.4) kombiniert. Erstelle eine Funktion `buildRAGPrompt` die alle vier Konzepte vereint.
 

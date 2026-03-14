@@ -1,0 +1,20 @@
+{
+  "id": "l5-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Config", "label": "PromptConfig", "role": "input" },
+    { "id": "Exemplars", "label": "Exemplars Array", "role": "input" },
+    { "id": "BSP", "label": "buildSystemPrompt()", "role": "process" },
+    { "id": "Template", "label": ["Prompt Template", "mit examples-Slot"], "role": "process" },
+    { "id": "Call", "label": "generateText()", "role": "process" },
+    { "id": "Output", "label": "Konsistenter Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Config", "to": "BSP" },
+    { "from": "Exemplars", "to": "Template" },
+    { "from": "BSP", "to": "Call" },
+    { "from": "Template", "to": "Call" },
+    { "from": "Call", "to": "Output" }
+  ],
+  "groups": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "l5-c5-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Config", "label": ["PromptConfig", "(5.1)"], "role": "input" },
+    { "id": "XML", "label": ["XML Struktur", "(5.2)"], "role": "input" },
+    { "id": "Exemplars", "label": ["Exemplars", "(5.3)"], "role": "input" },
+    { "id": "Data", "label": ["Externe Daten", "(5.4)"], "role": "input" },
+    { "id": "CoT", "label": ["Chain of Thought", "(5.5)"], "role": "input" },
+    { "id": "BSP", "label": "buildFullPrompt()", "role": "process" },
+    { "id": "Call", "label": "generateText()", "role": "process" },
+    { "id": "Output", "label": ["Strukturierte", "Antwort"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Config", "to": "BSP" },
+    { "from": "XML", "to": "BSP" },
+    { "from": "Exemplars", "to": "BSP" },
+    { "from": "Data", "to": "BSP" },
+    { "from": "CoT", "to": "BSP" },
+    { "from": "BSP", "to": "Call" },
+    { "from": "Call", "to": "Output" }
+  ],
+  "groups": []
+}

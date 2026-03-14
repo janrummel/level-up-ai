@@ -4,6 +4,9 @@ description: "Learn to structure system prompts as reusable templates with XML t
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l5-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l5-c1-combine.svg';
 
 ## THINK
 
@@ -11,36 +14,7 @@ When you write a system prompt — how do you make sure it stays consistent acro
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["You are HERE: Prompt Template"]
-    subgraph Template["Prompt Template"]
-      TC["&lt;task-context&gt;"]
-      BD["&lt;background-data&gt;"]
-      EX["&lt;examples&gt;"]
-      R["&lt;rules&gt;"]
-      CH["&lt;conversation-history&gt;"]
-      TA["&lt;the-ask&gt;"]
-      OF["&lt;output-format&gt;"]
-    end
-  end
-  V["Variables<br/>(role, audience, tone)"] --> Template
-  Template --> GT["generateText()"]
-  GT --> LLM["LLM"]
-  LLM --> OUT["Consistent Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style V fill:#4A90D9,color:#fff
-  style TC fill:#27AE60,color:#fff
-  style BD fill:#27AE60,color:#fff
-  style EX fill:#27AE60,color:#fff
-  style R fill:#27AE60,color:#fff
-  style CH fill:#27AE60,color:#fff
-  style TA fill:#27AE60,color:#fff
-  style OF fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style OUT fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Variables (role, audience, tone) flow into a Prompt Template with XML tags (task-context, background-data, examples, rules, conversation-history, the-ask, output-format), which then feeds generateText and LLM to produce consistent output" />
 
 The diagram shows the core idea: A prompt template defines a fixed structure with XML tags. Variables are injected dynamically. The result is a consistent, reusable prompt for any number of API calls.
 
@@ -274,18 +248,7 @@ Context Engineering is the systematic design of the input...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  V["Variables"] --> T["buildSystemPrompt()"]
-  T --> ST["streamText()"]
-  ST --> Stream["Text Stream"]
-  Stream --> Terminal["Terminal Output"]
-  style V fill:#4A90D9,color:#fff
-  style T fill:#27AE60,color:#fff
-  style ST fill:#27AE60,color:#fff
-  style Stream fill:#E67E22,color:#fff
-  style Terminal fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Variables flow into buildSystemPrompt, then into streamText which produces a Text Stream output to the Terminal" />
 
 **Exercise:** Now use your template with `streamText` instead of `generateText`. Stream the response to the terminal.
 

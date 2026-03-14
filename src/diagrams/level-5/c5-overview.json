@@ -1,0 +1,23 @@
+{
+  "id": "l5-c5-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Q1", "label": "Frage", "role": "input" },
+    { "id": "LLM1", "label": "LLM", "role": "process" },
+    { "id": "A1", "label": "Antwort", "role": "warning" },
+    { "id": "Q2", "label": "Frage", "role": "input" },
+    { "id": "LLM2", "label": ["LLM denkt", "Schritt fuer Schritt"], "role": "process" },
+    { "id": "TH", "label": ["thinking-instructions", "+ output-format"], "role": "process" },
+    { "id": "A2", "label": ["Nachvollziehbare", "Antwort"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Q1", "to": "LLM1" },
+    { "from": "LLM1", "to": "A1" },
+    { "from": "Q2", "to": "LLM2" },
+    { "from": "LLM2", "to": "TH" },
+    { "from": "TH", "to": "A2" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Chain of Thought", "nodes": ["Q2", "LLM2", "TH", "A2"], "style": "highlight" }
+  ]
+}

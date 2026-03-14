@@ -1,0 +1,24 @@
+{
+  "id": "l5-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "TC", "label": "<task-context>", "role": "process" },
+    { "id": "EX", "label": ["<examples>", "input/output Paare"], "role": "output" },
+    { "id": "TA", "label": "<the-ask>", "role": "process" },
+    { "id": "Input", "label": "Neuer Input", "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "OUT", "label": ["Konsistenter Output", "im gewuenschten Stil"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "TC" },
+    { "from": "Input", "to": "EX" },
+    { "from": "Input", "to": "TA" },
+    { "from": "TC", "to": "LLM" },
+    { "from": "EX", "to": "LLM" },
+    { "from": "TA", "to": "LLM" },
+    { "from": "LLM", "to": "OUT" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Exemplars", "nodes": ["EX"], "style": "highlight" }
+  ]
+}
