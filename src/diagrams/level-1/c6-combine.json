@@ -1,0 +1,17 @@
+{
+  "id": "l1-c6-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "System", "label": ["System Prompt", "(Rolle: Code Reviewer)"], "role": "input" },
+    { "id": "Prompt", "label": "User Input", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Output", "label": ["Output.object()", "(Strukturiertes Feedback)"], "role": "process" },
+    { "id": "Review", "label": ["{ score, issues,", "suggestions }"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "System", "to": "GT" },
+    { "from": "Prompt", "to": "GT" },
+    { "from": "GT", "to": "Output" },
+    { "from": "Output", "to": "Review" }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "l1-c1-overview",
+  "direction": "TB",
+  "nodes": [
+    { "id": "Code", "label": "Dein Code", "role": "input" },
+    { "id": "Core", "label": ["AI SDK Core", "(Backend)"], "role": "process" },
+    { "id": "UI", "label": ["AI SDK UI", "(Frontend)"], "role": "process" },
+    { "id": "RSC", "label": ["AI SDK RSC", "(React Server)"], "role": "process" },
+    { "id": "Provider", "label": "Provider", "role": "process" },
+    { "id": "A", "label": "Anthropic", "role": "output" },
+    { "id": "O", "label": "OpenAI", "role": "output" },
+    { "id": "G", "label": "Google", "role": "output" },
+    { "id": "More", "label": "20+ weitere", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Code", "to": "Core" },
+    { "from": "Code", "to": "UI" },
+    { "from": "Code", "to": "RSC" },
+    { "from": "Core", "to": "Provider" },
+    { "from": "UI", "to": "Provider" },
+    { "from": "RSC", "to": "Provider" },
+    { "from": "Provider", "to": "A" },
+    { "from": "Provider", "to": "O" },
+    { "from": "Provider", "to": "G" },
+    { "from": "Provider", "to": "More" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: AI SDK", "nodes": ["Core", "UI", "RSC"], "style": "highlight" }
+  ]
+}

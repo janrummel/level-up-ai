@@ -4,6 +4,10 @@ description: "Verstehe die Architektur des AI SDK und fuehre Deinen ersten gener
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c1-combine.svg';
+
 
 ## THINK
 
@@ -11,32 +15,7 @@ Wenn Du mit Claude, GPT und Gemini arbeiten willst — brauchst Du fuer jeden ei
 
 ## OVERVIEW
 
-```mermaid
-graph TB
-  subgraph HIER["Du bist HIER: AI SDK"]
-    subgraph SDK["AI SDK"]
-      Core["AI SDK Core<br/>(Backend)"]
-      UI["AI SDK UI<br/>(Frontend)"]
-      RSC["AI SDK RSC<br/>(React Server)"]
-    end
-  end
-  Code["Dein Code"] --> SDK
-  SDK --> Provider["Provider"]
-  Provider --> A["Anthropic"]
-  Provider --> O["OpenAI"]
-  Provider --> G["Google"]
-  Provider --> More["20+ weitere"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Code fill:#4A90D9,color:#fff
-  style Core fill:#27AE60,color:#fff
-  style UI fill:#27AE60,color:#fff
-  style RSC fill:#27AE60,color:#fff
-  style Provider fill:#27AE60,color:#fff
-  style A fill:#E67E22,color:#fff
-  style O fill:#E67E22,color:#fff
-  style G fill:#E67E22,color:#fff
-  style More fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="AI SDK Architektur: Dein Code verbindet sich ueber AI SDK Core, UI und RSC mit Providern wie Anthropic, OpenAI und Google" />
 
 Das AI SDK sitzt zwischen Deinem Code und den LLM-Providern. Es bietet eine einheitliche API — egal welchen Provider Du nutzt. Drei Bibliotheken, ein Interface.
 
@@ -173,18 +152,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> GT1["generateText()<br/>Anthropic"]
-  Prompt --> GT2["generateText()<br/>OpenAI"]
-  GT1 --> Out1["Output A"]
-  GT2 --> Out2["Output B"]
-  style Prompt fill:#4A90D9,color:#fff
-  style GT1 fill:#27AE60,color:#fff
-  style GT2 fill:#27AE60,color:#fff
-  style Out1 fill:#E67E22,color:#fff
-  style Out2 fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Derselbe Prompt wird an generateText mit Anthropic und OpenAI gesendet und erzeugt zwei separate Outputs" />
 
 **Uebung:** Aendere den Provider — ersetze `anthropic` durch `openai`. Was musst Du aendern?
 

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 583 422" role="img" aria-label="l1-c1-overview">
+  <defs>
+  <!-- Gradients -->
+  <linearGradient id="grad-input" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#5B9FE6"/>
+    <stop offset="100%" stop-color="#3A7BD5"/>
+  </linearGradient>
+  <linearGradient id="grad-process" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#43C67A"/>
+    <stop offset="100%" stop-color="#27AE60"/>
+  </linearGradient>
+  <linearGradient id="grad-output" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#F0944D"/>
+    <stop offset="100%" stop-color="#E67E22"/>
+  </linearGradient>
+  <linearGradient id="grad-warning" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#EF6B6B"/>
+    <stop offset="100%" stop-color="#E74C3C"/>
+  </linearGradient>
+  <linearGradient id="grad-neutral" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#64748b"/>
+    <stop offset="100%" stop-color="#475569"/>
+  </linearGradient>
+
+  <!-- Glow filters -->
+  <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#3A7BD5" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#27AE60" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E67E22" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#E74C3C" flood-opacity="0.3"/>
+    <feComposite in2="blur" operator="in"/>
+    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <!-- Shadow filter -->
+  <filter id="shadow">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/>
+  </filter>
+
+  <!-- Arrow marker -->
+  <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#64748b"/>
+  </marker>
+</defs>
+  <rect width="583" height="422" fill="#0f172a" rx="16"/>
+  <!-- Groups -->
+  <text x="289.25" y="120" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="system-ui, -apple-system, sans-serif">Du bist HIER: AI SDK</text>
+    <rect x="58.75" y="124" width="461" height="78" rx="6" stroke="#E67E22" stroke-dasharray="5 5" fill="none" stroke-width="2"/>
+  <!-- Edges -->
+  <path d="M 359.375,76 L 446.25,106 L 446.25,136" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 305.5625,76 L 302.75,106 L 302.75,136" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 254.75,73.60371517027863 L 145.75,106 L 145.75,136" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 446.25,190 L 446.25,220 L 352.75,251.27526132404182" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 302.75,190 L 302.75,220 L 302.75,250" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 145.75,190 L 145.75,220 L 252.75,252.71337579617835" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 352.75,280.7829560585885 L 490.5,316 L 490.5,346" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 325.34375,286 L 363,316 L 363,346" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 278.46875,286 L 238,316 L 238,346" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M 252.75,279.92546583850935 L 101.5,316 L 101.5,346" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <!-- Nodes -->
+  <rect x="254.75" y="40" width="105" height="36" rx="10" fill="url(#grad-input)" filter="url(#shadow)"/>
+      <text x="307.25" y="62" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Dein Code</text>
+    <g filter="url(#glow-green)">
+      <rect x="384.75" y="136" width="123" height="54" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="446.25" y="159" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">AI SDK Core</text>
+      <text x="446.25" y="175" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">(Backend)</text>
+    </g>
+    <g filter="url(#glow-green)">
+      <rect x="245.75" y="136" width="114" height="54" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="302.75" y="159" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">AI SDK UI</text>
+      <text x="302.75" y="175" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">(Frontend)</text>
+    </g>
+    <g filter="url(#glow-green)">
+      <rect x="70.75" y="136" width="150" height="54" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="145.75" y="159" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">AI SDK RSC</text>
+      <text x="145.75" y="175" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">(React Server)</text>
+    </g>
+    <rect x="252.75" y="250" width="100" height="36" rx="10" fill="url(#grad-process)" filter="url(#shadow)"/>
+      <text x="302.75" y="272" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Provider</text>
+    <rect x="438" y="346" width="105" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="490.5" y="368" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Anthropic</text>
+    <rect x="313" y="346" width="100" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="363" y="368" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">OpenAI</text>
+    <rect x="188" y="346" width="100" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="238" y="368" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">Google</text>
+    <rect x="40" y="346" width="123" height="36" rx="10" fill="url(#grad-output)" filter="url(#shadow)"/>
+      <text x="101.5" y="368" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, -apple-system, sans-serif">20+ weitere</text>
+</svg>

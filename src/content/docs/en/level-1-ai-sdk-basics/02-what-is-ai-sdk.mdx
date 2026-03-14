@@ -4,6 +4,10 @@ description: "Understand the architecture of the AI SDK and execute your first g
 sidebar:
   order: 2
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c1-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c1-combine.svg';
+
 
 ## THINK
 
@@ -11,32 +15,7 @@ If you want to work with Claude, GPT and Gemini — do you need a different libr
 
 ## OVERVIEW
 
-```mermaid
-graph TB
-  subgraph HIER["You are HERE: AI SDK"]
-    subgraph SDK["AI SDK"]
-      Core["AI SDK Core<br/>(Backend)"]
-      UI["AI SDK UI<br/>(Frontend)"]
-      RSC["AI SDK RSC<br/>(React Server)"]
-    end
-  end
-  Code["Your Code"] --> SDK
-  SDK --> Provider["Provider"]
-  Provider --> A["Anthropic"]
-  Provider --> O["OpenAI"]
-  Provider --> G["Google"]
-  Provider --> More["20+ more"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Code fill:#4A90D9,color:#fff
-  style Core fill:#27AE60,color:#fff
-  style UI fill:#27AE60,color:#fff
-  style RSC fill:#27AE60,color:#fff
-  style Provider fill:#27AE60,color:#fff
-  style A fill:#E67E22,color:#fff
-  style O fill:#E67E22,color:#fff
-  style G fill:#E67E22,color:#fff
-  style More fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="AI SDK architecture: Your code connects through AI SDK Core, UI and RSC to providers like Anthropic, OpenAI and Google" />
 
 The AI SDK sits between your code and the LLM providers. It offers a unified API — regardless of which provider you use. Three libraries, one interface.
 
@@ -173,18 +152,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["Prompt"] --> GT1["generateText()<br/>Anthropic"]
-  Prompt --> GT2["generateText()<br/>OpenAI"]
-  GT1 --> Out1["Output A"]
-  GT2 --> Out2["Output B"]
-  style Prompt fill:#4A90D9,color:#fff
-  style GT1 fill:#27AE60,color:#fff
-  style GT2 fill:#27AE60,color:#fff
-  style Out1 fill:#E67E22,color:#fff
-  style Out2 fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="The same prompt is sent to generateText with Anthropic and OpenAI, producing two separate outputs" />
 
 **Exercise:** Change the provider — replace `anthropic` with `openai`. What do you need to change?
 

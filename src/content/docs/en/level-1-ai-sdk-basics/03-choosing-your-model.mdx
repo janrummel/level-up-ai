@@ -4,6 +4,9 @@ description: "Learn how the provider system works and how to choose the right mo
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c2-combine.svg';
 
 ## THINK
 
@@ -11,25 +14,7 @@ How do you decide which LLM to use for a task — cost, quality, speed? And what
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  subgraph HIER["You are HERE: Model selection"]
-    Aufgabe["Task"] --> Einfach{"Simple?"}
-    Aufgabe --> Komplex{"Complex?"}
-    Aufgabe --> Code{"Code?"}
-    Einfach -->|Yes| Flash["Flash model<br/>cheap, fast<br/>gemini-2.5-flash"]
-    Komplex -->|Yes| Pro["Pro model<br/>pricier, better<br/>claude-sonnet-4-5-20250514"]
-    Code -->|Yes| CodeModel["Code model<br/>specialized<br/>e.g. claude-sonnet"]
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Aufgabe fill:#4A90D9,color:#fff
-  style Einfach fill:#27AE60,color:#fff
-  style Komplex fill:#27AE60,color:#fff
-  style Code fill:#27AE60,color:#fff
-  style Flash fill:#E67E22,color:#fff
-  style Pro fill:#E67E22,color:#fff
-  style CodeModel fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Decision tree for model selection: Simple tasks use Flash, Complex use Pro, Code tasks use specialized models" />
 
 Model selection is a deliberate decision: Which model fits which task? The AI SDK makes switching trivial — only the import and model line change.
 
@@ -194,21 +179,7 @@ Tokens: 102
 
 ## COMBINE
 
-```mermaid
-graph TD
-  Task["Task"] --> Select["selectModel()"]
-  Select --> Simple["Flash model"]
-  Select --> Complex["Pro model"]
-  Simple --> GT["generateText()"]
-  Complex --> GT
-  GT --> Result["Result"]
-  style Task fill:#4A90D9,color:#fff
-  style Select fill:#27AE60,color:#fff
-  style Simple fill:#E67E22,color:#fff
-  style Complex fill:#E67E22,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Task flows into selectModel, selects Flash or Pro model, then generateText to Result" />
 
 **Exercise:** Build a function `selectModel(task: string)` that returns an appropriate model based on the task. Use the decision tree from the OVERVIEW as the logic.
 

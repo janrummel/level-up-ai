@@ -1,0 +1,20 @@
+{
+  "id": "l1-c2-combine",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Task", "label": "Aufgabe", "role": "input" },
+    { "id": "Select", "label": "selectModel()", "role": "process" },
+    { "id": "Simple", "label": "Flash/Haiku", "role": "output" },
+    { "id": "Complex", "label": "Balanced/Frontier", "role": "output" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Result", "label": "Result", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Task", "to": "Select" },
+    { "from": "Select", "to": "Simple" },
+    { "from": "Select", "to": "Complex" },
+    { "from": "Simple", "to": "GT" },
+    { "from": "Complex", "to": "GT" },
+    { "from": "GT", "to": "Result" }
+  ]
+}

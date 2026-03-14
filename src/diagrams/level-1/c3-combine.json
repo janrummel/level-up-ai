@@ -1,0 +1,23 @@
+{
+  "id": "l1-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Task", "label": "Aufgabe", "role": "input" },
+    { "id": "System", "label": "system", "role": "input" },
+    { "id": "Prompt", "label": "prompt", "role": "input" },
+    { "id": "SM", "label": "selectModel()", "role": "process" },
+    { "id": "Model", "label": "Modell", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Text", "label": "result.text", "role": "output" },
+    { "id": "Usage", "label": "result.usage", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Task", "to": "SM" },
+    { "from": "SM", "to": "Model" },
+    { "from": "Model", "to": "GT" },
+    { "from": "System", "to": "GT" },
+    { "from": "Prompt", "to": "GT" },
+    { "from": "GT", "to": "Text" },
+    { "from": "GT", "to": "Usage" }
+  ]
+}

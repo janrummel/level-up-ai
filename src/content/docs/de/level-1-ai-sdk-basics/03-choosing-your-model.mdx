@@ -4,6 +4,10 @@ description: "Lerne, wie das Provider-System funktioniert und wie Du das richtig
 sidebar:
   order: 3
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c2-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c2-combine.svg';
+
 
 ## THINK
 
@@ -11,25 +15,7 @@ Woran entscheidest Du, welches LLM Du fuer eine Aufgabe nutzt — Kosten, Qualit
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  subgraph HIER["Du bist HIER: Modell-Auswahl"]
-    Aufgabe["Aufgabe"] --> Einfach{"Einfach?"}
-    Aufgabe --> Standard{"Standard?"}
-    Aufgabe --> Komplex{"Komplex?"}
-    Einfach -->|Ja| Flash["Flash/Haiku<br/>guenstig, schnell<br/>gemini-2.5-flash, claude-haiku"]
-    Standard -->|Ja| Mid["Balanced<br/>Qualitaet + Speed<br/>claude-sonnet, gpt-4o"]
-    Komplex -->|Ja| Top["Frontier<br/>max. Qualitaet<br/>claude-opus, o3"]
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Aufgabe fill:#4A90D9,color:#fff
-  style Einfach fill:#27AE60,color:#fff
-  style Standard fill:#27AE60,color:#fff
-  style Komplex fill:#27AE60,color:#fff
-  style Flash fill:#E67E22,color:#fff
-  style Mid fill:#E67E22,color:#fff
-  style Top fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="Entscheidungsbaum fuer die Modell-Auswahl: Einfache Aufgaben nutzen Flash/Haiku, Standard nutzt Balanced, Komplexe nutzt Frontier-Modelle" />
 
 Die Modell-Auswahl ist eine bewusste Entscheidung: Welches Modell passt zu welcher Aufgabe? Die meisten Provider bieten drei Modell-Tiers an:
 
@@ -59,6 +45,7 @@ Jeder Provider ist ein eigenes npm Package. Du installierst nur die, die Du brau
 import { anthropic } from '@ai-sdk/anthropic';  // ← npm install @ai-sdk/anthropic
 import { openai } from '@ai-sdk/openai';          // ← npm install @ai-sdk/openai
 import { google } from '@ai-sdk/google';          // ← npm install @ai-sdk/google
+
 ```
 
 Jeder Import gibt Dir eine Funktion, die Modell-Instanzen erzeugt. Die Funktion heisst wie der Provider (`anthropic`, `openai`, `google`).
@@ -204,21 +191,7 @@ Tokens: 102
 
 ## COMBINE
 
-```mermaid
-graph TD
-  Task["Aufgabe"] --> Select["selectModel()"]
-  Select --> Simple["Flash/Haiku"]
-  Select --> Complex["Balanced/Frontier"]
-  Simple --> GT["generateText()"]
-  Complex --> GT
-  GT --> Result["Result"]
-  style Task fill:#4A90D9,color:#fff
-  style Select fill:#27AE60,color:#fff
-  style Simple fill:#E67E22,color:#fff
-  style Complex fill:#E67E22,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel, waehlt Flash/Haiku oder Balanced/Frontier, dann generateText zum Result" />
 
 **Uebung:** Baue eine Funktion `selectModel(task: string)`, die basierend auf der Aufgabe ein passendes Modell zurueckgibt. Nutze den Entscheidungsbaum aus dem OVERVIEW als Logik.
 

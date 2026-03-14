@@ -4,6 +4,8 @@ description: "Lerne, wie Du mit streamText Echtzeit-Feedback erzeugst — Token 
 sidebar:
   order: 5
 ---
+import { Image } from 'astro:assets';
+import combineDiagram from '../../../../assets/diagrams/l1-c4-combine.svg';
 
 ## THINK
 
@@ -219,24 +221,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Aufgabe"] --> SM["selectModel()<br/>(1.2)"]
-  SM --> Model1["Modell A"]
-  SM --> Model2["Modell B"]
-  Model1 --> ST1["streamText()"]
-  Model2 --> ST2["streamText()"]
-  ST1 --> Out1["Stream A"]
-  ST2 --> Out2["Stream B"]
-  style Task fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model1 fill:#27AE60,color:#fff
-  style Model2 fill:#27AE60,color:#fff
-  style ST1 fill:#27AE60,color:#fff
-  style ST2 fill:#27AE60,color:#fff
-  style Out1 fill:#E67E22,color:#fff
-  style Out2 fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel, waehlt Modell A und B, beide durch streamText zu Stream A und Stream B" />
 
 **Uebung:** Kombiniere `streamText` mit der `selectModel`-Funktion aus Challenge 1.2. Streame denselben Prompt mit zwei verschiedenen Modellen nacheinander und vergleiche die gefuehlte Geschwindigkeit.
 

@@ -1,0 +1,24 @@
+{
+  "id": "l1-c2-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Aufgabe", "label": "Aufgabe", "role": "input" },
+    { "id": "Einfach", "label": "Einfach?", "role": "process" },
+    { "id": "Standard", "label": "Standard?", "role": "process" },
+    { "id": "Komplex", "label": "Komplex?", "role": "process" },
+    { "id": "Flash", "label": ["Flash/Haiku", "guenstig, schnell"], "role": "output" },
+    { "id": "Mid", "label": ["Balanced", "Qualitaet + Speed"], "role": "output" },
+    { "id": "Top", "label": ["Frontier", "max. Qualitaet"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Aufgabe", "to": "Einfach" },
+    { "from": "Aufgabe", "to": "Standard" },
+    { "from": "Aufgabe", "to": "Komplex" },
+    { "from": "Einfach", "to": "Flash" },
+    { "from": "Standard", "to": "Mid" },
+    { "from": "Komplex", "to": "Top" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Modell-Auswahl", "nodes": ["Aufgabe", "Einfach", "Standard", "Komplex", "Flash", "Mid", "Top"], "style": "highlight" }
+  ]
+}

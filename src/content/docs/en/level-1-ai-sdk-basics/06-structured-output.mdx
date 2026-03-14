@@ -4,6 +4,9 @@ description: "Learn how to get typed JSON objects instead of free text from the 
 sidebar:
   order: 6
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c5-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c5-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ How do you get an LLM to return JSON instead of free text — reliably, every ti
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["You are HERE: Output API"]
-    Schema["Zod Schema"] --> OutputObj["Output.object()"]
-    OutputObj --> GT["generateText()"]
-  end
-  GT --> Typed["Typed Object"]
-
-  subgraph Ohne["Without Schema"]
-    Prompt2["Prompt"] --> GT2["generateText()"]
-    GT2 --> Freitext["Unstructured Text"]
-  end
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Schema fill:#4A90D9,color:#fff
-  style OutputObj fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Typed fill:#E67E22,color:#fff
-  style Prompt2 fill:#4A90D9,color:#fff
-  style GT2 fill:#27AE60,color:#fff
-  style Freitext fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="With Zod Schema and Output.object you get a typed object; without schema only unstructured text" />
 
 Top: With a Zod schema and `Output.object` you get a typed object. Bottom: Without a schema you get free text that you'd have to parse manually.
 
@@ -219,20 +201,7 @@ Summary: The iPhone 16 Pro impresses with top camera and performance...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Text["User Text"] --> Choice["Output.choice()<br/>(Category)"]
-  Choice --> Cat["Category"]
-  Cat --> Prompt2["Prompt + Category"]
-  Prompt2 --> Obj["Output.object()<br/>(Details)"]
-  Obj --> Result["Structured<br/>Result"]
-  style Text fill:#4A90D9,color:#fff
-  style Choice fill:#27AE60,color:#fff
-  style Cat fill:#E67E22,color:#fff
-  style Prompt2 fill:#4A90D9,color:#fff
-  style Obj fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="User Text flows into Output.choice to Category, then with Prompt into Output.object to structured result" />
 
 **Exercise:** Use `Output.choice` to first determine the category of a text (e.g. "bug-report", "feature-request", "question"), then `Output.object` to extract structured details. Two `generateText` calls in sequence — the output of the first determines the prompt of the second.
 

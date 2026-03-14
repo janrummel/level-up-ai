@@ -4,6 +4,9 @@ description: "Lerne, wie Du mit dem system-Parameter dem LLM eine Rolle, Regeln 
 sidebar:
   order: 7
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c6-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c6-combine.svg';
 
 ## THINK
 
@@ -11,21 +14,7 @@ Du kennst den `system`-Parameter bereits aus Challenge 1.3, wo Du ihn zum ersten
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["Du bist HIER: System Prompt"]
-    System["system<br/>(Rolle, Regeln, Stil)"]
-  end
-  User["prompt<br/>(Aufgabe)"] --> LLM["LLM"]
-  System --> LLM
-  LLM --> Antwort["Antwort im<br/>definierten Stil"]
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style System fill:#4A90D9,color:#fff
-  style User fill:#4A90D9,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Antwort fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="System Prompt mit Rolle, Regeln und Stil und der User Prompt fliessen ins LLM, Ausgabe: Antwort im definierten Stil" />
 
 Der `system`-Parameter definiert WIE das LLM antwortet (Rolle, Stil, Regeln). Der `prompt` definiert WORUEBER es antwortet (die Aufgabe). Beide fliessen in das LLM — aber sie haben unterschiedliche Aufgaben.
 
@@ -229,18 +218,7 @@ Eine REST API ist ein architektonisches Muster...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  System["System Prompt<br/>(Rolle: Code Reviewer)"] --> GT["generateText()"]
-  Prompt["User Input"] --> GT
-  GT --> Output["Output.object()<br/>(Strukturiertes Feedback)"]
-  Output --> Review["{ score, issues,<br/>suggestions }"]
-  style System fill:#4A90D9,color:#fff
-  style Prompt fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Output fill:#27AE60,color:#fff
-  style Review fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="System Prompt und User Input fliessen in generateText, dann Output.object zu strukturiertem Feedback mit score, issues, suggestions" />
 
 **Uebung:** Kombiniere System Prompts mit Structured Output (Challenge 1.5). Erstelle einen System Prompt der eine bestimmte Rolle definiert UND nutze `Output.object` fuer die Ausgabe.
 

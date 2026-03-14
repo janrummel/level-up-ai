@@ -4,6 +4,9 @@ description: "Verstehe das generateText Result-Objekt im Detail — Text, Usage,
 sidebar:
   order: 4
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c3-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ Was bekommst Du zurueck, wenn Du ein LLM um Text bittest — nur den Text, oder 
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  P["prompt"] --> GT
-  S["system"] --> GT
-  subgraph HIER["Du bist HIER: generateText"]
-    GT["generateText()"]
-  end
-  GT --> Text["result.text"]
-  GT --> Usage["result.usage"]
-  GT --> FR["result.finishReason"]
-  GT --> Steps["result.steps"]
-  GT --> Resp["result.response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style P fill:#4A90D9,color:#fff
-  style S fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Text fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style FR fill:#E67E22,color:#fff
-  style Steps fill:#E67E22,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="prompt und system fliessen in generateText, das result.text, result.usage, result.finishReason, result.steps und result.response zurueckgibt" />
 
 `generateText` nimmt `model` + `prompt` als Input und gibt ein reichhaltiges Result-Objekt zurueck. Neben dem Text bekommst Du Token-Verbrauch, den Grund fuer das Stoppen, einzelne Schritte und die rohe Response.
 
@@ -242,24 +224,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Aufgabe"] --> SM["selectModel()"]
-  SM --> Model["Modell"]
-  Model --> GT["generateText()"]
-  System["system"] --> GT
-  Prompt["prompt"] --> GT
-  GT --> Text["result.text"]
-  GT --> Usage["result.usage"]
-  style Task fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Prompt fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Text fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, system und prompt in generateText, Ausgabe: result.text und result.usage" />
 
 **Uebung:** Kombiniere `generateText` mit der `selectModel`-Funktion aus Challenge 1.2. Generiere Text mit verschiedenen Modellen und vergleiche `usage.totalTokens`.
 

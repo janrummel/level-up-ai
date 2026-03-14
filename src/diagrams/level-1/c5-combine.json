@@ -1,0 +1,19 @@
+{
+  "id": "l1-c5-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Text", "label": "User Text", "role": "input" },
+    { "id": "Choice", "label": ["Output.choice()", "(Kategorie)"], "role": "process" },
+    { "id": "Cat", "label": "Kategorie", "role": "output" },
+    { "id": "Prompt2", "label": "Prompt + Kategorie", "role": "input" },
+    { "id": "Obj", "label": ["Output.object()", "(Details)"], "role": "process" },
+    { "id": "Result", "label": ["Strukturiertes", "Ergebnis"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Text", "to": "Choice" },
+    { "from": "Choice", "to": "Cat" },
+    { "from": "Cat", "to": "Prompt2" },
+    { "from": "Prompt2", "to": "Obj" },
+    { "from": "Obj", "to": "Result" }
+  ]
+}

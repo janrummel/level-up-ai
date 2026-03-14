@@ -1,0 +1,17 @@
+{
+  "id": "l1-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": "Prompt", "role": "input" },
+    { "id": "GT1", "label": ["generateText()", "Anthropic"], "role": "process" },
+    { "id": "GT2", "label": ["generateText()", "OpenAI"], "role": "process" },
+    { "id": "Out1", "label": "Output A", "role": "output" },
+    { "id": "Out2", "label": "Output B", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "GT1" },
+    { "from": "Prompt", "to": "GT2" },
+    { "from": "GT1", "to": "Out1" },
+    { "from": "GT2", "to": "Out2" }
+  ]
+}

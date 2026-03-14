@@ -1,0 +1,18 @@
+{
+  "id": "l1-c6-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "System", "label": ["system", "(Rolle, Regeln, Stil)"], "role": "input" },
+    { "id": "User", "label": ["prompt", "(Aufgabe)"], "role": "input" },
+    { "id": "LLM", "label": "LLM", "role": "process" },
+    { "id": "Antwort", "label": ["Antwort im", "definierten Stil"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "System", "to": "LLM" },
+    { "from": "User", "to": "LLM" },
+    { "from": "LLM", "to": "Antwort" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: System Prompt", "nodes": ["System"], "style": "highlight" }
+  ]
+}

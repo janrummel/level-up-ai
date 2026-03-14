@@ -1,0 +1,23 @@
+{
+  "id": "l1-c5-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Schema", "label": "Zod Schema", "role": "input" },
+    { "id": "OutputObj", "label": "Output.object()", "role": "process" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Typed", "label": "Typisiertes Objekt", "role": "output" },
+    { "id": "Prompt2", "label": "Prompt", "role": "input" },
+    { "id": "GT2", "label": "generateText()", "role": "process" },
+    { "id": "Freitext", "label": "Unstrukturierter Text", "role": "warning" }
+  ],
+  "edges": [
+    { "from": "Schema", "to": "OutputObj" },
+    { "from": "OutputObj", "to": "GT" },
+    { "from": "GT", "to": "Typed" },
+    { "from": "Prompt2", "to": "GT2" },
+    { "from": "GT2", "to": "Freitext" }
+  ],
+  "groups": [
+    { "id": "hier", "label": "Du bist HIER: Output API", "nodes": ["Schema", "OutputObj", "GT"], "style": "highlight" }
+  ]
+}

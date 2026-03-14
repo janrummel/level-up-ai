@@ -4,6 +4,9 @@ description: "Understand the generateText result object in detail — text, usag
 sidebar:
   order: 4
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c3-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c3-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ What do you get back when you ask an LLM for text — just the text, or more?
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  P["prompt"] --> GT
-  S["system"] --> GT
-  subgraph HIER["You are HERE: generateText"]
-    GT["generateText()"]
-  end
-  GT --> Text["result.text"]
-  GT --> Usage["result.usage"]
-  GT --> FR["result.finishReason"]
-  GT --> Steps["result.steps"]
-  GT --> Resp["result.response"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style P fill:#4A90D9,color:#fff
-  style S fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Text fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-  style FR fill:#E67E22,color:#fff
-  style Steps fill:#E67E22,color:#fff
-  style Resp fill:#E67E22,color:#fff
-```
+<Image src={overviewDiagram} alt="prompt and system flow into generateText, returning result.text, result.usage, result.finishReason, result.steps and result.response" />
 
 `generateText` takes `model` + `prompt` as input and returns a rich result object. Beyond the text you get token usage, the reason for stopping, individual steps and the raw response.
 
@@ -214,24 +196,7 @@ Finish Reason: stop
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Task["Task"] --> SM["selectModel()"]
-  SM --> Model["Model"]
-  Model --> GT["generateText()"]
-  System["system"] --> GT
-  Prompt["prompt"] --> GT
-  GT --> Text["result.text"]
-  GT --> Usage["result.usage"]
-  style Task fill:#4A90D9,color:#fff
-  style System fill:#4A90D9,color:#fff
-  style Prompt fill:#4A90D9,color:#fff
-  style SM fill:#27AE60,color:#fff
-  style Model fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Text fill:#E67E22,color:#fff
-  style Usage fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="Task flows into selectModel to Model, system and prompt into generateText, output: result.text and result.usage" />
 
 **Exercise:** Combine `generateText` with the `selectModel` function from Challenge 1.2. Generate text with different models and compare `usage.totalTokens`.
 

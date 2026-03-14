@@ -1,0 +1,20 @@
+{
+  "id": "l1-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": ["User Input", "(1.1)"], "role": "input" },
+    { "id": "Select", "label": ["selectModel()", "(1.2)"], "role": "process" },
+    { "id": "Model", "label": "Modell", "role": "process" },
+    { "id": "System", "label": ["System Prompt", "(1.6)"], "role": "input" },
+    { "id": "Process", "label": ["streamText() /", "Output.object()", "(1.3-1.5)"], "role": "process" },
+    { "id": "Terminal", "label": "CLI Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "Select" },
+    { "from": "Select", "to": "Model" },
+    { "from": "Model", "to": "Process" },
+    { "from": "System", "to": "Process" },
+    { "from": "Input", "to": "Process" },
+    { "from": "Process", "to": "Terminal" }
+  ]
+}

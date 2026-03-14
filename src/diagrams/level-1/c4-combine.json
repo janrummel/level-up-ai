@@ -1,0 +1,23 @@
+{
+  "id": "l1-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Task", "label": "Aufgabe", "role": "input" },
+    { "id": "SM", "label": ["selectModel()", "(1.2)"], "role": "process" },
+    { "id": "Model1", "label": "Modell A", "role": "process" },
+    { "id": "Model2", "label": "Modell B", "role": "process" },
+    { "id": "ST1", "label": "streamText()", "role": "process" },
+    { "id": "ST2", "label": "streamText()", "role": "process" },
+    { "id": "Out1", "label": "Stream A", "role": "output" },
+    { "id": "Out2", "label": "Stream B", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Task", "to": "SM" },
+    { "from": "SM", "to": "Model1" },
+    { "from": "SM", "to": "Model2" },
+    { "from": "Model1", "to": "ST1" },
+    { "from": "Model2", "to": "ST2" },
+    { "from": "ST1", "to": "Out1" },
+    { "from": "ST2", "to": "Out2" }
+  ]
+}

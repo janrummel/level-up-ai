@@ -4,6 +4,9 @@ description: "Lerne, wie Du mit Zod Schemas und der Output API typisierte JSON-O
 sidebar:
   order: 6
 ---
+import { Image } from 'astro:assets';
+import overviewDiagram from '../../../../assets/diagrams/l1-c5-overview.svg';
+import combineDiagram from '../../../../assets/diagrams/l1-c5-combine.svg';
 
 ## THINK
 
@@ -11,28 +14,7 @@ Wie bringst Du ein LLM dazu, JSON statt Freitext zurueckzugeben — zuverlaessig
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph HIER["Du bist HIER: Output API"]
-    Schema["Zod Schema"] --> OutputObj["Output.object()"]
-    OutputObj --> GT["generateText()"]
-  end
-  GT --> Typed["Typisiertes Objekt"]
-
-  subgraph Ohne["Ohne Schema"]
-    Prompt2["Prompt"] --> GT2["generateText()"]
-    GT2 --> Freitext["Unstrukturierter Text"]
-  end
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,color:#E67E22
-  style Schema fill:#4A90D9,color:#fff
-  style OutputObj fill:#27AE60,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Typed fill:#E67E22,color:#fff
-  style Prompt2 fill:#4A90D9,color:#fff
-  style GT2 fill:#27AE60,color:#fff
-  style Freitext fill:#E74C3C,color:#fff
-```
+<Image src={overviewDiagram} alt="Mit Zod Schema und Output.object bekommst Du ein typisiertes Objekt; ohne Schema nur unstrukturierten Text" />
 
 Oben: Mit Zod Schema und `Output.object` bekommst Du ein typisiertes Objekt. Unten: Ohne Schema bekommst Du Freitext, den Du manuell parsen muestest.
 
@@ -219,20 +201,7 @@ Fazit: Das iPhone 16 Pro ueberzeugt mit Top-Kamera und Performance...
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Text["User Text"] --> Choice["Output.choice()<br/>(Kategorie)"]
-  Choice --> Cat["Kategorie"]
-  Cat --> Prompt2["Prompt + Kategorie"]
-  Prompt2 --> Obj["Output.object()<br/>(Details)"]
-  Obj --> Result["Strukturiertes<br/>Ergebnis"]
-  style Text fill:#4A90D9,color:#fff
-  style Choice fill:#27AE60,color:#fff
-  style Cat fill:#E67E22,color:#fff
-  style Prompt2 fill:#4A90D9,color:#fff
-  style Obj fill:#27AE60,color:#fff
-  style Result fill:#E67E22,color:#fff
-```
+<Image src={combineDiagram} alt="User Text fliesst in Output.choice zur Kategorie, dann mit Prompt in Output.object zum strukturierten Ergebnis" />
 
 **Uebung:** Nutze `Output.choice` um erst die Kategorie eines Texts zu bestimmen (z.B. "bug-report", "feature-request", "question"), dann `Output.object` um strukturierte Details zu extrahieren. Zwei `generateText` Calls nacheinander — der Output des ersten bestimmt den Prompt des zweiten.
 
