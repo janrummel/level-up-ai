@@ -32,30 +32,10 @@ Im Vergleich zum Wettbewerb liegt das Unternehmen bei...
 
 Dieses Projekt verbindet alle vier Bausteine:
 
-```mermaid
-graph LR
-  Input["User Query +<br/>Metadata (7.2)"] --> API["API Route"]
+import l7BossOverview from '../../../../assets/diagrams/l7-boss-overview.svg';
+import { Image } from 'astro:assets';
 
-  API --> DataStream["createDataStream()<br/>(7.1)"]
-  API --> ST["streamText()"]
-
-  ST --> Transforms["smoothStream() +<br/>Custom Filter (7.3)"]
-  Transforms --> DataStream
-
-  DataStream --> ErrorHandler["onError (7.4)"]
-  ErrorHandler --> UI["Dashboard UI"]
-
-  StatusParts["Status Data<br/>Parts (7.1)"] --> DataStream
-
-  style Input fill:#4A90D9,color:#fff
-  style API fill:#27AE60,color:#fff
-  style DataStream fill:#27AE60,color:#fff
-  style ST fill:#27AE60,color:#fff
-  style Transforms fill:#27AE60,color:#fff
-  style ErrorHandler fill:#E74C3C,color:#fff
-  style UI fill:#E67E22,color:#fff
-  style StatusParts fill:#E67E22,color:#fff
-```
+<Image src={l7BossOverview} alt="Boss Fight Architektur: User Query mit Metadata fließt über API Route zu createDataStream und streamText mit Transforms und Error Handler ins Dashboard UI" />
 
 ## Anforderungen
 

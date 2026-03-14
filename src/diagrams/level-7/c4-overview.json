@@ -1,0 +1,29 @@
+{
+  "id": "l7-c4-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Start", "label": "streamText()", "role": "input" },
+    { "id": "Stream", "label": "Stream laeuft", "role": "process" },
+    { "id": "Finish", "label": ["finish Event", "Alles gut"], "role": "process" },
+    { "id": "Error", "label": "Error Event", "role": "warning" },
+    { "id": "OnError", "label": "onError Callback", "role": "output" },
+    { "id": "UserMsg", "label": ["User-freundliche", "Fehlermeldung"], "role": "output" },
+    { "id": "Log", "label": "Error Logging", "role": "output" },
+    { "id": "Retry", "label": "Retry?", "role": "output" },
+    { "id": "Fallback", "label": "Fallback-Antwort", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Start", "to": "Stream" },
+    { "from": "Stream", "to": "Finish", "label": "Erfolg" },
+    { "from": "Stream", "to": "Error", "label": "Fehler" },
+    { "from": "Error", "to": "OnError" },
+    { "from": "OnError", "to": "UserMsg" },
+    { "from": "OnError", "to": "Log" },
+    { "from": "OnError", "to": "Retry" },
+    { "from": "Retry", "to": "Start", "label": "Ja" },
+    { "from": "Retry", "to": "Fallback", "label": "Nein" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Error Handling", "nodes": ["OnError", "UserMsg", "Log", "Retry"], "style": "highlight" }
+  ]
+}

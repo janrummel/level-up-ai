@@ -11,24 +11,11 @@ Have you noticed that LLM streams sometimes stutter — individual characters in
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  LLM["LLM Provider"] --> Raw["Raw Stream<br/>'H' 'e' 'l' 'l' 'o'"]
+import l7C3Overview from '../../../../assets/diagrams/l7-c3-overview.svg';
+import l7C3Combine from '../../../../assets/diagrams/l7-c3-combine.svg';
+import { Image } from 'astro:assets';
 
-  subgraph HERE["You are HERE: Stream Transforms"]
-    Raw --> T1["Transform 1:<br/>smoothStream()"]
-    T1 --> T2["Transform 2:<br/>Custom Filter"]
-  end
-
-  T2 --> UI["UI Output<br/>'Hello World'"]
-
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style LLM fill:#27AE60,color:#fff
-  style Raw fill:#E74C3C,color:#fff
-  style T1 fill:#27AE60,color:#fff
-  style T2 fill:#27AE60,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l7C3Overview} alt="Overview: LLM Provider Raw Stream passes through smoothStream() and Custom Filter Transform before arriving as UI Output" />
 
 Stream Transforms sit between the LLM and your UI. They transform, filter, or smooth the chunks before they reach the user. You can use built-in transforms like `smoothStream` or write your own.
 
@@ -260,18 +247,7 @@ THE TEXT BEFORE IT REACHES THE USER.
 
 ## COMBINE
 
-```mermaid
-graph LR
-  LLM["streamText()<br/>(1.4)"] --> Smooth["smoothStream()<br/>(7.3)"]
-  Smooth --> Filter["redactEmails()<br/>(7.3)"]
-  Filter --> DataStream["+ Data Parts<br/>(7.1)"]
-  DataStream --> UI["Frontend"]
-  style LLM fill:#27AE60,color:#fff
-  style Smooth fill:#27AE60,color:#fff
-  style Filter fill:#E67E22,color:#fff
-  style DataStream fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l7C3Combine} alt="Combine: streamText() passes through smoothStream() and redactEmails() filter, Data Parts are added and sent to the Frontend" />
 
 **Exercise:** Combine Stream Transforms with Custom Data Parts from Challenge 7.1. Build a stream that:
 

@@ -1,0 +1,22 @@
+{
+  "id": "l7-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "User", "label": "User Message", "role": "input" },
+    { "id": "Meta", "label": ["+ Metadata", "(7.2)"], "role": "output" },
+    { "id": "API", "label": "API Route", "role": "process" },
+    { "id": "DB", "label": ["Persistence", "(Level 4)"], "role": "process" },
+    { "id": "LLM", "label": ["streamText()", "(1.4)"], "role": "process" },
+    { "id": "Response", "label": ["+ Response Metadata", "(7.2)"], "role": "output" },
+    { "id": "UI", "label": "Frontend", "role": "output" }
+  ],
+  "edges": [
+    { "from": "User", "to": "Meta" },
+    { "from": "Meta", "to": "API" },
+    { "from": "API", "to": "DB" },
+    { "from": "API", "to": "LLM" },
+    { "from": "LLM", "to": "Response" },
+    { "from": "Response", "to": "UI" }
+  ],
+  "groups": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "l7-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": ["User Query +", "Metadata (7.2)"], "role": "input" },
+    { "id": "API", "label": "API Route", "role": "process" },
+    { "id": "DataStream", "label": ["createDataStream()", "(7.1)"], "role": "process" },
+    { "id": "ST", "label": "streamText()", "role": "process" },
+    { "id": "Transforms", "label": ["smoothStream() +", "Custom Filter (7.3)"], "role": "process" },
+    { "id": "ErrorHandler", "label": "onError (7.4)", "role": "warning" },
+    { "id": "UI", "label": "Dashboard UI", "role": "output" },
+    { "id": "StatusParts", "label": ["Status Data", "Parts (7.1)"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "API" },
+    { "from": "API", "to": "DataStream" },
+    { "from": "API", "to": "ST" },
+    { "from": "ST", "to": "Transforms" },
+    { "from": "Transforms", "to": "DataStream" },
+    { "from": "DataStream", "to": "ErrorHandler" },
+    { "from": "ErrorHandler", "to": "UI" },
+    { "from": "StatusParts", "to": "DataStream" }
+  ],
+  "groups": []
+}

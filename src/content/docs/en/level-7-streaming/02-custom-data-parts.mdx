@@ -280,18 +280,10 @@ console.log('\n--- Stream beendet ---');
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Prompt["User Prompt<br/>(1.4)"] --> ST["streamText()"]
-  ST --> DataStream["createDataStream()"]
-  StatusParts["Status Parts<br/>(7.1)"] --> DataStream
-  DataStream --> UI["Frontend UI"]
-  style Prompt fill:#4A90D9,color:#fff
-  style ST fill:#27AE60,color:#fff
-  style DataStream fill:#27AE60,color:#fff
-  style StatusParts fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+import l7C1Combine from '../../../../assets/diagrams/l7-c1-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l7C1Combine} alt="Combine: User Prompt and Status Parts flow through streamText() and createDataStream() into the Frontend UI" />
 
 **Exercise:** Combine Custom Data Parts with the `streamText` knowledge from Level 1.4. Build a stream that:
 

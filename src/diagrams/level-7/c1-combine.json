@@ -1,0 +1,18 @@
+{
+  "id": "l7-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Prompt", "label": ["User Prompt", "(1.4)"], "role": "input" },
+    { "id": "ST", "label": "streamText()", "role": "process" },
+    { "id": "DataStream", "label": "createDataStream()", "role": "process" },
+    { "id": "StatusParts", "label": ["Status Parts", "(7.1)"], "role": "output" },
+    { "id": "UI", "label": "Frontend UI", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Prompt", "to": "ST" },
+    { "from": "ST", "to": "DataStream" },
+    { "from": "StatusParts", "to": "DataStream" },
+    { "from": "DataStream", "to": "UI" }
+  ],
+  "groups": []
+}

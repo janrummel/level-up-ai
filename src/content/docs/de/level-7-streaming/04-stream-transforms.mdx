@@ -11,24 +11,11 @@ Hast Du bemerkt, dass LLM-Streams manchmal stottern — einzelne Buchstaben stat
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  LLM["LLM Provider"] --> Raw["Raw Stream<br/>'H' 'e' 'l' 'l' 'o'"]
+import l7C3Overview from '../../../../assets/diagrams/l7-c3-overview.svg';
+import l7C3Combine from '../../../../assets/diagrams/l7-c3-combine.svg';
+import { Image } from 'astro:assets';
 
-  subgraph HIER["Du bist HIER: Stream Transforms"]
-    Raw --> T1["Transform 1:<br/>smoothStream()"]
-    T1 --> T2["Transform 2:<br/>Custom Filter"]
-  end
-
-  T2 --> UI["UI Output<br/>'Hello World'"]
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style LLM fill:#27AE60,color:#fff
-  style Raw fill:#E74C3C,color:#fff
-  style T1 fill:#27AE60,color:#fff
-  style T2 fill:#27AE60,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l7C3Overview} alt="Overview: LLM Provider Raw Stream durchläuft smoothStream() und Custom Filter Transform bevor er als UI Output ankommt" />
 
 Stream Transforms sitzen zwischen dem LLM und Deiner UI. Sie transformieren, filtern oder glaetten die Chunks, bevor sie beim User ankommen. Du kannst Built-in Transforms wie `smoothStream` nutzen oder eigene schreiben.
 
@@ -260,18 +247,7 @@ ZU FILTERN ODER ZU TRANSFORMIEREN, BEVOR ER BEIM USER ANKOMMT.
 
 ## COMBINE
 
-```mermaid
-graph LR
-  LLM["streamText()<br/>(1.4)"] --> Smooth["smoothStream()<br/>(7.3)"]
-  Smooth --> Filter["redactEmails()<br/>(7.3)"]
-  Filter --> DataStream["+ Data Parts<br/>(7.1)"]
-  DataStream --> UI["Frontend"]
-  style LLM fill:#27AE60,color:#fff
-  style Smooth fill:#27AE60,color:#fff
-  style Filter fill:#E67E22,color:#fff
-  style DataStream fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l7C3Combine} alt="Combine: streamText() durchläuft smoothStream() und redactEmails() Filter, dann werden Data Parts hinzugefügt und ans Frontend gesendet" />
 
 **Uebung:** Kombiniere Stream Transforms mit Custom Data Parts aus Challenge 7.1. Baue einen Stream, der:
 

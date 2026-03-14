@@ -11,31 +11,11 @@ Wie haengst Du zusaetzliche Infos an eine Message an, die NICHT zum LLM gehen so
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  subgraph Input["Message mit Metadata"]
-    Content["content:<br/>'Erklaere Streaming'"]
-    Meta["metadata:<br/>{ userId, timestamp,<br/>sessionId }"]
-  end
+import l7C2Overview from '../../../../assets/diagrams/l7-c2-overview.svg';
+import l7C2Combine from '../../../../assets/diagrams/l7-c2-combine.svg';
+import { Image } from 'astro:assets';
 
-  subgraph HIER["Du bist HIER: Metadata Routing"]
-    Router["API Route"]
-  end
-
-  Content --> LLM["LLM Provider"]
-  Meta --> DB["Datenbank /<br/>Analytics"]
-  Router --> LLM
-  Router --> DB
-  LLM --> Response["LLM Antwort"]
-
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Content fill:#4A90D9,color:#fff
-  style Meta fill:#E67E22,color:#fff
-  style Router fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style DB fill:#27AE60,color:#fff
-  style Response fill:#E67E22,color:#fff
-```
+<Image src={l7C2Overview} alt="Overview: Message Content geht zum LLM Provider, Metadata geht zur Datenbank/Analytics — Routing über die API Route" />
 
 Message Metadata lebt neben dem Content, wird aber NICHT an das LLM gesendet. Der Content geht zum LLM, die Metadata bleibt in Deiner App — fuer Logging, Persistence, Analytics.
 
@@ -292,22 +272,7 @@ Nachricht? Liste ALLES auf, was Du sehen kannst."
 
 ## COMBINE
 
-```mermaid
-graph LR
-  User["User Message"] --> Meta["+ Metadata<br/>(7.2)"]
-  Meta --> API["API Route"]
-  API --> DB["Persistence<br/>(Level 4)"]
-  API --> LLM["streamText()<br/>(1.4)"]
-  LLM --> Response["+ Response Metadata<br/>(7.2)"]
-  Response --> UI["Frontend"]
-  style User fill:#4A90D9,color:#fff
-  style Meta fill:#E67E22,color:#fff
-  style API fill:#27AE60,color:#fff
-  style DB fill:#27AE60,color:#fff
-  style LLM fill:#27AE60,color:#fff
-  style Response fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l7C2Combine} alt="Combine: User Message mit Metadata wird über API Route zu Persistence und streamText() geleitet, Antwort mit Response Metadata ans Frontend" />
 
 **Uebung:** Kombiniere Message Metadata mit dem Persistence-Konzept aus Level 4. Baue eine Funktion, die:
 

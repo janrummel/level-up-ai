@@ -1,0 +1,20 @@
+{
+  "id": "l7-c3-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "LLM", "label": "LLM Provider", "role": "process" },
+    { "id": "Raw", "label": ["Raw Stream", "'H' 'e' 'l' 'l' 'o'"], "role": "warning" },
+    { "id": "T1", "label": ["Transform 1:", "smoothStream()"], "role": "process" },
+    { "id": "T2", "label": ["Transform 2:", "Custom Filter"], "role": "process" },
+    { "id": "UI", "label": ["UI Output", "'Hello World'"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "LLM", "to": "Raw" },
+    { "from": "Raw", "to": "T1" },
+    { "from": "T1", "to": "T2" },
+    { "from": "T2", "to": "UI" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Stream Transforms", "nodes": ["Raw", "T1", "T2"], "style": "highlight" }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "l7-c2-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Content", "label": ["content:", "'Erklaere Streaming'"], "role": "input" },
+    { "id": "Meta", "label": ["metadata:", "{ userId, timestamp,", "sessionId }"], "role": "output" },
+    { "id": "Router", "label": "API Route", "role": "process" },
+    { "id": "LLM", "label": "LLM Provider", "role": "process" },
+    { "id": "DB", "label": ["Datenbank /", "Analytics"], "role": "process" },
+    { "id": "Response", "label": "LLM Antwort", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Content", "to": "LLM" },
+    { "from": "Meta", "to": "DB" },
+    { "from": "Router", "to": "LLM" },
+    { "from": "Router", "to": "DB" },
+    { "from": "LLM", "to": "Response" }
+  ],
+  "groups": [
+    { "id": "Input", "label": "Message mit Metadata", "nodes": ["Content", "Meta"], "style": "default" },
+    { "id": "HIER", "label": "Du bist HIER: Metadata Routing", "nodes": ["Router"], "style": "highlight" }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "l7-c4-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "ST", "label": ["streamText()", "(1.4)"], "role": "input" },
+    { "id": "Transform", "label": ["smoothStream()", "(7.3)"], "role": "process" },
+    { "id": "ErrorCheck", "label": "Fehler?", "role": "process" },
+    { "id": "UI", "label": "Frontend", "role": "output" },
+    { "id": "Handler", "label": ["onError", "(7.4)"], "role": "warning" },
+    { "id": "UserMsg", "label": "User-Meldung", "role": "warning" },
+    { "id": "Retry", "label": ["Retry mit", "Backoff"], "role": "warning" }
+  ],
+  "edges": [
+    { "from": "ST", "to": "Transform" },
+    { "from": "Transform", "to": "ErrorCheck" },
+    { "from": "ErrorCheck", "to": "UI", "label": "Nein" },
+    { "from": "ErrorCheck", "to": "Handler", "label": "Ja" },
+    { "from": "Handler", "to": "UserMsg" },
+    { "from": "Handler", "to": "Retry" }
+  ],
+  "groups": []
+}

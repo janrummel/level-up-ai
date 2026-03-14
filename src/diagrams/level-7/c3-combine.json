@@ -1,0 +1,18 @@
+{
+  "id": "l7-c3-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "LLM", "label": ["streamText()", "(1.4)"], "role": "process" },
+    { "id": "Smooth", "label": ["smoothStream()", "(7.3)"], "role": "process" },
+    { "id": "Filter", "label": ["redactEmails()", "(7.3)"], "role": "output" },
+    { "id": "DataStream", "label": ["+ Data Parts", "(7.1)"], "role": "output" },
+    { "id": "UI", "label": "Frontend", "role": "output" }
+  ],
+  "edges": [
+    { "from": "LLM", "to": "Smooth" },
+    { "from": "Smooth", "to": "Filter" },
+    { "from": "Filter", "to": "DataStream" },
+    { "from": "DataStream", "to": "UI" }
+  ],
+  "groups": []
+}

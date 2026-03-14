@@ -11,34 +11,11 @@ What happens in your app when the LLM provider throws an error mid-stream? The u
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Start["streamText()"] --> Stream{"Stream running"}
+import l7C4Overview from '../../../../assets/diagrams/l7-c4-overview.svg';
+import l7C4Combine from '../../../../assets/diagrams/l7-c4-combine.svg';
+import { Image } from 'astro:assets';
 
-  Stream -->|Success| Finish["finish Event<br/>All good"]
-  Stream -->|Error| Error["Error Event"]
-
-  subgraph HERE["You are HERE: Error Handling"]
-    Error --> OnError["onError Callback"]
-    OnError --> UserMsg["User-friendly<br/>error message"]
-    OnError --> Log["Error Logging"]
-    OnError --> Retry["Retry?"]
-  end
-
-  Retry -->|Yes| Start
-  Retry -->|No| Fallback["Fallback response"]
-
-  style HERE fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Start fill:#4A90D9,color:#fff
-  style Stream fill:#27AE60,color:#fff
-  style Finish fill:#27AE60,color:#fff
-  style Error fill:#E74C3C,color:#fff
-  style OnError fill:#E67E22,color:#fff
-  style UserMsg fill:#E67E22,color:#fff
-  style Log fill:#E67E22,color:#fff
-  style Retry fill:#E67E22,color:#fff
-  style Fallback fill:#E67E22,color:#fff
-```
+<Image src={l7C4Overview} alt="Overview: streamText() Stream branches on success to finish Event, on error to onError Callback with Logging, user message, and Retry option" />
 
 Errors happen: provider timeouts, rate limits, unknown tools, network drops. With error handling you catch these errors and give the user a meaningful response instead of letting the app crash.
 
@@ -304,22 +281,7 @@ Bitte versuche es in einigen Sekunden erneut."
 
 ## COMBINE
 
-```mermaid
-graph LR
-  ST["streamText()<br/>(1.4)"] --> Transform["smoothStream()<br/>(7.3)"]
-  Transform --> ErrorCheck{"Error?"}
-  ErrorCheck -->|No| UI["Frontend"]
-  ErrorCheck -->|Yes| Handler["onError<br/>(7.4)"]
-  Handler --> UserMsg["User message"]
-  Handler --> Retry["Retry with<br/>Backoff"]
-  style ST fill:#4A90D9,color:#fff
-  style Transform fill:#27AE60,color:#fff
-  style ErrorCheck fill:#27AE60,color:#fff
-  style UI fill:#E67E22,color:#fff
-  style Handler fill:#E74C3C,color:#fff
-  style UserMsg fill:#E74C3C,color:#fff
-  style Retry fill:#E74C3C,color:#fff
-```
+<Image src={l7C4Combine} alt="Combine: streamText() through smoothStream(), error check routes to onError Handler with user message and Retry on error, directly to Frontend on success" />
 
 **Exercise:** Combine Error Handling with Stream Transforms. Build a stream that:
 
