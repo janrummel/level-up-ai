@@ -35,43 +35,10 @@ Deine Pipeline soll sich so anfuehlen:
 
 Dieses Projekt verbindet alle vier Bausteine:
 
-```mermaid
-graph LR
-  Topic["Topic<br/>(Input)"] --> Research
+import l8BossOverview from '../../../../assets/diagrams/l8-boss-overview.svg';
+import { Image } from 'astro:assets';
 
-  subgraph Pipeline["Research Pipeline"]
-    subgraph S1["Step 1: Research Loop (8.3 + 8.4)"]
-      Loop["Custom Loop<br/>mit search-Tool"]
-      Guards["Break Conditions:<br/>Max 5 Iter, 30s, Cost"]
-      Loop --> Guards
-    end
-
-    subgraph S2["Step 2: Summarize (8.1)"]
-      Sum["generateText()<br/>Zusammenfassung"]
-    end
-
-    subgraph S3["Step 3: Format (8.1)"]
-      Fmt["streamText()<br/>Report"]
-    end
-  end
-
-  Research --> S1
-  S1 --> S2
-  S2 --> S3
-
-  S1 --> DS["createDataStream()<br/>(8.2)"]
-  S2 --> DS
-  S3 --> DS
-  DS --> UI["Frontend /<br/>Terminal"]
-
-  style Topic fill:#4A90D9,color:#fff
-  style Loop fill:#27AE60,color:#fff
-  style Guards fill:#E74C3C,color:#fff
-  style Sum fill:#27AE60,color:#fff
-  style Fmt fill:#27AE60,color:#fff
-  style DS fill:#27AE60,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l8BossOverview} alt="Boss Fight Overview: Topic als Input, Research Loop mit Break Conditions in Step 1, Summarize in Step 2, Format in Step 3, createDataStream liefert alles ans Frontend" />
 
 ## Anforderungen
 

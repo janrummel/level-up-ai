@@ -344,21 +344,10 @@ console.log('\n--- Pipeline beendet ---');
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Topic["Topic"] --> Pipeline["3-Step Pipeline<br/>(8.1)"]
-  Pipeline --> DS["createDataStream()<br/>(7.1)"]
-  DS --> Progress["Progress Data Parts<br/>(8.2)"]
-  DS --> Text["streamText()<br/>(7.1)"]
-  Progress --> UI["Frontend"]
-  Text --> UI
-  style Topic fill:#4A90D9,color:#fff
-  style Pipeline fill:#27AE60,color:#fff
-  style DS fill:#27AE60,color:#fff
-  style Progress fill:#E67E22,color:#fff
-  style Text fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+import l8C2Combine from '../../../../assets/diagrams/l8-c2-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l8C2Combine} alt="Combine: Topic in 3-Step Pipeline, dann createDataStream mit Progress Data Parts und streamText, beides ins Frontend" />
 
 **Uebung:** Kombiniere Workflow-Streaming mit `smoothStream` aus Level 7.3. Fuer den letzten Step (der den Text streamt):
 

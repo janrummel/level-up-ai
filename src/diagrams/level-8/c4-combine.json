@@ -1,0 +1,23 @@
+{
+  "id": "l8-c4-combine",
+  "direction": "TD",
+  "nodes": [
+    { "id": "User", "label": "User Prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "Guards", "label": ["Break Conditions", "(8.4)"], "role": "process" },
+    { "id": "State", "label": ["State Tracking", "(8.3)"], "role": "process" },
+    { "id": "Partial", "label": ["Partial Result", "+ breakReason"], "role": "warning" },
+    { "id": "Final", "label": "Final Result", "role": "output" }
+  ],
+  "edges": [
+    { "from": "User", "to": "GT" },
+    { "from": "GT", "to": "Guards" },
+    { "from": "Guards", "to": "State", "label": "Weiter" },
+    { "from": "State", "to": "GT" },
+    { "from": "Guards", "to": "Partial", "label": "Abbruch" },
+    { "from": "Guards", "to": "Final", "label": "Fertig" }
+  ],
+  "groups": [
+    { "id": "Loop", "label": "Robust Agent Loop", "nodes": ["GT", "Guards", "State"], "style": "highlight" }
+  ]
+}

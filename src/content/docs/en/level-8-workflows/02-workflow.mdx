@@ -11,21 +11,11 @@ What if a task is too complex for a single LLM call — e.g., researching, summa
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Input["Topic"] --> S1
-  subgraph HIER["You are HERE: Workflow"]
-    S1["Step 1:<br/>Research"] --> S2["Step 2:<br/>Summarize"]
-    S2 --> S3["Step 3:<br/>Format"]
-  end
-  S3 --> Output["Final Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Input fill:#4A90D9,color:#fff
-  style S1 fill:#27AE60,color:#fff
-  style S2 fill:#27AE60,color:#fff
-  style S3 fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+import l8C1Overview from '../../../../assets/diagrams/l8-c1-overview.svg';
+import l8C1Combine from '../../../../assets/diagrams/l8-c1-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l8C1Overview} alt="Overview: Topic as input, three chained steps (Research, Summarize, Format) as process, Final Output" />
 
 A workflow chains multiple `generateText` calls. The output of Step 1 becomes the input of Step 2. Each step has its own prompt, its own role — and can be tested individually.
 
@@ -298,24 +288,7 @@ Total: 685 Tokens
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Topic["Topic"] --> S1["Step 1:<br/>Research"]
-  SystemR["System Prompt<br/>Research (1.6)"] --> S1
-  S1 --> S2["Step 2:<br/>Summarize"]
-  SystemS["System Prompt<br/>Analyst (1.6)"] --> S2
-  S2 --> S3["Step 3:<br/>Format"]
-  SystemF["System Prompt<br/>Writer (1.6)"] --> S3
-  S3 --> Output["Result"]
-  style Topic fill:#4A90D9,color:#fff
-  style SystemR fill:#4A90D9,color:#fff
-  style SystemS fill:#4A90D9,color:#fff
-  style SystemF fill:#4A90D9,color:#fff
-  style S1 fill:#27AE60,color:#fff
-  style S2 fill:#27AE60,color:#fff
-  style S3 fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={l8C1Combine} alt="Combine: Topic and System Prompts (Research, Analyst, Writer) as inputs to three steps, Result as output" />
 
 **Exercise:** Combine the workflow with system prompts from Level 1.6. Build a pipeline with three different roles:
 

@@ -1,0 +1,21 @@
+{
+  "id": "l8-c2-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Topic", "label": "Topic", "role": "input" },
+    { "id": "Pipeline", "label": ["3-Step Pipeline", "(8.1)"], "role": "process" },
+    { "id": "DS", "label": ["createDataStream()", "(7.1)"], "role": "process" },
+    { "id": "Progress", "label": ["Progress Data Parts", "(8.2)"], "role": "output" },
+    { "id": "Text", "label": ["streamText()", "(7.1)"], "role": "output" },
+    { "id": "UI", "label": "Frontend", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Topic", "to": "Pipeline" },
+    { "from": "Pipeline", "to": "DS" },
+    { "from": "DS", "to": "Progress" },
+    { "from": "DS", "to": "Text" },
+    { "from": "Progress", "to": "UI" },
+    { "from": "Text", "to": "UI" }
+  ],
+  "groups": []
+}

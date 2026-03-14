@@ -1,0 +1,28 @@
+{
+  "id": "l8-c4-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Loop", "label": ["Agent Loop", "laeuft"], "role": "process" },
+    { "id": "Checks", "label": "Break Conditions", "role": "process" },
+    { "id": "MaxIter", "label": "Max Iterations", "role": "warning" },
+    { "id": "Timeout", "label": "Timeout", "role": "warning" },
+    { "id": "Cost", "label": "Cost Guard", "role": "warning" },
+    { "id": "Quality", "label": "Quality Check", "role": "process" },
+    { "id": "Break", "label": "Break + Partial Result", "role": "warning" },
+    { "id": "Return", "label": "Return Ergebnis", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Loop", "to": "Checks" },
+    { "from": "Checks", "to": "MaxIter", "label": "Messages > 50" },
+    { "from": "Checks", "to": "Timeout", "label": "Zeit > 30s" },
+    { "from": "Checks", "to": "Cost", "label": "Tokens > Budget" },
+    { "from": "Checks", "to": "Quality", "label": "Qualitaet OK" },
+    { "from": "MaxIter", "to": "Break" },
+    { "from": "Timeout", "to": "Break" },
+    { "from": "Cost", "to": "Break" },
+    { "from": "Quality", "to": "Return" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Breaking the Loop", "nodes": ["Checks", "MaxIter", "Timeout", "Cost", "Quality"], "style": "highlight" }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "l8-c1-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Input", "label": "Topic", "role": "input" },
+    { "id": "S1", "label": ["Step 1:", "Research"], "role": "process" },
+    { "id": "S2", "label": ["Step 2:", "Summarize"], "role": "process" },
+    { "id": "S3", "label": ["Step 3:", "Format"], "role": "process" },
+    { "id": "Output", "label": "Fertiger Output", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Input", "to": "S1" },
+    { "from": "S1", "to": "S2" },
+    { "from": "S2", "to": "S3" },
+    { "from": "S3", "to": "Output" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Workflow", "nodes": ["S1", "S2", "S3"], "style": "highlight" }
+  ]
+}

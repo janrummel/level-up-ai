@@ -11,25 +11,11 @@ What if you need more control than the built-in `maxSteps`/`stopWhen` pattern of
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Init["Initialize<br/>messages = [user prompt]"] --> Call["generateText()<br/>with Tools"]
-  Call --> Check{"finishReason?"}
-  Check -->|"tool-calls"| Update["Update messages<br/>+ track state"]
-  Update --> Call
-  Check -->|"stop"| Return["Return result"]
-  subgraph HIER["You are HERE: Custom Loop"]
-    Call
-    Check
-    Update
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Init fill:#4A90D9,color:#fff
-  style Call fill:#27AE60,color:#fff
-  style Check fill:#27AE60,color:#fff
-  style Update fill:#27AE60,color:#fff
-  style Return fill:#E67E22,color:#fff
-```
+import l8C3Overview from '../../../../assets/diagrams/l8-c3-overview.svg';
+import l8C3Combine from '../../../../assets/diagrams/l8-c3-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l8C3Overview} alt="Overview: Initialize as input, Custom Loop with generateText, finishReason check and messages update as process, Return result as output" />
 
 A custom loop gives you full control over the agent lifecycle. You manage the messages array, check the `finishReason`, track your own state, and decide after each iteration whether the loop continues.
 
@@ -382,25 +368,7 @@ Messages in array: 7
 
 ## COMBINE
 
-```mermaid
-graph TD
-  User["User Prompt"] --> Loop
-  subgraph Loop["Custom Loop (8.3)"]
-    GT["generateText()"]
-    State["State Tracking"]
-    GT --> State
-    State --> GT
-  end
-  Loop --> DS["createDataStream()<br/>(8.2)"]
-  DS --> Progress["Progress per<br/>Iteration"]
-  DS --> UI["Frontend"]
-  style User fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style State fill:#27AE60,color:#fff
-  style DS fill:#27AE60,color:#fff
-  style Progress fill:#E67E22,color:#fff
-  style UI fill:#E67E22,color:#fff
-```
+<Image src={l8C3Combine} alt="Combine: User Prompt into Custom Loop with generateText and State Tracking, then createDataStream with Progress and Frontend output" />
 
 **Exercise:** Combine the custom loop with the progress streaming from Challenge 8.2. After each loop iteration:
 

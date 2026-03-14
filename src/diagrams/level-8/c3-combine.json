@@ -1,0 +1,23 @@
+{
+  "id": "l8-c3-combine",
+  "direction": "TD",
+  "nodes": [
+    { "id": "User", "label": "User Prompt", "role": "input" },
+    { "id": "GT", "label": "generateText()", "role": "process" },
+    { "id": "State", "label": "State Tracking", "role": "process" },
+    { "id": "DS", "label": ["createDataStream()", "(8.2)"], "role": "process" },
+    { "id": "Progress", "label": ["Progress pro", "Iteration"], "role": "output" },
+    { "id": "UI", "label": "Frontend", "role": "output" }
+  ],
+  "edges": [
+    { "from": "User", "to": "GT" },
+    { "from": "GT", "to": "State" },
+    { "from": "State", "to": "GT" },
+    { "from": "GT", "to": "DS" },
+    { "from": "DS", "to": "Progress" },
+    { "from": "DS", "to": "UI" }
+  ],
+  "groups": [
+    { "id": "Loop", "label": "Custom Loop (8.3)", "nodes": ["GT", "State"], "style": "highlight" }
+  ]
+}

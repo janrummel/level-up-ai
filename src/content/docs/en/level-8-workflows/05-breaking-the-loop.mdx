@@ -11,34 +11,11 @@ What happens when your agent gets stuck in an infinite loop — e.g., because no
 
 ## OVERVIEW
 
-```mermaid
-graph TD
-  Loop["Agent Loop<br/>running"] --> Checks{"Break Conditions"}
-  Checks -->|"Messages > 50"| MaxIter["Max Iterations"]
-  Checks -->|"Time > 30s"| Timeout["Timeout"]
-  Checks -->|"Tokens > Budget"| Cost["Cost Guard"]
-  Checks -->|"Quality OK"| Quality["Quality Check"]
-  MaxIter --> Break["Break + Partial Result"]
-  Timeout --> Break
-  Cost --> Break
-  Quality --> Return["Return Result"]
-  subgraph HIER["You are HERE: Breaking the Loop"]
-    Checks
-    MaxIter
-    Timeout
-    Cost
-    Quality
-  end
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Loop fill:#27AE60,color:#fff
-  style Checks fill:#27AE60,color:#fff
-  style MaxIter fill:#E74C3C,color:#fff
-  style Timeout fill:#E74C3C,color:#fff
-  style Cost fill:#E74C3C,color:#fff
-  style Quality fill:#27AE60,color:#fff
-  style Break fill:#E74C3C,color:#fff
-  style Return fill:#E67E22,color:#fff
-```
+import l8C4Overview from '../../../../assets/diagrams/l8-c4-overview.svg';
+import l8C4Combine from '../../../../assets/diagrams/l8-c4-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l8C4Overview} alt="Overview: Agent Loop running, Break Conditions check Max Iterations, Timeout, Cost Guard and Quality Check, on limit Break with Partial Result, on success Return Result" />
 
 Four break conditions protect your agent loop from uncontrolled behavior: Max Iterations prevents endless loops, Timeout stops after a defined time, Cost Guard limits token usage, and Quality Check ends the loop when the result is good enough.
 
@@ -559,26 +536,7 @@ Stats: {"iterations":2,"totalTokens":974,"durationMs":4521}
 
 ## COMBINE
 
-```mermaid
-graph TD
-  User["User Prompt"] --> Loop
-  subgraph Loop["Robust Agent Loop"]
-    GT["generateText()"]
-    Guards{"Break Conditions<br/>(8.4)"}
-    State["State Tracking<br/>(8.3)"]
-    GT --> Guards
-    Guards -->|"Continue"| State
-    State --> GT
-  end
-  Guards -->|"Terminate"| Partial["Partial Result<br/>+ breakReason"]
-  Guards -->|"Done"| Final["Final Result"]
-  style User fill:#4A90D9,color:#fff
-  style GT fill:#27AE60,color:#fff
-  style Guards fill:#27AE60,color:#fff
-  style State fill:#27AE60,color:#fff
-  style Partial fill:#E74C3C,color:#fff
-  style Final fill:#E67E22,color:#fff
-```
+<Image src={l8C4Combine} alt="Combine: User Prompt into Robust Agent Loop with generateText, Break Conditions and State Tracking, terminate yields Partial Result, done yields Final Result" />
 
 **Exercise:** Build a robust agent with ALL safeguards. Combine:
 

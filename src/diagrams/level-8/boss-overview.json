@@ -1,0 +1,28 @@
+{
+  "id": "l8-boss-overview",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Topic", "label": ["Topic", "(Input)"], "role": "input" },
+    { "id": "Loop", "label": ["Custom Loop", "mit search-Tool"], "role": "process" },
+    { "id": "Guards", "label": ["Break Conditions:", "Max 5 Iter, 30s, Cost"], "role": "warning" },
+    { "id": "Sum", "label": ["generateText()", "Zusammenfassung"], "role": "process" },
+    { "id": "Fmt", "label": ["streamText()", "Report"], "role": "process" },
+    { "id": "DS", "label": ["createDataStream()", "(8.2)"], "role": "process" },
+    { "id": "UI", "label": ["Frontend /", "Terminal"], "role": "output" }
+  ],
+  "edges": [
+    { "from": "Topic", "to": "Loop" },
+    { "from": "Loop", "to": "Guards" },
+    { "from": "Guards", "to": "Sum" },
+    { "from": "Sum", "to": "Fmt" },
+    { "from": "Loop", "to": "DS" },
+    { "from": "Sum", "to": "DS" },
+    { "from": "Fmt", "to": "DS" },
+    { "from": "DS", "to": "UI" }
+  ],
+  "groups": [
+    { "id": "S1", "label": "Step 1: Research Loop (8.3 + 8.4)", "nodes": ["Loop", "Guards"], "style": "highlight" },
+    { "id": "S2", "label": "Step 2: Summarize (8.1)", "nodes": ["Sum"], "style": "highlight" },
+    { "id": "S3", "label": "Step 3: Format (8.1)", "nodes": ["Fmt"], "style": "highlight" }
+  ]
+}

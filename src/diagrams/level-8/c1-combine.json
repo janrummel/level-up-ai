@@ -1,0 +1,24 @@
+{
+  "id": "l8-c1-combine",
+  "direction": "LR",
+  "nodes": [
+    { "id": "Topic", "label": "Topic", "role": "input" },
+    { "id": "SystemR", "label": ["System Prompt", "Research (1.6)"], "role": "input" },
+    { "id": "SystemS", "label": ["System Prompt", "Analyst (1.6)"], "role": "input" },
+    { "id": "SystemF", "label": ["System Prompt", "Writer (1.6)"], "role": "input" },
+    { "id": "S1", "label": ["Step 1:", "Research"], "role": "process" },
+    { "id": "S2", "label": ["Step 2:", "Summarize"], "role": "process" },
+    { "id": "S3", "label": ["Step 3:", "Format"], "role": "process" },
+    { "id": "Output", "label": "Ergebnis", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Topic", "to": "S1" },
+    { "from": "SystemR", "to": "S1" },
+    { "from": "S1", "to": "S2" },
+    { "from": "SystemS", "to": "S2" },
+    { "from": "S2", "to": "S3" },
+    { "from": "SystemF", "to": "S3" },
+    { "from": "S3", "to": "Output" }
+  ],
+  "groups": []
+}

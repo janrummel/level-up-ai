@@ -1,0 +1,21 @@
+{
+  "id": "l8-c3-overview",
+  "direction": "TD",
+  "nodes": [
+    { "id": "Init", "label": ["Initialize", "messages = [user prompt]"], "role": "input" },
+    { "id": "Call", "label": ["generateText()", "mit Tools"], "role": "process" },
+    { "id": "Check", "label": "finishReason?", "role": "process" },
+    { "id": "Update", "label": ["Messages aktualisieren", "+ State tracken"], "role": "process" },
+    { "id": "Return", "label": "Return Ergebnis", "role": "output" }
+  ],
+  "edges": [
+    { "from": "Init", "to": "Call" },
+    { "from": "Call", "to": "Check" },
+    { "from": "Check", "to": "Update", "label": "tool-calls" },
+    { "from": "Update", "to": "Call" },
+    { "from": "Check", "to": "Return", "label": "stop" }
+  ],
+  "groups": [
+    { "id": "HIER", "label": "Du bist HIER: Custom Loop", "nodes": ["Call", "Check", "Update"], "style": "highlight" }
+  ]
+}

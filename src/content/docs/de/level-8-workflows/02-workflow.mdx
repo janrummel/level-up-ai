@@ -11,21 +11,11 @@ Was wenn eine Aufgabe zu komplex fuer einen einzigen LLM-Call ist — z.B. reche
 
 ## OVERVIEW
 
-```mermaid
-graph LR
-  Input["Topic"] --> S1
-  subgraph HIER["Du bist HIER: Workflow"]
-    S1["Step 1:<br/>Research"] --> S2["Step 2:<br/>Summarize"]
-    S2 --> S3["Step 3:<br/>Format"]
-  end
-  S3 --> Output["Fertiger Output"]
-  style HIER fill:none,stroke:#E67E22,stroke-width:3px,stroke-dasharray:5 5
-  style Input fill:#4A90D9,color:#fff
-  style S1 fill:#27AE60,color:#fff
-  style S2 fill:#27AE60,color:#fff
-  style S3 fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+import l8C1Overview from '../../../../assets/diagrams/l8-c1-overview.svg';
+import l8C1Combine from '../../../../assets/diagrams/l8-c1-combine.svg';
+import { Image } from 'astro:assets';
+
+<Image src={l8C1Overview} alt="Overview: Topic als Input, drei verkettete Steps (Research, Summarize, Format) als Prozess, Fertiger Output" />
 
 Ein Workflow verkettet mehrere `generateText`-Calls. Der Output von Step 1 wird zum Input von Step 2. Jeder Schritt hat seinen eigenen Prompt, seine eigene Rolle — und kann einzeln getestet werden.
 
@@ -298,24 +288,7 @@ Gesamt: 685 Tokens
 
 ## COMBINE
 
-```mermaid
-graph LR
-  Topic["Topic"] --> S1["Step 1:<br/>Research"]
-  SystemR["System Prompt<br/>Research (1.6)"] --> S1
-  S1 --> S2["Step 2:<br/>Summarize"]
-  SystemS["System Prompt<br/>Analyst (1.6)"] --> S2
-  S2 --> S3["Step 3:<br/>Format"]
-  SystemF["System Prompt<br/>Writer (1.6)"] --> S3
-  S3 --> Output["Ergebnis"]
-  style Topic fill:#4A90D9,color:#fff
-  style SystemR fill:#4A90D9,color:#fff
-  style SystemS fill:#4A90D9,color:#fff
-  style SystemF fill:#4A90D9,color:#fff
-  style S1 fill:#27AE60,color:#fff
-  style S2 fill:#27AE60,color:#fff
-  style S3 fill:#27AE60,color:#fff
-  style Output fill:#E67E22,color:#fff
-```
+<Image src={l8C1Combine} alt="Combine: Topic und System Prompts (Research, Analyst, Writer) als Inputs zu drei Steps, Ergebnis als Output" />
 
 **Uebung:** Kombiniere den Workflow mit System Prompts aus Level 1.6. Baue eine Pipeline mit drei unterschiedlichen Rollen:
 
