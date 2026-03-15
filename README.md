@@ -1,27 +1,39 @@
-# Level Up AI — Vom Vibe Coder zum AI Engineer
+<p align="center">
+  <img src="https://em-content.zobj.net/source/apple/391/rocket_1f680.png" width="80" alt="Level Up AI">
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+<h1 align="center">Level Up AI</h1>
 
-> **[janrummel.github.io/level-up-ai](https://janrummel.github.io/level-up-ai/)**
+<p align="center">
+  <strong>From Vibe Coder to AI Engineer.</strong><br>
+  9 levels. 41 challenges. 9 boss fights. Built on official sources and tested code.
+</p>
 
-Ein kostenloser, interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SDK v6](https://ai-sdk.dev). 9 Level, 41+ Challenges, Boss Fights und eine Referenz-Sektion — auf Deutsch und Englisch.
+<p align="center">
+  <a href="https://janrummel.github.io/level-up-ai/">Website</a> ·
+  <a href="#curriculum">Curriculum</a> ·
+  <a href="#who-is-this-for">Who is this for</a> ·
+  <a href="#run-locally">Run locally</a> ·
+  <a href="#sources">Sources</a>
+</p>
 
-## Warum?
+<p align="center">
+  <img src="https://img.shields.io/badge/levels-9-E67E22" alt="Levels">
+  <img src="https://img.shields.io/badge/challenges-41+-F1C40F" alt="Challenges">
+  <img src="https://img.shields.io/badge/languages-EN%20%2B%20DE-58a6ff" alt="Languages">
+  <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="License">
+</p>
 
-Vibe Coding bringt dich schnell zu einem Prototypen — aber nicht zu Production-Code. Dieser Kurs schliesst die Luecke: Du lernst Schritt fuer Schritt, wie AI-Anwendungen wirklich funktionieren und wie du sie robust baust.
+---
 
-## Fuer wen?
+## Why?
 
-- **TypeScript-Entwickler**, die AI programmatisch in Projekte einbauen wollen
-- **"Vibe Coder"**, die systematisch verstehen wollen was unter der Haube passiert
-- **Voraussetzungen:** Node.js 20+, TypeScript-Grundkenntnisse, ein API Key (Anthropic, OpenAI oder Google)
-- **Zeitaufwand:** ~25-50 Stunden im eigenen Tempo
+Vibe Coding gets you to a prototype fast — but not to production code. This course closes the gap: learn step by step how AI applications really work and how to build them robustly. Free, open source, bilingual.
 
-## Inhalt
+## Curriculum
 
-| Level | Thema | Challenges |
-|-------|-------|------------|
+| Level | Topic | What you'll build |
+|-------|-------|-------------------|
 | 1 | AI SDK Basics | generateText, streamText, Structured Output, System Prompts |
 | 2 | LLM Fundamentals | Tokens, Usage, Context Window, Prompt Caching |
 | 3 | Agents & MCP | Tool Calling, Message Parts, MCP stdio/HTTP, Tool Approval |
@@ -33,32 +45,39 @@ Vibe Coding bringt dich schnell zu einem Prototypen — aber nicht zu Production
 | 9 | Advanced Patterns | Guardrails, Model Router, Multi-Output, Research Workflow |
 | Ref | Reference | UI/Model Messages, Tools, Streams, Data Parts, Metadata |
 
-Jede Challenge folgt dem 6-Step-Pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
+Every challenge follows the 6-step pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
 
-## Lokale Entwicklung
+## Who is this for?
+
+- **TypeScript developers** who want to integrate AI into real projects
+- **"Vibe Coders"** who want to systematically understand what happens under the hood
+- **Prerequisites:** Node.js 20+, basic TypeScript, an API key (Anthropic, OpenAI, or Google)
+- **Time:** ~25-50 hours at your own pace
+
+## Run locally
 
 ```bash
 npm install
-npm run dev        # Dev-Server auf localhost:4321
-npm run build      # Production Build
+npm run dev        # Dev server on localhost:4321
+npm run build      # Production build
 ```
 
 ## Tech Stack
 
-[Astro](https://astro.build) + [Starlight](https://starlight.astro.build), TypeScript, MDX, i18n (DE/EN)
+[Astro](https://astro.build) + [Starlight](https://starlight.astro.build) · TypeScript · MDX · i18n (EN/DE)
 
-## Quellen
+## Sources
 
-Basiert auf dem Open-Source Curriculum von [ai-hero-dev/ai-sdk-v6-crash-course](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course) und den offiziellen Docs von [ai-sdk.dev](https://ai-sdk.dev), [Anthropic](https://docs.anthropic.com), [Evalite](https://github.com/mattpocock/evalite) und [Langfuse](https://langfuse.com).
+Built on the open-source curriculum from [ai-hero-dev/ai-sdk-v6-crash-course](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course) and official docs from [ai-sdk.dev](https://ai-sdk.dev), [Anthropic](https://docs.anthropic.com), [Evalite](https://github.com/mattpocock/evalite), and [Langfuse](https://langfuse.com).
 
-## Beitragen
+## Related Project
 
-Fehler gefunden? Verbesserungsvorschlag? Issues und Pull Requests sind willkommen.
+**[AI Product Thinking](https://github.com/janrummel/ai-product-thinking)** — The counterpart for Product Managers: a free AI PM curriculum with decision scenarios instead of code.
 
-## Verwandtes Projekt
+## Contributing
 
-**[AI Product Thinking](https://github.com/janrummel/ai-product-thinking)** — Das Gegenstueck fuer Product Manager: Ein AI PM Lernpfad mit Entscheidungsszenarien statt Code.
+Found an error? Have a suggestion? Issues and pull requests are welcome.
 
-## Lizenz
+## License
 
 MIT
