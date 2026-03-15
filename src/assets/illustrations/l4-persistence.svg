@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Level 4: Persistence">
+  <rect width="400" height="300" rx="16" fill="#1a1a2e"/>
+  <rect x="140" y="50" width="120" height="80" rx="8" fill="#2a2a4e" stroke="#e67e22" stroke-width="1.5" opacity="0.5"/>
+  <rect x="160" y="70" width="80" height="10" rx="2" fill="#e67e22" opacity="0.3"/>
+  <rect x="160" y="85" width="60" height="10" rx="2" fill="#e67e22" opacity="0.2"/>
+  <rect x="160" y="100" width="70" height="10" rx="2" fill="#e67e22" opacity="0.15"/>
+  <path d="M200 140 L200 160" stroke="#e67e22" stroke-width="2" opacity="0.4"/>
+  <polygon points="195,155 200,165 205,155" fill="#e67e22" opacity="0.4"/>
+  <ellipse cx="200" cy="185" rx="60" ry="20" fill="#2a2a4e" stroke="#e67e22" stroke-width="1.5" opacity="0.5"/>
+  <text x="200" y="190" text-anchor="middle" fill="#e67e22" font-family="system-ui" font-size="10" opacity="0.6">DB</text>
+  <text x="200" y="230" text-anchor="middle" fill="#7d8590" font-family="system-ui" font-size="14" font-weight="600">PLACEHOLDER</text>
+  <text x="200" y="253" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Replace with Storyset: "Cloud storage" or "Database"</text>
+  <text x="200" y="273" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Rafiki style · Color: #E67E22</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Level 9: Advanced Patterns">
+  <rect width="400" height="300" rx="16" fill="#1a1a2e"/>
+  <rect x="130" y="40" width="140" height="30" rx="6" fill="#2a2a4e" stroke="#E74C3C" stroke-width="1" opacity="0.5"/>
+  <text x="200" y="60" text-anchor="middle" fill="#E74C3C" font-family="system-ui" font-size="9" opacity="0.6">Guardrails</text>
+  <circle cx="130" cy="115" r="30" fill="#2a2a4e" stroke="#e67e22" stroke-width="1" opacity="0.4"/>
+  <text x="130" y="119" text-anchor="middle" fill="#e67e22" font-family="system-ui" font-size="9" opacity="0.6">Router</text>
+  <circle cx="270" cy="115" r="30" fill="#2a2a4e" stroke="#4A90D9" stroke-width="1" opacity="0.4"/>
+  <text x="270" y="119" text-anchor="middle" fill="#4A90D9" font-family="system-ui" font-size="9" opacity="0.6">Compare</text>
+  <line x1="160" y1="115" x2="240" y2="115" stroke="#e67e22" stroke-width="1" opacity="0.3" stroke-dasharray="4"/>
+  <line x1="200" y1="70" x2="130" y2="85" stroke="#E74C3C" stroke-width="1" opacity="0.2"/>
+  <line x1="200" y1="70" x2="270" y2="85" stroke="#E74C3C" stroke-width="1" opacity="0.2"/>
+  <text x="200" y="215" text-anchor="middle" fill="#7d8590" font-family="system-ui" font-size="14" font-weight="600">PLACEHOLDER</text>
+  <text x="200" y="238" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Replace with Storyset: "Expert" or "Advanced technology"</text>
+  <text x="200" y="258" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Rafiki style · Color: #E67E22</text>
+</svg>

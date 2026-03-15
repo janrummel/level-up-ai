@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Level 7: Streaming">
+  <rect width="400" height="300" rx="16" fill="#1a1a2e"/>
+  <circle cx="80" cy="100" r="25" fill="#2a2a4e" stroke="#e67e22" stroke-width="1.5" opacity="0.5"/>
+  <text x="80" y="104" text-anchor="middle" fill="#e67e22" font-family="system-ui" font-size="9" opacity="0.6">LLM</text>
+  <rect x="300" y="80" width="60" height="40" rx="6" fill="#2a2a4e" stroke="#e67e22" stroke-width="1" opacity="0.4"/>
+  <text x="330" y="104" text-anchor="middle" fill="#e67e22" font-family="system-ui" font-size="9" opacity="0.6">UI</text>
+  <circle cx="150" cy="100" r="4" fill="#e67e22" opacity="0.6"/>
+  <circle cx="180" cy="100" r="4" fill="#e67e22" opacity="0.5"/>
+  <circle cx="210" cy="100" r="4" fill="#e67e22" opacity="0.4"/>
+  <circle cx="240" cy="100" r="4" fill="#e67e22" opacity="0.3"/>
+  <circle cx="270" cy="100" r="4" fill="#e67e22" opacity="0.2"/>
+  <path d="M110 100 L290 100" stroke="#e67e22" stroke-width="1" opacity="0.15" stroke-dasharray="4"/>
+  <text x="200" y="215" text-anchor="middle" fill="#7d8590" font-family="system-ui" font-size="14" font-weight="600">PLACEHOLDER</text>
+  <text x="200" y="238" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Replace with Storyset: "Data flow" or "Real time"</text>
+  <text x="200" y="258" text-anchor="middle" fill="#555" font-family="system-ui" font-size="11">Rafiki style · Color: #E67E22</text>
+</svg>
