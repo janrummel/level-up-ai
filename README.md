@@ -45,7 +45,13 @@ Vibe Coding gets you to a prototype fast — but not to production code. This co
 | 9 | Advanced Patterns | Guardrails, Model Router, Multi-Output, Research Workflow |
 | Ref | Reference | UI/Model Messages, Tools, Streams, Data Parts, Metadata |
 
-Every challenge follows the 6-step pattern: **THINK → OVERVIEW → WHY → WALKTHROUGH → TRY → COMBINE**
+## How each challenge works
+
+Every challenge follows the same 6-step pattern:
+
+**THINK** (activate prior knowledge) → **OVERVIEW** (big picture) → **WHY** (the problem) → **WALKTHROUGH** (step by step) → **TRY** (hands-on) → **COMBINE** (connect the dots)
+
+Each level ends with a **Boss Fight** — a project that combines all building blocks without a provided solution. You build it, you verify it, you own it.
 
 ## Who is this for?
 
@@ -53,6 +59,10 @@ Every challenge follows the 6-step pattern: **THINK → OVERVIEW → WHY → WAL
 - **"Vibe Coders"** who want to systematically understand what happens under the hood
 - **Prerequisites:** Node.js 20+, basic TypeScript, an API key (Anthropic, OpenAI, or Google)
 - **Time:** ~25-50 hours at your own pace
+
+## Built on
+
+Based on the [Vercel AI SDK v6.x](https://ai-sdk.dev) (as of March 2026). 50+ generated SVG diagrams. Every code example tested. All concepts linked to official documentation.
 
 ## Run locally
 
@@ -76,7 +86,7 @@ Built on the open-source curriculum from [ai-hero-dev/ai-sdk-v6-crash-course](ht
 
 ## Contributing
 
-Found an error? Have a suggestion? Issues and pull requests are welcome.
+Found an error? Have a suggestion? Issues and pull requests are welcome — whether it's a typo, a broken code example, a translation improvement, or a content correction.
 
 ## License
 
