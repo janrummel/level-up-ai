@@ -17,13 +17,11 @@ hero:
 template: splash
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Du nutzt AI — aber baust Du auch damit?
 
 Du promptest besser als die meisten. Aber wenn es darum geht, AI **programmatisch** einzubauen — SDK, Agents, Tool Calling, Streaming — wird es still. Das Problem ist kein fehlendes Talent. Es ist ein **fehlender Lernpfad.**
-
-## Vibe Coding vs. AI Engineering
 
 **Vibe Coding** bedeutet: Du laesst ein LLM Code generieren, kopierst ihn rein und hoffst, dass er funktioniert. Kein Debugging, keine Evaluation, kein Verstaendnis der Mechanik. Das Ergebnis: fragile Anwendungen, die in Production versagen.
 
@@ -65,6 +63,20 @@ Jedes Level folgt einem festen Rhythmus:
   </Card>
 </CardGrid>
 
+## Curriculum
+
+| Level | Thema | Was Du baust |
+|-------|-------|-------------|
+| 1 | AI SDK Basics | generateText, streamText, Structured Output |
+| 2 | LLM Fundamentals | Tokens, Usage Tracking, Context Windows |
+| 3 | Agents & MCP | Tool Calling, MCP-Server, Agent Loops |
+| 4 | Persistence | Chat-Historie, DB Persistence, Validation |
+| 5 | Context Engineering | Prompting, RAG, Chain of Thought |
+| 6 | Evals | Evalite, LLM-as-Judge, Langfuse |
+| 7 | Streaming | Custom Data Parts, Stream Transforms |
+| 8 | Workflows | Pipelines, Streaming zum Frontend |
+| 9 | Advanced Patterns | Guardrails, Model Router, Research Workflow |
+
 ## Fuer wen ist das?
 
 <CardGrid>
@@ -78,4 +90,42 @@ Jedes Level folgt einem festen Rhythmus:
 
 **Zeitaufwand:** ~25-50 Stunden im eigenen Tempo. Bei 2-4 Stunden pro Woche ca. 3 Monate fuer alle 9 Levels. Jedes Level funktioniert auch einzeln.
 
-> **Versionshinweis:** Dieser Kurs basiert auf dem [Vercel AI SDK v6.x](https://ai-sdk.dev) (Stand Maerz 2026). APIs koennen sich aendern — pruefe im Zweifelsfall die aktuelle Dokumentation auf [ai-sdk.dev](https://ai-sdk.dev).
+## Haeufig gestellte Fragen
+
+<details>
+<summary>Brauche ich AI/ML-Vorkenntnisse?</summary>
+
+Nein. Der Kurs startet bei Null und baut systematisch auf. Du solltest TypeScript koennen und schon mal eine API benutzt haben — das reicht. Machine-Learning-Theorie ist nicht noetig.
+</details>
+
+<details>
+<summary>Welchen AI-Provider brauche ich?</summary>
+
+Jeder Provider den das Vercel AI SDK unterstuetzt: Anthropic (Claude), OpenAI oder Google (Gemini). Das SDK abstrahiert die Unterschiede, Du kannst jederzeit wechseln. Die meisten Challenges funktionieren mit jedem Provider.
+</details>
+
+<details>
+<summary>Ist das nur ein weiterer Prompt-Engineering-Kurs?</summary>
+
+Nein. Prompt Engineering ist ein Thema in Level 5. Dieser Kurs deckt den vollen Stack ab: SDK-Integration, Tool Calling, Agents, Streaming, Evaluation, Persistence und Production Patterns. Du schreibst echten Code, nicht nur Prompts.
+</details>
+
+<details>
+<summary>Kann ich Levels ueberspringen?</summary>
+
+Ja. Jedes Level funktioniert eigenstaendig. Schau in die Roadmap um zu sehen was jedes Level abdeckt. Die Levels bauen aber aufeinander auf — Level 3 (Agents) setzt Level 1 (SDK Basics) voraus.
+</details>
+
+<details>
+<summary>Ist der Inhalt aktuell?</summary>
+
+Dieser Kurs basiert auf dem Vercel AI SDK v6.x (Stand Maerz 2026). APIs entwickeln sich weiter — pruefe im Zweifelsfall die aktuelle Dokumentation auf [ai-sdk.dev](https://ai-sdk.dev). Die Prinzipien und Patterns bleiben stabil auch wenn APIs sich aendern.
+</details>
+
+## Verwandtes Projekt
+
+<LinkCard title="AI Product Thinking" href="https://janrummel.github.io/ai-product-thinking/" description="Das Gegenstueck fuer Product Manager: ein kostenloser AI PM Lernpfad mit Entscheidungsszenarien statt Code. Gleiche Qualitaet, andere Perspektive." />
+
+## Warum es das gibt
+
+Die meisten AI-Kurse lehren Prompting. Wenige lehren Bauen. Dieser Kurs existiert, weil die Luecke zwischen "Ich kann ChatGPT nutzen" und "Ich kann ein AI-Feature shippen" groesser ist als sie aussieht — und es keinen kostenlosen, strukturierten Weg gab sie zu schliessen. Jede Challenge ist getestet, jedes Konzept mit offiziellen Quellen verlinkt. Kein Filler, kein Fluff.

@@ -17,11 +17,15 @@ hero:
 template: splash
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## You use AI — but do you build with it?
 
 You prompt better than most. But when it comes to integrating AI **programmatically** — SDK, agents, tool calling, streaming — things get quiet. The problem isn't a lack of talent. It's a **missing learning path.**
+
+**Vibe Coding** means: let an LLM generate code, paste it in, hope it works. No debugging, no evaluation, no understanding of the mechanics. The result: fragile applications that fail in production.
+
+**AI Engineering** is the opposite: you understand how LLMs work. You measure quality instead of guessing. You build guardrails, track costs, and test systematically. **Verify, don't trust.** This course takes you from one to the other.
 
 ## After 9 levels you can...
 
@@ -59,6 +63,20 @@ Each level follows a fixed rhythm:
   </Card>
 </CardGrid>
 
+## Curriculum
+
+| Level | Topic | What you'll build |
+|-------|-------|-------------------|
+| 1 | AI SDK Basics | generateText, streamText, structured output |
+| 2 | LLM Fundamentals | Tokens, usage tracking, context windows |
+| 3 | Agents & MCP | Tool calling, MCP servers, agent loops |
+| 4 | Persistence | Chat history, DB persistence, validation |
+| 5 | Context Engineering | Prompting, RAG, chain of thought |
+| 6 | Evals | Evalite, LLM-as-Judge, Langfuse |
+| 7 | Streaming | Custom data parts, stream transforms |
+| 8 | Workflows | Pipelines, streaming to frontend |
+| 9 | Advanced Patterns | Guardrails, model router, research workflow |
+
 ## Who is this for?
 
 <CardGrid>
@@ -66,8 +84,48 @@ Each level follows a fixed rhythm:
     TypeScript dev who wants to integrate AI into real projects. "Vibe Coder" who wants to systematically understand what happens under the hood.
   </Card>
   <Card title="What you need" icon="list-format">
-    Node.js 18+, basic TypeScript knowledge and an API key (Anthropic, OpenAI or Google).
+    Node.js 20+, basic TypeScript knowledge and an API key (Anthropic, OpenAI or Google).
   </Card>
 </CardGrid>
 
-**Time commitment:** ~40-80 hours at your own pace. At 2-4 hours per week, about 3 months for all 9 levels. Each level also works standalone.
+**Time commitment:** ~25-50 hours at your own pace. At 2-4 hours per week, about 3 months for all 9 levels. Each level also works standalone.
+
+## Frequently asked questions
+
+<details>
+<summary>Do I need prior AI/ML experience?</summary>
+
+No. The course starts from zero and builds up systematically. You should know TypeScript and have used an API before — that's it. Machine learning theory is not required.
+</details>
+
+<details>
+<summary>Which AI provider do I need?</summary>
+
+Any provider supported by the Vercel AI SDK works: Anthropic (Claude), OpenAI, or Google (Gemini). The SDK abstracts the differences, so you can switch anytime. Most challenges work with any provider.
+</details>
+
+<details>
+<summary>Is this just another prompt engineering course?</summary>
+
+No. Prompt engineering is one topic in Level 5. This course covers the full stack: SDK integration, tool calling, agents, streaming, evaluation, persistence, and production patterns. You write real code, not just prompts.
+</details>
+
+<details>
+<summary>Can I skip levels?</summary>
+
+Yes. Each level works standalone. Check the Roadmap to see what each level covers and jump to what interests you. That said, levels build on each other — Level 3 (Agents) assumes you know Level 1 (SDK Basics).
+</details>
+
+<details>
+<summary>Is the content up to date?</summary>
+
+This course is built on the Vercel AI SDK v6.x (as of March 2026). APIs evolve — when in doubt, check the current docs at [ai-sdk.dev](https://ai-sdk.dev). The principles and patterns remain stable even as APIs change.
+</details>
+
+## Related project
+
+<LinkCard title="AI Product Thinking" href="https://janrummel.github.io/ai-product-thinking/" description="The counterpart for Product Managers: a free AI PM curriculum with decision scenarios instead of code. Same quality, different perspective." />
+
+## Why this exists
+
+Most AI courses teach you to prompt. Few teach you to build. This course exists because the gap between "I can use ChatGPT" and "I can ship an AI feature" is bigger than it looks — and there was no free, structured path to close it. Every challenge is tested, every concept linked to official sources. No filler, no fluff.

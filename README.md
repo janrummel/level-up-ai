@@ -1,5 +1,8 @@
 # Level Up AI — Vom Vibe Coder zum AI Engineer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+
 > **[janrummel.github.io/level-up-ai](https://janrummel.github.io/level-up-ai/)**
 
 Ein kostenloser, interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SDK v6](https://ai-sdk.dev). 9 Level, 41+ Challenges, Boss Fights und eine Referenz-Sektion — auf Deutsch und Englisch.
@@ -7,6 +10,13 @@ Ein kostenloser, interaktiver Lernpfad fuer AI Engineering mit dem [Vercel AI SD
 ## Warum?
 
 Vibe Coding bringt dich schnell zu einem Prototypen — aber nicht zu Production-Code. Dieser Kurs schliesst die Luecke: Du lernst Schritt fuer Schritt, wie AI-Anwendungen wirklich funktionieren und wie du sie robust baust.
+
+## Fuer wen?
+
+- **TypeScript-Entwickler**, die AI programmatisch in Projekte einbauen wollen
+- **"Vibe Coder"**, die systematisch verstehen wollen was unter der Haube passiert
+- **Voraussetzungen:** Node.js 20+, TypeScript-Grundkenntnisse, ein API Key (Anthropic, OpenAI oder Google)
+- **Zeitaufwand:** ~25-50 Stunden im eigenen Tempo
 
 ## Inhalt
 
@@ -40,6 +50,14 @@ npm run build      # Production Build
 ## Quellen
 
 Basiert auf dem Open-Source Curriculum von [ai-hero-dev/ai-sdk-v6-crash-course](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course) und den offiziellen Docs von [ai-sdk.dev](https://ai-sdk.dev), [Anthropic](https://docs.anthropic.com), [Evalite](https://github.com/mattpocock/evalite) und [Langfuse](https://langfuse.com).
+
+## Beitragen
+
+Fehler gefunden? Verbesserungsvorschlag? Issues und Pull Requests sind willkommen.
+
+## Verwandtes Projekt
+
+**[AI Product Thinking](https://github.com/janrummel/ai-product-thinking)** — Das Gegenstueck fuer Product Manager: Ein AI PM Lernpfad mit Entscheidungsszenarien statt Code.
 
 ## Lizenz
 
