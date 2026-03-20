@@ -1,6 +1,6 @@
 ---
 title: "Level 4 Complete"
-description: "Zusammenfassung aller Konzepte aus Level 4: Persistence — von onFinish ueber Chat IDs bis zum vollstaendigen Persistence-Cycle."
+description: "Zusammenfassung aller Konzepte aus Level 4: Persistence — von onFinish Ã¼ber Chat IDs bis zum vollstaendigen Persistence-Cycle."
 sidebar:
   order: 7
   badge:
@@ -13,19 +13,19 @@ import skillTree from '../../../../assets/diagrams/skill-tree-l4-complete.svg';
 
 ## Level 4 abgeschlossen!
 
-Dein Chat-System hat jetzt ein Gedaechtnis. Es speichert, laedt und validiert — und ueberlebt jeden Reload. Das ist die Grundlage fuer jede produktionsreife AI-Anwendung.
+Dein Chat-System hat jetzt ein Gedaechtnis. Es speichert, laedt und validiert — und ueberlebt jeden Reload. Das ist die Grundlage fÃ¼r jede produktionsreife AI-Anwendung.
 
 ## Was Du gelernt hast
 
-- **On Finish Callback:** Ergebnisse automatisch nach der Completion abfangen — `onFinish` liefert `text`, `usage`, `finishReason` und `response` fuer Logging, Analytics und Persistence
+- **On Finish Callback:** Ergebnisse automatisch nach der Completion abfangen — `onFinish` liefert `text`, `usage`, `finishReason` und `response` fÃ¼r Logging, Analytics und Persistence
 - **Chat ID:** Sessions eindeutig identifizieren mit `crypto.randomUUID()` — das Frontend schickt die ID mit jedem Request, das Backend ordnet Messages dem richtigen Chat zu
-- **Persistence:** Messages in einer Datenbank speichern und bei Reload laden — der vollstaendige Cycle: Load → Generate → Save. Chats ueberleben Server-Neustarts und Deployments
-- **Message Validation:** Eingehende Nachrichten mit Zod Schemas validieren, bevor sie verarbeitet werden — `safeParse` fuer strukturierte Fehlerbehandlung, Schutz vor Schema-Drift und Injection
+- **Persistence:** Messages in einer Datenbank speichern und bei Reload laden — der vollstÃ¤ndige Cycle: Load → Generate → Save. Chats ueberleben Server-Neustarts und Deployments
+- **Message Validation:** Eingehende Nachrichten mit Zod Schemas validieren, bevor sie verarbeitet werden — `safeParse` fÃ¼r strukturierte Fehlerbehandlung, Schutz vor Schema-Drift und Injection
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 4 Persistence abgeschlossen, Level 5 Context Engineering ist das naechste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 4 Persistence abgeschlossen, Level 5 Context Engineering ist das nÃ¤chste Level" />
 
 ## Naechstes Level
 
-**Level 5: Context Engineering** — Du weisst jetzt, wie Du Chats speicherst und laedt. Aber was genau schickst Du ans LLM? Context Engineering ist die Kunst, dem LLM den optimalen Input zu geben — von strukturierten Prompt Templates ueber Few-Shot Learning bis zu RAG und Chain of Thought. Du lernst, wie Du aus vagen Prompts praezise, reproduzierbare Ergebnisse machst.
+**Level 5: Context Engineering** — Du weisst jetzt, wie Du Chats speicherst und laedt. Aber was genau schickst Du ans LLM? Context Engineering ist die Kunst, dem LLM den optimalen Input zu geben — von strukturierten Prompt Templates Ã¼ber Few-Shot Learning bis zu RAG und Chain of Thought. Du lernst, wie Du aus vagen Prompts praezise, reproduzierbare Ergebnisse machst.

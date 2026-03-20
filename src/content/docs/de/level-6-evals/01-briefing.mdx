@@ -1,6 +1,6 @@
 ---
 title: "Level 6: Evals — Briefing"
-description: "Lerne, wie Du LLM-Anwendungen automatisiert testest — von Evalite ueber deterministische Scorer bis zu LLM-as-a-Judge und Langfuse."
+description: "Lerne, wie Du LLM-Anwendungen automatisiert testest — von Evalite Ã¼ber deterministische Scorer bis zu LLM-as-a-Judge und Langfuse."
 sidebar:
   order: 1
   badge:
@@ -13,11 +13,11 @@ import skillTree from '../../../../assets/diagrams/skill-tree-l6-briefing.svg';
 import LessonIllustration from '../../../../components/LessonIllustration.astro';
 import illustration from '../../../../assets/illustrations/l6-evals.svg';
 
-<LessonIllustration src={illustration} alt="Level 6: Evals — automatisierte Tests fuer LLM-Anwendungen" />
+<LessonIllustration src={illustration} alt="Level 6: Evals — automatisierte Tests fÃ¼r LLM-Anwendungen" />
 
 ## TL;DR
 
-> Evals sind automatisierte Tests fuer LLM-Anwendungen. Statt richtig/falsch messen sie Qualitaet auf einer Skala. Evalite ist Dein Vitest fuer AI.
+> Evals sind automatisierte Tests fÃ¼r LLM-Anwendungen. Statt richtig/falsch messen sie QualitÃ¤t auf einer Skala. Evalite ist Dein Vitest fÃ¼r AI.
 
 ## Skill Tree
 
@@ -27,9 +27,9 @@ import illustration from '../../../../assets/illustrations/l6-evals.svg';
 
 - **Evalite Basics** — Das TypeScript-native Eval-Framework einrichten und Deine erste Eval schreiben
 - **Deterministic Eval** — Schnelle, guenstige Scorer ohne LLM: String-Vergleich, Contains-Check, Custom Scorer
-- **LLM-as-a-Judge** — Ein LLM bewertet die Ausgabe eines anderen LLM — fuer offene Antworten ohne eindeutig richtige Loesung
+- **LLM-as-a-Judge** — Ein LLM bewertet die Ausgabe eines anderen LLM — fÃ¼r offene Antworten ohne eindeutig richtige LÃ¶sung
 - **Dataset Management** — Repraesentative Test-Daten sammeln, pflegen und kritisch bewerten
-- **Langfuse** — Production-Observability: Traces, Kosten und Qualitaet in Echtzeit ueberwachen
+- **Langfuse** — Production-Observability: Traces, Kosten und QualitÃ¤t in Echtzeit Ã¼berwachen
 
 ## Warum das wichtig ist
 
@@ -37,21 +37,21 @@ import illustration from '../../../../assets/illustrations/l6-evals.svg';
 
 Ohne Evals aenderst Du einen Prompt und hoffst, dass es besser wird. Du liest manuell durch, ob die Antworten noch gut sind. Bei einer Aenderung bricht etwas anderes — und Du merkst es erst, wenn sich ein User beschwert.
 
-Das konkrete Problem: LLM-Ausgaben sind nicht deterministisch. Derselbe Prompt kann unterschiedliche Ergebnisse liefern. Klassische Unit Tests mit `expect(result).toBe("...")` funktionieren nicht. Du brauchst ein neues Test-Paradigma — Scorer, die Qualitaet auf einer Skala messen statt binaerem richtig/falsch.
+Das konkrete Problem: LLM-Ausgaben sind nicht deterministisch. Derselbe Prompt kann unterschiedliche Ergebnisse liefern. Klassische Unit Tests mit `expect(result).toBe("...")` funktionieren nicht. Du brauchst ein neues Test-Paradigma — Scorer, die QualitÃ¤t auf einer Skala messen statt binaerem richtig/falsch.
 
 ## Voraussetzungen
 
 - **Level 1: AI SDK Basics** — `generateText` muss sitzen, das ist Deine Task-Funktion in Evals
 - **Level 5: Context Engineering** — System Prompts und Prompt Templates, die Du mit Evals iterativ verbessern wirst
-- **OpenAI API Key** — Dieses Level nutzt OpenAI-Modelle (`gpt-4o`, `gpt-4o-mini`) als Judge und Task-Modell. **Warum der Provider-Wechsel?** Evalite und die Autoevals-Bibliothek (LLM-as-Judge Scorer) verwenden standardmaessig OpenAI — das ist eine Abhaengigkeit dieser Tools, nicht eine generelle Empfehlung. Du koenntest auch Anthropic-Modelle als Task-Modell nutzen, aber die Judge-Scorer erwarten OpenAI. Erstelle einen Key unter [platform.openai.com/api-keys](https://platform.openai.com/api-keys) und lege ihn in einer `.env`-Datei ab:
+- **OpenAI API Key** — Dieses Level nutzt OpenAI-Modelle (`gpt-4o`, `gpt-4o-mini`) als Judge und Task-Modell. **Warum der Provider-Wechsel?** Evalite und die Autoevals-Bibliothek (LLM-as-Judge Scorer) verwenden standardmaessig OpenAI — das ist eine AbhÃ¤ngigkeit dieser Tools, nicht eine generelle Empfehlung. Du koenntest auch Anthropic-Modelle als Task-Modell nutzen, aber die Judge-Scorer erwarten OpenAI. Erstelle einen Key unter [platform.openai.com/api-keys](https://platform.openai.com/api-keys) und lege ihn in einer `.env`-Datei ab:
   ```bash
   OPENAI_API_KEY=sk-...
   ```
 - **pnpm** — Evalite nutzt `pnpm` als Paketmanager. Falls Du bisher mit `npm` gearbeitet hast: `npm install -g pnpm`. Alternativ funktioniert `npm install -D` statt `pnpm add -D` genauso.
-- Du arbeitest weiterhin in Deinem Projektverzeichnis aus Level 1 oder erstellst ein neues Verzeichnis fuer dieses Level.
+- Du arbeitest weiterhin in Deinem Projektverzeichnis aus Level 1 oder erstellst ein neues Verzeichnis fÃ¼r dieses Level.
 
-:::note[Kosten fuer LLM-basierte Evals]
-Beachte: LLM-basierte Evals (wie LLM-as-Judge) verursachen zusaetzliche API-Calls und damit Kosten. Pro Eval-Durchlauf wird mindestens ein weiterer API-Call pro Testfall gemacht — einmal fuer die Task und einmal fuer den Judge. Plane das in Dein Budget ein, besonders bei groesseren Datasets.
+:::note[Kosten fÃ¼r LLM-basierte Evals]
+Beachte: LLM-basierte Evals (wie LLM-as-Judge) verursachen zusaetzliche API-Calls und damit Kosten. Pro Eval-Durchlauf wird mindestens ein weiterer API-Call pro Testfall gemacht — einmal fÃ¼r die Task und einmal fÃ¼r den Judge. Plane das in Dein Budget ein, besonders bei grÃ¶Ãeren Datasets.
 :::
 
 > **Skip-Hinweis:** Du arbeitest bereits mit Evalite oder einem anderen Eval-Framework und kennst den Unterschied zwischen deterministischen und LLM-as-Judge Scorern? Spring direkt zur [Boss Fight](../07-boss-fight/) und baue eine komplette Eval-Pipeline.
@@ -68,9 +68,9 @@ Beachte: LLM-basierte Evals (wie LLM-as-Judge) verursachen zusaetzliche API-Call
 
 ## Boss Fight
 
-Baue eine **Eval-Pipeline fuer Chat Titles**: Ein komplettes Evaluierungssystem fuer einen Chat-Titel-Generator. Du erstellst ein Dataset mit diversen Chat-Verlaeufen, kombinierst deterministische Scorer (Titellaenge) mit LLM-as-Judge (Relevanz) und trackst alles mit `traceAISDKModel`. Alle fuenf Bausteine in einer Pipeline.
+Baue eine **Eval-Pipeline fÃ¼r Chat Titles**: Ein komplettes Evaluierungssystem fÃ¼r einen Chat-Titel-Generator. Du erstellst ein Dataset mit diversen Chat-Verlaeufen, kombinierst deterministische Scorer (Titellaenge) mit LLM-as-Judge (Relevanz) und trackst alles mit `traceAISDKModel`. Alle fuenf Bausteine in einer Pipeline.
 
-## Quellen fuer dieses Level
+## Quellen fÃ¼r dieses Level
 
 - [github.com/mattpocock/evalite](https://github.com/mattpocock/evalite) — Evalite Repo + Docs
 - [npmjs.com/package/evalite](https://www.npmjs.com/package/evalite)

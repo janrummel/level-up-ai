@@ -10,7 +10,7 @@ sidebar:
 
 ## Das Szenario
 
-Du baust ein **Production-Ready AI-System** — das ultimative Projekt, das alles vereint was Du in 9 Levels gelernt hast. Das System nimmt ein Thema entgegen, recherchiert autonom, waehlt fuer jeden Schritt das optimale Modell, schuetzt sich mit Guardrails, und liefert einen qualitaetsgesicherten Report.
+Du baust ein **Production-Ready AI-System** — das ultimative Projekt, das alles vereint was Du in 9 Levels gelernt hast. Das System nimmt ein Thema entgegen, recherchiert autonom, waehlt fÃ¼r jeden Schritt das optimale Modell, schuetzt sich mit Guardrails, und liefert einen qualitaetsgesicherten Report.
 
 Dein System soll sich so anfuehlen:
 
@@ -47,11 +47,11 @@ import { Image } from 'astro:assets';
 
 ## Anforderungen
 
-### Pflicht — das muss Dein System koennen
+### Pflicht — das muss Dein System kÃ¶nnen
 
 1. **Input Guardrails** (Challenge 9.1) — Pruefe jeden User-Input auf Prompt Injection und PII bevor die Pipeline startet. Ungueltige Eingaben werden mit einer klaren Fehlermeldung abgelehnt.
 
-2. **Model Router** (Challenge 9.2) — Nutze fuer jede Phase der Pipeline das optimale Modell. Research: guenstiges Flash-Modell. Analyse und Formatierung: starkes Sonnet/Opus-Modell. Klassifikation: kleinstes verfuegbares Modell.
+2. **Model Router** (Challenge 9.2) — Nutze fÃ¼r jede Phase der Pipeline das optimale Modell. Research: guenstiges Flash-Modell. Analyse und Formatierung: starkes Sonnet/Opus-Modell. Klassifikation: kleinstes verfuegbares Modell.
 
 3. **Research Loop** (Level 3 + Level 8) — Ein Custom Agent Loop mit mindestens einem Tool (search). Der Loop hat drei Break Conditions: Max Iterations (5), Timeout (30s), Cost Guard (5.000 Tokens). Der Agent entscheidet selbst, wann genug recherchiert ist.
 
@@ -63,13 +63,13 @@ import { Image } from 'astro:assets';
 
 7. **Structured Output** (Level 1.5) — Der Report wird als typisiertes Objekt mit Zod Schema zurueckgegeben (Titel, Zusammenfassung, Kernaussagen, Fazit).
 
-### Bonus — fuer den Extra-Kick
+### Bonus — fÃ¼r den Extra-Kick
 
-8. **Comparing Outputs** (Challenge 9.3) — Fuer den finalen Report: Generiere die Zusammenfassung mit 2 verschiedenen Modellen parallel und waehle das bessere Ergebnis (per einfachem Scorer oder LLM-as-a-Judge).
+8. **Comparing Outputs** (Challenge 9.3) — FÃ¼r den finalen Report: Generiere die Zusammenfassung mit 2 verschiedenen Modellen parallel und waehle das bessere Ergebnis (per einfachem Scorer oder LLM-as-a-Judge).
 
-9. **Streaming** (Level 7 + 8.2) — Streame den finalen Report in Echtzeit. Sende Progress Data Parts fuer jede Phase der Pipeline. (Nutze `createDataStream` + `writeData` wie in Challenge 8.2.)
+9. **Streaming** (Level 7 + 8.2) — Streame den finalen Report in Echtzeit. Sende Progress Data Parts fÃ¼r jede Phase der Pipeline. (Nutze `createDataStream` + `writeData` wie in Challenge 8.2.)
 
-10. **Eval Coverage** (Level 6) — Schreibe mindestens 2 Evalite-Tests: einen der prueft ob der Report die erwarteten Abschnitte hat, und einen der die Laenge der Zusammenfassung bewertet.
+10. **Eval Coverage** (Level 6) — Schreibe mindestens 2 Evalite-Tests: einen der prÃ¼ft ob der Report die erwarteten Abschnitte hat, und einen der die Laenge der Zusammenfassung bewertet.
 
 ## Starter-Code
 
@@ -113,28 +113,28 @@ const ReportSchema = z.object({
 
 ### Pflicht — Dein Boss Fight ist bestanden, wenn:
 
-- [ ] Input-Guardrails pruefen auf Prompt Injection und PII
-- [ ] Model Router waehlt unterschiedliche Modelle fuer Research vs. Analysis
+- [ ] Input-Guardrails prÃ¼fen auf Prompt Injection und PII
+- [ ] Model Router waehlt unterschiedliche Modelle fÃ¼r Research vs. Analysis
 - [ ] Research Loop nutzt einen Custom while-Loop mit mindestens einem Tool
 - [ ] Mindestens 2 Break Conditions sind implementiert (Max Iterations + ein weiterer)
 - [ ] Workflow verkettet mindestens 2 sequentielle `generateText`-Calls
 - [ ] System Prompts nutzen XML-Struktur (Context Engineering)
-- [ ] Output-Guardrails pruefen den finalen Report
+- [ ] Output-Guardrails prÃ¼fen den finalen Report
 - [ ] Token-Verbrauch wird pro Phase und gesamt getrackt
 - [ ] Structured Output mit Zod Schema
 
-### Bonus — fuer die Kuer:
+### Bonus — fÃ¼r die Kuer:
 
 - [ ] Comparing Outputs generiert mit mindestens 2 Modellen parallel und waehlt das bessere Ergebnis
-- [ ] Streaming mit Progress Data Parts fuer jede Pipeline-Phase
-- [ ] Mindestens ein Evalite-Test prueft die Pipeline-Qualitaet
+- [ ] Streaming mit Progress Data Parts fÃ¼r jede Pipeline-Phase
+- [ ] Mindestens ein Evalite-Test prÃ¼ft die Pipeline-QualitÃ¤t
 
 ## Hinweise
 
 <details>
 <summary>Hinweis 1: Pipeline-Struktur</summary>
 
-Baue die Pipeline als eine `async function researchPipeline(topic: string)` die alle drei Phasen nacheinander ausfuehrt. Jede Phase ist eine eigene Funktion die ein Ergebnis-Objekt zurueckgibt. Am Ende: Statistiken sammeln und den Report zurueckgeben.
+Baue die Pipeline als eine `async function researchPipeline(topic: string)` die alle drei Phasen nacheinander ausfÃ¼hrt. Jede Phase ist eine eigene Funktion die ein Ergebnis-Objekt zurueckgibt. Am Ende: Statistiken sammeln und den Report zurueckgeben.
 
 </details>
 
@@ -155,7 +155,7 @@ Der Vergleich muss nicht die gesamte Pipeline doppelt laufen lassen. Es reicht, 
 <details>
 <summary>Hinweis 4: Evals separat halten</summary>
 
-Schreibe die Evals in eine separate Datei. Importiere die Pipeline-Funktion und teste sie mit Evalite. Ein Scorer prueft ob `keyFindings.length >= 3`, ein anderer ob `summary.length > 100`. So bleiben Pipeline und Tests sauber getrennt.
+Schreibe die Evals in eine separate Datei. Importiere die Pipeline-Funktion und teste sie mit Evalite. Ein Scorer prÃ¼ft ob `keyFindings.length >= 3`, ein anderer ob `summary.length > 100`. So bleiben Pipeline und Tests sauber getrennt.
 
 </details>
 

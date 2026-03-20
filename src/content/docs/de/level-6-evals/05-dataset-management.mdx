@@ -1,6 +1,6 @@
 ---
 title: "Challenge 6.4: Dataset Management"
-description: "Baue repraesentative, diverse Test-Datensaetze und lerne, wie Du die Qualitaet Deiner Eval-Daten systematisch pruefst."
+description: "Baue repraesentative, diverse Test-Datensaetze und lerne, wie Du die QualitÃ¤t Deiner Eval-Daten systematisch pruefst."
 sidebar:
   order: 5
 ---
@@ -14,15 +14,15 @@ Wie viele Test-Cases brauchst Du — und woher weisst Du, ob sie gut genug sind?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Dataset-Management-Zyklus: Seed Data sammeln, Evaluate ausfuehren, Critique (Daten bewerten), Improve (Daten ergaenzen) fuehrt zurueck zu Evaluate — ein iterativer Kreislauf zur Verbesserung der Test-Daten" />
+<Image src={overviewDiagram} alt="Dataset-Management-Zyklus: Seed Data sammeln, Evaluate ausfÃ¼hren, Critique (Daten bewerten), Improve (Daten ergaenzen) fuehrt zurÃ¼ck zu Evaluate — ein iterativer Kreislauf zur Verbesserung der Test-Daten" />
 
-Dataset Management ist ein Zyklus: Du sammelst Seed-Daten, fuehrst Evals aus, bewertest die Qualitaet Deiner Test-Daten, ergaenzt fehlende Faelle und evaluierst erneut. Die Daten werden mit jedem Durchlauf besser.
+Dataset Management ist ein Zyklus: Du sammelst Seed-Daten, fuehrst Evals aus, bewertest die QualitÃ¤t Deiner Test-Daten, ergaenzt fehlende Faelle und evaluierst erneut. Die Daten werden mit jedem Durchlauf besser.
 
 ## WHY
 
 **Ohne gute Datasets:** Deine Evals messen das Falsche. 5 Test-Cases, die alle aus der gleichen Kategorie stammen, geben Dir false confidence. Der Score sagt 0.95 — aber bei einem Edge Case halluziniert das LLM. Du merkst es nicht, weil der Edge Case nicht im Dataset ist.
 
-**Mit guten Datasets:** 20-50 diverse Test-Cases decken Normalfaelle, Edge Cases und Grenzfaelle ab. Wenn der Score 0.85 sagt, weisst Du, dass er repraesentativ ist. Du erkennst Schwaechen frueh und kannst gezielt verbessern.
+**Mit guten Datasets:** 20-50 diverse Test-Cases decken Normalfaelle, Edge Cases und Grenzfaelle ab. Wenn der Score 0.85 sagt, weisst Du, dass er repraesentativ ist. Du erkennst SchwÃ¤chen frueh und kannst gezielt verbessern.
 
 ## WALKTHROUGH
 
@@ -42,7 +42,7 @@ evalite('Chat Titles', {
         expected: 'TypeScript Generics',
       },
       {
-        input: 'Wie konfiguriere ich ESLint fuer ein React-Projekt?',
+        input: 'Wie konfiguriere ich ESLint fÃ¼r ein React-Projekt?',
         expected: 'ESLint React Setup',
       },
     ];
@@ -60,7 +60,7 @@ Wie viele Test-Cases brauchst Du? Die Faustregel:
 
 | Phase | Anzahl | Zweck |
 |-------|--------|-------|
-| **Prototyp** | 5-10 | Schnelles Feedback, grundlegende Funktion pruefen |
+| **Prototyp** | 5-10 | Schnelles Feedback, grundlegende Funktion prÃ¼fen |
 | **Entwicklung** | 20-50 | Repraesentative Abdeckung, Edge Cases einbeziehen |
 | **Production** | 50-200+ | Statistisch aussagekraeftig, alle Kategorien abgedeckt |
 
@@ -84,7 +84,7 @@ data: async () => [
   { input: 'Kannst du das nochmal machen?', expected: 'Wiederholung' },
 
   // Sonderzeichen und Formatierung
-  { input: 'Was ist O(n log n)?', expected: 'Algorithmus-Komplexitaet' },
+  { input: 'Was ist O(n log n)?', expected: 'Algorithmus-KomplexitÃ¤t' },
   { input: 'Unterschied: map() vs forEach()?', expected: 'Array-Methoden Vergleich' },
 
   // Leere oder triviale Inputs
@@ -95,10 +95,10 @@ data: async () => [
 
 ### Schicht 3: Kategorien systematisch abdecken
 
-Definiere Kategorien fuer Dein Dataset und stelle sicher, dass jede abgedeckt ist:
+Definiere Kategorien fÃ¼r Dein Dataset und stelle sicher, dass jede abgedeckt ist:
 
 ```typescript
-// Dataset-Kategorien fuer einen Chat-Title-Generator
+// Dataset-Kategorien fÃ¼r einen Chat-Title-Generator
 const categories = {
   technical: [
     { input: 'Wie funktioniert Git Rebase?', expected: 'Git Rebase' },
@@ -133,7 +133,7 @@ evalite('Chat Titles', {
 
 ### Schicht 4: Dataset Critiquing
 
-Eine fortgeschrittene Technik: Lass ein LLM die Qualitaet Deiner Test-Daten bewerten. "Sind meine Test-Cases repraesentativ genug? Welche Faelle fehlen?"
+Eine fortgeschrittene Technik: Lass ein LLM die QualitÃ¤t Deiner Test-Daten bewerten. "Sind meine Test-Cases repraesentativ genug? Welche Faelle fehlen?"
 
 ```typescript
 import { generateObject } from 'ai';
@@ -174,11 +174,11 @@ Suggest specific test cases that should be added.`,
 }
 ```
 
-Das Ergebnis sagt Dir, welche Kategorien fehlen und schlaegt konkrete Test-Cases vor. Du pruefst die Vorschlaege, uebernimmst die sinnvollen und fuehrst die Evals erneut aus.
+Das Ergebnis sagt Dir, welche Kategorien fehlen und schlÃ¤gt konkrete Test-Cases vor. Du pruefst die Vorschlaege, uebernimmst die sinnvollen und fuehrst die Evals erneut aus.
 
 ### Schicht 5: Dataset versionieren
 
-Dein Dataset aendert sich ueber die Zeit. Versioniere es wie Code:
+Dein Dataset Ã¤ndert sich Ã¼ber die Zeit. Versioniere es wie Code:
 
 ```typescript
 // datasets/chat-titles-v1.ts
@@ -208,11 +208,11 @@ evalite('Chat Titles', {
 });
 ```
 
-So kannst Du spaeter vergleichen: Hat sich der Score mit Dataset v2 veraendert?
+So kannst Du spÃ¤ter vergleichen: Hat sich der Score mit Dataset v2 verÃ¤ndert?
 
 ## TRY
 
-**Aufgabe:** Erstelle ein Dataset fuer einen Chat-Title-Generator mit mindestens 15 Test-Cases aus verschiedenen Kategorien.
+**Aufgabe:** Erstelle ein Dataset fÃ¼r einen Chat-Title-Generator mit mindestens 15 Test-Cases aus verschiedenen Kategorien.
 
 Erstelle die Datei `dataset.eval.ts` und fuehre sie mit `pnpm eval:dev` aus.
 
@@ -247,7 +247,7 @@ import { Levenshtein } from 'autoevals';
 - [ ] Keine doppelten oder fast identischen Test-Cases
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 // chat-title-dataset.eval.ts
@@ -266,7 +266,7 @@ const chatTitleDataset = [
   // Conversational (3)
   { input: 'Hey, kannst du mir helfen?', expected: 'Hilfe-Anfrage' },
   { input: 'Danke, das hat super funktioniert!', expected: 'Positives Feedback' },
-  { input: 'Ich verstehe das nicht, kannst du es nochmal erklaeren?', expected: 'Erklaerung wiederholen' },
+  { input: 'Ich verstehe das nicht, kannst du es nochmal erklÃ¤ren?', expected: 'ErklÃ¤rung wiederholen' },
 
   // Edge Cases (4)
   { input: '', expected: 'Leere Nachricht' },
@@ -296,7 +296,7 @@ evalite('Chat Titles', {
 });
 ```
 
-**Erklaerung:** Die Levenshtein-Scores werden niedrig sein, weil die simulierte `task` nur die ersten 5 Woerter nimmt — nicht den idealen Titel. Das ist der Punkt: Mit dem Dataset siehst Du, WO die Task versagt, und kannst iterativ verbessern. Fehlende Kategorien koennten sein: Code-Snippets als Input, URLs, Fragen in Nicht-Lateinischen Schriften.
+**ErklÃ¤rung:** Die Levenshtein-Scores werden niedrig sein, weil die simulierte `task` nur die ersten 5 Woerter nimmt — nicht den idealen Titel. Das ist der Punkt: Mit dem Dataset siehst Du, WO die Task versagt, und kannst iterativ verbessern. Fehlende Kategorien koennten sein: Code-Snippets als Input, URLs, Fragen in Nicht-Lateinischen Schriften.
 
 </details>
 

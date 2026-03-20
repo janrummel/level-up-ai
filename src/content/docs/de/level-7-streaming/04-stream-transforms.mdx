@@ -1,6 +1,6 @@
 ---
 title: "Challenge 7.3: Stream Transforms"
-description: "Glaette stotternde LLM-Streams mit smoothStream und baue eigene TransformStreams fuer Custom-Verarbeitung."
+description: "Glaette stotternde LLM-Streams mit smoothStream und baue eigene TransformStreams fÃ¼r Custom-Verarbeitung."
 sidebar:
   order: 4
 ---
@@ -87,8 +87,8 @@ const upperCase = () =>                               // ← Factory-Funktion
 ```
 
 Die Struktur ist immer gleich:
-1. **Aeussere Funktion:** Gibt die Factory zurueck (Konfigurationsebene)
-2. **Innere Funktion:** Bekommt Options (Tools etc.), gibt `TransformStream` zurueck
+1. **Aeussere Funktion:** Gibt die Factory zurÃ¼ck (Konfigurationsebene)
+2. **Innere Funktion:** Bekommt Options (Tools etc.), gibt `TransformStream` zurÃ¼ck
 3. **transform-Methode:** Verarbeitet jeden einzelnen Chunk
 
 ### Schicht 3: Transforms verketten
@@ -152,7 +152,7 @@ const result = streamText({
 });
 ```
 
-**Achtung:** Stream Transforms arbeiten chunk-weise. Eine E-Mail-Adresse koennte ueber zwei Chunks verteilt sein ("user@" + "example.com"). Fuer robuste Filterung brauchst Du einen Buffer im Transform — das ist eine fortgeschrittene Technik.
+**Achtung:** Stream Transforms arbeiten chunk-weise. Eine E-Mail-Adresse kÃ¶nnte Ã¼ber zwei Chunks verteilt sein ("user@" + "example.com"). FÃ¼r robuste Filterung brauchst Du einen Buffer im Transform — das ist eine fortgeschrittene Technik.
 
 ## TRY
 
@@ -195,7 +195,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 Fuehre aus: `npx tsx stream-transforms.ts`
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { smoothStream, streamText } from 'ai';
@@ -231,9 +231,9 @@ for await (const chunk of result.textStream) {
 console.log(); // Zeilenumbruch am Ende
 ```
 
-**Erklaerung:** `smoothStream()` sammelt die einzelnen Buchstaben vom LLM und gibt sie in Wortgruppen weiter. Dann transformiert `upperCase()` jeden Text-Chunk in Grossbuchstaben. Nicht-Text-Chunks (wie `finish` oder `tool-call`) werden unveraendert durchgereicht. Die Reihenfolge im Array bestimmt die Pipeline-Reihenfolge.
+**ErklÃ¤rung:** `smoothStream()` sammelt die einzelnen Buchstaben vom LLM und gibt sie in Wortgruppen weiter. Dann transformiert `upperCase()` jeden Text-Chunk in Grossbuchstaben. Nicht-Text-Chunks (wie `finish` oder `tool-call`) werden unveraendert durchgereicht. Die Reihenfolge im Array bestimmt die Pipeline-Reihenfolge.
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 
 ```
 STREAM TRANSFORMS SIND EIN MECHANISMUS, DER CHUNKS ZWISCHEN DEM LLM
@@ -251,7 +251,7 @@ ZU FILTERN ODER ZU TRANSFORMIEREN, BEVOR ER BEIM USER ANKOMMT.
 
 **Uebung:** Kombiniere Stream Transforms mit Custom Data Parts aus Challenge 7.1. Baue einen Stream, der:
 
-1. `smoothStream()` fuer fluessige Ausgabe nutzt
+1. `smoothStream()` fÃ¼r fluessige Ausgabe nutzt
 2. Einen Custom Transform hat, der bestimmte Woerter (z.B. "TODO", "FIXME") aus dem Text filtert und durch "[REDACTED]" ersetzt
 3. Per `createDataStream` einen Data Part sendet, der zaehlt, wie viele Woerter gefiltert wurden
 

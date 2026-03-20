@@ -32,12 +32,12 @@ Assistant: 1. Statische Typen fangen Fehler frueh ab...
 
 --- Simulierter Reload ---
 
-[Loaded] 4 messages fuer Chat a1b2c3d4...
+[Loaded] 4 messages fÃ¼r Chat a1b2c3d4...
 
 [Request 3] User: Welchen Vorteil findest Du am wichtigsten?
 [Validation] OK
 [Saved] 6 messages
-Assistant: Basierend auf unserer Diskussion ueber TypeScript...
+Assistant: Basierend auf unserer Diskussion Ã¼ber TypeScript...
 
 --- Ungueltige Nachricht ---
 
@@ -51,7 +51,7 @@ Dieses Projekt kombiniert alle vier Bausteine aus Level 4:
 
 ## Anforderungen
 
-1. **Chat ID generieren** (Challenge 4.2) — Beim Start wird eine UUID generiert. Alle Messages gehoeren zu dieser ID.
+1. **Chat ID generieren** (Challenge 4.2) — Beim Start wird eine UUID generiert. Alle Messages gehÃ¶ren zu dieser ID.
 2. **Message Validation** (Challenge 4.4) — Jeder Request wird vor der Verarbeitung gegen ein Zod Schema validiert. Ungueltige Messages werden abgelehnt und nicht gespeichert.
 3. **onFinish Callback** (Challenge 4.1) — Im `onFinish` werden die neuen Messages (User + Assistant) automatisch gespeichert und der Token-Verbrauch geloggt.
 4. **Persistence** (Challenge 4.3) — Messages werden in einer In-Memory "DB" (Map) gespeichert. Nach einem simulierten Reload wird der Verlauf geladen und der Chat fortgesetzt.
@@ -73,17 +73,17 @@ import { z } from 'zod';
 // TODO: Map als In-Memory DB
 
 // --- Schemas ---
-// TODO: Zod Schema fuer Messages und Chat-Requests
+// TODO: Zod Schema fÃ¼r Messages und Chat-Requests
 
 // --- DB-Funktionen ---
 // TODO: saveMessages(chatId, messages)
 // TODO: loadMessages(chatId)
 
 // --- Validation ---
-// TODO: validate(body) — gibt { success, data?, error? } zurueck
+// TODO: validate(body) — gibt { success, data?, error? } zurÃ¼ck
 
 // --- Chat-Funktion ---
-// TODO: chat(chatId, userMessage) — der vollstaendige Cycle:
+// TODO: chat(chatId, userMessage) — der vollstÃ¤ndige Cycle:
 //   1. Validate
 //   2. Load history
 //   3. generateText mit onFinish (Save + Token-Log)
@@ -115,7 +115,7 @@ import { z } from 'zod';
 
 Dein Boss Fight ist bestanden, wenn:
 
-- [ ] Eine Chat ID wird beim Start generiert und fuer alle Requests verwendet
+- [ ] Eine Chat ID wird beim Start generiert und fÃ¼r alle Requests verwendet
 - [ ] Jeder Request wird vor der Verarbeitung gegen ein Zod Schema validiert
 - [ ] Ungueltige Messages werden abgelehnt und nicht in der DB gespeichert
 - [ ] `onFinish` speichert Messages automatisch nach jeder Completion
@@ -129,21 +129,21 @@ Dein Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: Den Reload simulieren</summary>
 
-Du brauchst keinen echten Server-Neustart. Erstelle einfach eine neue Variable fuer den Verlauf (`let currentHistory = []`) und setze sie auf leer. Dann lade den Verlauf mit `loadMessages(chatId)` neu aus der Map. Das simuliert, was bei einem echten Reload passiert: Der Arbeitsspeicher ist leer, aber die DB hat die Daten.
+Du brauchst keinen echten Server-Neustart. Erstelle einfach eine neue Variable fÃ¼r den Verlauf (`let currentHistory = []`) und setze sie auf leer. Dann lade den Verlauf mit `loadMessages(chatId)` neu aus der Map. Das simuliert, was bei einem echten Reload passiert: Der Arbeitsspeicher ist leer, aber die DB hat die Daten.
 
 </details>
 
 <details>
 <summary>Hinweis 2: Validation und Chat-Funktion trennen</summary>
 
-Baue die Validation als separate Funktion, nicht direkt in der Chat-Logik. Deine `chat(chatId, userMessage)`-Funktion sollte zuerst `validate()` aufrufen. Wenn die Validation fehlschlaegt, gibt die Funktion frueh zurueck — ohne DB-Zugriff und ohne LLM-Call. So ist klar: Nur validierte Messages erreichen `generateText`.
+Baue die Validation als separate Funktion, nicht direkt in der Chat-Logik. Deine `chat(chatId, userMessage)`-Funktion sollte zuerst `validate()` aufrufen. Wenn die Validation fehlschlaegt, gibt die Funktion frueh zurÃ¼ck — ohne DB-Zugriff und ohne LLM-Call. So ist klar: Nur validierte Messages erreichen `generateText`.
 
 </details>
 
 <details>
 <summary>Hinweis 3: Messages-Array richtig aufbauen</summary>
 
-Beim Fortsetzen nach dem Reload muss das Messages-Array alle bisherigen Messages enthalten — nicht nur die neue. Lade den Verlauf mit `loadMessages(chatId)`, haenge die neue User-Message an, und uebergib das gesamte Array an `generateText`. Im `onFinish` speicherst Du dann das komplette Array (inklusive der neuen Assistant-Antwort) zurueck in die DB.
+Beim Fortsetzen nach dem Reload muss das Messages-Array alle bisherigen Messages enthalten — nicht nur die neue. Lade den Verlauf mit `loadMessages(chatId)`, haenge die neue User-Message an, und uebergib das gesamte Array an `generateText`. Im `onFinish` speicherst Du dann das komplette Array (inklusive der neuen Assistant-Antwort) zurÃ¼ck in die DB.
 
 </details>
 

@@ -1,6 +1,6 @@
 ---
 title: "Challenge 3.5: Tool Approval"
-description: "Human-in-the-Loop fuer kritische Operationen — mit needsApproval, dynamischer Approval-Logik und sicheren Agents."
+description: "Human-in-the-Loop fÃ¼r kritische Operationen — mit needsApproval, dynamischer Approval-Logik und sicheren Agents."
 sidebar:
   order: 6
 ---
@@ -11,19 +11,19 @@ import combineDiagram from '../../../../assets/diagrams/l3-c5-combine.svg';
 
 ## THINK
 
-Wuerdest Du einem Agenten erlauben, ohne Rueckfrage Dateien zu loeschen, E-Mails zu versenden oder Daten in einer Datenbank zu aendern?
+Wuerdest Du einem Agenten erlauben, ohne Rueckfrage Dateien zu loeschen, E-Mails zu versenden oder Daten in einer Datenbank zu Ã¤ndern?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="LLM will Tool ausfuehren, Approval Guard fragt User, bei Genehmigung wird Tool ausgefuehrt, bei Ablehnung abgelehnt" />
+<Image src={overviewDiagram} alt="LLM will Tool ausfÃ¼hren, Approval Guard fragt User, bei Genehmigung wird Tool ausgefuehrt, bei Ablehnung abgelehnt" />
 
-Zwischen Tool Call und Tool Execution sitzt ein **Approval Guard**. Wenn ein Tool als kritisch markiert ist, fragt der Guard den User um Erlaubnis, bevor das Tool ausgefuehrt wird. Das ist Human-in-the-Loop — der Mensch behaelt die Kontrolle ueber gefaehrliche Aktionen.
+Zwischen Tool Call und Tool Execution sitzt ein **Approval Guard**. Wenn ein Tool als kritisch markiert ist, fragt der Guard den User um Erlaubnis, bevor das Tool ausgefuehrt wird. Das ist Human-in-the-Loop — der Mensch behaelt die Kontrolle Ã¼ber gefaehrliche Aktionen.
 
 ## WHY
 
 **Ohne Approval:** Der Agent fuehrt alles aus, was das LLM entscheidet. Dateien loeschen, E-Mails versenden, Daten ueberschreiben — ohne Rueckfrage. Ein Fehler im Prompt oder eine Halluzination kann irreversiblen Schaden anrichten.
 
-**Mit Approval:** Kritische Operationen werden erst nach menschlicher Freigabe ausgefuehrt. Du definierst, welche Tools sicher sind (automatisch ausfuehren) und welche gefaehrlich sind (erst fragen). Der Agent bleibt nuetzlich, aber kontrollierbar.
+**Mit Approval:** Kritische Operationen werden erst nach menschlicher Freigabe ausgefuehrt. Du definierst, welche Tools sicher sind (automatisch ausfÃ¼hren) und welche gefaehrlich sind (erst fragen). Der Agent bleibt nuetzlich, aber kontrollierbar.
 
 ## WALKTHROUGH
 
@@ -61,7 +61,7 @@ const deleteFileTool = tool({
     path: z.string().describe('The file path to delete'),
   }),
   needsApproval: async ({ path }) => {                   // ← Async Funktion
-    // Nur Freigabe noetig fuer kritische Verzeichnisse
+    // Nur Freigabe noetig fÃ¼r kritische Verzeichnisse
     return path.startsWith('/important/') || path.startsWith('/config/');
   },
   execute: async ({ path }) => {
@@ -70,7 +70,7 @@ const deleteFileTool = tool({
 });
 ```
 
-Die `needsApproval`-Funktion bekommt die gleichen Parameter wie `execute`. Sie gibt `true` zurueck, wenn eine Freigabe noetig ist, und `false`, wenn das Tool direkt ausgefuehrt werden darf.
+Die `needsApproval`-Funktion bekommt die gleichen Parameter wie `execute`. Sie gibt `true` zurÃ¼ck, wenn eine Freigabe noetig ist, und `false`, wenn das Tool direkt ausgefuehrt werden darf.
 
 ### Schicht 3: Approval Flow mit generateText — das 2-Call Pattern
 
@@ -133,7 +133,7 @@ let result = await generateText({
   messages,
 });
 
-// Antwort-Messages in den Verlauf uebernehmen
+// Antwort-Messages in den Verlauf Ã¼bernehmen
 messages.push(...result.response.messages);
 
 // Pruefen ob Approval Requests vorhanden sind
@@ -143,7 +143,7 @@ while (result.content.some(part => part.type === 'tool-approval-request')) {
   for (const part of result.content) {
     if (part.type === 'tool-approval-request') {
       const approved = await askUser(
-        `Agent will ${part.toolCall.toolName}(${JSON.stringify(part.toolCall.input)}) ausfuehren. Erlauben? (y/n): `
+        `Agent will ${part.toolCall.toolName}(${JSON.stringify(part.toolCall.input)}) ausfÃ¼hren. Erlauben? (y/n): `
       );
       approvals.push({
         type: 'tool-approval-response',
@@ -173,8 +173,8 @@ console.log(result.text);
 
 So funktioniert das Pattern:
 
-1. **Erster Aufruf:** `generateText` erkennt, dass `deleteFile` eine Freigabe braucht. Statt das Tool auszufuehren, kommt ein `tool-approval-request` in `result.content` zurueck.
-2. **Approval Request pruefen:** Jeder Request hat eine `approvalId` und den `toolCall` (mit `toolName` und `input`).
+1. **Erster Aufruf:** `generateText` erkennt, dass `deleteFile` eine Freigabe braucht. Statt das Tool auszufuehren, kommt ein `tool-approval-request` in `result.content` zurÃ¼ck.
+2. **Approval Request prÃ¼fen:** Jeder Request hat eine `approvalId` und den `toolCall` (mit `toolName` und `input`).
 3. **User fragen:** Du fragst den User und baust ein `ToolApprovalResponse`-Objekt mit der gleichen `approvalId`.
 4. **Zweiter Aufruf:** Du haengst die Approvals als `{ role: 'tool', content: approvals }` an die Messages und rufst `generateText` erneut auf.
 5. **Loop:** Bei Genehmigung wird das Tool ausgefuehrt. Bei Ablehnung reagiert das LLM darauf. Die `while`-Schleife faengt auch Faelle ab, in denen der Agent nach der ersten Runde weitere Approval-pflichtige Tools aufrufen will.
@@ -187,14 +187,14 @@ Ein bewaehrtes Pattern: Trenne Tools in sichere und gefaehrliche Kategorien:
 import { tool } from 'ai';
 import { z } from 'zod';
 
-// Sichere Tools — automatisch ausfuehren
+// Sichere Tools — automatisch ausfÃ¼hren
 const searchTool = tool({
   description: 'Search for information (read-only)',
   inputSchema: z.object({
     query: z.string().describe('Search query'),
   }),
   execute: async ({ query }) => ({
-    results: [`Ergebnis fuer "${query}"`],
+    results: [`Ergebnis fÃ¼r "${query}"`],
   }),
 });
 
@@ -262,17 +262,17 @@ import * as readline from 'readline';
 // TODO 1: Definiere readFileTool (kein Approval noetig)
 // - description: Datei lesen
 // - inputSchema: path (string)
-// - execute: Gibt simulierten Inhalt zurueck
+// - execute: Gibt simulierten Inhalt zurÃ¼ck
 
 // TODO 2: Definiere deleteFileTool (mit needsApproval: true)
 // - description: Datei loeschen
 // - inputSchema: path (string)
 // - needsApproval: true
-// - execute: Gibt Loesch-Bestaetigung zurueck
+// - execute: Gibt Loesch-Bestaetigung zurÃ¼ck
 
 // TODO 3: Erstelle eine askUser() Hilfsfunktion
 // - Fragt im Terminal nach Freigabe
-// - Gibt true/false zurueck
+// - Gibt true/false zurÃ¼ck
 
 // TODO 4: Erstelle messages Array (ModelMessage[]) mit dem User-Prompt
 // - 'Lies /tmp/notes.txt und loesche die Datei danach.'
@@ -280,8 +280,8 @@ import * as readline from 'readline';
 // TODO 5: Erster generateText-Aufruf mit tools, stopWhen, messages
 // - messages.push(...result.response.messages)
 
-// TODO 6: While-Loop: result.content auf 'tool-approval-request' pruefen
-// - Fuer jeden Request: User fragen, ToolApprovalResponse bauen
+// TODO 6: While-Loop: result.content auf 'tool-approval-request' prÃ¼fen
+// - FÃ¼r jeden Request: User fragen, ToolApprovalResponse bauen
 // - Approvals als { role: 'tool', content: approvals } an messages anhaengen
 // - generateText erneut aufrufen mit aktualisierten messages
 
@@ -299,7 +299,7 @@ import * as readline from 'readline';
 - [ ] Bei "Nein": Tool wird nicht ausgefuehrt, Agent reagiert darauf
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import {
@@ -411,11 +411,11 @@ for (const call of allToolCalls) {
 console.log(`\nAntwort: ${result.text}`);
 ```
 
-**Erklaerung:** Der Agent liest zuerst `/tmp/notes.txt` (automatisch, kein Approval noetig) und versucht dann die Datei zu loeschen. Beim `deleteFile` Call greift `needsApproval: true`: Statt das Tool auszufuehren, gibt `generateText` einen `tool-approval-request` in `result.content` zurueck. Dein Code fragt den User im Terminal. Bei "y" wird eine genehmigende `ToolApprovalResponse` gebaut und als Tool-Message angehaengt. Der zweite `generateText`-Aufruf fuehrt das Tool dann aus. Bei "n" bekommt das LLM die Ablehnung und reagiert darauf — z.B. mit "Die Datei wurde nicht geloescht, da die Aktion abgelehnt wurde."
+**ErklÃ¤rung:** Der Agent liest zuerst `/tmp/notes.txt` (automatisch, kein Approval noetig) und versucht dann die Datei zu loeschen. Beim `deleteFile` Call greift `needsApproval: true`: Statt das Tool auszufuehren, gibt `generateText` einen `tool-approval-request` in `result.content` zurÃ¼ck. Dein Code fragt den User im Terminal. Bei "y" wird eine genehmigende `ToolApprovalResponse` gebaut und als Tool-Message angehaengt. Der zweite `generateText`-Aufruf fuehrt das Tool dann aus. Bei "n" bekommt das LLM die Ablehnung und reagiert darauf — z.B. mit "Die Datei wurde nicht geloescht, da die Aktion abgelehnt wurde."
 
 **Ausfuehren:** `npx tsx challenge-3-5.ts`
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 --- Approval Request ---
 Tool: deleteFile
@@ -435,14 +435,14 @@ Antwort: Die Datei /tmp/notes.txt wurde gelesen und anschliessend geloescht.
 
 ## COMBINE
 
-<Image src={combineDiagram} alt="Prompt startet Agent, LLM waehlt sichere oder gefaehrliche Tools, gefaehrliche brauchen Approval, bei Ablehnung zurueck zum LLM" />
+<Image src={combineDiagram} alt="Prompt startet Agent, LLM waehlt sichere oder gefaehrliche Tools, gefaehrliche brauchen Approval, bei Ablehnung zurÃ¼ck zum LLM" />
 
-**Uebung:** Erweitere den Research Agent aus Challenge 3.3 um einen Approval-Schritt fuer das Speichern von Ergebnissen.
+**Uebung:** Erweitere den Research Agent aus Challenge 3.3 um einen Approval-Schritt fÃ¼r das Speichern von Ergebnissen.
 
 1. Nimm den Agent aus Challenge 3.3 mit `searchTool` und `summarizeTool`
 2. Fuege ein `saveResultsTool` hinzu mit `needsApproval: true`
 3. Prompt: "Recherchiere TypeScript, fasse zusammen und speichere die Ergebnisse in /tmp/research.txt."
-4. Implementiere den 2-Call Loop: Erster `generateText`-Aufruf, dann `result.content` auf `tool-approval-request` pruefen, User fragen, `ToolApprovalResponse` bauen, zweiter Aufruf
+4. Implementiere den 2-Call Loop: Erster `generateText`-Aufruf, dann `result.content` auf `tool-approval-request` prÃ¼fen, User fragen, `ToolApprovalResponse` bauen, zweiter Aufruf
 5. Logge ob der User die Speicherung genehmigt oder abgelehnt hat
 
 **Optional Stretch Goal:** Implementiere dynamisches Approval: `needsApproval` als Funktion, die nur bei Pfaden ausserhalb von `/tmp/` eine Freigabe verlangt. Teste mit verschiedenen Pfaden.

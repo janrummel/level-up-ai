@@ -42,7 +42,7 @@ import { Image } from 'astro:assets';
 
 ## Anforderungen
 
-1. **Research Loop** (Challenge 8.3 + 8.4) — Step 1 ist ein Custom Agent Loop mit einem `search`-Tool. Das LLM entscheidet, welche Suchbegriffe es verwendet. Der Loop hat drei Break Conditions: maximal 5 Iterationen, 30 Sekunden Timeout, 5.000 Tokens Cost Limit. Der Loop gibt Partial Results zurueck, wenn ein Limit greift.
+1. **Research Loop** (Challenge 8.3 + 8.4) — Step 1 ist ein Custom Agent Loop mit einem `search`-Tool. Das LLM entscheidet, welche Suchbegriffe es verwendet. Der Loop hat drei Break Conditions: maximal 5 Iterationen, 30 Sekunden Timeout, 5.000 Tokens Cost Limit. Der Loop gibt Partial Results zurÃ¼ck, wenn ein Limit greift.
 
 2. **Workflow** (Challenge 8.1) — Step 2 nimmt die Recherche-Ergebnisse aus Step 1 und fasst sie mit `generateText` in 5 Kernaussagen zusammen. Step 3 formatiert die Zusammenfassung als Report — mit `streamText`, damit der User den Text in Echtzeit sieht.
 
@@ -75,11 +75,11 @@ const LIMITS = {
 
 // TODO: researchLoop(topic, dataStream) — Custom Loop mit Break Conditions
 
-// TODO: summarize(researchResult, dataStream) — generateText fuer Zusammenfassung
+// TODO: summarize(researchResult, dataStream) — generateText fÃ¼r Zusammenfassung
 
-// TODO: format(summary, dataStream) — streamText fuer Report + mergeIntoDataStream
+// TODO: format(summary, dataStream) — streamText fÃ¼r Report + mergeIntoDataStream
 
-// TODO: createDataStream mit execute-Funktion die alle drei Steps ausfuehrt
+// TODO: createDataStream mit execute-Funktion die alle drei Steps ausfÃ¼hrt
 
 // TODO: Stream im Terminal konsumieren (siehe Challenge 8.2, Schicht 3)
 ```
@@ -102,21 +102,21 @@ Dein Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: Research Loop Struktur</summary>
 
-Kapsle den Research Loop in eine eigene `async function researchLoop(topic: string, dataStream: DataStream)`. Die Funktion gibt `{ result: string, breakReason: string, stats: {...} }` zurueck. Innerhalb der Funktion: `while (true)` mit Pre-Checks fuer alle drei Limits, dann `generateText`, dann Ergebnis pruefen.
+Kapsle den Research Loop in eine eigene `async function researchLoop(topic: string, dataStream: DataStream)`. Die Funktion gibt `{ result: string, breakReason: string, stats: {...} }` zurÃ¼ck. Innerhalb der Funktion: `while (true)` mit Pre-Checks fÃ¼r alle drei Limits, dann `generateText`, dann Ergebnis prÃ¼fen.
 
 </details>
 
 <details>
 <summary>Hinweis 2: DataStream an Subfunktionen uebergeben</summary>
 
-Die `execute`-Funktion von `createDataStream` bekommt den `dataStream` Controller. Uebergib ihn an alle drei Step-Funktionen, damit sie `dataStream.writeData()` aufrufen koennen. Nur Step 3 nutzt `mergeIntoDataStream` — die anderen Steps nutzen `generateText` und brauchen den Text als String fuer den naechsten Step.
+Die `execute`-Funktion von `createDataStream` bekommt den `dataStream` Controller. Uebergib ihn an alle drei Step-Funktionen, damit sie `dataStream.writeData()` aufrufen kÃ¶nnen. Nur Step 3 nutzt `mergeIntoDataStream` — die anderen Steps nutzen `generateText` und brauchen den Text als String fÃ¼r den nÃ¤chsten Step.
 
 </details>
 
 <details>
 <summary>Hinweis 3: Partial Results weiterverarbeiten</summary>
 
-Wenn der Research Loop wegen Timeout abbricht, hat er trotzdem `bestResult` gespeichert — den Text der letzten Iteration. Gib diesen als `result` zurueck. Step 2 (Summarize) arbeitet dann mit dem Partial Result weiter. Die Pipeline laeuft immer bis zum Ende durch — nur Step 1 wird moeglicherweise abgekuerzt.
+Wenn der Research Loop wegen Timeout abbricht, hat er trotzdem `bestResult` gespeichert — den Text der letzten Iteration. Gib diesen als `result` zurÃ¼ck. Step 2 (Summarize) arbeitet dann mit dem Partial Result weiter. Die Pipeline laeuft immer bis zum Ende durch — nur Step 1 wird mÃ¶glicherweise abgekuerzt.
 
 </details>
 

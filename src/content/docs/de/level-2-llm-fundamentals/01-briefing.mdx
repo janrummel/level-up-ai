@@ -34,11 +34,11 @@ import illustration from '../../../../assets/illustrations/l2-llm-fundamentals.s
 
 In Level 1 hast Du gelernt, wie Du mit dem AI SDK Text generierst. Aber Du hast `result.usage` nur als Zahl gesehen — ohne zu verstehen, was ein Token ist, warum die Zahlen so sind und wie Du sie kontrollierst.
 
-Das konkrete Problem: Ohne Token-Verstaendnis kannst Du keine Kosten vorhersagen. Ohne Context-Window-Wissen fliegst Du mitten in der Konversation raus. Ohne Caching zahlst Du fuer denselben System Prompt jedes Mal den vollen Preis. Dieses Level gibt Dir die technischen Grundlagen, die Du fuer kosteneffiziente AI-Anwendungen brauchst.
+Das konkrete Problem: Ohne Token-VerstÃ¤ndnis kannst Du keine Kosten vorhersagen. Ohne Context-Window-Wissen fliegst Du mitten in der Konversation raus. Ohne Caching zahlst Du fÃ¼r denselben System Prompt jedes Mal den vollen Preis. Dieses Level gibt Dir die technischen Grundlagen, die Du fÃ¼r kosteneffiziente AI-Anwendungen brauchst.
 
 ## Voraussetzungen
 
-- **Level 1 abgeschlossen** — `generateText`, `streamText`, `result.usage` muessen sitzen
+- **Level 1 abgeschlossen** — `generateText`, `streamText`, `result.usage` mÃ¼ssen sitzen
 - **Grundverstaendnis von API-Kosten** — Du weisst, dass LLM-Calls Geld kosten
 - **Projektverzeichnis:** Arbeite im selben Projektverzeichnis wie Level 1 weiter — alle noetigen Packages (`ai`, `@ai-sdk/anthropic`, `tsx`) sind bereits installiert
 
@@ -55,9 +55,9 @@ Das konkrete Problem: Ohne Token-Verstaendnis kannst Du keine Kosten vorhersagen
 
 ## Boss Fight
 
-Baue einen **Token-Budget-Rechner**: Ein Tool, das Tokens in System Prompt, User Message und erwartetem Output zaehlt, prueft ob alles ins Context Window passt, die erwarteten Kosten berechnet und die Cache-Hit-Rate ueber mehrere Calls trackt. Alle vier Bausteine dieses Levels in einem Projekt.
+Baue einen **Token-Budget-Rechner**: Ein Tool, das Tokens in System Prompt, User Message und erwartetem Output zaehlt, prÃ¼ft ob alles ins Context Window passt, die erwarteten Kosten berechnet und die Cache-Hit-Rate Ã¼ber mehrere Calls trackt. Alle vier Bausteine dieses Levels in einem Projekt.
 
-## Quellen fuer dieses Level
+## Quellen fÃ¼r dieses Level
 
 - [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
 - [Anthropic: Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting)

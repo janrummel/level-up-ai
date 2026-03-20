@@ -1,6 +1,6 @@
 ---
 title: "Challenge 5.5: Chain of Thought"
-description: "Bringe das LLM dazu, Schritt fuer Schritt nachzudenken — fuer nachvollziehbare, fehleraermere Antworten."
+description: "Bringe das LLM dazu, Schritt fÃ¼r Schritt nachzudenken — fÃ¼r nachvollziehbare, fehleraermere Antworten."
 sidebar:
   order: 6
 ---
@@ -14,7 +14,7 @@ Wenn Du eine komplexe Rechenaufgabe loest — rechnest Du im Kopf oder schreibst
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Links: direkte Frage ans LLM ergibt fehleranfaellige Antwort (rot). Rechts (Chain of Thought): Frage geht ins LLM das Schritt fuer Schritt denkt, durch thinking-instructions und output-format gefuehrt, und eine nachvollziehbare Antwort liefert" />
+<Image src={overviewDiagram} alt="Links: direkte Frage ans LLM ergibt fehleranfaellige Antwort (rot). Rechts (Chain of Thought): Frage geht ins LLM das Schritt fÃ¼r Schritt denkt, durch thinking-instructions und output-format gefuehrt, und eine nachvollziehbare Antwort liefert" />
 
 Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen fehleranfaellig (rot). Rechts: Mit `<thinking-instructions>` und `<output-format>` denkt das LLM zuerst nach. Die Antwort ist nachvollziehbar und basiert auf Zwischenschritten.
 
@@ -22,7 +22,7 @@ Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen f
 
 **Ohne Chain of Thought:** LLMs generieren Tokens sequentiell — jedes Wort basiert auf den vorherigen. Wenn das LLM sofort mit der Antwort beginnt, hat es keine Gelegenheit, das Problem zu durchdenken. Bei komplexen Aufgaben fuehrt das zu oberflaechlichen oder fehlerhaften Antworten. Fehler sind nicht nachvollziehbar, weil der Denkprozess unsichtbar bleibt.
 
-**Mit Chain of Thought:** Das LLM "verbrennt" Tokens fuer seinen Denkprozess, bevor es die eigentliche Antwort generiert. Die Zwischenschritte stehen im Kontext und beeinflussen die nachfolgenden Tokens. Die Reasoning-Kette ist nachpruefbar, Fehler sind lokalisierbar, die Ergebnisse sind besser.
+**Mit Chain of Thought:** Das LLM "verbrennt" Tokens fÃ¼r seinen Denkprozess, bevor es die eigentliche Antwort generiert. Die Zwischenschritte stehen im Kontext und beeinflussen die nachfolgenden Tokens. Die Reasoning-Kette ist nachpruefbar, Fehler sind lokalisierbar, die Ergebnisse sind besser.
 
 ## WALKTHROUGH
 
@@ -31,11 +31,11 @@ Links: Ohne Chain of Thought antwortet das LLM sofort — bei komplexen Fragen f
 Chain of Thought (CoT) bedeutet: Das LLM soll seine Gedanken aufschreiben, bevor es antwortet. Statt direkt das Ergebnis auszugeben, durchlaeuft es erst einen sichtbaren Denkprozess.
 
 ```
-Ohne CoT:  "Was ist 37 * 83?"  →  "2981"  (geraten, falsch — korrekt waere 3071)
+Ohne CoT:  "Was ist 37 * 83?"  →  "2981"  (geraten, falsch — korrekt wÃ¤re 3071)
 Mit CoT:   "Was ist 37 * 83?"  →  "37 * 80 = 2960, 37 * 3 = 111, 2960 + 111 = 3071"  →  "3071"
 ```
 
-Die Tokens, die das LLM beim Nachdenken generiert, beeinflussen die Qualitaet der eigentlichen Antwort. Der Plan steht im Kontext — und der Kontext steuert, was als naechstes kommt.
+Die Tokens, die das LLM beim Nachdenken generiert, beeinflussen die QualitÃ¤t der eigentlichen Antwort. Der Plan steht im Kontext — und der Kontext steuert, was als naechstes kommt.
 
 > Moderne Modelle wie Claude bieten "Extended Thinking" als eingebautes Feature an. Das hier beschriebene Prompt-basierte CoT ist die manuelle Variante, die mit jedem Modell funktioniert.
 
@@ -55,7 +55,7 @@ Order them from foundational to advanced.
 
 Wichtig: Die Instructions beschreiben nicht WAS das LLM antworten soll, sondern WIE es darueber nachdenken soll. Das ist der Unterschied zu `<rules>` — Rules steuern die Ausgabe, Thinking Instructions steuern den Denkprozess.
 
-### Schicht 3: output-format fuer strukturierte Ausgabe
+### Schicht 3: output-format fÃ¼r strukturierte Ausgabe
 
 Ohne klares `<output-format>` mischt das LLM Denken und Antwort. Mit dem Tag trennst Du beides sauber:
 
@@ -72,12 +72,12 @@ Das LLM gibt dann eine Ausgabe in dieser Struktur:
 ```
 <thinking>
 1. Der User kennt wahrscheinlich keine Generics
-2. Ich muss erst Grundtypen erklaeren
+2. Ich muss erst Grundtypen erklÃ¤ren
 3. Dann Generics einfuehren
 4. Dann das konkrete Beispiel zeigen
 </thinking>
 
-# TypeScript Generics erklaert
+# TypeScript Generics erklÃ¤rt
 
 Stell Dir vor, Du hast eine Funktion die mit verschiedenen Typen arbeiten soll...
 ```
@@ -86,15 +86,15 @@ So kann das Frontend den `<thinking>`-Block separat rendern oder ausblenden — 
 
 ### Schicht 4: Wann Chain of Thought nutzen?
 
-CoT ist nicht fuer jede Aufgabe sinnvoll. Es kostet zusaetzliche Tokens und verlangsamt die Antwort.
+CoT ist nicht fÃ¼r jede Aufgabe sinnvoll. Es kostet zusaetzliche Tokens und verlangsamt die Antwort.
 
 | Sinnvoll | Nicht noetig |
 |----------|-------------|
 | Komplexe Logik, Multi-Step-Analyse | Einfache Fragen ("Was ist die Hauptstadt von Frankreich?") |
 | Code Review, Debugging | Format-Konvertierung |
 | Analyse mit mehreren Faktoren | Uebersetzungen |
-| Aufgaben mit Wissens-Abhaengigkeiten | Zusammenfassungen kurzer Texte |
-| Wenn Nachvollziehbarkeit wichtig ist | Wenn Geschwindigkeit Prioritaet hat |
+| Aufgaben mit Wissens-AbhÃ¤ngigkeiten | Zusammenfassungen kurzer Texte |
+| Wenn Nachvollziehbarkeit wichtig ist | Wenn Geschwindigkeit PrioritÃ¤t hat |
 
 **Faustregel:** Wenn Du als Mensch Zwischenschritte aufschreiben wuerdest, profitiert auch das LLM von CoT.
 
@@ -150,10 +150,10 @@ Review this code and provide actionable feedback.
 
 // TODO: Fuege <thinking-instructions> hinzu.
 // Das LLM soll zuerst:
-//   - Den Code Zeile fuer Zeile durchgehen
+//   - Den Code Zeile fÃ¼r Zeile durchgehen
 //   - Potentielle Probleme identifizieren
 //   - Die Probleme nach Schweregrad sortieren
-//   - Abhaengigkeiten zwischen Fixes beachten
+//   - AbhÃ¤ngigkeiten zwischen Fixes beachten
 
 // TODO: Fuege <output-format> hinzu.
 // Zwei Abschnitte:
@@ -174,7 +174,7 @@ for await (const chunk of result.textStream) {
 - [ ] Ergebnis basiert auf den Zwischenschritten
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { streamText } from 'ai';
@@ -252,13 +252,13 @@ for await (const chunk of result.textStream) {
 }
 ```
 
-**Erklaerung:** Die `<thinking-instructions>` fuehren das LLM durch einen systematischen Analyseprozess: erst lesen, dann Probleme identifizieren, dann priorisieren. Das `<output-format>` trennt den Denkprozess (`<thinking>` Block) von den strukturierten Review-Ergebnissen. So kann man nachvollziehen, warum das LLM welches Issue wie bewertet hat — und die Ergebnisse sind konsistent formatiert.
+**ErklÃ¤rung:** Die `<thinking-instructions>` fuehren das LLM durch einen systematischen Analyseprozess: erst lesen, dann Probleme identifizieren, dann priorisieren. Das `<output-format>` trennt den Denkprozess (`<thinking>` Block) von den strukturierten Review-Ergebnissen. So kann man nachvollziehen, warum das LLM welches Issue wie bewertet hat — und die Ergebnisse sind konsistent formatiert.
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 <thinking>
-1. any[] — kein Typsicherheit, Laufzeitfehler moeglich
-2. == statt === — lose Vergleiche koennen zu Bugs fuehren
+1. any[] — kein Typsicherheit, Laufzeitfehler mÃ¶glich
+2. == statt === — lose Vergleiche kÃ¶nnen zu Bugs fuehren
 3. let statt const — result wird nie reassigned
 ...
 </thinking>
@@ -276,7 +276,7 @@ for await (const chunk of result.textStream) {
 
 <Image src={combineDiagram} alt="PromptConfig (5.1), XML Struktur (5.2), Exemplars (5.3), Externe Daten (5.4) und Chain of Thought (5.5) fliessen alle in buildFullPrompt, dann in generateText und erzeugen eine strukturierte Antwort" />
 
-**Uebung:** Baue einen vollstaendigen Prompt der ALLE 5 Konzepte dieses Levels vereint: Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + RAG (5.4) + Chain of Thought (5.5). Das ist die Vorbereitung fuer die Boss Fight.
+**Uebung:** Baue einen vollstaendigen Prompt der ALLE 5 Konzepte dieses Levels vereint: Template (5.1) + XML Struktur (5.2) + Exemplars (5.3) + RAG (5.4) + Chain of Thought (5.5). Das ist die Vorbereitung fÃ¼r die Boss Fight.
 
 Konkret:
 1. Erstelle eine `buildFullPrompt`-Funktion die ein Config-Objekt mit allen Parametern akzeptiert: `role`, `audience`, `tone`, `sourceUrl`, `content`, `exemplars`, `thinkingInstructions`

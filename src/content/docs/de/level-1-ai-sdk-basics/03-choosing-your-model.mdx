@@ -1,6 +1,6 @@
 ---
 title: "Challenge 1.2: Dein erstes Modell"
-description: "Lerne, wie das Provider-System funktioniert und wie Du das richtige Modell fuer Deine Aufgabe waehlst."
+description: "Lerne, wie das Provider-System funktioniert und wie Du das richtige Modell fÃ¼r Deine Aufgabe waehlst."
 sidebar:
   order: 3
 ---
@@ -11,29 +11,29 @@ import combineDiagram from '../../../../assets/diagrams/l1-c2-combine.svg';
 
 ## THINK
 
-Woran entscheidest Du, welches LLM Du fuer eine Aufgabe nutzt — Kosten, Qualitaet, Geschwindigkeit? Und was passiert, wenn Du spaeter den Provider wechseln willst?
+Woran entscheidest Du, welches LLM Du fÃ¼r eine Aufgabe nutzt — Kosten, QualitÃ¤t, Geschwindigkeit? Und was passiert, wenn Du spÃ¤ter den Provider wechseln willst?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Entscheidungsbaum fuer die Modell-Auswahl: Einfache Aufgaben nutzen Flash/Haiku, Standard nutzt Balanced, Komplexe nutzt Frontier-Modelle" />
+<Image src={overviewDiagram} alt="Entscheidungsbaum fÃ¼r die Modell-Auswahl: Einfache Aufgaben nutzen Flash/Haiku, Standard nutzt Balanced, Komplexe nutzt Frontier-Modelle" />
 
 Die Modell-Auswahl ist eine bewusste Entscheidung: Welches Modell passt zu welcher Aufgabe? Die meisten Provider bieten drei Modell-Tiers an:
 
-| Tier | Beispiele | Staerke | Einsatz |
+| Tier | Beispiele | StÃ¤rke | Einsatz |
 |------|-----------|---------|---------|
 | **Flash/Haiku** | Gemini Flash, Claude Haiku | Schnell, guenstig | Einfache Tasks, Klassifikation, Extraktion |
-| **Balanced** | Claude Sonnet, GPT-4o | Gute Qualitaet bei moderaten Kosten | Alltagsaufgaben, Code, Analyse |
-| **Frontier** | Claude Opus, o3 | Hoechste Qualitaet | Komplexes Reasoning, schwierige Probleme |
+| **Balanced** | Claude Sonnet, GPT-4o | Gute QualitÃ¤t bei moderaten Kosten | Alltagsaufgaben, Code, Analyse |
+| **Frontier** | Claude Opus, o3 | Hoechste QualitÃ¤t | Komplexes Reasoning, schwierige Probleme |
 
-> **Wichtig:** "Sonnet" ist kein Synonym fuer "Pro". Claude Sonnet ist ein eigenes Modell im mittleren Tier — schnell und kosteneffizient, aber nicht das leistungsfaehigste Modell von Anthropic. Das waere Claude Opus.
+> **Wichtig:** "Sonnet" ist kein Synonym fÃ¼r "Pro". Claude Sonnet ist ein eigenes Modell im mittleren Tier — schnell und kosteneffizient, aber nicht das leistungsfaehigste Modell von Anthropic. Das wÃ¤re Claude Opus.
 
-Das AI SDK macht den Wechsel zwischen diesen Tiers trivial — nur Import und Model-Zeile aendern sich.
+Das AI SDK macht den Wechsel zwischen diesen Tiers trivial — nur Import und Model-Zeile Ã¤ndern sich.
 
 ## WHY
 
-**Ohne bewusste Modell-Wahl:** Du nutzt immer dasselbe Modell. Zu teuer fuer einfache Aufgaben (Titel generieren mit dem staerksten Modell), zu schlecht fuer komplexe Aufgaben (Code-Review mit dem guenstigsten Modell). Deine AI-Kosten explodieren oder Deine Qualitaet leidet.
+**Ohne bewusste Modell-Wahl:** Du nutzt immer dasselbe Modell. Zu teuer fÃ¼r einfache Aufgaben (Titel generieren mit dem staerksten Modell), zu schlecht fÃ¼r komplexe Aufgaben (Code-Review mit dem guenstigsten Modell). Deine AI-Kosten explodieren oder Deine QualitÃ¤t leidet.
 
-**Mit bewusster Modell-Wahl:** Du nutzt das optimale Modell fuer jede Aufgabe. Flash/Haiku-Modelle fuer einfache Tasks, Balanced-Modelle wie Sonnet fuer den Alltag, Frontier-Modelle fuer die schwierigsten Probleme. Das AI SDK macht den Wechsel so einfach, dass Du verschiedene Modelle in einer Anwendung mischen kannst.
+**Mit bewusster Modell-Wahl:** Du nutzt das optimale Modell fÃ¼r jede Aufgabe. Flash/Haiku-Modelle fÃ¼r einfache Tasks, Balanced-Modelle wie Sonnet fÃ¼r den Alltag, Frontier-Modelle fÃ¼r die schwierigsten Probleme. Das AI SDK macht den Wechsel so einfach, dass Du verschiedene Modelle in einer Anwendung mischen kannst.
 
 ## WALKTHROUGH
 
@@ -52,7 +52,7 @@ Jeder Import gibt Dir eine Funktion, die Modell-Instanzen erzeugt. Die Funktion 
 
 ### Schicht 2: Modell instanziieren
 
-Die Provider-Funktion nimmt einen Modell-Namen als String und gibt eine Modell-Instanz zurueck:
+Die Provider-Funktion nimmt einen Modell-Namen als String und gibt eine Modell-Instanz zurÃ¼ck:
 
 ```typescript
 const model1 = anthropic('claude-sonnet-4-5-20250514');  // ← Anthropic Claude Sonnet
@@ -60,11 +60,11 @@ const model2 = openai('gpt-4o');                          // ← OpenAI GPT-4o
 const model3 = google('gemini-2.5-flash');                // ← Google Gemini Flash
 ```
 
-Alle drei haben dasselbe Interface. Du kannst sie ueberall dort einsetzen, wo das AI SDK ein `model` erwartet — in `generateText`, `streamText`, `Output.object` und allen anderen Funktionen.
+Alle drei haben dasselbe Interface. Du kannst sie Ã¼berall dort einsetzen, wo das AI SDK ein `model` erwartet — in `generateText`, `streamText`, `Output.object` und allen anderen Funktionen.
 
 ### Schicht 3: Provider wechseln
 
-Der entscheidende Punkt: Nur Import und Model-Zeile aendern sich. Der gesamte restliche Code bleibt identisch.
+Der entscheidende Punkt: Nur Import und Model-Zeile Ã¤ndern sich. Der gesamte restliche Code bleibt identisch.
 
 **Vorher — Anthropic:**
 
@@ -137,7 +137,7 @@ const prompt = 'Was ist der Unterschied zwischen let und const in JavaScript?';
 - [ ] Usage (Tokens) wird verglichen
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -165,7 +165,7 @@ console.log('Text:', result2.text);
 console.log('Tokens:', result2.usage.totalTokens);
 ```
 
-**Erklaerung:** Beide Calls nutzen exakt denselben `prompt`. Nur `model` unterscheidet sich. Die Outputs zeigen Dir, wie unterschiedlich (oder aehnlich) verschiedene Modelle dieselbe Frage beantworten — und wie viele Tokens sie dafuer verbrauchen.
+**ErklÃ¤rung:** Beide Calls nutzen exakt denselben `prompt`. Nur `model` unterscheidet sich. Die Outputs zeigen Dir, wie unterschiedlich (oder aehnlich) verschiedene Modelle dieselbe Frage beantworten — und wie viele Tokens sie dafuer verbrauchen.
 
 > **Nur einen API-Key?** Kein Problem — nutze zwei Modelle desselben Providers, z.B. `anthropic('claude-haiku-3-5-20241022')` und `anthropic('claude-sonnet-4-5-20250514')`.
 
@@ -175,7 +175,7 @@ console.log('Tokens:', result2.usage.totalTokens);
 npx tsx challenge-1-2.ts
 ```
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 
 ```
 --- Anthropic (Claude Sonnet) ---
@@ -205,12 +205,12 @@ function selectModel(task: string): LanguageModel {
   if (task.includes('zusammenfassen') || task.includes('uebersetzen')) {
     return google('gemini-2.5-flash');
   }
-  // Standard-Aufgaben: Balanced-Modell (Qualitaet + Speed)
+  // Standard-Aufgaben: Balanced-Modell (QualitÃ¤t + Speed)
   return anthropic('claude-sonnet-4-5-20250514');
 }
 ```
 
-Nutze `selectModel` in Kombination mit `generateText` aus Challenge 1.1. Teste mit verschiedenen Aufgaben und pruefe, ob das richtige Modell gewaehlt wird.
+Nutze `selectModel` in Kombination mit `generateText` aus Challenge 1.1. Teste mit verschiedenen Aufgaben und prÃ¼fe, ob das richtige Modell gewaehlt wird.
 
 **Optional Stretch Goal:** Erweitere `selectModel` um eine dritte Kategorie — z.B. Code-Aufgaben, die ein spezialisiertes Modell nutzen.
 

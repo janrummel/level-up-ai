@@ -11,19 +11,19 @@ import combineDiagram from '../../../../assets/diagrams/l1-c1-combine.svg';
 
 ## THINK
 
-Wenn Du mit Claude, GPT und Gemini arbeiten willst — brauchst Du fuer jeden eine andere Library? Andere Typen? Andere Fehlerbehandlung?
+Wenn Du mit Claude, GPT und Gemini arbeiten willst — brauchst Du fÃ¼r jeden eine andere Library? Andere Typen? Andere Fehlerbehandlung?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="AI SDK Architektur: Dein Code verbindet sich ueber AI SDK Core, UI und RSC mit Providern wie Anthropic, OpenAI und Google" />
+<Image src={overviewDiagram} alt="AI SDK Architektur: Dein Code verbindet sich Ã¼ber AI SDK Core, UI und RSC mit Providern wie Anthropic, OpenAI und Google" />
 
 Das AI SDK sitzt zwischen Deinem Code und den LLM-Providern. Es bietet eine einheitliche API — egal welchen Provider Du nutzt. Drei Bibliotheken, ein Interface.
 
 ## WHY
 
-**Ohne AI SDK:** Fuer jeden Provider eine andere API, andere Typen, andere Fehlerbehandlung. Provider wechseln bedeutet den halben Code umschreiben. Jeder Provider hat eigene SDKs mit unterschiedlichen Interfaces.
+**Ohne AI SDK:** FÃ¼r jeden Provider eine andere API, andere Typen, andere Fehlerbehandlung. Provider wechseln bedeutet den halben Code umschreiben. Jeder Provider hat eigene SDKs mit unterschiedlichen Interfaces.
 
-**Mit AI SDK:** Eine API fuer alle Provider. Du wechselst den Provider, indem Du eine Import-Zeile und den Modell-Namen aenderst. Der Rest Deines Codes bleibt identisch.
+**Mit AI SDK:** Eine API fÃ¼r alle Provider. Du wechselst den Provider, indem Du eine Import-Zeile und den Modell-Namen aenderst. Der Rest Deines Codes bleibt identisch.
 
 ## WALKTHROUGH
 
@@ -34,7 +34,7 @@ Das AI SDK besteht aus drei Teilen. In diesem Level arbeiten wir ausschliesslich
 | Bibliothek | Package | Einsatz |
 |------------|---------|---------|
 | **AI SDK Core** | `ai` | Backend: Text generieren, Tools, Agents, Structured Output |
-| **AI SDK UI** | `ai` (gleicher Import) | Frontend: Framework-agnostische Hooks fuer Chat-UIs |
+| **AI SDK UI** | `ai` (gleicher Import) | Frontend: Framework-agnostische Hooks fÃ¼r Chat-UIs |
 | **AI SDK RSC** | `ai` (gleicher Import) | React Server Components: Streaming React Components |
 
 AI SDK Core ist das Fundament. Alles andere baut darauf auf. Wenn Du `generateText` oder `streamText` nutzt, nutzt Du AI SDK Core.
@@ -75,12 +75,12 @@ console.log(result.usage);        // ← Token-Verbrauch: { promptTokens, comple
 console.log(result.finishReason); // ← Warum gestoppt: 'stop' | 'length' | 'tool-calls'
 ```
 
-Drei Zeilen Code, drei Informationen zurueck:
+Drei Zeilen Code, drei Informationen zurÃ¼ck:
 1. **`result.text`** — der generierte Text als String
-2. **`result.usage`** — wie viele Tokens verbraucht wurden (wichtig fuer Kosten)
+2. **`result.usage`** — wie viele Tokens verbraucht wurden (wichtig fÃ¼r Kosten)
 3. **`result.finishReason`** — warum das LLM aufgehoert hat zu generieren
 
-Das `model`-Argument ist der einzige Ort, an dem der Provider vorkommt. Alles andere (`prompt`, `result.text`, `result.usage`) ist Provider-unabhaengig.
+Das `model`-Argument ist der einzige Ort, an dem der Provider vorkommt. Alles andere (`prompt`, `result.text`, `result.usage`) ist Provider-unabhÃ¤ngig.
 
 ## TRY
 
@@ -116,7 +116,7 @@ Das `model`-Argument ist der einzige Ort, an dem der Provider vorkommt. Alles an
 - [ ] `ANTHROPIC_API_KEY` als Environment Variable gesetzt
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -132,7 +132,7 @@ console.log('Usage:', result.usage);
 console.log('Finish Reason:', result.finishReason);
 ```
 
-**Erklaerung:** `generateText` ist eine async Funktion, die ein Result-Objekt zurueckgibt. Das `model`-Argument erstellt eine Anthropic-Modell-Instanz mit dem Modell-Namen `claude-sonnet-4-5-20250514`. Der `prompt` ist der User-Input. Die drei geloggten Properties geben Dir den generierten Text, den Token-Verbrauch und den Grund fuer das Stoppen.
+**ErklÃ¤rung:** `generateText` ist eine async Funktion, die ein Result-Objekt zurueckgibt. Das `model`-Argument erstellt eine Anthropic-Modell-Instanz mit dem Modell-Namen `claude-sonnet-4-5-20250514`. Der `prompt` ist der User-Input. Die drei geloggten Properties geben Dir den generierten Text, den Token-Verbrauch und den Grund fÃ¼r das Stoppen.
 
 **Ausfuehren:**
 
@@ -140,7 +140,7 @@ console.log('Finish Reason:', result.finishReason);
 npx tsx challenge-1-1.ts
 ```
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 
 ```
 Text: TypeScript ist eine typisierte Obermenge von JavaScript, die statische Typpruefung...
@@ -154,7 +154,7 @@ Finish Reason: stop
 
 <Image src={combineDiagram} alt="Derselbe Prompt wird an generateText mit Anthropic und OpenAI gesendet und erzeugt zwei separate Outputs" />
 
-**Uebung:** Aendere den Provider — ersetze `anthropic` durch `openai`. Was musst Du aendern?
+**Uebung:** Aendere den Provider — ersetze `anthropic` durch `openai`. Was musst Du Ã¤ndern?
 
 1. Installiere den OpenAI Provider: `npm install @ai-sdk/openai`
 2. Aendere den Import: `import { openai } from '@ai-sdk/openai'`

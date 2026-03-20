@@ -31,7 +31,7 @@ Workflows bedeuten mehrere LLM-Calls pro Aufgabe — die Kosten steigen schnell.
 
 - **Workflows** — mehrere `generateText`-Calls sequentiell verketten, wobei der Output von Step N zum Input von Step N+1 wird
 - **Streaming to Frontend** — Workflow-Fortschritt in Echtzeit ans Frontend streamen mit `createDataStream` und Custom Data Parts
-- **Custom Loop** — eigene Agent-Loops bauen mit voller Kontrolle ueber Abbruchbedingungen, State-Tracking und Messages-Array
+- **Custom Loop** — eigene Agent-Loops bauen mit voller Kontrolle Ã¼ber Abbruchbedingungen, State-Tracking und Messages-Array
 - **Breaking the Loop** — Endlosschleifen verhindern mit Max-Iterations, Timeout, Cost Guard und Quality Checks
 
 ## Warum das wichtig ist
@@ -46,7 +46,7 @@ Das konkrete Problem: Du willst eine Research-Pipeline bauen, die Quellen sucht,
 - **Level 7: Streaming** — Custom Data Parts, `createDataStream`, `writeData`, `mergeIntoDataStream` (Challenge 7.1)
 - **TypeScript** — async/await, while-Loops, AbortController
 
-> **Projektverzeichnis:** Erstelle einen neuen Ordner `level-8-workflows/` fuer die Dateien dieses Levels. Du brauchst keine neuen Pakete — `ai`, `@ai-sdk/anthropic` und `zod` aus vorherigen Levels genuegen.
+> **Projektverzeichnis:** Erstelle einen neuen Ordner `level-8-workflows/` fÃ¼r die Dateien dieses Levels. Du brauchst keine neuen Pakete — `ai`, `@ai-sdk/anthropic` und `zod` aus vorherigen Levels genuegen.
 
 > **Skip-Hinweis:** Du baust bereits Custom Agent Loops mit eigenen Abbruchbedingungen, streamst Fortschritt ans Frontend und hast Timeout-Guards implementiert? Spring direkt zur [Boss Fight](../06-boss-fight/) und baue eine Multi-Step Research Pipeline.
 
@@ -54,7 +54,7 @@ Das konkrete Problem: Du willst eine Research-Pipeline bauen, die Quellen sucht,
 
 <CardGrid>
   <LinkCard title="8.1 — Workflow" description="Sequentielle `generateText`-Calls, Output-Verkettung, spezialisierte Steps" href="../02-workflow/" />
-  <LinkCard title="8.2 — Streaming to Frontend" description="`createDataStream` + `writeData` fuer Step-Fortschritt, Frontend-Konsum" href="../03-streaming-to-frontend/" />
+  <LinkCard title="8.2 — Streaming to Frontend" description="`createDataStream` + `writeData` fÃ¼r Step-Fortschritt, Frontend-Konsum" href="../03-streaming-to-frontend/" />
   <LinkCard title="8.3 — Custom Loop" description="Eigener while-Loop, Messages-Array, State-Tracking, finishReason-Check" href="../04-custom-loop/" />
   <LinkCard title="8.4 — Breaking the Loop" description="Max-Iterations, Timeout, Cost Guard, Quality Check, Partial Results" href="../05-breaking-the-loop/" />
 </CardGrid>
@@ -63,7 +63,7 @@ Das konkrete Problem: Du willst eine Research-Pipeline bauen, die Quellen sucht,
 
 Baue eine **Multi-Step Research Pipeline** — ein System, das ein Thema recherchiert (Custom Loop mit Tools), Fortschritt in Echtzeit streamt, die Ergebnisse zusammenfasst (Workflow) und mit Safeguards geschuetzt ist (Max-Iterations, Timeout, Cost Limit). Du kombinierst alle vier Bausteine dieses Levels in einem Projekt.
 
-## Quellen fuer dieses Level
+## Quellen fÃ¼r dieses Level
 
 - [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
 - [Vercel AI SDK: Building Agents](https://ai-sdk.dev/docs/agents/building-agents)

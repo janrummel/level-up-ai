@@ -30,7 +30,7 @@ Recherchiere: Welche neuen Features hat TypeScript 5.8?
   → Zusammenfassung erstellt
 
 --- Approval Request ---
-Agent will saveResults("/tmp/research-typescript-5.8.txt") ausfuehren.
+Agent will saveResults("/tmp/research-typescript-5.8.txt") ausfÃ¼hren.
 Erlauben? (y/n): y
 Genehmigt.
 
@@ -82,13 +82,13 @@ import * as readline from 'readline';
 
 // TODO: saveResultsTool definieren (mit needsApproval: true)
 
-// TODO: askUser() Hilfsfunktion fuer Terminal-Approval
+// TODO: askUser() Hilfsfunktion fÃ¼r Terminal-Approval
 
 // TODO: Hauptfunktion:
 // 1. User-Input lesen (readline)
 // 2. Agent-Loop:
 //    a) generateText aufrufen
-//    b) result.content auf 'tool-approval-request' Parts pruefen
+//    b) result.content auf 'tool-approval-request' Parts prÃ¼fen
 //    c) User im Terminal fragen (askUser)
 //    d) tool-approval-response bauen und zu messages pushen
 //    e) generateText erneut aufrufen bis keine Approval Requests mehr
@@ -114,14 +114,14 @@ Dein Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: Tool-Beschreibungen sind entscheidend</summary>
 
-Die `description` der Tools beeinflusst stark, in welcher Reihenfolge das LLM sie nutzt. Formuliere die Beschreibungen so, dass klar wird: `search` ist fuer Informationsbeschaffung, `summarize` fuer Zusammenfassung von gesammelten Daten, und `saveResults` fuer das Speichern am Ende. Der System Prompt kann die Reihenfolge zusaetzlich lenken: "Recherchiere zuerst, fasse dann zusammen, speichere am Ende."
+Die `description` der Tools beeinflusst stark, in welcher Reihenfolge das LLM sie nutzt. Formuliere die Beschreibungen so, dass klar wird: `search` ist fÃ¼r Informationsbeschaffung, `summarize` fÃ¼r Zusammenfassung von gesammelten Daten, und `saveResults` fÃ¼r das Speichern am Ende. Der System Prompt kann die Reihenfolge zusaetzlich lenken: "Recherchiere zuerst, fasse dann zusammen, speichere am Ende."
 
 </details>
 
 <details>
-<summary>Hinweis 2: onStepFinish fuer Live-Ausgabe</summary>
+<summary>Hinweis 2: onStepFinish fÃ¼r Live-Ausgabe</summary>
 
-Nutze `onStepFinish` fuer die formatierte Ausgabe waehrend der Agent-Ausfuehrung. In diesem Callback hast Du Zugriff auf `stepNumber`, `toolCalls`, `toolResults` und `usage`. Du kannst dort jeden Tool Call mit seinem Ergebnis formatiert ins Terminal schreiben.
+Nutze `onStepFinish` fÃ¼r die formatierte Ausgabe waehrend der Agent-Ausfuehrung. In diesem Callback hast Du Zugriff auf `stepNumber`, `toolCalls`, `toolResults` und `usage`. Du kannst dort jeden Tool Call mit seinem Ergebnis formatiert ins Terminal schreiben.
 
 </details>
 

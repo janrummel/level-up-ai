@@ -17,7 +17,7 @@ import illustration from '../../../../assets/illustrations/l1-sdk-basics.svg';
 
 ## TL;DR
 
-> Das AI SDK ist Dein Werkzeugkasten fuer AI-Anwendungen. In diesem Level lernst Du die Grundlagen: Text generieren, streamen, strukturierte Ausgaben und System Prompts. Eine API fuer alle Provider — Anthropic, OpenAI, Google und 20+ weitere.
+> Das AI SDK ist Dein Werkzeugkasten fÃ¼r AI-Anwendungen. In diesem Level lernst Du die Grundlagen: Text generieren, streamen, strukturierte Ausgaben und System Prompts. Eine API fÃ¼r alle Provider — Anthropic, OpenAI, Google und 20+ weitere.
 
 ## Skill Tree
 
@@ -30,29 +30,29 @@ import illustration from '../../../../assets/illustrations/l1-sdk-basics.svg';
 - **Text generieren mit `generateText`** — das Result-Objekt, Usage Tracking, Finish Reason
 - **Text streamen mit `streamText`** — Echtzeit-Ausgabe, Stream Events, `textStream`
 - **Strukturierte Ausgaben mit `Output.object`, `Output.array` und `Output.choice`** — typisierte JSON-Antworten statt Freitext
-- **System Prompts fuer Rollenverhalten** — dem LLM eine Identitaet und Regeln geben
+- **System Prompts fÃ¼r Rollenverhalten** — dem LLM eine Identitaet und Regeln geben
 
 ## Warum das wichtig ist
 
 Jede AI-Anwendung baut auf diesen Grundlagen auf. Ohne sie bist Du auf Copy-Paste aus ChatGPT angewiesen und kannst AI nicht programmatisch in Deine Projekte einbauen.
 
-Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provider hat eine andere API, andere Typen, andere Fehlerbehandlung. Das AI SDK loest das — eine einheitliche API fuer alle Provider. Du lernst sie hier von Grund auf.
+Das konkrete Problem: Du willst AI in Deinen Code integrieren, aber jeder Provider hat eine andere API, andere Typen, andere Fehlerbehandlung. Das AI SDK loest das — eine einheitliche API fÃ¼r alle Provider. Du lernst sie hier von Grund auf.
 
 ## Voraussetzungen
 
-- **Node.js 20+** und **npm** installiert — pruefe mit `node -v` und `npm -v`
+- **Node.js 20+** und **npm** installiert — prÃ¼fe mit `node -v` und `npm -v`
 - **TypeScript Grundkenntnisse** — Typen, Interfaces, async/await
 - **Erfahrung mit ChatGPT oder aehnlichem** — Du weisst, was ein LLM ist und was es kann
-- **Ein API-Key** fuer mindestens einen Provider:
-  - [Anthropic Console](https://console.anthropic.com/) — API-Key unter "API Keys" erstellen (empfohlen fuer diesen Kurs)
+- **Ein API-Key** fÃ¼r mindestens einen Provider:
+  - [Anthropic Console](https://console.anthropic.com/) — API-Key unter "API Keys" erstellen (empfohlen fÃ¼r diesen Kurs)
   - [OpenAI Platform](https://platform.openai.com/) — API-Key unter "API Keys" erstellen
   - [Google AI Studio](https://aistudio.google.com/) — API-Key erstellen
 
-> Die meisten Provider bieten ein kostenloses Startguthaben oder Free Tier. Fuer Level 1 reicht ein einzelner API-Key.
+> Die meisten Provider bieten ein kostenloses Startguthaben oder Free Tier. FÃ¼r Level 1 reicht ein einzelner API-Key.
 
 ## Bevor Du loslegst
 
-Erstelle ein Projektverzeichnis fuer dieses Level. Jede Challenge wird als eigene TypeScript-Datei gespeichert, die Boss Fight kombiniert alles in einer finalen Datei.
+Erstelle ein Projektverzeichnis fÃ¼r dieses Level. Jede Challenge wird als eigene TypeScript-Datei gespeichert, die Boss Fight kombiniert alles in einer finalen Datei.
 
 ```bash
 mkdir level-1-ai-sdk && cd level-1-ai-sdk
@@ -61,7 +61,7 @@ npm install ai @ai-sdk/anthropic zod
 npm install -D tsx typescript
 ```
 
-Erstelle eine `.env`-Datei fuer Deinen API-Key:
+Erstelle eine `.env`-Datei fÃ¼r Deinen API-Key:
 
 ```bash
 echo 'ANTHROPIC_API_KEY=sk-ant-dein-key-hier' > .env
@@ -73,7 +73,7 @@ So fuehrst Du Deine TypeScript-Dateien aus:
 npx tsx --env-file=.env challenge-1-1.ts
 ```
 
-> `tsx` ist ein TypeScript-Runner, der `.ts`-Dateien direkt ausfuehrt — ohne `tsconfig.json`, ohne Build-Schritt. Mit `--env-file=.env` werden Deine Umgebungsvariablen geladen (Node.js 20+ Feature). Alternativ kannst Du `dotenv` installieren (`npm install dotenv`) und am Anfang Deiner Datei `import 'dotenv/config'` einfuegen.
+> `tsx` ist ein TypeScript-Runner, der `.ts`-Dateien direkt ausfÃ¼hrt — ohne `tsconfig.json`, ohne Build-Schritt. Mit `--env-file=.env` werden Deine Umgebungsvariablen geladen (Node.js 20+ Feature). Alternativ kannst Du `dotenv` installieren (`npm install dotenv`) und am Anfang Deiner Datei `import 'dotenv/config'` einfuegen.
 
 ### Troubleshooting
 
@@ -98,7 +98,7 @@ npx tsx --env-file=.env challenge-1-1.ts
 
 Baue einen **CLI-Chat**: Ein Terminal-Programm, das Text mit `streamText` in Echtzeit ausgibt und auf Anfrage strukturierte JSON-Ausgabe mit `Output.object` liefert. Du kombinierst alle sechs Bausteine dieses Levels in einem Projekt.
 
-## Quellen fuer dieses Level
+## Quellen fÃ¼r dieses Level
 
 - [Vercel AI SDK: Introduction](https://ai-sdk.dev/docs/introduction)
 - [Vercel AI SDK: Providers and Models](https://ai-sdk.dev/docs/foundations/providers-and-models)

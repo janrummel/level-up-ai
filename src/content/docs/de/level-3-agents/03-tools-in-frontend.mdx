@@ -47,7 +47,7 @@ Jede Nachricht ist ein Array von Parts. Das LLM kann Text und Tool Calls in beli
 
 ### Schicht 2: Tool Events im Stream
 
-Wenn Du `streamText` mit Tools nutzt, bekommst Du ueber `fullStream` spezifische Events:
+Wenn Du `streamText` mit Tools nutzt, bekommst Du Ã¼ber `fullStream` spezifische Events:
 
 ```typescript
 import { streamText, tool } from 'ai';
@@ -95,7 +95,7 @@ Die Event-Reihenfolge ist immer: `tool-call` → (Tool wird ausgefuehrt) → `to
 Zwischen `tool-call` und `tool-result` liegt die Ausfuehrungszeit des Tools. In dieser Phase kannst Du einen Loading State anzeigen:
 
 ```typescript
-// Pseudo-Code fuer UI-Rendering:
+// Pseudo-Code fÃ¼r UI-Rendering:
 for await (const part of result.fullStream) {
   switch (part.type) {
     case 'tool-call':
@@ -116,7 +116,7 @@ In einem echten Frontend (React, Next.js) wuerdest Du hier einen State-Wechsel a
 
 ### Schicht 4: Mehrere Parts rendern
 
-Eine vollstaendige Rendering-Logik muss alle Part-Typen behandeln. Hier ein Beispiel, das Text, Tool Calls und Tool Results formatiert ausgibt:
+Eine vollstÃ¤ndige Rendering-Logik muss alle Part-Typen behandeln. Hier ein Beispiel, das Text, Tool Calls und Tool Results formatiert ausgibt:
 
 ```typescript
 import { streamText, tool } from 'ai';
@@ -150,7 +150,7 @@ for await (const part of result.fullStream) {
       toolStates.set(part.toolCallId, 'running');
       console.log(`\n┌─ Tool: ${part.toolName}`);
       console.log(`│  Args: ${JSON.stringify(part.args)}`);
-      console.log(`│  Status: ausfuehrend...`);
+      console.log(`│  Status: ausfÃ¼hrend...`);
       break;
     case 'tool-result':
       toolStates.set(part.toolCallId, 'done');
@@ -165,7 +165,7 @@ for await (const part of result.fullStream) {
 }
 ```
 
-Die `Map` trackt den Status jedes Tool Calls ueber seine `toolCallId`. In einem echten Frontend wuerde das ein React State sein, der die UI aktualisiert.
+Die `Map` trackt den Status jedes Tool Calls Ã¼ber seine `toolCallId`. In einem echten Frontend wÃ¼rde das ein React State sein, der die UI aktualisiert.
 
 ## TRY
 
@@ -192,7 +192,7 @@ const weatherTool = tool({
 });
 
 // TODO 1: Rufe streamText auf mit dem weatherTool
-// TODO 2: Iteriere ueber result.fullStream
+// TODO 2: Iteriere Ã¼ber result.fullStream
 // TODO 3: Behandle diese Event-Typen:
 //   - 'text-delta': Text ins Terminal schreiben
 //   - 'tool-call': Tool-Name und Parameter anzeigen
@@ -209,7 +209,7 @@ const weatherTool = tool({
 - [ ] `finish` Event mit Token-Verbrauch geloggt
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { streamText, tool } from 'ai';
@@ -256,11 +256,11 @@ for await (const part of result.fullStream) {
 }
 ```
 
-**Erklaerung:** Das LLM ruft `weather` fuer "Berlin" und "Muenchen" auf — moeglicherweise in separaten Tool Calls. Jeder Call erzeugt erst ein `tool-call` Event (mit Args), dann nach Ausfuehrung ein `tool-result` Event (mit Ergebnis). Am Ende kommt Text, der beide Ergebnisse zusammenfasst.
+**ErklÃ¤rung:** Das LLM ruft `weather` fÃ¼r "Berlin" und "Muenchen" auf — mÃ¶glicherweise in separaten Tool Calls. Jeder Call erzeugt erst ein `tool-call` Event (mit Args), dann nach Ausfuehrung ein `tool-result` Event (mit Ergebnis). Am Ende kommt Text, der beide Ergebnisse zusammenfasst.
 
 **Ausfuehren:** `npx tsx challenge-3-2.ts`
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 
 [TOOL CALL] weather
@@ -293,7 +293,7 @@ Finish Reason: stop
 3. Formatiere die Ausgabe so, dass Tool Calls und Tool Results visuell hervorgehoben sind (z.B. mit `[TOOL]` Prefix)
 4. Zeige am Ende eine Zusammenfassung: Wie viele Tools wurden aufgerufen, wie viele Tokens verbraucht?
 
-**Optional Stretch Goal:** Baue einen `renderToolResult(toolName, result)` Helper, der fuer verschiedene Tools unterschiedliche Formatierungen ausgibt — z.B. eine Wetter-Anzeige fuer `weather` und eine Berechnung fuer `calculator`.
+**Optional Stretch Goal:** Baue einen `renderToolResult(toolName, result)` Helper, der fÃ¼r verschiedene Tools unterschiedliche Formatierungen ausgibt — z.B. eine Wetter-Anzeige fÃ¼r `weather` und eine Berechnung fÃ¼r `calculator`.
 
 ## Quellen
 

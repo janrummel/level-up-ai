@@ -1,6 +1,6 @@
 ---
 title: "Challenge 6.1: Evalite Basics"
-description: "Richte Evalite ein und schreibe Deine erste automatisierte Eval fuer LLM-Ausgaben — mit Daten, Task und Scorer."
+description: "Richte Evalite ein und schreibe Deine erste automatisierte Eval fÃ¼r LLM-Ausgaben — mit Daten, Task und Scorer."
 sidebar:
   order: 2
 ---
@@ -10,7 +10,7 @@ import combineDiagram from '../../../../assets/diagrams/l6-c1-combine.svg';
 
 ## THINK
 
-Wie testest Du, ob Dein LLM-System gute Antworten gibt — manuell jedes Mal durchlesen? Was, wenn Du 50 Prompts aenderst und pruefen willst, ob die Qualitaet gestiegen oder gesunken ist?
+Wie testest Du, ob Dein LLM-System gute Antworten gibt — manuell jedes Mal durchlesen? Was, wenn Du 50 Prompts aenderst und prÃ¼fen willst, ob die QualitÃ¤t gestiegen oder gesunken ist?
 
 ## OVERVIEW
 
@@ -20,7 +20,7 @@ Wie testest Du, ob Dein LLM-System gute Antworten gibt — manuell jedes Mal dur
 
 ## WHY
 
-**Ohne Evals:** Du aenderst einen Prompt und hoffst, dass die Antworten besser werden. Du liest manuell 5 Antworten durch, die sehen gut aus, also deployest Du. Zwei Wochen spaeter merkst Du: Bei einer bestimmten Frage halluziniert das LLM jetzt. Keine Ahnung, seit wann.
+**Ohne Evals:** Du aenderst einen Prompt und hoffst, dass die Antworten besser werden. Du liest manuell 5 Antworten durch, die sehen gut aus, also deployest Du. Zwei Wochen spÃ¤ter merkst Du: Bei einer bestimmten Frage halluziniert das LLM jetzt. Keine Ahnung, seit wann.
 
 **Mit Evals:** Du aenderst einen Prompt, startest `evalite watch`, und siehst sofort: Score von 0.82 auf 0.91 gestiegen. Oder: Score von 0.82 auf 0.65 gefallen — Regression entdeckt, bevor ein User es merkt. Messen, vergleichen, iterieren.
 
@@ -90,12 +90,12 @@ evalite('My First Eval', {
 1. `data` liefert Test-Cases (Input + erwarteter Output)
 2. `task` wird pro Test-Case mit dem `input` ausgefuehrt
 3. `scorers` vergleichen den tatsaechlichen Output mit dem `expected`-Wert
-4. Ergebnisse werden gespeichert (standardmaessig in-memory; fuer persistente Speicherung konfigurierst Du SQLite via `createSqliteStorage` in einer `evalite.config.ts`)
+4. Ergebnisse werden gespeichert (standardmaessig in-memory; fÃ¼r persistente Speicherung konfigurierst Du SQLite via `createSqliteStorage` in einer `evalite.config.ts`)
 5. Dashboard zeigt Scores unter `http://localhost:3006`
 
 ### Schicht 4: data als async Function
 
-Statt eines statischen Arrays kann `data` auch eine async Function sein — nuetzlich fuer dynamisches Laden:
+Statt eines statischen Arrays kann `data` auch eine async Function sein — nuetzlich fÃ¼r dynamisches Laden:
 
 ```typescript
 evalite('Capital Cities', {
@@ -105,7 +105,7 @@ evalite('Capital Cities', {
     { input: 'What is the capital of Japan?', expected: 'Tokyo' },
   ],
   task: async (input) => {
-    // Hier kommt spaeter Dein LLM-Call rein
+    // Hier kommt spÃ¤ter Dein LLM-Call rein
     return input;
   },
   scorers: [Levenshtein],
@@ -146,9 +146,9 @@ evalite('Capital Cities', {
 
 Starte die Evals mit `pnpm eval:dev` und oeffne `http://localhost:3006`:
 
-- **Uebersicht:** Alle Evals mit Durchschnitts-Score
+- **Ãbersicht:** Alle Evals mit Durchschnitts-Score
 - **Detail-Ansicht:** Jeder Test-Case mit Input, Output, Expected und Score
-- **Verlauf:** Scores ueber die Zeit — siehst Du Verbesserungen oder Regressionen
+- **Verlauf:** Scores Ã¼ber die Zeit — siehst Du Verbesserungen oder Regressionen
 - **Traces:** Bei `traceAISDKModel` siehst Du die LLM-Aufrufe mit Token-Verbrauch
 
 ## TRY
@@ -179,12 +179,12 @@ import { Levenshtein } from 'autoevals';
 **Checkliste:**
 - [ ] `evalite` und `Levenshtein` importiert
 - [ ] `data` mit 3 Test-Cases definiert
-- [ ] `task` gibt den Input mit angehaengtem Text zurueck
+- [ ] `task` gibt den Input mit angehaengtem Text zurÃ¼ck
 - [ ] `Levenshtein` als Scorer gesetzt
 - [ ] `pnpm eval:dev` zeigt Ergebnisse im Dashboard
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 // hello.eval.ts
@@ -207,7 +207,7 @@ evalite('Greeting Eval', {
 
 **Erwarteter Output:** Alle drei Test-Cases sollten Score 1.0 erreichen — die `task`-Funktion produziert exakt den erwarteten Output. Im Dashboard unter `localhost:3006` siehst Du "Greeting Eval" mit Durchschnitts-Score 1.0.
 
-**Erklaerung:** Der Levenshtein Scorer misst die Aehnlichkeit zwischen dem tatsaechlichen Output und dem erwarteten Output. Score 1.0 bedeutet identisch, Score 0.0 bedeutet komplett verschieden. In diesem Beispiel sollte jeder Test-Case einen Score von 1.0 erreichen, weil die `task`-Funktion exakt den erwarteten Output produziert.
+**ErklÃ¤rung:** Der Levenshtein Scorer misst die Aehnlichkeit zwischen dem tatsaechlichen Output und dem erwarteten Output. Score 1.0 bedeutet identisch, Score 0.0 bedeutet komplett verschieden. In diesem Beispiel sollte jeder Test-Case einen Score von 1.0 erreichen, weil die `task`-Funktion exakt den erwarteten Output produziert.
 
 </details>
 
@@ -221,7 +221,7 @@ evalite('Greeting Eval', {
 2. Nutze `generateText` mit `traceAISDKModel` als `task`
 3. System Prompt: `'Answer with only the city name. No periods, no extra text.'`
 4. Scorer: `Levenshtein`
-5. Starte `pnpm eval:dev` und pruefe die Scores im Dashboard
+5. Starte `pnpm eval:dev` und prÃ¼fe die Scores im Dashboard
 
 **Frage zum Nachdenken:** Warum ist `Levenshtein` hier nicht der ideale Scorer? Was passiert, wenn das LLM "Paris, France" statt "Paris" antwortet?
 

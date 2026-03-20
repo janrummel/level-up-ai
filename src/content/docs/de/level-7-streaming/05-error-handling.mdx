@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-Was passiert in Deiner App, wenn der LLM-Provider mitten im Stream einen Fehler wirft? Der User hat schon die halbe Antwort gelesen — und dann? Weisse Seite? Abbruch ohne Erklaerung? Oder eine hilfreiche Fehlermeldung?
+Was passiert in Deiner App, wenn der LLM-Provider mitten im Stream einen Fehler wirft? Der User hat schon die halbe Antwort gelesen — und dann? Weisse Seite? Abbruch ohne ErklÃ¤rung? Oder eine hilfreiche Fehlermeldung?
 
 ## OVERVIEW
 
@@ -23,7 +23,7 @@ Fehler passieren: Provider-Timeouts, Rate Limits, unbekannte Tools, Netzwerkabbr
 
 **Ohne Error Handling:** Deine App crasht, wenn der Provider einen Fehler wirft. Der User sieht eine weisse Seite, eine kryptische Fehlermeldung oder die halbe Antwort bricht einfach ab. In Production ist das inakzeptabel — User verlieren Vertrauen und Daten gehen verloren.
 
-**Mit Error Handling:** Fehler werden abgefangen und in verstaendliche Meldungen uebersetzt. Der User weiss, was passiert ist, und kann es nochmal versuchen. Dein Logging erfasst den Fehler fuer Debugging. Und mit Retry-Strategien kann Deine App bestimmte Fehler sogar selbst loesen.
+**Mit Error Handling:** Fehler werden abgefangen und in verstaendliche Meldungen uebersetzt. Der User weiss, was passiert ist, und kann es nochmal versuchen. Dein Logging erfasst den Fehler fÃ¼r Debugging. Und mit Retry-Strategien kann Deine App bestimmte Fehler sogar selbst loesen.
 
 ## WALKTHROUGH
 
@@ -50,13 +50,13 @@ const result = streamText({
 - **Stream-Fehlern:** Verbindungsabbruch, Timeout
 - **Tool-Fehlern:** Tool wirft Exception (ab Level 3)
 
-Wichtig: `onError` verhindert nicht, dass der Fehler zum User durchschlaegt. Es ist ein Hook fuer Logging und Monitoring — nicht fuer User-Facing Error Messages.
+Wichtig: `onError` verhindert nicht, dass der Fehler zum User durchschlaegt. Es ist ein Hook fÃ¼r Logging und Monitoring — nicht fÃ¼r User-Facing Error Messages.
 
 ### Schicht 2: onError in toUIMessageStreamResponse
 
 > **Web-App Kontext:** Der folgende Code zeigt Error Handling in einer Next.js API Route. Deine TRY-Uebung weiter unten arbeitet im Terminal (CLI).
 
-Fuer Web-APIs kontrollierst Du mit `onError` in `toUIMessageStreamResponse`, welche Fehlermeldung der Client sieht:
+FÃ¼r Web-APIs kontrollierst Du mit `onError` in `toUIMessageStreamResponse`, welche Fehlermeldung der Client sieht:
 
 ```typescript
 export async function POST(req: Request) {
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
   return result.toUIMessageStreamResponse({
     onError(error) {                                  // ← Kontrolliert Client-Fehlermeldung
-      // WICHTIG: Gibt den String zurueck, den der Client sieht
+      // WICHTIG: Gibt den String zurÃ¼ck, den der Client sieht
       // Keine internen Details leaken!
       return 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut.';
     },
@@ -82,8 +82,8 @@ export async function POST(req: Request) {
 ```
 
 Die Trennung ist entscheidend:
-- **`onError` in `streamText`**: Server-Seite. Logge den vollen Fehler fuer Debugging.
-- **`onError` in `toUIMessageStreamResponse`**: Client-Seite. Gib eine kurze, verstaendliche Meldung zurueck.
+- **`onError` in `streamText`**: Server-Seite. Logge den vollen Fehler fÃ¼r Debugging.
+- **`onError` in `toUIMessageStreamResponse`**: Client-Seite. Gib eine kurze, verstaendliche Meldung zurÃ¼ck.
 
 ### Schicht 3: Spezifische Fehlertypen behandeln
 
@@ -126,7 +126,7 @@ Wichtige Error-Typen im AI SDK:
 
 ### Schicht 4: Retry-Strategie
 
-Fuer transiente Fehler (Netzwerk, Rate Limits) kannst Du einen Retry-Wrapper bauen:
+FÃ¼r transiente Fehler (Netzwerk, Rate Limits) kannst Du einen Retry-Wrapper bauen:
 
 ```typescript
 import { streamText } from 'ai';
@@ -165,11 +165,11 @@ async function streamWithRetry(
 
 Die Retry-Strategie nutzt **Exponential Backoff**: 1s, 2s, 4s, ... Das gibt dem Provider Zeit, sich zu erholen (z.B. nach Rate Limiting).
 
-> **Hinweis:** Dieses Pattern wartet auf den vollstaendigen Text (`result.text`). Fuer Streaming-Retries (wo Du den Text schon waehrend der Generierung anzeigen willst) brauchst Du eine komplexere Loesung — z.B. den `for await`-Loop in der Retry-Schleife selbst.
+> **Hinweis:** Dieses Pattern wartet auf den vollstaendigen Text (`result.text`). FÃ¼r Streaming-Retries (wo Du den Text schon waehrend der Generierung anzeigen willst) brauchst Du eine komplexere LÃ¶sung — z.B. den `for await`-Loop in der Retry-Schleife selbst.
 
 ### Schicht 5: Try/Catch um den Stream-Consumer
 
-Vergiss nicht: Fehler koennen auch beim Konsumieren des Streams auftreten. Wrap den `for await` Loop in einen try/catch:
+Vergiss nicht: Fehler kÃ¶nnen auch beim Konsumieren des Streams auftreten. Wrap den `for await` Loop in einen try/catch:
 
 ```typescript
 const result = streamText({
@@ -186,7 +186,7 @@ try {
   console.error('\n--- Stream abgebrochen ---');
   console.error('Fehler:', error);
   // Fallback: Gespeicherte Antwort zeigen, User informieren, etc.
-  console.log('Die Antwort konnte nicht vollstaendig geladen werden.');
+  console.log('Die Antwort konnte nicht vollstÃ¤ndig geladen werden.');
 }
 ```
 
@@ -228,7 +228,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 Fuehre aus: `npx tsx error-handling.ts`
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { streamText } from 'ai';
@@ -260,9 +260,9 @@ try {
 }
 ```
 
-**Erklaerung:** Der ungueltige Modellname fuehrt zu einem API-Fehler. `onError` loggt den Fehler serverseitig (mit allen Details fuer Debugging). Der try/catch um den Stream-Consumer faengt den Fehler ab und zeigt eine verstaendliche Meldung. In Production wuerdest Du hier eine UI-Komponente rendern statt `console.log`.
+**ErklÃ¤rung:** Der ungueltige Modellname fuehrt zu einem API-Fehler. `onError` loggt den Fehler serverseitig (mit allen Details fÃ¼r Debugging). Der try/catch um den Stream-Consumer faengt den Fehler ab und zeigt eine verstaendliche Meldung. In Production wuerdest Du hier eine UI-Komponente rendern statt `console.log`.
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 
 ```
 Starte Stream mit absichtlichem Fehler...

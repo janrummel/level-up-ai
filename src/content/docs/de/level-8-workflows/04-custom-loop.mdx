@@ -17,13 +17,13 @@ import { Image } from 'astro:assets';
 
 <Image src={l8C3Overview} alt="Overview: Initialize als Input, Custom Loop mit generateText, finishReason-Check und Messages-Update als Prozess, Return Ergebnis als Output" />
 
-Ein Custom Loop gibt Dir volle Kontrolle ueber den Agent-Lifecycle. Du verwaltest das Messages-Array, pruefst den `finishReason`, trackst eigenen State und entscheidest nach jeder Iteration, ob der Loop weiterlaeuft.
+Ein Custom Loop gibt Dir volle Kontrolle Ã¼ber den Agent-Lifecycle. Du verwaltest das Messages-Array, pruefst den `finishReason`, trackst eigenen State und entscheidest nach jeder Iteration, ob der Loop weiterlaeuft.
 
 ## WHY
 
-**Ohne Custom Loop:** Du nutzt `generateText` mit `maxSteps` oder `stopWhen: stepCountIs(N)` (aus Level 3). Das reicht fuer Standard-Faelle. Aber: Du kannst nur nach Step-Count abbrechen, keinen eigenen State zwischen Iterationen tracken und keine Entscheidungen basierend auf Tool-Ergebnissen treffen.
+**Ohne Custom Loop:** Du nutzt `generateText` mit `maxSteps` oder `stopWhen: stepCountIs(N)` (aus Level 3). Das reicht fÃ¼r Standard-Faelle. Aber: Du kannst nur nach Step-Count abbrechen, keinen eigenen State zwischen Iterationen tracken und keine Entscheidungen basierend auf Tool-Ergebnissen treffen.
 
-**Mit Custom Loop:** Volle Kontrolle ueber den Agent-Lifecycle. Du entscheidest nach jeder Iteration: Weitermachen oder stoppen? Du trackst, welche Tools aufgerufen wurden, wie oft, mit welchen Ergebnissen. Du kannst basierend auf einem bestimmten Tool-Ergebnis abbrechen — nicht nur nach N Steps.
+**Mit Custom Loop:** Volle Kontrolle Ã¼ber den Agent-Lifecycle. Du entscheidest nach jeder Iteration: Weitermachen oder stoppen? Du trackst, welche Tools aufgerufen wurden, wie oft, mit welchen Ergebnissen. Du kannst basierend auf einem bestimmten Tool-Ergebnis abbrechen — nicht nur nach N Steps.
 
 ## WALKTHROUGH
 
@@ -47,7 +47,7 @@ const searchTool = tool({
   }),
   execute: async ({ query }) => {
     // Simulierte Suche
-    return { results: [`Ergebnis fuer "${query}": Wichtige Fakten...`] };
+    return { results: [`Ergebnis fÃ¼r "${query}": Wichtige Fakten...`] };
   },
 });
 
@@ -76,7 +76,7 @@ while (!done) {
 }
 ```
 
-Der Kern: `result.response.messages` enthaelt die Assistant-Message (mit Tool Calls) und die Tool-Result-Messages. Diese werden zum `messages`-Array gepusht, damit das LLM in der naechsten Iteration den Kontext hat.
+Der Kern: `result.response.messages` enthaelt die Assistant-Message (mit Tool Calls) und die Tool-Result-Messages. Diese werden zum `messages`-Array gepusht, damit das LLM in der nÃ¤chsten Iteration den Kontext hat.
 
 ### Schicht 2: State-Tracking
 
@@ -154,7 +154,7 @@ console.log(`Tool Calls gesamt: ${state.toolCallCount}`);
 console.log(`Tools verwendet: ${[...state.toolsUsed].join(', ')}`);
 ```
 
-Jetzt siehst Du nach jedem Loop-Durchlauf: Wie viele Tool Calls wurden gemacht? Welche Tools wurden genutzt? Das ist mit `ToolLoopAgent` nicht moeglich — dort bekommst Du diese Informationen erst am Ende.
+Jetzt siehst Du nach jedem Loop-Durchlauf: Wie viele Tool Calls wurden gemacht? Welche Tools wurden genutzt? Das ist mit `ToolLoopAgent` nicht mÃ¶glich — dort bekommst Du diese Informationen erst am Ende.
 
 ### Schicht 3: Abbruch basierend auf Tool-Ergebnis
 
@@ -192,7 +192,7 @@ const searchTool = tool({
 const messages: Array<any> = [
   {
     role: 'user',
-    content: 'Recherchiere Edge Computing. Nutze search fuer Recherche und checkQuality um die Qualitaet zu pruefen. Stoppe erst wenn die Qualitaet ausreicht.',
+    content: 'Recherchiere Edge Computing. Nutze search fÃ¼r Recherche und checkQuality um die QualitÃ¤t zu prÃ¼fen. Stoppe erst wenn die QualitÃ¤t ausreicht.',
   },
 ];
 
@@ -211,7 +211,7 @@ while (!done) {
     if (tc.toolName === 'checkQuality' && tc.result.sufficient) {
       qualityScore = tc.result.score;
       done = true;                                // ← Abbruch basierend auf Tool-Ergebnis
-      console.log(`Qualitaet ausreichend: Score ${qualityScore}`);
+      console.log(`QualitÃ¤t ausreichend: Score ${qualityScore}`);
     }
   }
 
@@ -223,7 +223,7 @@ while (!done) {
 }
 ```
 
-Das ist der Kernvorteil: Du brichst nicht nach N Steps ab, sondern wenn ein bestimmtes Tool ein bestimmtes Ergebnis liefert. Das LLM recherchiert solange, bis die Qualitaet stimmt.
+Das ist der Kernvorteil: Du brichst nicht nach N Steps ab, sondern wenn ein bestimmtes Tool ein bestimmtes Ergebnis liefert. Das LLM recherchiert solange, bis die QualitÃ¤t stimmt.
 
 ## TRY
 
@@ -263,13 +263,13 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 
 **Checkliste:**
 - [ ] Messages-Array korrekt initialisiert
-- [ ] while-Loop prueft `finishReason`
+- [ ] while-Loop prÃ¼ft `finishReason`
 - [ ] `result.response.messages` wird zum Messages-Array gepusht
 - [ ] Tool Call Count wird getrackt
 - [ ] Loop bricht ab, wenn `save`-Tool `{ saved: true }` zurueckgibt
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { generateText, tool } from 'ai';
@@ -302,7 +302,7 @@ const saveTool = tool({
 const messages: Array<any> = [
   {
     role: 'user',
-    content: 'Recherchiere die Vorteile von Edge Computing. Nutze search fuer die Recherche. Wenn Du genug Informationen hast, nutze save um das Ergebnis zu speichern.',
+    content: 'Recherchiere die Vorteile von Edge Computing. Nutze search fÃ¼r die Recherche. Wenn Du genug Informationen hast, nutze save um das Ergebnis zu speichern.',
   },
 ];
 
@@ -347,7 +347,7 @@ console.log(`Tool Calls gesamt: ${toolCallCount}`);
 console.log(`Messages im Array: ${messages.length}`);
 ```
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 Iteration 1: 1 Tool Calls
 Iteration 2: 2 Tool Calls
@@ -362,7 +362,7 @@ Tool Calls gesamt: 3
 Messages im Array: 7
 ```
 
-**Erklaerung:** Der while-Loop laeuft, bis entweder das `save`-Tool `{ saved: true }` zurueckgibt oder `finishReason === 'stop'`. Nach jeder Iteration werden die Response-Messages zum Array gepusht, damit das LLM den vollen Kontext hat. Die Tool Calls werden gezaehlt und am Ende als Statistik ausgegeben.
+**ErklÃ¤rung:** Der while-Loop laeuft, bis entweder das `save`-Tool `{ saved: true }` zurueckgibt oder `finishReason === 'stop'`. Nach jeder Iteration werden die Response-Messages zum Array gepusht, damit das LLM den vollen Kontext hat. Die Tool Calls werden gezaehlt und am Ende als Statistik ausgegeben.
 
 </details>
 

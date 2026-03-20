@@ -1,6 +1,6 @@
 ---
-title: "Boss Fight: Eval-Pipeline fuer Chat Titles"
-description: "Kombiniere alle fuenf Bausteine aus Level 6 in einer kompletten Eval-Pipeline fuer einen Chat-Titel-Generator."
+title: "Boss Fight: Eval-Pipeline fÃ¼r Chat Titles"
+description: "Kombiniere alle fuenf Bausteine aus Level 6 in einer kompletten Eval-Pipeline fÃ¼r einen Chat-Titel-Generator."
 sidebar:
   order: 7
   badge:
@@ -12,7 +12,7 @@ import overviewDiagram from '../../../../assets/diagrams/l6-boss-overview.svg';
 
 ## Das Szenario
 
-Du baust eine **komplette Eval-Pipeline fuer einen Chat-Titel-Generator**. Das System nimmt eine User-Nachricht und generiert einen kurzen, beschreibenden Titel fuer den Chat. Deine Pipeline evaluiert die Qualitaet dieser Titel automatisch — mit deterministischen Scorern UND LLM-as-Judge.
+Du baust eine **komplette Eval-Pipeline fÃ¼r einen Chat-Titel-Generator**. Das System nimmt eine User-Nachricht und generiert einen kurzen, beschreibenden Titel fÃ¼r den Chat. Deine Pipeline evaluiert die QualitÃ¤t dieser Titel automatisch — mit deterministischen Scorern UND LLM-as-Judge.
 
 So soll es funktionieren:
 
@@ -20,7 +20,7 @@ So soll es funktionieren:
 Input:  "Ich brauche Hilfe mit TypeScript Generics und Constraints"
 Title:  "TypeScript Generics"
 
-Input:  "Wie konfiguriere ich Docker Compose fuer ein Multi-Container Setup?"
+Input:  "Wie konfiguriere ich Docker Compose fÃ¼r ein Multi-Container Setup?"
 Title:  "Docker Compose Setup"
 
 Input:  ""
@@ -44,11 +44,11 @@ Dieses Projekt verbindet alle fuenf Bausteine:
    - 51-80 Zeichen → Score 0.5
    - 0 oder >80 Zeichen → Score 0.0
 
-5. **Deterministic Scorer: Kein Punkt am Ende** (Challenge 6.2) — Erstelle einen Scorer, der prueft, ob der Titel NICHT mit einem Punkt endet.
+5. **Deterministic Scorer: Kein Punkt am Ende** (Challenge 6.2) — Erstelle einen Scorer, der prÃ¼ft, ob der Titel NICHT mit einem Punkt endet.
 
 6. **LLM-as-Judge Scorer: Relevanz** (Challenge 6.3) — Erstelle einen Scorer, der bewertet, ob der generierte Titel zur User-Nachricht passt. Nutze `generateObject` mit einem Zod Schema und einer Score-Skala.
 
-7. **Mehrere Scorer kombiniert** — Alle drei Scorer (Titellaenge, kein Punkt, Relevanz) muessen in einem `scorers`-Array laufen.
+7. **Mehrere Scorer kombiniert** — Alle drei Scorer (Titellaenge, kein Punkt, Relevanz) mÃ¼ssen in einem `scorers`-Array laufen.
 
 8. **Eval-Driven Iteration** — Fuehre die Evals einmal aus, analysiere die Ergebnisse, passe den System Prompt an und fuehre die Evals erneut aus. Hat sich der Score verbessert?
 
@@ -81,9 +81,9 @@ import { z } from 'zod';
 //   - Nutze generateObject mit einem Judge-Prompt
 //   - Score-Skala: A (perfekt relevant), B (teilweise relevant),
 //     C (vage relevant), D (nicht relevant)
-//   - Gib score + metadata (rationale) zurueck
+//   - Gib score + metadata (rationale) zurÃ¼ck
 
-// TODO 4: Definiere den System Prompt fuer den Titel-Generator
+// TODO 4: Definiere den System Prompt fÃ¼r den Titel-Generator
 
 // TODO 5: Erstelle das Dataset mit 20+ Test-Cases
 
@@ -99,9 +99,9 @@ Deine Boss Fight ist bestanden, wenn:
 
 - [ ] Dataset mit mindestens 20 diversen Test-Cases (technisch, conversational, Edge Cases, mehrdeutig)
 - [ ] `generateText` mit `traceAISDKModel` als `task` — Titel werden vom LLM generiert
-- [ ] System Prompt definiert Regeln fuer Titel-Generierung (Laenge, Format, Stil)
+- [ ] System Prompt definiert Regeln fÃ¼r Titel-Generierung (Laenge, Format, Stil)
 - [ ] `titleLength` Scorer bewertet die Laenge mit abgestuften Scores
-- [ ] `noTrailingPeriod` Scorer prueft auf fehlendes Punkt am Ende
+- [ ] `noTrailingPeriod` Scorer prÃ¼ft auf fehlendes Punkt am Ende
 - [ ] `titleRelevance` Scorer nutzt LLM-as-Judge mit `generateObject` und Zod Schema
 - [ ] Alle drei Scorer laufen in einem `scorers`-Array
 - [ ] Mindestens eine Iteration: System Prompt anpassen, erneut evaluieren, Scores vergleichen
@@ -111,7 +111,7 @@ Deine Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: System Prompt Design</summary>
 
-Ein guter System Prompt fuer Titel-Generierung koennte so aussehen:
+Ein guter System Prompt fÃ¼r Titel-Generierung kÃ¶nnte so aussehen:
 
 ```
 Generate a short, descriptive title for the following chat message.
@@ -130,7 +130,7 @@ Starte damit und iteriere basierend auf den Eval-Ergebnissen.
 <details>
 <summary>Hinweis 2: Relevance Scorer Prompt</summary>
 
-Der Judge-Prompt fuer Relevanz koennte die Frage stellen: "How well does this title describe the chat message?" und eine Skala anbieten:
+Der Judge-Prompt fÃ¼r Relevanz kÃ¶nnte die Frage stellen: "How well does this title describe the chat message?" und eine Skala anbieten:
 - A (1.0): Title captures the main topic precisely
 - B (0.7): Title is related but too vague or too specific
 - C (0.3): Title is only loosely related

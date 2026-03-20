@@ -1,17 +1,17 @@
 ---
 title: "UI Messages vs Model Messages"
-description: "Die zwei Message-Typen im AI SDK v6 — UIMessage fuer das Frontend, ModelMessage fuer LLM-Calls."
+description: "Die zwei Message-Typen im AI SDK v6 — UIMessage fÃ¼r das Frontend, ModelMessage fÃ¼r LLM-Calls."
 sidebar:
   order: 1
 ---
 
-## Ueberblick
+## Ãberblick
 
-Das AI SDK v6 unterscheidet strikt zwischen zwei Message-Typen. **UIMessage** ist die Waehrung des Frontends — sie enthaelt alles, was die UI braucht: eine eindeutige `id`, strukturierte `parts` und optionale `metadata`. UIMessage ist die Source of Truth fuer den App-State und wird von `useChat` verwaltet.
+Das AI SDK v6 unterscheidet strikt zwischen zwei Message-Typen. **UIMessage** ist die Waehrung des Frontends — sie enthaelt alles, was die UI braucht: eine eindeutige `id`, strukturierte `parts` und optionale `metadata`. UIMessage ist die Source of Truth fÃ¼r den App-State und wird von `useChat` verwaltet.
 
-**ModelMessage** (auch CoreMessage genannt) ist das Format, das an das LLM gesendet wird. Es hat eine andere Struktur: vier Rollen statt drei, und der Content variiert je nach Rolle (String oder Parts-Array). ModelMessages werden nie direkt im Frontend gespeichert — sie existieren nur fuer den LLM-Call.
+**ModelMessage** (auch CoreMessage genannt) ist das Format, das an das LLM gesendet wird. Es hat eine andere Struktur: vier Rollen statt drei, und der Content variiert je nach Rolle (String oder Parts-Array). ModelMessages werden nie direkt im Frontend gespeichert — sie existieren nur fÃ¼r den LLM-Call.
 
-Die Konvertierung zwischen beiden Typen laeuft ueber zwei Utility-Funktionen: `convertToModelMessages()` wandelt UIMessages in ModelMessages um, `convertToUIMessages()` macht das Gegenteil.
+Die Konvertierung zwischen beiden Typen laeuft Ã¼ber zwei Utility-Funktionen: `convertToModelMessages()` wandelt UIMessages in ModelMessages um, `convertToUIMessages()` macht das Gegenteil.
 
 ## TypeScript-Typen
 
@@ -34,7 +34,7 @@ type UIMessagePart =
   | ReasoningUIPart     // { type: 'reasoning', ... }
   | DataUIPart;         // { type: 'data-${NAME}', data: ... } — custom Data Parts, z.B. 'data-weather'
 
-// ModelMessage — fuer LLM-Calls
+// ModelMessage — fÃ¼r LLM-Calls
 // Vier Typen: SystemModelMessage, UserModelMessage, AssistantModelMessage, ToolModelMessage
 // Rolle 'tool' existiert nur in ModelMessages, nicht in UIMessages
 ```
@@ -46,7 +46,7 @@ import { convertToModelMessages } from 'ai';
 import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-// UIMessages (z.B. von useChat) → ModelMessages fuer streamText
+// UIMessages (z.B. von useChat) → ModelMessages fÃ¼r streamText
 const modelMessages = await convertToModelMessages(uiMessages);
 
 const result = streamText({
@@ -64,7 +64,7 @@ const result = streamText({
 | Content-Format | `parts`-Array (typisiert) | String oder Parts-Array (rollenabhaengig) |
 | ID | Pflichtfeld (`id: string`) | Kein ID-Feld |
 | Metadata | Optional (`metadata?: METADATA`) | Nicht vorhanden |
-| Source of Truth | Ja — App-State | Nein — nur fuer LLM-Kommunikation |
+| Source of Truth | Ja — App-State | Nein — nur fÃ¼r LLM-Kommunikation |
 
 ## Siehe auch
 

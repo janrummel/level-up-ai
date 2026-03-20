@@ -5,7 +5,7 @@ sidebar:
   order: 9
 ---
 
-## Ueberblick
+## Ãberblick
 
 In einem Multi-Step-Szenario (z.B. Tool-Call-Loop mit `maxSteps`) durchlaeuft `streamText` mehrere Generierungsschritte. Jeder Schritt wird durch **`step-start`** und **`step-finish`** Stream Parts begrenzt. Der `step-start` Part liefert die `messageId`, Request-Metadaten und Warnings. Der `step-finish` Part liefert `finishReason`, `usage` (Token-Verbrauch), `isContinued`, Response-Metadaten und optional Log Probabilities.
 
@@ -82,10 +82,10 @@ for await (const part of result.fullStream) {
 |-------------|---------------|------------|
 | Wann | Nach jedem Schritt | Nach allen Schritten |
 | `usage` | Token-Verbrauch dieses Schritts | Token-Verbrauch des letzten Schritts |
-| `totalUsage` | Nicht verfuegbar | Aggregiert ueber alle Schritte |
-| `steps` | Nicht verfuegbar | Array aller Schritte |
-| `stepType` | `'initial'`, `'continue'`, `'tool-result'` | Nicht verfuegbar |
-| `isContinued` | `true` wenn der naechste Schritt folgt | Nicht verfuegbar |
+| `totalUsage` | Nicht verfÃ¼gbar | Aggregiert Ã¼ber alle Schritte |
+| `steps` | Nicht verfÃ¼gbar | Array aller Schritte |
+| `stepType` | `'initial'`, `'continue'`, `'tool-result'` | Nicht verfÃ¼gbar |
+| `isContinued` | `true` wenn der nÃ¤chste Schritt folgt | Nicht verfÃ¼gbar |
 
 ## StepStartUIPart
 

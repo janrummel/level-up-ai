@@ -1,6 +1,6 @@
 ---
 title: "Challenge 3.4: MCP"
-description: "Verbinde Dein LLM mit externen Diensten ueber ein standardisiertes Protokoll — MCP Client, Transport Types und Tool-Integration."
+description: "Verbinde Dein LLM mit externen Diensten Ã¼ber ein standardisiertes Protokoll — MCP Client, Transport Types und Tool-Integration."
 sidebar:
   order: 5
 ---
@@ -11,23 +11,23 @@ import combineDiagram from '../../../../assets/diagrams/l3-c4-combine.svg';
 
 ## THINK
 
-Wie verbindest Du Dein LLM mit externen Diensten — ohne fuer jeden eine eigene Integration zu bauen? Was waere, wenn es ein standardisiertes Protokoll gaebe, das jeder Tool-Server spricht?
+Wie verbindest Du Dein LLM mit externen Diensten — ohne fÃ¼r jeden eine eigene Integration zu bauen? Was wÃ¤re, wenn es ein standardisiertes Protokoll gaebe, das jeder Tool-Server spricht?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="AI App verbindet sich ueber MCP Client und Protocol mit drei MCP Servern fuer Dateien, Datenbank und Web API" />
+<Image src={overviewDiagram} alt="AI App verbindet sich Ã¼ber MCP Client und Protocol mit drei MCP Servern fÃ¼r Dateien, Datenbank und Web API" />
 
 **MCP** (Model Context Protocol) ist ein offenes Protokoll, das die Kommunikation zwischen AI-Anwendungen und Tool-Servern standardisiert. Ein MCP Client in Deiner App verbindet sich mit beliebig vielen MCP Servern — jeder Server stellt Tools bereit, die Dein LLM nutzen kann.
 
 ## WHY
 
-**Ohne MCP:** Fuer jeden externen Dienst baust Du eine eigene Integration. Eigene `tool()`-Definition, eigene API-Anbindung, eigene Fehlerbehandlung. Bei 10 Diensten hast Du 10 verschiedene Integrationen zu pflegen. Nicht standardisiert, nicht austauschbar.
+**Ohne MCP:** FÃ¼r jeden externen Dienst baust Du eine eigene Integration. Eigene `tool()`-Definition, eigene API-Anbindung, eigene Fehlerbehandlung. Bei 10 Diensten hast Du 10 verschiedene Integrationen zu pflegen. Nicht standardisiert, nicht austauschbar.
 
-**Mit MCP:** Ein Protokoll fuer alle Tools. Du verbindest Dich mit einem MCP Server und bekommst automatisch alle seine Tools — mit Beschreibungen, Schemas, fertig zur Nutzung. Server wechseln? Transport aendern? Ein Konfigurationswechsel, kein Code-Umbau.
+**Mit MCP:** Ein Protokoll fÃ¼r alle Tools. Du verbindest Dich mit einem MCP Server und bekommst automatisch alle seine Tools — mit Beschreibungen, Schemas, fertig zur Nutzung. Server wechseln? Transport Ã¤ndern? Ein Konfigurationswechsel, kein Code-Umbau.
 
 ## WALKTHROUGH
 
-### Setup fuer diese Challenge
+### Setup fÃ¼r diese Challenge
 
 MCP erfordert zwei zusaetzliche Pakete:
 
@@ -54,7 +54,7 @@ const client = await createMCPClient({
 
 ### Schicht 2: Transport-Optionen
 
-MCP unterstuetzt verschiedene Transports fuer verschiedene Szenarien:
+MCP unterstuetzt verschiedene Transports fÃ¼r verschiedene Szenarien:
 
 | Transport | Einsatz | Beispiel |
 |-----------|---------|----------|
@@ -62,7 +62,7 @@ MCP unterstuetzt verschiedene Transports fuer verschiedene Szenarien:
 | **SSE** | Alternative zu HTTP | Server-Sent Events basiert |
 | **stdio** | Lokale Server, Development | Lokaler Prozess (Node.js, Python) |
 
-**HTTP** — fuer Remote-Server in Production:
+**HTTP** — fÃ¼r Remote-Server in Production:
 
 ```typescript
 const client = await createMCPClient({
@@ -76,7 +76,7 @@ const client = await createMCPClient({
 });
 ```
 
-**stdio** — fuer lokale Server waehrend der Entwicklung:
+**stdio** — fÃ¼r lokale Server waehrend der Entwicklung:
 
 ```typescript
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -89,11 +89,11 @@ const client = await createMCPClient({
 });
 ```
 
-stdio startet den MCP Server als lokalen Kindprozess. Kommunikation laeuft ueber stdin/stdout. Ideal fuer Development und Testen.
+stdio startet den MCP Server als lokalen Kindprozess. Kommunikation laeuft Ã¼ber stdin/stdout. Ideal fÃ¼r Development und Testen.
 
 ### Schicht 3: MCP Tools laden und nutzen
 
-`client.tools()` gibt Dir alle Tools des Servers als Objekt zurueck — fertig fuer `generateText`:
+`client.tools()` gibt Dir alle Tools des Servers als Objekt zurÃ¼ck — fertig fÃ¼r `generateText`:
 
 ```typescript
 import { createMCPClient } from '@ai-sdk/mcp';
@@ -108,7 +108,7 @@ const client = await createMCPClient({
 });
 
 // Alle Tools des Servers laden
-const tools = await client.tools();                      // ← Gibt { toolName: tool, ... } zurueck
+const tools = await client.tools();                      // ← Gibt { toolName: tool, ... } zurÃ¼ck
 
 console.log('Verfuegbare Tools:', Object.keys(tools));
 
@@ -125,7 +125,7 @@ console.log(result.text);
 await client.close();
 ```
 
-`client.tools()` gibt ein Objekt zurueck, das genau das Format hat, das `generateText` erwartet. Du kannst MCP Tools und lokale Tools auch mischen:
+`client.tools()` gibt ein Objekt zurÃ¼ck, das genau das Format hat, das `generateText` erwartet. Du kannst MCP Tools und lokale Tools auch mischen:
 
 ```typescript
 const mcpTools = await client.tools();
@@ -137,7 +137,7 @@ const allTools = {
 
 ### Schicht 4: Typisierte Tools mit Schemas
 
-Standardmaessig sind MCP Tools untypisiert — die Schemas kommen vom Server. Du kannst aber eigene Zod-Schemas angeben fuer volle TypeScript-Typsicherheit:
+Standardmaessig sind MCP Tools untypisiert — die Schemas kommen vom Server. Du kannst aber eigene Zod-Schemas angeben fÃ¼r volle TypeScript-Typsicherheit:
 
 ```typescript
 import { z } from 'zod';
@@ -200,7 +200,7 @@ const result = streamText({
 
 **Datei:** `challenge-3-4.ts`
 
-**Aufgabe:** Erstelle einen MCP Client mit stdio Transport, lade die verfuegbaren Tools und nutze sie mit `generateText`.
+**Aufgabe:** Erstelle einen MCP Client mit stdio Transport, lade die verfÃ¼gbaren Tools und nutze sie mit `generateText`.
 
 ```typescript
 import { createMCPClient } from '@ai-sdk/mcp';
@@ -213,13 +213,13 @@ import { anthropic } from '@ai-sdk/anthropic';
 // - args: ['-y', '@modelcontextprotocol/server-everything']
 //   (ein Demo-Server der verschiedene Test-Tools bereitstellt)
 
-// TODO 2: Lade die verfuegbaren Tools mit client.tools()
+// TODO 2: Lade die verfÃ¼gbaren Tools mit client.tools()
 // TODO 3: Logge die Tool-Namen: Object.keys(tools)
 
 // TODO 4: Nutze die Tools mit generateText
 // - model: anthropic('claude-sonnet-4-5-20250514')
 // - tools: die geladenen MCP Tools
-// - prompt: Eine Frage die zu den verfuegbaren Tools passt
+// - prompt: Eine Frage die zu den verfÃ¼gbaren Tools passt
 
 // TODO 5: Logge result.text und result.toolCalls
 // TODO 6: Schliesse den Client mit client.close()
@@ -233,7 +233,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] Client am Ende geschlossen
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { createMCPClient } from '@ai-sdk/mcp';
@@ -265,13 +265,13 @@ try {
 }
 ```
 
-**Erklaerung:** Der `@modelcontextprotocol/server-everything` ist ein offizieller Demo-Server, der verschiedene Test-Tools bereitstellt (echo, add, etc.). Der stdio Transport startet ihn als lokalen Kindprozess. `client.tools()` laedt automatisch alle verfuegbaren Tools mit ihren Beschreibungen und Schemas. Nach der Nutzung wird der Client — und damit der Kindprozess — sauber geschlossen.
+**ErklÃ¤rung:** Der `@modelcontextprotocol/server-everything` ist ein offizieller Demo-Server, der verschiedene Test-Tools bereitstellt (echo, add, etc.). Der stdio Transport startet ihn als lokalen Kindprozess. `client.tools()` laedt automatisch alle verfÃ¼gbaren Tools mit ihren Beschreibungen und Schemas. Nach der Nutzung wird der Client — und damit der Kindprozess — sauber geschlossen.
 
 > **Hinweis:** `npx -y` laedt und startet den Demo-Server automatisch — Du musst ihn nicht vorher installieren.
 
 **Ausfuehren:** `npx tsx challenge-3-4.ts`
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 Verfuegbare Tools: [ 'echo', 'add', 'longRunningOperation', ... ]
 

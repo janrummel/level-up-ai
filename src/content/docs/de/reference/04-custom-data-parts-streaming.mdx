@@ -5,13 +5,13 @@ sidebar:
   order: 4
 ---
 
-## Ueberblick
+## Ãberblick
 
 Data Parts transportieren strukturierte Daten neben dem LLM-Text im selben Stream. Statt Fortschritt, Status oder Quellen in den Text einzubetten, sendest Du typisierte JSON-Objekte, die das Frontend direkt rendern kann.
 
-Es gibt zwei Kategorien: **Persistent Data Parts** werden in `message.parts` gespeichert und bleiben Teil der Message-Historie. **Transient Data Parts** sind nur waehrend des Streams ueber den `onData`-Callback verfuegbar und werden nicht persistiert.
+Es gibt zwei Kategorien: **Persistent Data Parts** werden in `message.parts` gespeichert und bleiben Teil der Message-Historie. **Transient Data Parts** sind nur waehrend des Streams Ã¼ber den `onData`-Callback verfÃ¼gbar und werden nicht persistiert.
 
-Auf der Server-Seite nutzt Du `createUIMessageStreamResponse` (oder `createUIMessageStream`) mit einem `execute`-Callback. Der `writer` bietet eine `write()`-Methode fuer Custom Data Parts und `writer.merge()` fuegt den LLM-Stream ein.
+Auf der Server-Seite nutzt Du `createUIMessageStreamResponse` (oder `createUIMessageStream`) mit einem `execute`-Callback. Der `writer` bietet eine `write()`-Methode fÃ¼r Custom Data Parts und `writer.merge()` fuegt den LLM-Stream ein.
 
 ## Server-Beispiel
 
@@ -69,7 +69,7 @@ type MyUIMessage = UIMessage<
 | `createUIMessageStreamResponse({ execute })` | Erstellt eine Response mit UI Message Stream |
 | `createUIMessageStream({ execute })` | Erstellt einen rohen UI Message Stream |
 | `writer.write({ type: 'data-${NAME}', data })` | Schreibt ein Persistent Data Part |
-| `writer.write({ type: 'data-${NAME}', data, id })` | Schreibt ein Data Part mit ID (fuer Reconciliation) |
+| `writer.write({ type: 'data-${NAME}', data, id })` | Schreibt ein Data Part mit ID (fÃ¼r Reconciliation) |
 | `writer.write({ ..., transient: true })` | Schreibt ein Transient Data Part (nicht persistiert) |
 | `writer.merge(result.toUIMessageStream())` | Fuegt den LLM-Stream in den Writer ein |
 

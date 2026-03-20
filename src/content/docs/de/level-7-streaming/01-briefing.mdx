@@ -1,6 +1,6 @@
 ---
 title: "Level 7: Streaming — Briefing"
-description: "Fortgeschrittenes Streaming — Custom Data Parts, Message Metadata, Stream Transforms und Error Handling fuer Production-Apps."
+description: "Fortgeschrittenes Streaming — Custom Data Parts, Message Metadata, Stream Transforms und Error Handling fÃ¼r Production-Apps."
 sidebar:
   order: 1
   badge:
@@ -13,11 +13,11 @@ import skillTree from '../../../../assets/diagrams/skill-tree-l7-briefing.svg';
 import LessonIllustration from '../../../../components/LessonIllustration.astro';
 import illustration from '../../../../assets/illustrations/l7-streaming.svg';
 
-<LessonIllustration src={illustration} alt="Level 7: Streaming — fortgeschrittenes Streaming fuer Production-Apps" />
+<LessonIllustration src={illustration} alt="Level 7: Streaming — fortgeschrittenes Streaming fÃ¼r Production-Apps" />
 
 ## TL;DR
 
-> Fortgeschrittenes Streaming — Custom Data Parts, Message Metadata, Stream Transforms und Error Handling fuer Production-Apps. Du lernst, wie Du neben Text auch strukturierte Daten im Stream transportierst, Metadaten sauber vom LLM-Content trennst, stotternde Streams glaettest und Fehler abfaengst, ohne dass Deine App crasht.
+> Fortgeschrittenes Streaming — Custom Data Parts, Message Metadata, Stream Transforms und Error Handling fÃ¼r Production-Apps. Du lernst, wie Du neben Text auch strukturierte Daten im Stream transportierst, Metadaten sauber vom LLM-Content trennst, stotternde Streams glaettest und Fehler abfaengst, ohne dass Deine App crasht.
 
 ## Skill Tree
 
@@ -36,7 +36,7 @@ In diesem Level machst Du deutlich mehr API-Calls als bisher — Streaming bedeu
 
 ## Warum das wichtig ist
 
-In Level 1 hast Du `streamText` kennengelernt — Token fuer Token ins Terminal schreiben. Das reicht fuer Prototypen. In Production brauchst Du mehr: strukturierte Daten neben dem Text, saubere Metadaten-Trennung, fluessige Ausgabe und robuste Fehlerbehandlung.
+In Level 1 hast Du `streamText` kennengelernt — Token fÃ¼r Token ins Terminal schreiben. Das reicht fÃ¼r Prototypen. In Production brauchst Du mehr: strukturierte Daten neben dem Text, saubere Metadaten-Trennung, fluessige Ausgabe und robuste Fehlerbehandlung.
 
 Das konkrete Problem: Dein Stream liefert nur rohen Text. Aber Deine UI braucht Fortschrittsanzeigen, Quellenangaben und Status-Updates — und wenn der Provider mitten im Stream abstuerzt, sieht Dein User eine weisse Seite.
 
@@ -61,9 +61,9 @@ Das konkrete Problem: Dein Stream liefert nur rohen Text. Aber Deine UI braucht 
 
 ## Boss Fight
 
-Baue ein **Real-Time Dashboard**: Ein Streaming-System, das Custom Data Parts fuer Status-Updates sendet, Message Metadata fuer Session-Tracking nutzt, `smoothStream` fuer fluessige Ausgabe anwendet und Fehler graceful abfaengt — alles in einem Projekt.
+Baue ein **Real-Time Dashboard**: Ein Streaming-System, das Custom Data Parts fÃ¼r Status-Updates sendet, Message Metadata fÃ¼r Session-Tracking nutzt, `smoothStream` fÃ¼r fluessige Ausgabe anwendet und Fehler graceful abfaengt — alles in einem Projekt.
 
-## Quellen fuer dieses Level
+## Quellen fÃ¼r dieses Level
 
 - [Vercel AI SDK: Streaming](https://ai-sdk.dev/docs/ai-sdk-core/generating-text#streamtext)
 - [Vercel AI SDK: Stream Helpers](https://ai-sdk.dev/docs/ai-sdk-core/stream-helpers)

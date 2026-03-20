@@ -15,15 +15,15 @@ Was wenn ein LLM mehrere Tools nacheinander aufrufen muss, um eine Aufgabe zu lo
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Prompt startet LLM, LLM prueft ob Tool Call noetig, wenn ja Execute Tool und zurueck zum LLM, wenn nein Final Answer" />
+<Image src={overviewDiagram} alt="Prompt startet LLM, LLM prÃ¼ft ob Tool Call noetig, wenn ja Execute Tool und zurÃ¼ck zum LLM, wenn nein Final Answer" />
 
-Das ist der **Agentic Loop**: Das LLM generiert → prueft ob es ein Tool braucht → fuehrt das Tool aus → schickt das Ergebnis zurueck → generiert erneut. Das wiederholt sich, bis das LLM eine finale Antwort hat oder ein Limit erreicht ist.
+Das ist der **Agentic Loop**: Das LLM generiert → prÃ¼ft ob es ein Tool braucht → fuehrt das Tool aus → schickt das Ergebnis zurÃ¼ck → generiert erneut. Das wiederholt sich, bis das LLM eine finale Antwort hat oder ein Limit erreicht ist.
 
 ## WHY
 
 **Ohne Loop:** Nur ein einziger Tool Call pro Request. Das LLM kann eine Frage beantworten die ein Tool braucht, aber keine komplexen Aufgaben, die mehrere Schritte erfordern. "Recherchiere X, fasse es zusammen und berechne Y" — unmoeglich in einem Schritt.
 
-**Mit Loop:** Autonome Multi-Step Agents. Das LLM entscheidet selbst, welches Tool es als naechstes braucht, wie oft es iteriert und wann es fertig ist. Es kann Zwischenergebnisse nutzen, um den naechsten Schritt zu planen.
+**Mit Loop:** Autonome Multi-Step Agents. Das LLM entscheidet selbst, welches Tool es als naechstes braucht, wie oft es iteriert und wann es fertig ist. Es kann Zwischenergebnisse nutzen, um den nÃ¤chsten Schritt zu planen.
 
 ## WALKTHROUGH
 
@@ -72,7 +72,7 @@ const { text, steps } = await generateText({
   prompt: 'Recherchiere die Geschichte von Rust.',
 });
 
-// Alle Tool Calls ueber alle Schritte extrahieren
+// Alle Tool Calls Ã¼ber alle Schritte extrahieren
 const allToolCalls = steps.flatMap(step => step.toolCalls);
 
 console.log(`Agent hat ${steps.length} Schritte gemacht`);
@@ -82,18 +82,18 @@ for (const call of allToolCalls) {
   console.log(`  - ${call.toolName}(${JSON.stringify(call.args)})`);
 }
 
-// Token-Verbrauch ueber alle Schritte
+// Token-Verbrauch Ã¼ber alle Schritte
 const totalTokens = steps.reduce(
   (sum, step) => sum + step.usage.totalTokens, 0
 );
 console.log(`Tokens gesamt: ${totalTokens}`);
 ```
 
-`steps.flatMap(s => s.toolCalls)` ist das zentrale Pattern: Es sammelt alle Tool Calls aus allen Schritten in ein flaches Array. Genauso funktioniert es fuer `toolResults`.
+`steps.flatMap(s => s.toolCalls)` ist das zentrale Pattern: Es sammelt alle Tool Calls aus allen Schritten in ein flaches Array. Genauso funktioniert es fÃ¼r `toolResults`.
 
 ### Schicht 3: Mehrere Tools im Loop
 
-Die wahre Staerke des Agentic Loop zeigt sich mit mehreren Tools. Das LLM waehlt pro Schritt das passende Tool:
+Die wahre StÃ¤rke des Agentic Loop zeigt sich mit mehreren Tools. Das LLM waehlt pro Schritt das passende Tool:
 
 ```typescript
 import { generateText, tool, stepCountIs } from 'ai';
@@ -149,11 +149,11 @@ for (const [i, step] of steps.entries()) {
 }
 ```
 
-Das LLM koennte so vorgehen: Schritt 1 → `search("Rust Geschichte")` → Schritt 2 → `calculator({ operation: 'subtract', a: 2026, b: 2010 })` → Schritt 3 → `summarize(...)` → Schritt 4 → Finale Antwort. Die Reihenfolge entscheidet das LLM autonom.
+Das LLM kÃ¶nnte so vorgehen: Schritt 1 → `search("Rust Geschichte")` → Schritt 2 → `calculator({ operation: 'subtract', a: 2026, b: 2010 })` → Schritt 3 → `summarize(...)` → Schritt 4 → Finale Antwort. Die Reihenfolge entscheidet das LLM autonom.
 
 ### Schicht 4: onStepFinish Callback
 
-Mit `onStepFinish` bekommst Du nach jedem Schritt einen Callback. Ideal fuer Echtzeit-Monitoring:
+Mit `onStepFinish` bekommst Du nach jedem Schritt einen Callback. Ideal fÃ¼r Echtzeit-Monitoring:
 
 ```typescript
 const { text, steps } = await generateText({
@@ -174,7 +174,7 @@ const { text, steps } = await generateText({
 });
 ```
 
-`onStepFinish` wird nach jedem Schritt aufgerufen — egal ob der Schritt einen Tool Call oder Text enthielt. Das gibt Dir Live-Feedback ueber den Fortschritt des Agents.
+`onStepFinish` wird nach jedem Schritt aufgerufen — egal ob der Schritt einen Tool Call oder Text enthielt. Das gibt Dir Live-Feedback Ã¼ber den Fortschritt des Agents.
 
 ## TRY
 
@@ -190,12 +190,12 @@ import { z } from 'zod';
 // TODO 1: Definiere ein searchTool
 // - description: Sucht nach Informationen
 // - inputSchema: query (string)
-// - execute: Gibt simulierte Suchergebnisse zurueck
+// - execute: Gibt simulierte Suchergebnisse zurÃ¼ck
 
 // TODO 2: Definiere ein summarizeTool
 // - description: Fasst Text zusammen
 // - inputSchema: text (string)
-// - execute: Gibt eine simulierte Zusammenfassung zurueck
+// - execute: Gibt eine simulierte Zusammenfassung zurÃ¼ck
 
 // TODO 3: Nutze generateText mit:
 // - Beiden Tools
@@ -206,18 +206,18 @@ import { z } from 'zod';
 // TODO 4: Logge:
 // - result.text (finale Antwort)
 // - Anzahl der Schritte
-// - Alle Tool Calls ueber alle Schritte
+// - Alle Tool Calls Ã¼ber alle Schritte
 ```
 
 **Checkliste:**
 - [ ] Zwei Tools definiert (search + summarize)
 - [ ] `stopWhen: stepCountIs(3)` gesetzt
 - [ ] `onStepFinish` Callback implementiert
-- [ ] `steps.flatMap(s => s.toolCalls)` fuer alle Tool Calls
+- [ ] `steps.flatMap(s => s.toolCalls)` fÃ¼r alle Tool Calls
 - [ ] Agent nutzt beide Tools autonom
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>LÃ¶sung anzeigen</summary>
 
 ```typescript
 import { generateText, tool, stepCountIs } from 'ai';
@@ -248,7 +248,7 @@ const summarizeTool = tool({
     summary: `Zusammenfassung von ${text.length} Zeichen`,
     keyPoints: [
       'Microsoft-Entwicklung seit 2012',
-      'Statische Typen fuer JavaScript',
+      'Statische Typen fÃ¼r JavaScript',
       'Aktive Weiterentwicklung',
     ],
   }),
@@ -281,11 +281,11 @@ for (const call of allToolCalls) {
 console.log(`\nAntwort:\n${text}`);
 ```
 
-**Erklaerung:** Der Agent durchlaeuft den Agentic Loop: Schritt 1 → `search` aufrufen → Suchergebnisse erhalten → Schritt 2 → `summarize` mit den Ergebnissen → Zusammenfassung erhalten → Schritt 3 → Finale Antwort formulieren. Das LLM entscheidet die Reihenfolge autonom.
+**ErklÃ¤rung:** Der Agent durchlaeuft den Agentic Loop: Schritt 1 → `search` aufrufen → Suchergebnisse erhalten → Schritt 2 → `summarize` mit den Ergebnissen → Zusammenfassung erhalten → Schritt 3 → Finale Antwort formulieren. Das LLM entscheidet die Reihenfolge autonom.
 
 **Ausfuehren:** `npx tsx challenge-3-3.ts`
 
-**Erwarteter Output (ungefaehr):**
+**Erwarteter Output (ungefÃ¤hr):**
 ```
 --- Schritt 1 ---
   Tools: search
@@ -313,15 +313,15 @@ TypeScript ist eine von Microsoft entwickelte Programmiersprache...
 
 <Image src={combineDiagram} alt="User Prompt startet Agentic Loop: LLM waehlt zwischen search, calculator oder Final Answer" />
 
-**Uebung:** Erweitere den Research Agent um das Calculator-Tool aus Challenge 3.1. Der Agent soll sowohl recherchieren als auch rechnen koennen.
+**Uebung:** Erweitere den Research Agent um das Calculator-Tool aus Challenge 3.1. Der Agent soll sowohl recherchieren als auch rechnen kÃ¶nnen.
 
 1. Nimm das `searchTool` und `summarizeTool` von oben
 2. Fuege das `calculatorTool` aus Challenge 3.1 hinzu
-3. Setze `stopWhen: stepCountIs(5)` fuer mehr Schritte
+3. Setze `stopWhen: stepCountIs(5)` fÃ¼r mehr Schritte
 4. Prompt: "Recherchiere wann TypeScript veroeffentlicht wurde. Berechne wie viele Jahre das her ist. Fasse alles zusammen."
 5. Logge den vollstaendigen Agent-Verlauf: Welches Tool wurde in welchem Schritt genutzt?
 
-**Optional Stretch Goal:** Fuege `onStepFinish` hinzu und berechne die kumulative Token-Nutzung ueber alle Schritte. Zeige nach jedem Schritt an: "Schritt X: Y Tokens (gesamt: Z Tokens)."
+**Optional Stretch Goal:** Fuege `onStepFinish` hinzu und berechne die kumulative Token-Nutzung Ã¼ber alle Schritte. Zeige nach jedem Schritt an: "Schritt X: Y Tokens (gesamt: Z Tokens)."
 
 ## Quellen
 
