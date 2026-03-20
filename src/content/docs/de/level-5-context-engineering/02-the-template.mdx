@@ -16,17 +16,17 @@ Wenn Du einen System Prompt schreibst — wie stellst Du sicher, dass er bei 20 
 
 <Image src={overviewDiagram} alt="Variables (role, audience, tone) fliessen in ein Prompt Template mit XML Tags (task-context, background-data, examples, rules, conversation-history, the-ask, output-format), das dann generateText und LLM zu konsistentem Output fuehrt" />
 
-Das Diagramm zeigt die Kernidee: Ein Prompt Template definiert eine feste Struktur mit XML Tags. Variablen werden dynamisch injiziert. Das Ergebnis ist ein konsistenter, wiederverwendbarer Prompt fÃ¼r beliebig viele API-Calls.
+Das Diagramm zeigt die Kernidee: Ein Prompt Template definiert eine feste Struktur mit XML Tags. Variablen werden dynamisch injiziert. Das Ergebnis ist ein konsistenter, wiederverwendbarer Prompt fuer beliebig viele API-Calls.
 
 ## WHY
 
-**Ohne Template:** Du kopierst Prompts per Copy-Paste in jede Datei. Jeder Prompt sieht leicht anders aus. Aenderungen am Ton oder Format mÃ¼ssen an 20 Stellen gleichzeitig gemacht werden. Das Ergebnis ist inkonsistent und nicht testbar.
+**Ohne Template:** Du kopierst Prompts per Copy-Paste in jede Datei. Jeder Prompt sieht leicht anders aus. Aenderungen am Ton oder Format muessen an 20 Stellen gleichzeitig gemacht werden. Das Ergebnis ist inkonsistent und nicht testbar.
 
 **Mit Template:** Ein Prompt, eine Stelle, viele Aufgaben. Du aenderst die Variablen — der Rest bleibt gleich. DRY (Don't Repeat Yourself), testbar, wartbar.
 
 ## WALKTHROUGH
 
-### Schicht 1: Die Grundstruktur (XML Tags fÃ¼r Sections)
+### Schicht 1: Die Grundstruktur (XML Tags fuer Sections)
 
 Anthropic empfiehlt, Prompts mit XML Tags zu strukturieren. Jeder Tag hat eine bestimmte Funktion und Position — die Reihenfolge folgt der Aufmerksamkeitsverteilung von LLMs:
 
@@ -60,7 +60,7 @@ Ausgabeformat — steht am ENDE (hoher Einfluss)
 </output-format>
 ```
 
-LLMs gewichten Anfang und Ende stÃ¤rker als die Mitte. Deshalb stehen `<task-context>` und `<output-format>` an den Raendern — dort, wo sie den groessten Einfluss haben.
+LLMs gewichten Anfang und Ende staerker als die Mitte. Deshalb stehen `<task-context>` und `<output-format>` an den Raendern — dort, wo sie den groessten Einfluss haben.
 
 ### Schicht 2: Variables und dynamische Inhalte
 
@@ -81,7 +81,7 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklÃ¤ren
+- Fachbegriffe beim ersten Auftreten erklaeren
 - Keine Annahmen ohne Kennzeichnung
 </rules>
 
@@ -91,7 +91,7 @@ Formatiere Deine Antwort als: ${config.outputFormat}
 `;
 ```
 
-Jede Variable macht den Prompt flexibel, ohne die Struktur zu veraendern. Derselbe Prompt funktioniert fÃ¼r einen "technischen Redakteur" genauso wie fÃ¼r einen "Marketing-Texter" — nur die Variablen Ã¤ndern sich.
+Jede Variable macht den Prompt flexibel, ohne die Struktur zu veraendern. Derselbe Prompt funktioniert fuer einen "technischen Redakteur" genauso wie fuer einen "Marketing-Texter" — nur die Variablen aendern sich.
 
 ### Schicht 3: Die buildSystemPrompt Funktion
 
@@ -117,9 +117,9 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklÃ¤ren
+- Fachbegriffe beim ersten Auftreten erklaeren
 - Keine Annahmen ohne Kennzeichnung
-- Codebeispiele mÃ¼ssen lauffaehig sein
+- Codebeispiele muessen lauffaehig sein
 </rules>
 
 <output-format>
@@ -143,7 +143,7 @@ const result = await generateText({
 console.log(result.text);
 ```
 
-Die Funktion nimmt ein `PromptConfig`-Objekt und gibt einen vollstaendigen System Prompt als String zurÃ¼ck. Du kannst sie in Tests mocken, in verschiedenen Kontexten wiederverwenden und an einer Stelle Ã¤ndern.
+Die Funktion nimmt ein `PromptConfig`-Objekt und gibt einen vollstaendigen System Prompt als String zurueck. Du kannst sie in Tests mocken, in verschiedenen Kontexten wiederverwenden und an einer Stelle aendern.
 
 ## TRY
 
@@ -164,10 +164,10 @@ interface PromptConfig {
 
 // TODO: Implementiere buildSystemPrompt
 // 1. Nutze Template Literals (Backticks)
-// 2. Setze XML Tags fÃ¼r die Struktur ein:
-//    - <task-context> fÃ¼r Rolle und Zielgruppe
-//    - <rules> fÃ¼r Tonalitaet und Einschraenkungen
-//    - <output-format> fÃ¼r das gewuenschte Format
+// 2. Setze XML Tags fuer die Struktur ein:
+//    - <task-context> fuer Rolle und Zielgruppe
+//    - <rules> fuer Tonalitaet und Einschraenkungen
+//    - <output-format> fuer das gewuenschte Format
 // 3. Injiziere die config-Variablen an den richtigen Stellen
 function buildSystemPrompt(config: PromptConfig): string {
   // Dein Code hier
@@ -189,13 +189,13 @@ console.log(result.text);
 ```
 
 **Checkliste:**
-- [ ] Template nutzt XML Tags fÃ¼r Struktur
+- [ ] Template nutzt XML Tags fuer Struktur
 - [ ] Mindestens 4 Sektionen (role, audience, tone, format)
-- [ ] Funktion gibt einen String zurÃ¼ck
+- [ ] Funktion gibt einen String zurueck
 - [ ] Code laeuft mit `generateText`
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -217,9 +217,9 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklÃ¤ren
+- Fachbegriffe beim ersten Auftreten erklaeren
 - Keine Annahmen ohne Kennzeichnung
-- Codebeispiele mÃ¼ssen lauffaehig sein
+- Codebeispiele muessen lauffaehig sein
 </rules>
 
 <output-format>
@@ -242,9 +242,9 @@ const result = await generateText({
 console.log(result.text);
 ```
 
-**ErklÃ¤rung:** Die Funktion nutzt `<task-context>` am Anfang fÃ¼r maximalen Einfluss auf die Rolle und `<output-format>` am Ende fÃ¼r maximale Kontrolle Ã¼ber das Format. Die `<rules>` stehen in der Mitte. Alle vier `config`-Variablen werden dynamisch injiziert.
+**Erklaerung:** Die Funktion nutzt `<task-context>` am Anfang fuer maximalen Einfluss auf die Rolle und `<output-format>` am Ende fuer maximale Kontrolle ueber das Format. Die `<rules>` stehen in der Mitte. Alle vier `config`-Variablen werden dynamisch injiziert.
 
-**Erwarteter Output (ungefÃ¤hr — LLM-Ausgaben variieren):**
+**Erwarteter Output (ungefaehr — LLM-Ausgaben variieren):**
 ```
 Context Engineering ist die systematische Gestaltung des Inputs...
 ```
@@ -259,7 +259,7 @@ Context Engineering ist die systematische Gestaltung des Inputs...
 
 Du brauchst:
 1. Ersetze `generateText` durch `streamText`
-2. Iteriere Ã¼ber `result.textStream` mit `for await...of`
+2. Iteriere ueber `result.textStream` mit `for await...of`
 3. Gib jeden Chunk mit `process.stdout.write(chunk)` aus
 
 **Optional Stretch Goal:** Fuege einen zweiten Aufruf hinzu, der dasselbe Template mit einer anderen Konfiguration nutzt (z.B. `role: 'Marketing-Texter'`). Vergleiche die Outputs.

@@ -1,17 +1,17 @@
 ---
 title: "Message Metadata"
-description: "Zusaetzliche Daten an Messages anhaengen, die das LLM nicht sieht — fÃ¼r Logging, Analytics und Persistenz."
+description: "Zusaetzliche Daten an Messages anhaengen, die das LLM nicht sieht — fuer Logging, Analytics und Persistenz."
 sidebar:
   order: 7
 ---
 
-## Ãberblick
+## Ueberblick
 
-Die `metadata`-Property auf UIMessage ist ein beliebiges Objekt, das nicht an das LLM gesendet wird. Es beschreibt die Message selbst — wer sie gesendet hat, wann, mit welchem Modell, wie viele Tokens verbraucht wurden. Metadata ist unsichtbar fÃ¼r das LLM, aber nuetzlich fÃ¼r Logging, Analytics und Persistenz.
+Die `metadata`-Property auf UIMessage ist ein beliebiges Objekt, das nicht an das LLM gesendet wird. Es beschreibt die Message selbst — wer sie gesendet hat, wann, mit welchem Modell, wie viele Tokens verbraucht wurden. Metadata ist unsichtbar fuer das LLM, aber nuetzlich fuer Logging, Analytics und Persistenz.
 
-Der Unterschied zu Data Parts: **Metadata beschreibt die Message** (wer, wann, womit), **Data Parts sind dynamischer Content innerhalb der Message** (Wetter-Karten, Fortschrittsbalken, Quellen). Metadata Ã¤ndert sich nicht nach dem Erstellen, Data Parts kÃ¶nnen sich Ã¼ber ID-Reconciliation weiterentwickeln.
+Der Unterschied zu Data Parts: **Metadata beschreibt die Message** (wer, wann, womit), **Data Parts sind dynamischer Content innerhalb der Message** (Wetter-Karten, Fortschrittsbalken, Quellen). Metadata aendert sich nicht nach dem Erstellen, Data Parts koennen sich ueber ID-Reconciliation weiterentwickeln.
 
-Auf der Server-Seite setzt Du Response-Metadata Ã¼ber die `messageMetadata`-Option in `toUIMessageStreamResponse`. Incoming-Metadata von User-Messages kannst Du auf dem Server auslesen und fÃ¼r Logging oder Analytics nutzen.
+Auf der Server-Seite setzt Du Response-Metadata ueber die `messageMetadata`-Option in `toUIMessageStreamResponse`. Incoming-Metadata von User-Messages kannst Du auf dem Server auslesen und fuer Logging oder Analytics nutzen.
 
 ## Code-Beispiel
 
@@ -66,8 +66,8 @@ export async function POST(req: Request) {
 | `timestamp` | Zeitstempel der Erstellung |
 | `sessionId` | Zuordnung zu einer Session |
 | `modelId` | Welches Modell die Antwort generiert hat |
-| `tokenUsage` | Token-Verbrauch fÃ¼r Kosten-Tracking |
-| `latencyMs` | Antwortzeit fÃ¼r Performance-Monitoring |
+| `tokenUsage` | Token-Verbrauch fuer Kosten-Tracking |
+| `latencyMs` | Antwortzeit fuer Performance-Monitoring |
 | `feedbackScore` | User-Bewertung der Antwort |
 
 ## Metadata vs Data Parts
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 |-------------|----------|-----------|
 | Beschreibt | Die Message selbst | Content innerhalb der Message |
 | Aenderbar | Nein (einmal gesetzt) | Ja (via ID-Reconciliation) |
-| Sichtbar fÃ¼r LLM | Nein | Nein |
+| Sichtbar fuer LLM | Nein | Nein |
 | Typischer Inhalt | userId, timestamp, modelId | Wetter-Daten, Fortschritt, Quellen |
 | Zugriff im Frontend | `message.metadata` | `message.parts` (type `'data'`) |
 

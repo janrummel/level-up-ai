@@ -15,19 +15,19 @@ Was passiert wenn Du einem LLM einen Roman schickst — kann es den komplett les
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Context Window enthaelt System Prompt, Messages, Tool-Definitionen und Platz fÃ¼r Output; bei Ueberschreitung Fehler oder Truncation" />
+<Image src={overviewDiagram} alt="Context Window enthaelt System Prompt, Messages, Tool-Definitionen und Platz fuer Output; bei Ueberschreitung Fehler oder Truncation" />
 
-Das Context Window ist ein fester Rahmen — alles was das LLM gleichzeitig "sehen" kann. System Prompt, Chat-Verlauf, Tool-Definitionen UND der Platz fÃ¼r die Antwort mÃ¼ssen zusammen hineinpassen. Wenn nicht, gibt es Fehler oder Informationsverlust.
+Das Context Window ist ein fester Rahmen — alles was das LLM gleichzeitig "sehen" kann. System Prompt, Chat-Verlauf, Tool-Definitionen UND der Platz fuer die Antwort muessen zusammen hineinpassen. Wenn nicht, gibt es Fehler oder Informationsverlust.
 
 ## WHY
 
-**Ohne Context-Window-VerstÃ¤ndnis:** Dein Chat funktioniert fÃ¼r 10 Nachrichten, bei Nachricht 30 bekommst Du ploetzlich Fehler. Du schickst ein langes Dokument mit und die Antwort bezieht sich nur auf die letzten Absaetze. Du verstehst nicht, warum das LLM Kontext "vergisst".
+**Ohne Context-Window-Verstaendnis:** Dein Chat funktioniert fuer 10 Nachrichten, bei Nachricht 30 bekommst Du ploetzlich Fehler. Du schickst ein langes Dokument mit und die Antwort bezieht sich nur auf die letzten Absaetze. Du verstehst nicht, warum das LLM Kontext "vergisst".
 
-**Mit Context-Window-VerstÃ¤ndnis:** Du planst strategisch, was ins Fenster kommt und was nicht. Du implementierst Truncation oder Summarization, bevor es zu Fehlern kommt. Du reservierst Platz fÃ¼r den Output und hast die volle Kontrolle Ã¼ber den Informationsfluss.
+**Mit Context-Window-Verstaendnis:** Du planst strategisch, was ins Fenster kommt und was nicht. Du implementierst Truncation oder Summarization, bevor es zu Fehlern kommt. Du reservierst Platz fuer den Output und hast die volle Kontrolle ueber den Informationsfluss.
 
 ## WALKTHROUGH
 
-### Schicht 1: Context-Window-Groessen im Ãberblick
+### Schicht 1: Context-Window-Groessen im Ueberblick
 
 Verschiedene Modelle haben verschiedene Limits:
 
@@ -40,7 +40,7 @@ Verschiedene Modelle haben verschiedene Limits:
 
 200.000 Tokens klingt viel, aber in einer Chat-Anwendung summiert sich jede Nachricht. Ein System Prompt mit Tool-Definitionen kann leicht 2.000-5.000 Tokens verbrauchen — bei jedem einzelnen Call.
 
-> **Reasoning/Thinking Tokens:** Modelle wie Claude mit "Extended Thinking" oder OpenAI o3 nutzen zusaetzliche **Reasoning-Tokens**, um intern Schritt fÃ¼r Schritt zu denken, bevor sie antworten. Diese Tokens sind im Output nicht sichtbar, beanspruchen aber trotzdem das Context Window und zaehlen zu den Output-Tokens (= Kosten). Bei aktiviertem Extended Thinking kann ein einzelner Call tausende zusaetzliche Tokens verbrauchen. Das ist relevant fÃ¼r die Planung der verfÃ¼gbaren Kapazitaet — reserviere genuegend Platz fÃ¼r Reasoning, wenn Du diese Features nutzt.
+> **Reasoning/Thinking Tokens:** Modelle wie Claude mit "Extended Thinking" oder OpenAI o3 nutzen zusaetzliche **Reasoning-Tokens**, um intern Schritt fuer Schritt zu denken, bevor sie antworten. Diese Tokens sind im Output nicht sichtbar, beanspruchen aber trotzdem das Context Window und zaehlen zu den Output-Tokens (= Kosten). Bei aktiviertem Extended Thinking kann ein einzelner Call tausende zusaetzliche Tokens verbrauchen. Das ist relevant fuer die Planung der verfuegbaren Kapazitaet — reserviere genuegend Platz fuer Reasoning, wenn Du diese Features nutzt.
 
 ### Schicht 2: Was zaehlt alles rein?
 
@@ -65,14 +65,14 @@ const result = await generateText({
     { role: 'user', content: 'Und dieser Code?' },            // ← Aktuelle Nachricht
   ],
 
-  // 3. Platz fÃ¼r Output — muss auch reinpassen!
-  maxTokens: 4096,                                             // ← Reserviert fÃ¼r Antwort
+  // 3. Platz fuer Output — muss auch reinpassen!
+  maxTokens: 4096,                                             // ← Reserviert fuer Antwort
 });
 ```
 
 Die Rechnung: `system` + alle `messages` + Tool-Definitionen + `maxTokens` muss kleiner sein als das Context Window. Wenn Du `maxTokens` nicht setzt, reserviert das Modell einen Standardwert.
 
-> **`prompt` vs. `messages`:** In den bisherigen Challenges hast Du `prompt` genutzt — ein einzelner String fÃ¼r eine einzelne Frage. `messages` ist ein Array von Nachrichten mit `role` und `content`, das einen ganzen Chat-Verlauf abbildet. Beide Parameter schliessen sich gegenseitig aus: Nutze `prompt` fÃ¼r einzelne Anfragen und `messages` fÃ¼r Konversationen mit Verlauf.
+> **`prompt` vs. `messages`:** In den bisherigen Challenges hast Du `prompt` genutzt — ein einzelner String fuer eine einzelne Frage. `messages` ist ein Array von Nachrichten mit `role` und `content`, das einen ganzen Chat-Verlauf abbildet. Beide Parameter schliessen sich gegenseitig aus: Nutze `prompt` fuer einzelne Anfragen und `messages` fuer Konversationen mit Verlauf.
 
 ### Schicht 3: Was passiert bei Ueberschreitung?
 
@@ -92,7 +92,7 @@ Stille Truncation ist gefaehrlicher als ein Fehler. Das LLM antwortet normal, ha
 
 ### Schicht 4: Strategien bei vollem Context Window
 
-Drei Strategien fÃ¼r lange Konversationen:
+Drei Strategien fuer lange Konversationen:
 
 **Strategie 1: Truncation (Abschneiden aelterer Nachrichten)**
 
@@ -165,26 +165,26 @@ async function summarizeOldMessages(
 Neben dem Context Window gibt es weitere Parameter, die das LLM-Verhalten steuern:
 
 **temperature** (0.0 – 1.0+): Kontrolliert die Zufaelligkeit der Antwort.
-- `temperature: 0` — deterministisch, immer die wahrscheinlichste Antwort. Ideal fÃ¼r Code, Fakten, Analysen.
-- `temperature: 1` — kreativer, mehr Variation. Gut fÃ¼r Brainstorming, kreatives Schreiben.
-- Hoehe Werte (>1) erhÃ¶hen die Zufaelligkeit weiter, aber auch das Risiko von Unsinn.
+- `temperature: 0` — deterministisch, immer die wahrscheinlichste Antwort. Ideal fuer Code, Fakten, Analysen.
+- `temperature: 1` — kreativer, mehr Variation. Gut fuer Brainstorming, kreatives Schreiben.
+- Hoehe Werte (>1) erhoehen die Zufaelligkeit weiter, aber auch das Risiko von Unsinn.
 
 **topP** (0.0 – 1.0): Begrenzt die Auswahl auf die wahrscheinlichsten Tokens, deren kumulative Wahrscheinlichkeit `topP` erreicht. `topP: 0.1` = nur die Top-10% der Tokens werden beruecksichtigt.
 
 ```typescript
 const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  temperature: 0,    // ← Deterministisch — ideal fÃ¼r Code-Reviews
+  temperature: 0,    // ← Deterministisch — ideal fuer Code-Reviews
   prompt: 'Review diesen Code: ...',
 });
 ```
 
-**Faustregel:** Nutze `temperature: 0` fÃ¼r Aufgaben die Praezision erfordern. Erhoehe temperature nur bewusst fÃ¼r kreative Aufgaben. In den meisten Faellen brauchst Du `topP` nicht zu Ã¤ndern.
+**Faustregel:** Nutze `temperature: 0` fuer Aufgaben die Praezision erfordern. Erhoehe temperature nur bewusst fuer kreative Aufgaben. In den meisten Faellen brauchst Du `topP` nicht zu aendern.
 :::
 
 ## TRY
 
-**Aufgabe:** Simuliere eine Konversation, die sich dem Context Limit naehert. Berechne die Token-Anzahl und prÃ¼fe, ob sie ins Fenster passt.
+**Aufgabe:** Simuliere eine Konversation, die sich dem Context Limit naehert. Berechne die Token-Anzahl und pruefe, ob sie ins Fenster passt.
 
 Erstelle eine Datei `challenge-2-3.ts`:
 
@@ -232,12 +232,12 @@ const MODEL_CONTEXT_WINDOW = 200_000; // Claude Sonnet: 200K Tokens
 **Checkliste:**
 - [ ] System Prompt und Messages definiert
 - [ ] `estimateTokens` implementiert
-- [ ] Token-Verbrauch fÃ¼r System, Messages und Output-Reserve berechnet
+- [ ] Token-Verbrauch fuer System, Messages und Output-Reserve berechnet
 - [ ] Gegen Context-Window-Limit geprueft
 - [ ] Warnung bei >80% Auslastung
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 const MODEL_CONTEXT_WINDOW = 200_000;
@@ -289,7 +289,7 @@ Ausfuehren mit:
 npx tsx challenge-2-3.ts
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 ```
 System: 45 Tokens
 Messages: 6871 Tokens (10 Nachrichten)
@@ -301,7 +301,7 @@ Auslastung: 5.5%
 
 Dieses Beispiel bleibt weit unter dem Limit. In einer echten Chat-Anwendung mit langen Code-Reviews und vielen Nachrichten wird die Auslastung schnell steigen.
 
-**ErklÃ¤rung:** Die `estimateTokens`-Funktion nutzt die Faustregel 1 Token ≈ 3.5 Zeichen als Durchschnitt zwischen Deutsch und Englisch. In einer Produktionsanwendung wuerdest Du den Tokenizer des Providers verwenden fÃ¼r exakte Zahlen. Die 80%-Warnung gibt Dir einen Sicherheitspuffer, bevor es zu Fehlern kommt.
+**Erklaerung:** Die `estimateTokens`-Funktion nutzt die Faustregel 1 Token ≈ 3.5 Zeichen als Durchschnitt zwischen Deutsch und Englisch. In einer Produktionsanwendung wuerdest Du den Tokenizer des Providers verwenden fuer exakte Zahlen. Die 80%-Warnung gibt Dir einen Sicherheitspuffer, bevor es zu Fehlern kommt.
 
 </details>
 
@@ -309,13 +309,13 @@ Dieses Beispiel bleibt weit unter dem Limit. In einer echten Chat-Anwendung mit 
 
 <Image src={combineDiagram} alt="Messages und System Prompt fliessen in Context Check, bei OK zu generateText, bei zu voll zu truncateMessages, dann result.usage" />
 
-**Uebung:** Baue einen Context Manager, der vor jedem Call prÃ¼ft, ob der Input ins Context Window passt, und bei Ueberschreitung automatisch alte Messages entfernt.
+**Uebung:** Baue einen Context Manager, der vor jedem Call prueft, ob der Input ins Context Window passt, und bei Ueberschreitung automatisch alte Messages entfernt.
 
 1. Implementiere `estimateTokens(text)` mit der Faustregel
 2. Berechne den Token-Verbrauch von System Prompt + Messages + Output-Reserve
 3. Wenn >80% des Context Windows belegt: entferne die aeltesten Messages (behalte die erste und die neuesten 5)
 4. Logge eine Warnung, wenn Messages entfernt werden
-5. Erst dann den `generateText`-Call ausfÃ¼hren
+5. Erst dann den `generateText`-Call ausfuehren
 
 **Optional Stretch Goal:** Statt Messages einfach zu entfernen, fasse die alten Messages mit einem `generateText`-Call zusammen und fuege die Zusammenfassung als erste "System-Nachricht" ein.
 

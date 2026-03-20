@@ -21,9 +21,9 @@ Derselbe Prompt geht parallel an mehrere Modelle. Alle Ergebnisse werden gesamme
 
 ## WHY
 
-**Ohne systematischen Vergleich:** Du wahlst ein Modell nach Bauchgefuehl oder Marketing. "Claude ist besser" oder "GPT-4o ist schneller" — ohne Daten. Du weisst nicht, ob ein billigeres Modell fÃ¼r Deinen Use Case reichen wÃ¼rde.
+**Ohne systematischen Vergleich:** Du wahlst ein Modell nach Bauchgefuehl oder Marketing. "Claude ist besser" oder "GPT-4o ist schneller" — ohne Daten. Du weisst nicht, ob ein billigeres Modell fuer Deinen Use Case reichen wuerde.
 
-**Mit systematischem Vergleich:** Du testest objektiv, welches Modell fÃ¼r Deine spezifische Aufgabe die beste Antwort liefert. Du triffst datengetriebene Modell-Entscheidungen. Du findest heraus, wo ein Flash-Modell ausreicht und wo Du ein Pro-Modell brauchst.
+**Mit systematischem Vergleich:** Du testest objektiv, welches Modell fuer Deine spezifische Aufgabe die beste Antwort liefert. Du triffst datengetriebene Modell-Entscheidungen. Du findest heraus, wo ein Flash-Modell ausreicht und wo Du ein Pro-Modell brauchst.
 
 ## WALKTHROUGH
 
@@ -66,7 +66,7 @@ for (const r of results) {
 }
 ```
 
-`Promise.all` sendet alle Requests gleichzeitig. Die Gesamtdauer ist die des langsamsten Modells, nicht die Summe aller. Du bekommst fÃ¼r jeden Call Text, Token-Verbrauch und Dauer.
+`Promise.all` sendet alle Requests gleichzeitig. Die Gesamtdauer ist die des langsamsten Modells, nicht die Summe aller. Du bekommst fuer jeden Call Text, Token-Verbrauch und Dauer.
 
 ### Schicht 2: Einfacher Vergleich — Metriken
 
@@ -103,11 +103,11 @@ function compareBasicMetrics(
 compareBasicMetrics(results);
 ```
 
-Einfache Metriken — Laenge, Geschwindigkeit, Token-Verbrauch — geben einen ersten Ãberblick. Aber sie sagen nichts Ã¼ber die QualitÃ¤t der Antwort.
+Einfache Metriken — Laenge, Geschwindigkeit, Token-Verbrauch — geben einen ersten Ueberblick. Aber sie sagen nichts ueber die Qualitaet der Antwort.
 
 ### Schicht 3: LLM-as-a-Judge
 
-FÃ¼r Qualitaetsbewertung: Ein starkes LLM bewertet die Antworten der anderen. Das Muster kennst Du aus Level 6.3:
+Fuer Qualitaetsbewertung: Ein starkes LLM bewertet die Antworten der anderen. Das Muster kennst Du aus Level 6.3:
 
 ```typescript
 import { generateText, Output } from 'ai';
@@ -138,7 +138,7 @@ async function judgeOutputs(
 Bewerte die folgenden LLM-Outputs nach:
 1. Korrektheit — Sind die Fakten richtig?
 2. Praezision — Ist die Antwort auf den Punkt?
-3. Verstaendlichkeit — Ist die ErklÃ¤rung klar?
+3. Verstaendlichkeit — Ist die Erklaerung klar?
 Vergib Scores von 1-10 und begruende Deine Bewertung.`,
     prompt: `<task>${prompt}</task>\n\n${formattedOutputs}`,
     output: Output.object({ schema: JudgmentSchema }),
@@ -164,7 +164,7 @@ Der Judge bekommt die Originalaufgabe und alle Outputs. Durch das Zod Schema ist
 
 ### Schicht 4: Systematischer Vergleich mit Evals
 
-FÃ¼r wiederholbare Vergleiche nutzt Du ein Eval-Framework wie Evalite aus Level 6:
+Fuer wiederholbare Vergleiche nutzt Du ein Eval-Framework wie Evalite aus Level 6:
 
 ```typescript
 import { evalite } from 'evalite';
@@ -173,7 +173,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { openai } from '@ai-sdk/openai';
 import { google } from '@ai-sdk/google';
 
-// Eval fÃ¼r jedes Modell separat ausfÃ¼hren
+// Eval fuer jedes Modell separat ausfuehren
 const modelsToCompare = [
   { name: 'claude-sonnet', model: anthropic('claude-sonnet-4-5-20250514') },
   { name: 'gpt-4o', model: openai('gpt-4o') },
@@ -207,7 +207,7 @@ for (const { name, model } of modelsToCompare) {
 }
 ```
 
-Mit Evalite bekommst Du reproduzierbare Ergebnisse Ã¼ber mehrere Testfaelle hinweg. Du kannst Modelle systematisch auf Deinen spezifischen Use Case benchmarken — nicht nach allgemeinen Benchmarks, sondern nach Deinen Anforderungen.
+Mit Evalite bekommst Du reproduzierbare Ergebnisse ueber mehrere Testfaelle hinweg. Du kannst Modelle systematisch auf Deinen spezifischen Use Case benchmarken — nicht nach allgemeinen Benchmarks, sondern nach Deinen Anforderungen.
 
 ## TRY
 
@@ -234,19 +234,19 @@ const expectedKeywords = ['var', 'let', 'const', 'scope', 'block'];
 //   - Wie viele Tokens hat jede Antwort verbraucht?
 
 // TODO 4: Bestimme den "Gewinner" basierend auf:
-//   - Meiste Keywords = hoechste QualitÃ¤t
+//   - Meiste Keywords = hoechste Qualitaet
 //   - Bei Gleichstand: kuerzere Antwort gewinnt
 ```
 
 **Checkliste:**
 - [ ] 3 Modelle parallel aufgerufen mit `Promise.all`
-- [ ] Keyword-Count fÃ¼r jede Antwort berechnet
+- [ ] Keyword-Count fuer jede Antwort berechnet
 - [ ] Laenge und Token-Verbrauch verglichen
 - [ ] Gewinner bestimmt und begruendet
 - [ ] Ergebnisse uebersichtlich formatiert ausgegeben
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -313,10 +313,10 @@ for (const r of results) {
 }
 ```
 
-**ErklÃ¤rung:** `Promise.all` sendet alle Requests parallel — die Gesamtdauer ist die des langsamsten Modells. Der Keyword-Scorer zaehlt, wie viele erwartete Begriffe in der Antwort vorkommen. Bei Gleichstand gewinnt die kuerzere Antwort, weil Praezision in der Aufgabe gefordert war ("maximal 3 Saetze").
+**Erklaerung:** `Promise.all` sendet alle Requests parallel — die Gesamtdauer ist die des langsamsten Modells. Der Keyword-Scorer zaehlt, wie viele erwartete Begriffe in der Antwort vorkommen. Bei Gleichstand gewinnt die kuerzere Antwort, weil Praezision in der Aufgabe gefordert war ("maximal 3 Saetze").
 
 ```
-Erwarteter Output (ungefÃ¤hr):
+Erwarteter Output (ungefaehr):
 === Vergleich ===
 
 | Modell | Keywords | Zeichen | Tokens | Dauer |
@@ -336,12 +336,12 @@ Gewinner: Gemini Flash (5 Keywords, 256 Zeichen)
 
 **Uebung:** Kombiniere Comparing Outputs mit dem Eval-Framework aus Level 6. Statt eines einmaligen Vergleichs:
 
-1. **Definiere 5 Test-Prompts** fÃ¼r Deinen Use Case (z.B. TypeScript-ErklÃ¤rungen)
+1. **Definiere 5 Test-Prompts** fuer Deinen Use Case (z.B. TypeScript-Erklaerungen)
 2. **Definiere 2 Scorer** — einen Keyword-Scorer und einen Laengen-Scorer
-3. **Laufe alle 3 Modelle** Ã¼ber alle 5 Prompts mit Evalite
+3. **Laufe alle 3 Modelle** ueber alle 5 Prompts mit Evalite
 4. **Vergleiche die Ergebnisse** — welches Modell gewinnt im Durchschnitt?
 
-Das Ergebnis ist ein datengetriebener Report, der Dir sagt: "FÃ¼r TypeScript-ErklÃ¤rungen ist Modell X am besten." Das ist die Grundlage fÃ¼r den Model Router aus Challenge 9.2.
+Das Ergebnis ist ein datengetriebener Report, der Dir sagt: "Fuer TypeScript-Erklaerungen ist Modell X am besten." Das ist die Grundlage fuer den Model Router aus Challenge 9.2.
 
 **Optional Stretch Goal:** Implementiere den LLM-as-a-Judge als Evalite-Scorer. Nutze ein starkes Modell das die Outputs auf einer Skala von 1-10 bewertet und eine Begruendung liefert.
 

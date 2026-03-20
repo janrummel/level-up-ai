@@ -1,6 +1,6 @@
 ---
 title: "Challenge 8.2: Streaming to Frontend"
-description: "Streame Workflow-Fortschritt in Echtzeit ans Frontend — Custom Data Parts fÃ¼r Step-Updates, kombiniert mit dem LLM-Text-Stream."
+description: "Streame Workflow-Fortschritt in Echtzeit ans Frontend — Custom Data Parts fuer Step-Updates, kombiniert mit dem LLM-Text-Stream."
 sidebar:
   order: 3
 ---
@@ -25,7 +25,7 @@ Statt 30 Sekunden Stille bekommt der User nach jedem Step ein Update. Die ersten
 
 ## WALKTHROUGH
 
-### Schicht 1: createDataStream fÃ¼r Workflow-Fortschritt
+### Schicht 1: createDataStream fuer Workflow-Fortschritt
 
 In Level 7.1 hast Du `createDataStream` und `writeData` kennengelernt. Jetzt nutzen wir sie, um Workflow-Steps zu tracken:
 
@@ -82,11 +82,11 @@ export async function POST(req: Request) {
 }
 ```
 
-Der entscheidende Trick: Die ersten zwei Steps nutzen `generateText` (wir brauchen das Ergebnis als String fÃ¼r den nÃ¤chsten Step). Der letzte Step nutzt `streamText` + `mergeIntoDataStream`, damit der User den finalen Text in Echtzeit sieht.
+Der entscheidende Trick: Die ersten zwei Steps nutzen `generateText` (wir brauchen das Ergebnis als String fuer den naechsten Step). Der letzte Step nutzt `streamText` + `mergeIntoDataStream`, damit der User den finalen Text in Echtzeit sieht.
 
 ### Schicht 2: Frontend-Konsum
 
-Im Frontend konsumierst Du die Data Parts wie in Level 7.1 — Ã¼ber den `data`-Array von `useChat`:
+Im Frontend konsumierst Du die Data Parts wie in Level 7.1 — ueber den `data`-Array von `useChat`:
 
 ```typescript
 'use client';
@@ -142,7 +142,7 @@ export function PipelineUI() {
 
 ### Schicht 3: CLI-Variante ohne Frontend
 
-FÃ¼r CLI-Tests ohne Next.js kannst Du den Data Stream direkt konsumieren:
+Fuer CLI-Tests ohne Next.js kannst Du den Data Stream direkt konsumieren:
 
 ```typescript
 import { createDataStream, generateText, streamText } from 'ai';
@@ -216,9 +216,9 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 //   - Fuehre Step 1 (Research) mit generateText aus
 //   - Sende ein Data Part { step: 1, status: 'done' }
 
-// TODO 3: Wiederhole fÃ¼r Step 2 (Summarize)
+// TODO 3: Wiederhole fuer Step 2 (Summarize)
 
-// TODO 4: FÃ¼r Step 3 (Translate):
+// TODO 4: Fuer Step 3 (Translate):
 //   - Nutze streamText statt generateText
 //   - Merge den Stream mit mergeIntoDataStream
 
@@ -233,7 +233,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 - [ ] Der letzte Step wird mit `mergeIntoDataStream` in den Data Stream eingefuegt
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { createDataStream, generateText, streamText } from 'ai';
@@ -289,7 +289,7 @@ while (true) {
 console.log('\n--- Pipeline beendet ---');
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 ```
 2:[{"step":1,"total":3,"label":"Recherche laeuft..."}]
 2:[{"step":1,"total":3,"status":"done","tokens":342}]
@@ -304,7 +304,7 @@ console.log('\n--- Pipeline beendet ---');
 --- Pipeline beendet ---
 ```
 
-**ErklÃ¤rung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts (JSON-Zeilen, Prefix `2:`) vor und nach jedem Step. `streamText` + `mergeIntoDataStream` fuegt den Text-Stream des letzten Steps ein (Prefix `0:`). Der User sieht: Fortschritts-Updates fÃ¼r Step 1 und 2, dann den gestreamten Text von Step 3 — alles in Echtzeit.
+**Erklaerung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts (JSON-Zeilen, Prefix `2:`) vor und nach jedem Step. `streamText` + `mergeIntoDataStream` fuegt den Text-Stream des letzten Steps ein (Prefix `0:`). Der User sieht: Fortschritts-Updates fuer Step 1 und 2, dann den gestreamten Text von Step 3 — alles in Echtzeit.
 
 </details>
 
@@ -314,9 +314,9 @@ import l8C2Combine from '../../../../assets/diagrams/l8-c2-combine.svg';
 
 <Image src={l8C2Combine} alt="Combine: Topic in 3-Step Pipeline, dann createDataStream mit Progress Data Parts und streamText, beides ins Frontend" />
 
-**Uebung:** Kombiniere Workflow-Streaming mit `smoothStream` aus Level 7.3. FÃ¼r den letzten Step (der den Text streamt):
+**Uebung:** Kombiniere Workflow-Streaming mit `smoothStream` aus Level 7.3. Fuer den letzten Step (der den Text streamt):
 
-1. Nutze `experimental_transform: smoothStream()` in `streamText` fÃ¼r fluessigere Textausgabe
+1. Nutze `experimental_transform: smoothStream()` in `streamText` fuer fluessigere Textausgabe
 2. Sende zusaetzlich zu den Step-Updates ein Data Part mit der Gesamtdauer: `{ type: 'stats', durationMs: Date.now() - startTime }`
 3. Sende ein Data Part mit dem Gesamt-Token-Verbrauch aller drei Steps
 

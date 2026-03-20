@@ -10,7 +10,7 @@ sidebar:
 
 ## Das Szenario
 
-Du baust ein **Real-Time Dashboard** — ein Streaming-System, das einem User in Echtzeit eine Analyse liefert. Der Stream transportiert neben dem Analyse-Text auch strukturierte Status-Updates, nutzt Message Metadata fÃ¼r Session-Tracking, glaettet die Ausgabe und faengt Fehler graceful ab.
+Du baust ein **Real-Time Dashboard** — ein Streaming-System, das einem User in Echtzeit eine Analyse liefert. Der Stream transportiert neben dem Analyse-Text auch strukturierte Status-Updates, nutzt Message Metadata fuer Session-Tracking, glaettet die Ausgabe und faengt Fehler graceful ab.
 
 Dein Dashboard soll sich so anfuehlen:
 
@@ -43,9 +43,9 @@ import { Image } from 'astro:assets';
 
 2. **Message Metadata** (Challenge 7.2) — Jede User-Message traegt Metadata: `userId`, `timestamp`, `sessionId`. Die Assistant-Antwort traegt Metadata: `modelId`, `generatedAt`, `tokenCount`. Logge die User-Metadata serverseitig, BEVOR der LLM-Call startet.
 
-3. **Stream Transforms** (Challenge 7.3) — Nutze `smoothStream()` fÃ¼r fluessige Textausgabe. Schreibe einen Custom Transform, der vertrauliche Daten maskiert (z.B. E-Mail-Adressen durch "[REDACTED]" ersetzt).
+3. **Stream Transforms** (Challenge 7.3) — Nutze `smoothStream()` fuer fluessige Textausgabe. Schreibe einen Custom Transform, der vertrauliche Daten maskiert (z.B. E-Mail-Adressen durch "[REDACTED]" ersetzt).
 
-4. **Error Handling** (Challenge 7.4) — Implementiere `onError` in `streamText` fÃ¼r serverseitiges Logging. Implementiere `onError` in `toUIMessageStreamResponse` fÃ¼r User-freundliche Fehlermeldungen. Wrapp den Stream-Consumer in try/catch als letzten Fallback.
+4. **Error Handling** (Challenge 7.4) — Implementiere `onError` in `streamText` fuer serverseitiges Logging. Implementiere `onError` in `toUIMessageStreamResponse` fuer User-freundliche Fehlermeldungen. Wrapp den Stream-Consumer in try/catch als letzten Fallback.
 
 5. **Session-Statistik** — Am Ende des Streams: Berechne die Dauer (aus Metadata-Timestamps) und sende eine finale Statistik als Data Part: `{ type: 'stats', duration, tokenCount, userId }`.
 
@@ -56,7 +56,7 @@ import { createDataStream, smoothStream, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO: Message mit Metadata erstellen
-// TODO: Custom Transform fÃ¼r Daten-Maskierung
+// TODO: Custom Transform fuer Daten-Maskierung
 // TODO: createDataStream mit Status-Updates
 // TODO: streamText mit smoothStream + Custom Transform
 // TODO: Error Handling (onError + try/catch)
@@ -81,12 +81,12 @@ Dein Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: createDataStream Struktur</summary>
 
-`createDataStream` erwartet eine `execute` Funktion, die den `dataStream` Controller als Parameter bekommt. In dieser Funktion rufst Du `dataStream.writeData()` fÃ¼r Custom Data Parts auf und `result.mergeIntoDataStream(dataStream)` fÃ¼r den LLM-Stream. Die Reihenfolge bestimmt, wann Data Parts im Stream erscheinen.
+`createDataStream` erwartet eine `execute` Funktion, die den `dataStream` Controller als Parameter bekommt. In dieser Funktion rufst Du `dataStream.writeData()` fuer Custom Data Parts auf und `result.mergeIntoDataStream(dataStream)` fuer den LLM-Stream. Die Reihenfolge bestimmt, wann Data Parts im Stream erscheinen.
 
 </details>
 
 <details>
-<summary>Hinweis 2: Timing fÃ¼r Fortschritts-Updates</summary>
+<summary>Hinweis 2: Timing fuer Fortschritts-Updates</summary>
 
 Du kannst `setTimeout` oder `setInterval` nutzen, um Fortschritts-Updates zeitversetzt zu senden. Oder nutze die `onStepFinish` bzw. `onChunk` Callbacks von `streamText`, um Data Parts basierend auf dem Stream-Fortschritt zu senden. Wichtig: Beende Intervalle in `onFinish`, sonst laeuft der Stream nie zu Ende.
 

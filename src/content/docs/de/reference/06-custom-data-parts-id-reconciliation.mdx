@@ -1,17 +1,17 @@
 ---
 title: "Custom Data Parts: ID Reconciliation"
-description: "Wie IDs progressive Updates fÃ¼r Data Parts ermoeglichen — Loading States, die sich zu fertigen Ergebnissen entwickeln."
+description: "Wie IDs progressive Updates fuer Data Parts ermoeglichen — Loading States, die sich zu fertigen Ergebnissen entwickeln."
 sidebar:
   order: 6
 ---
 
-## Ãberblick
+## Ueberblick
 
-Wenn Du ein Data Part mit einer ID sendest und spÃ¤ter ein weiteres Data Part mit derselben ID, wird das bestehende Part aktualisiert — nicht ein neues angehaengt. Das ermoeglicht progressive Loading States: erst ein Skeleton anzeigen, dann mit echten Daten ersetzen.
+Wenn Du ein Data Part mit einer ID sendest und spaeter ein weiteres Data Part mit derselben ID, wird das bestehende Part aktualisiert — nicht ein neues angehaengt. Das ermoeglicht progressive Loading States: erst ein Skeleton anzeigen, dann mit echten Daten ersetzen.
 
-Ohne ID-Reconciliation wuerdest Du fÃ¼r jeden Status-Wechsel einen neuen Eintrag in `message.parts` bekommen. Mit IDs bleibt es ein einziger Eintrag, der sich vom Loading-State zum fertigen Ergebnis entwickelt. Das haelt die UI sauber und die Message-Historie kompakt.
+Ohne ID-Reconciliation wuerdest Du fuer jeden Status-Wechsel einen neuen Eintrag in `message.parts` bekommen. Mit IDs bleibt es ein einziger Eintrag, der sich vom Loading-State zum fertigen Ergebnis entwickelt. Das haelt die UI sauber und die Message-Historie kompakt.
 
-Dieses Pattern ist besonders nuetzlich fÃ¼r Tool-Ergebnisse, die asynchron geladen werden — z.B. eine Wetter-Abfrage, die erst "Lade..." zeigt und dann die Temperatur.
+Dieses Pattern ist besonders nuetzlich fuer Tool-Ergebnisse, die asynchron geladen werden — z.B. eine Wetter-Abfrage, die erst "Lade..." zeigt und dann die Temperatur.
 
 ## Server: Progressive Updates senden
 
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       // LLM-Stream in den Writer mergen
       writer.merge(result.toUIMessageStream());
 
-      // SpÃ¤ter: Update mit echten Daten (gleiche ID)
+      // Spaeter: Update mit echten Daten (gleiche ID)
       const weather = await fetchWeather('Berlin');
       writer.write({
         type: 'data-weather',                    // ← Gleicher Type
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
 ## Frontend: Automatisches Update
 
 ```typescript
-// In message.parts gibt es nur EINEN Eintrag fÃ¼r 'weather-berlin'
+// In message.parts gibt es nur EINEN Eintrag fuer 'weather-berlin'
 // — den jeweils aktuellsten Stand
 
 {m.parts.map((part, i) => {
@@ -74,12 +74,12 @@ export async function POST(req: Request) {
 | Zweites Data Part gesendet | Neuer Eintrag in `parts` | Bestehender Eintrag aktualisiert |
 | `parts.length` | Waechst mit jedem Send | Bleibt gleich (pro ID) |
 | UI-Rendering | Mehrere Elemente (alt + neu) | Ein Element (aktueller Stand) |
-| Loading → Success | Zwei sichtbare Elemente | Ein Element, das sich Ã¤ndert |
+| Loading → Success | Zwei sichtbare Elemente | Ein Element, das sich aendert |
 
 ## Mehrere parallele Updates
 
 ```typescript
-// Drei unabhÃ¤ngige Data Parts mit eigenen IDs
+// Drei unabhaengige Data Parts mit eigenen IDs
 writer.write({
   type: 'data-weather',
   id: 'weather-berlin',
@@ -96,7 +96,7 @@ writer.write({
   data: { symbol: 'AAPL', status: 'loading' },
 });
 
-// Jedes wird unabhÃ¤ngig aktualisiert, sobald die Daten da sind
+// Jedes wird unabhaengig aktualisiert, sobald die Daten da sind
 ```
 
 ## Siehe auch

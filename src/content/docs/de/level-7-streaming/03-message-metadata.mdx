@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-Wie haengst Du zusaetzliche Infos an eine Message an, die NICHT zum LLM gehen sollen — z.B. einen Timestamp, die User-ID oder die IP-Adresse? Alles in den Message-Content zu packen wÃ¤re Verschwendung von Tokens und kÃ¶nnte das LLM verwirren.
+Wie haengst Du zusaetzliche Infos an eine Message an, die NICHT zum LLM gehen sollen — z.B. einen Timestamp, die User-ID oder die IP-Adresse? Alles in den Message-Content zu packen waere Verschwendung von Tokens und koennte das LLM verwirren.
 
 ## OVERVIEW
 
@@ -17,11 +17,11 @@ import { Image } from 'astro:assets';
 
 <Image src={l7C2Overview} alt="Overview: Message Content geht zum LLM Provider, Metadata geht zur Datenbank/Analytics — Routing über die API Route" />
 
-Message Metadata lebt neben dem Content, wird aber NICHT an das LLM gesendet. Der Content geht zum LLM, die Metadata bleibt in Deiner App — fÃ¼r Logging, Persistence, Analytics.
+Message Metadata lebt neben dem Content, wird aber NICHT an das LLM gesendet. Der Content geht zum LLM, die Metadata bleibt in Deiner App — fuer Logging, Persistence, Analytics.
 
 ## WHY
 
-**Ohne Metadata:** Du packst alles in den Message-Content. Das LLM sieht irrelevante Informationen ("userId: abc123, timestamp: 1709..."), verschwendet Tokens und wird mÃ¶glicherweise verwirrt. Oder Du speicherst Metadaten in einer separaten Datenstruktur und musst sie manuell mit den Messages synchron halten — fehleranfaellig und umstaendlich.
+**Ohne Metadata:** Du packst alles in den Message-Content. Das LLM sieht irrelevante Informationen ("userId: abc123, timestamp: 1709..."), verschwendet Tokens und wird moeglicherweise verwirrt. Oder Du speicherst Metadaten in einer separaten Datenstruktur und musst sie manuell mit den Messages synchron halten — fehleranfaellig und umstaendlich.
 
 **Mit Metadata:** Saubere Trennung. Der Content enthaelt nur, was das LLM sehen soll. Die Metadata enthaelt alles, was Deine App braucht — Timestamps, User-IDs, Session-Daten, Bewertungen. Beides reist zusammen in einer Message, aber nur der Content geht ans LLM.
 
@@ -48,7 +48,7 @@ const message: UIMessage = {
 };
 ```
 
-Die `metadata`-Property wird vom AI SDK beim Senden an den LLM-Provider automatisch ignoriert. Sie ist ausschliesslich fÃ¼r Deine Anwendungslogik.
+Die `metadata`-Property wird vom AI SDK beim Senden an den LLM-Provider automatisch ignoriert. Sie ist ausschliesslich fuer Deine Anwendungslogik.
 
 ### Schicht 2: Metadata auf der Server-Seite nutzen
 
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
   const lastMessage = messages.at(-1);
   const metadata = lastMessage?.metadata ?? {};
 
-  // FÃ¼r Logging / Analytics
+  // Fuer Logging / Analytics
   console.log(`User ${metadata.userId} fragt:`, lastMessage?.content);
   console.log(`Session: ${metadata.sessionId}`);
   console.log(`Timestamp: ${new Date(metadata.timestamp).toISOString()}`);
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
 
 ### Schicht 3: Metadata in der Antwort setzen
 
-Du kannst auch Metadata an die Antwort-Messages haengen. Das passiert Ã¼ber `messageMetadata` in `toUIMessageStreamResponse`:
+Du kannst auch Metadata an die Antwort-Messages haengen. Das passiert ueber `messageMetadata` in `toUIMessageStreamResponse`:
 
 ```typescript
 const result = streamText({
@@ -105,7 +105,7 @@ return result.toUIMessageStreamResponse({
 });
 ```
 
-Im Frontend ist die Metadata dann auf der Assistant-Message verfÃ¼gbar:
+Im Frontend ist die Metadata dann auf der Assistant-Message verfuegbar:
 
 ```typescript
 const { messages } = useChat();
@@ -118,7 +118,7 @@ messages.map((m) => {
 });
 ```
 
-### Schicht 4: Metadata fÃ¼r Persistence
+### Schicht 4: Metadata fuer Persistence
 
 Metadata ist besonders wertvoll in Kombination mit Persistence (Level 4). Du kannst Timestamps, Versionen und User-Daten direkt an der Message speichern:
 
@@ -183,13 +183,13 @@ import type { UIMessage } from 'ai';
 // const lastMessage = messages.at(-1);
 // console.log('Metadata:', lastMessage?.metadata);
 
-// TODO 3: Sende an streamText und prÃ¼fe ob das LLM die Metadata erwaehnt
+// TODO 3: Sende an streamText und pruefe ob das LLM die Metadata erwaehnt
 // const result = streamText({
 //   model: anthropic('claude-sonnet-4-5-20250514'),
 //   messages,
 // });
 
-// TODO 4: Konsumiere den Stream und prÃ¼fe die Antwort
+// TODO 4: Konsumiere den Stream und pruefe die Antwort
 // for await (const chunk of result.textStream) {
 //   process.stdout.write(chunk);
 // }
@@ -204,7 +204,7 @@ import type { UIMessage } from 'ai';
 Fuehre aus: `npx tsx message-metadata.ts`
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { streamText } from 'ai';
@@ -250,9 +250,9 @@ console.log('\n');
 // NICHT userId, sessionId oder timestamp.
 ```
 
-**ErklÃ¤rung:** Das LLM sieht nur den `content` der Message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." Die Metadata (`userId`, `timestamp`, `sessionId`) wird vom AI SDK herausgefiltert und erscheint nicht in der LLM-Antwort. Damit kannst Du Metadaten sicher transportieren, ohne Tokens zu verschwenden oder das LLM zu verwirren.
+**Erklaerung:** Das LLM sieht nur den `content` der Message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." Die Metadata (`userId`, `timestamp`, `sessionId`) wird vom AI SDK herausgefiltert und erscheint nicht in der LLM-Antwort. Damit kannst Du Metadaten sicher transportieren, ohne Tokens zu verschwenden oder das LLM zu verwirren.
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 
 ```
 --- App-Metadata (geht NICHT zum LLM) ---
@@ -266,7 +266,7 @@ was ich sehen kann. Ich sehe den Text "Was siehst Du in dieser
 Nachricht? Liste ALLES auf, was Du sehen kannst."
 ```
 
-> Das LLM sollte **nur** den Text-Content erwaehnen — keine userId, kein timestamp, keine sessionId. Falls es Metadata erwaehnt, prÃ¼fe ob `metadata` korrekt als Eigenschaft (nicht im `content`) steht.
+> Das LLM sollte **nur** den Text-Content erwaehnen — keine userId, kein timestamp, keine sessionId. Falls es Metadata erwaehnt, pruefe ob `metadata` korrekt als Eigenschaft (nicht im `content`) steht.
 
 </details>
 

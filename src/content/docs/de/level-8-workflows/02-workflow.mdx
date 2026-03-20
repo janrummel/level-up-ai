@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-Was wenn eine Aufgabe zu komplex fÃ¼r einen einzigen LLM-Call ist — z.B. recherchieren, zusammenfassen und formatieren? Wuerdest Du alles in einen Prompt packen, oder die Aufgabe aufteilen?
+Was wenn eine Aufgabe zu komplex fuer einen einzigen LLM-Call ist — z.B. recherchieren, zusammenfassen und formatieren? Wuerdest Du alles in einen Prompt packen, oder die Aufgabe aufteilen?
 
 ## OVERVIEW
 
@@ -21,7 +21,7 @@ Ein Workflow verkettet mehrere `generateText`-Calls. Der Output von Step 1 wird 
 
 ## WHY
 
-**Ohne Workflows:** Ein riesiger Prompt, der gleichzeitig recherchieren, zusammenfassen und formatieren soll. Schwer zu debuggen — wenn das Ergebnis schlecht ist, weisst Du nicht, welcher Teilschritt versagt hat. Keine Zwischenergebnisse, kein Step-fÃ¼r-Step-Testing.
+**Ohne Workflows:** Ein riesiger Prompt, der gleichzeitig recherchieren, zusammenfassen und formatieren soll. Schwer zu debuggen — wenn das Ergebnis schlecht ist, weisst Du nicht, welcher Teilschritt versagt hat. Keine Zwischenergebnisse, kein Step-fuer-Step-Testing.
 
 **Mit Workflows:** Spezialisierte Steps, jeder mit eigenem System Prompt. Du kannst Step 2 isoliert testen, indem Du ihm einen festen Input gibst. Du siehst Zwischenergebnisse nach jedem Schritt. Und wenn Step 3 schlechte Ergebnisse liefert, weisst Du: Das Problem liegt im Format-Prompt, nicht in der Recherche.
 
@@ -119,9 +119,9 @@ console.log(result.email);
 console.log(`\nTotal Tokens: ${result.totalTokens}`);
 ```
 
-Die Funktion gibt alle Zwischenergebnisse zurÃ¼ck. Das ist wichtig fÃ¼r Debugging — wenn die E-Mail schlecht ist, pruefst Du `result.summary`. Wenn die Zusammenfassung schlecht ist, pruefst Du `result.research`. Jede Schicht einzeln debuggbar.
+Die Funktion gibt alle Zwischenergebnisse zurueck. Das ist wichtig fuer Debugging — wenn die E-Mail schlecht ist, pruefst Du `result.summary`. Wenn die Zusammenfassung schlecht ist, pruefst Du `result.research`. Jede Schicht einzeln debuggbar.
 
-### Schicht 3: Token-Tracking Ã¼ber die Pipeline
+### Schicht 3: Token-Tracking ueber die Pipeline
 
 Ein Workflow mit drei Steps verbraucht dreimal so viele API-Calls wie ein einzelner. Token-Tracking ist wichtig:
 
@@ -215,7 +215,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 - [ ] Gesamter Token-Verbrauch wird berechnet
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -270,7 +270,7 @@ console.log('\n--- Ergebnis (Englisch) ---');
 console.log(result.translated);
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 ```
 research: 342 Tokens
 summarize: 187 Tokens
@@ -282,7 +282,7 @@ Gesamt: 685 Tokens
 [Uebersetzter Text erscheint hier — variiert je nach LLM-Antwort]
 ```
 
-**ErklÃ¤rung:** Drei spezialisierte Steps — jeder mit eigener Rolle. Step 1 recherchiert auf Deutsch, Step 2 fasst zusammen, Step 3 uebersetzt ins Englische. Der Token-Verbrauch wird pro Step getrackt. Du kannst jeden Step einzeln testen, indem Du ihm einen festen Input gibst.
+**Erklaerung:** Drei spezialisierte Steps — jeder mit eigener Rolle. Step 1 recherchiert auf Deutsch, Step 2 fasst zusammen, Step 3 uebersetzt ins Englische. Der Token-Verbrauch wird pro Step getrackt. Du kannst jeden Step einzeln testen, indem Du ihm einen festen Input gibst.
 
 </details>
 
@@ -292,7 +292,7 @@ Gesamt: 685 Tokens
 
 **Uebung:** Kombiniere den Workflow mit System Prompts aus Level 1.6. Baue eine Pipeline mit drei unterschiedlichen Rollen:
 
-1. **Step 1 — Researcher:** `system: 'Du bist ein Experte fÃ¼r [Dein Thema]. Recherchiere gruendlich und nenne Zahlen und Quellen.'`
+1. **Step 1 — Researcher:** `system: 'Du bist ein Experte fuer [Dein Thema]. Recherchiere gruendlich und nenne Zahlen und Quellen.'`
 2. **Step 2 — Critic:** `system: 'Du bist ein kritischer Reviewer. Pruefe die folgenden Aussagen auf Schwachstellen und Luecken. Benenne was fehlt.'`
 3. **Step 3 — Writer:** `system: 'Du bist ein erfahrener Autor. Schreibe einen ausgewogenen Artikel, der sowohl die Fakten als auch die Kritikpunkte integriert.'`
 

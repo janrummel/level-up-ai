@@ -5,9 +5,9 @@ sidebar:
   order: 2
 ---
 
-## Ãberblick
+## Ueberblick
 
-Tools erweitern ein LLM um Faehigkeiten, die es allein nicht hat — Datenbank-Abfragen, API-Calls, Berechnungen. Im AI SDK definierst Du ein Tool mit der `tool()`-Funktion, die drei Properties erwartet: `description` (was das Tool tut), `parameters` (welche Parameter es akzeptiert) und `execute` (was es ausfÃ¼hrt).
+Tools erweitern ein LLM um Faehigkeiten, die es allein nicht hat — Datenbank-Abfragen, API-Calls, Berechnungen. Im AI SDK definierst Du ein Tool mit der `tool()`-Funktion, die drei Properties erwartet: `description` (was das Tool tut), `parameters` (welche Parameter es akzeptiert) und `execute` (was es ausfuehrt).
 
 Das LLM sieht die `description` und die `parameters`, entscheidet ob es das Tool aufrufen will und generiert passende Argumente. Die `execute`-Funktion laeuft dann auf Deinem Server — das LLM fuehrt nie selbst Code aus.
 
@@ -50,23 +50,23 @@ const result = await generateText({
 
 | Property | Typ | Beschreibung |
 |----------|-----|-------------|
-| `description` | `string` | ErklÃ¤rung fÃ¼r das LLM, wann und wofuer das Tool genutzt werden soll |
-| `parameters` | `ZodSchema \| JSONSchema` | Schema der Eingabeparameter — Zod empfohlen fÃ¼r Typsicherheit |
+| `description` | `string` | Erklaerung fuer das LLM, wann und wofuer das Tool genutzt werden soll |
+| `parameters` | `ZodSchema \| JSONSchema` | Schema der Eingabeparameter — Zod empfohlen fuer Typsicherheit |
 | `execute` | `async (args, options) => Promise<T>` | Async Funktion, die mit den validierten Argumenten aufgerufen wird |
 
 ### Weitere wichtige Properties
 
 | Property | Typ | Beschreibung |
 |----------|-----|-------------|
-| `experimental_toToolResultContent` | `(result) => Content[]` | Wandelt das Tool-Ergebnis in Content um, den das LLM verarbeiten kann — z.B. fÃ¼r Bilder oder Screenshots bei Multi-Modal-Modellen |
+| `experimental_toToolResultContent` | `(result) => Content[]` | Wandelt das Tool-Ergebnis in Content um, den das LLM verarbeiten kann — z.B. fuer Bilder oder Screenshots bei Multi-Modal-Modellen |
 
 Die `execute`-Funktion erhaelt neben den Argumenten ein Options-Objekt mit:
-- `toolCallId` — eindeutige ID des Tool-Calls (z.B. fÃ¼r Stream-Data)
+- `toolCallId` — eindeutige ID des Tool-Calls (z.B. fuer Stream-Data)
 - `messages` — die Messages, die den Tool-Call ausgeloest haben
 - `abortSignal` — Signal zum Abbrechen der Operation
 
 :::note[Weitere Properties in AI SDK v6]
-`needsApproval` (boolean oder Funktion) aktiviert das Tool-Approval-Pattern — siehe [Tool Approval](../../level-3-agents/06-tool-approval/). FÃ¼r `outputSchema` und `title` prÃ¼fe die [offizielle tool()-Referenz](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool).
+`needsApproval` (boolean oder Funktion) aktiviert das Tool-Approval-Pattern — siehe [Tool Approval](../../level-3-agents/06-tool-approval/). Fuer `outputSchema` und `title` pruefe die [offizielle tool()-Referenz](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool).
 :::
 
 ### Zod-Tipps

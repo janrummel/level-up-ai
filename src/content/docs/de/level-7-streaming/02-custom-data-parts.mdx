@@ -13,13 +13,13 @@ Was wenn Du neben Text auch strukturierte Daten im Stream transportieren willst 
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Frontend, API Route und LLM streamen Text-Deltas mit Custom Data Parts fÃ¼r Fortschrittsanzeige" />
+<Image src={overviewDiagram} alt="Frontend, API Route und LLM streamen Text-Deltas mit Custom Data Parts fuer Fortschrittsanzeige" />
 
 Im Stream fliessen nicht nur Text-Chunks. Custom Data Parts lassen Dich strukturierte Daten — Fortschritt, Quellen, Status — parallel zum Text an das Frontend senden.
 
 ## WHY
 
-**Ohne Custom Data Parts:** Dein Stream liefert nur Text. Wenn Du dem User Fortschritt, Quellen oder Status anzeigen willst, musst Du diese Informationen entweder in den Text einbetten (haesslich, schwer parsbar) oder Ã¼ber einen separaten Kanal senden (komplex, Race Conditions).
+**Ohne Custom Data Parts:** Dein Stream liefert nur Text. Wenn Du dem User Fortschritt, Quellen oder Status anzeigen willst, musst Du diese Informationen entweder in den Text einbetten (haesslich, schwer parsbar) oder ueber einen separaten Kanal senden (komplex, Race Conditions).
 
 **Mit Custom Data Parts:** Strukturierte Daten fliessen im selben Stream wie der Text. Das Frontend bekommt typisierte Objekte und kann sie direkt in der UI rendern — Fortschrittsbalken, Quellenangaben, Status-Badges. Ein Stream, ein Kanal, alles synchron.
 
@@ -42,7 +42,7 @@ Die ersten fuenf kennst Du teilweise aus Level 1 und 3. Der `data`-Type ist neu 
 
 ### Schicht 2: Custom Data Parts senden
 
-Du sendest Custom Data Parts Ã¼ber `sendDataPart` auf dem Stream-Result oder Ã¼ber die `onChunk`/`onStepFinish` Callbacks. Der einfachste Weg ist `mergeIntoDataStream` in Kombination mit `createDataStream`:
+Du sendest Custom Data Parts ueber `sendDataPart` auf dem Stream-Result oder ueber die `onChunk`/`onStepFinish` Callbacks. Der einfachste Weg ist `mergeIntoDataStream` in Kombination mit `createDataStream`:
 
 ```typescript
 import { createDataStream, streamText } from 'ai';
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
 
 > **Web-App Kontext:** Der folgende Code zeigt Custom Data Parts in einer Next.js/React App. Deine TRY-Uebung weiter unten arbeitet im Terminal (CLI).
 
-Im Frontend empfaengst Du Custom Data Parts Ã¼ber den `data`-Array im `useChat`-Hook:
+Im Frontend empfaengst Du Custom Data Parts ueber den `data`-Array im `useChat`-Hook:
 
 ```typescript
 'use client';
@@ -179,7 +179,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 //   },
 // });
 
-// FÃ¼r CLI-Test: Den dataStream als ReadableStream konsumieren
+// Fuer CLI-Test: Den dataStream als ReadableStream konsumieren
 // const reader = dataStream.toDataStream().getReader();
 // const decoder = new TextDecoder();
 // while (true) {
@@ -198,7 +198,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 Fuehre aus: `npx tsx custom-data-parts.ts`
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { createDataStream, streamText } from 'ai';
@@ -236,9 +236,9 @@ while (true) {
 console.log('\n--- Stream beendet ---');
 ```
 
-**ErklÃ¤rung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts als JSON, `mergeIntoDataStream` fuegt den LLM-Text-Stream ein. Im Output siehst Du abwechselnd Data Parts (als JSON-Zeilen) und Text-Chunks — alles in einem Stream, in der richtigen Reihenfolge.
+**Erklaerung:** `createDataStream` oeffnet einen gemischten Kanal. `writeData` sendet Custom Data Parts als JSON, `mergeIntoDataStream` fuegt den LLM-Text-Stream ein. Im Output siehst Du abwechselnd Data Parts (als JSON-Zeilen) und Text-Chunks — alles in einem Stream, in der richtigen Reihenfolge.
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 
 ```
 2:["status","searching"]

@@ -18,19 +18,19 @@ Was passiert mit Deinem Chat-Verlauf wenn Du die Seite neu laedst?
 
 <Image src={overviewDiagram} alt="User Message an API Handler, generateText, onFinish speichert in DB, DB Load fuettert API Handler" />
 
-Persistence bedeutet: Messages werden nach jedem LLM-Call gespeichert und beim nÃ¤chsten Request (oder nach einem Reload) wieder geladen. Der Chat "erinnert sich" an alles, was vorher gesagt wurde.
+Persistence bedeutet: Messages werden nach jedem LLM-Call gespeichert und beim naechsten Request (oder nach einem Reload) wieder geladen. Der Chat "erinnert sich" an alles, was vorher gesagt wurde.
 
 ## WHY
 
 **Ohne Persistence:** Der Chat-Verlauf lebt nur im Arbeitsspeicher. Bei Reload, Server-Neustart oder Deployment ist alles weg. Der User muss von vorn anfangen. Multi-Turn-Conversations funktionieren nur innerhalb einer Session.
 
-**Mit Persistence:** Der Verlauf ueberlebt Reloads, Server-Neustarts und Deployments. Der User kann einen Chat jederzeit fortsetzen. Du hast eine Grundlage fÃ¼r Chat-History, Suche und Analytics.
+**Mit Persistence:** Der Verlauf ueberlebt Reloads, Server-Neustarts und Deployments. Der User kann einen Chat jederzeit fortsetzen. Du hast eine Grundlage fuer Chat-History, Suche und Analytics.
 
 ## WALKTHROUGH
 
 ### Schicht 1: Der Persistence-Cycle
 
-Der vollstÃ¤ndige Cycle besteht aus drei Schritten:
+Der vollstaendige Cycle besteht aus drei Schritten:
 
 <Image src={cycleDiagram} alt="Persistence-Cycle: 1. Load Messages aus DB, 2. Generate LLM mit Verlauf, 3. Save neue Messages in DB" />
 
@@ -81,7 +81,7 @@ In Produktionsumgebungen ist ein Append-only Pattern empfehlenswert: Neue Nachri
 
 ### Schicht 3: Messages laden (Load)
 
-Beim nÃ¤chsten Request (oder nach Reload) laedt das Backend den bisherigen Verlauf:
+Beim naechsten Request (oder nach Reload) laedt das Backend den bisherigen Verlauf:
 
 ```typescript
 async function loadMessages(
@@ -132,7 +132,7 @@ await continueChat(chatId, 'Und worin unterscheidet es sich von JavaScript?');
 //      user: "Und worin unterscheidet es sich?", assistant: "Der Hauptunterschied..."]
 ```
 
-Das LLM bekommt bei jedem Call den gesamten Verlauf und kann auf fruehere Nachrichten Bezug nehmen. Ohne Persistence wÃ¼rde es die zweite Frage ohne Kontext beantworten.
+Das LLM bekommt bei jedem Call den gesamten Verlauf und kann auf fruehere Nachrichten Bezug nehmen. Ohne Persistence wuerde es die zweite Frage ohne Kontext beantworten.
 
 ### Schicht 5: Normalisiertes DB-Schema (Ausblick)
 
@@ -161,7 +161,7 @@ interface Message {
 
 Neben `user` und `assistant` gibt es auch `system` und `tool` — letztere ist relevant wenn du Tool-Calls verwendest (kommt in spaeteren Levels).
 
-Zwei getrennte Tabellen: `chats` fÃ¼r Metadaten, `messages` fÃ¼r den Inhalt. Verknuepft Ã¼ber `chatId`. Das ermoeglicht effiziente Queries wie "alle Chats des Users" oder "Token-Verbrauch pro Chat".
+Zwei getrennte Tabellen: `chats` fuer Metadaten, `messages` fuer den Inhalt. Verknuepft ueber `chatId`. Das ermoeglicht effiziente Queries wie "alle Chats des Users" oder "Token-Verbrauch pro Chat".
 
 ## TRY
 
@@ -202,7 +202,7 @@ const db = new Map<string, Array<{ role: string; content: string }>>();
 **Ausfuehren mit:** `npx tsx challenge-4-3.ts`
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -264,7 +264,7 @@ stored.forEach((m, i) =>
 );
 ```
 
-**Erwarteter Output (ungefÃ¤hr — LLM-Antworten variieren):**
+**Erwarteter Output (ungefaehr — LLM-Antworten variieren):**
 
 ```
 --- Erste Nachricht ---
@@ -283,7 +283,7 @@ Messages: 4
   4. [assistant] Drei Vorteile von TypeScript sind: 1. Statische Typen...
 ```
 
-**ErklÃ¤rung:** `continueChat` implementiert den vollstaendigen Persistence-Cycle: Load → Generate → Save. Das LLM bekommt bei jedem Call den gesamten Verlauf und kann auf fruehere Nachrichten Bezug nehmen. Die `Map` simuliert eine Datenbank — in Production wÃ¼rde hier ein SQL INSERT / SELECT stehen.
+**Erklaerung:** `continueChat` implementiert den vollstaendigen Persistence-Cycle: Load → Generate → Save. Das LLM bekommt bei jedem Call den gesamten Verlauf und kann auf fruehere Nachrichten Bezug nehmen. Die `Map` simuliert eine Datenbank — in Production wuerde hier ein SQL INSERT / SELECT stehen.
 
 </details>
 
@@ -295,9 +295,9 @@ Messages: 4
 
 1. Erstelle eine `ChatDB`-Klasse mit `save`, `load` und `list`-Methoden
 2. `save(chatId, messages)` speichert den vollstaendigen Verlauf
-3. `load(chatId)` gibt den Verlauf zurÃ¼ck (leeres Array als Fallback)
-4. `list()` gibt alle Chat IDs mit Message-Anzahl zurÃ¼ck
-5. Baue eine `chat(db, chatId, userMessage)`-Funktion die den Cycle ausfÃ¼hrt
+3. `load(chatId)` gibt den Verlauf zurueck (leeres Array als Fallback)
+4. `list()` gibt alle Chat IDs mit Message-Anzahl zurueck
+5. Baue eine `chat(db, chatId, userMessage)`-Funktion die den Cycle ausfuehrt
 6. Erstelle 2 verschiedene Chats, fuehre je 2 Nachrichten aus
 7. Nutze `list()` um alle Chats mit Message-Count anzuzeigen
 

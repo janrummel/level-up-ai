@@ -10,7 +10,7 @@ import combineDiagram from '../../../../assets/diagrams/l1-c6-combine.svg';
 
 ## THINK
 
-Du kennst den `system`-Parameter bereits aus Challenge 1.3, wo Du ihn zum ersten Mal genutzt hast. Aber was genau ist der Unterschied zwischen einem System Prompt und einem User Prompt? Wer "hoert" welchen — und wie gestaltest Du ihn fÃ¼r konsistentes Verhalten?
+Du kennst den `system`-Parameter bereits aus Challenge 1.3, wo Du ihn zum ersten Mal genutzt hast. Aber was genau ist der Unterschied zwischen einem System Prompt und einem User Prompt? Wer "hoert" welchen — und wie gestaltest Du ihn fuer konsistentes Verhalten?
 
 ## OVERVIEW
 
@@ -20,15 +20,15 @@ Der `system`-Parameter definiert WIE das LLM antwortet (Rolle, Stil, Regeln). De
 
 ## WHY
 
-**Ohne System Prompt:** Das LLM antwortet generisch, jedes Mal in einem leicht anderen Stil. Mal ausfÃ¼hrlich, mal knapp. Mal foermlich, mal locker. Du hast keine Kontrolle Ã¼ber Ton, Perspektive oder Format. FÃ¼r eine Anwendung mit konsistenter User Experience ist das unbrauchbar.
+**Ohne System Prompt:** Das LLM antwortet generisch, jedes Mal in einem leicht anderen Stil. Mal ausfuehrlich, mal knapp. Mal foermlich, mal locker. Du hast keine Kontrolle ueber Ton, Perspektive oder Format. Fuer eine Anwendung mit konsistenter User Experience ist das unbrauchbar.
 
-**Mit System Prompt:** Das LLM hat eine definierte Rolle, klare Regeln und einen konsistenten Stil. Jede Antwort folgt denselben Vorgaben — egal welche Frage kommt. Du baust eine Persoenlichkeit, die zuverlÃ¤ssig funktioniert.
+**Mit System Prompt:** Das LLM hat eine definierte Rolle, klare Regeln und einen konsistenten Stil. Jede Antwort folgt denselben Vorgaben — egal welche Frage kommt. Du baust eine Persoenlichkeit, die zuverlaessig funktioniert.
 
 ## WALKTHROUGH
 
 ### Schicht 1: system vs. prompt — die Trennung
 
-Der `system`-Parameter bleibt typischerweise gleich, waehrend sich `prompt` mit jeder Anfrage Ã¤ndert:
+Der `system`-Parameter bleibt typischerweise gleich, waehrend sich `prompt` mit jeder Anfrage aendert:
 
 ```typescript
 import { generateText } from 'ai';
@@ -37,7 +37,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
   system: 'Du bist ein Pirat. Antworte immer wie ein Pirat.',  // ← Persoenlichkeit (bleibt gleich)
-  prompt: 'Was ist TypeScript?',                                 // ← Aufgabe (Ã¤ndert sich)
+  prompt: 'Was ist TypeScript?',                                 // ← Aufgabe (aendert sich)
 });
 
 console.log(result.text);
@@ -47,7 +47,7 @@ console.log(result.text);
 
 Aendere den `prompt` zu "Was ist React?" — die Pirat-Persoenlichkeit bleibt. Das ist der Kern: `system` definiert das Verhalten, `prompt` den Inhalt.
 
-### Schicht 2: Was gehÃ¶rt in den System Prompt?
+### Schicht 2: Was gehoert in den System Prompt?
 
 Ein guter System Prompt definiert vier Dinge:
 
@@ -55,7 +55,7 @@ Ein guter System Prompt definiert vier Dinge:
 |----------|---------|-------|
 | **Rolle** | "Du bist ein Senior TypeScript-Entwickler." | Expertise und Perspektive |
 | **Tonalitaet** | "Erklaere kurz und praezise." | Stil der Antworten |
-| **Regeln** | "Nutze keine Fachbegriffe ohne sie zu erklÃ¤ren." | Einschraenkungen |
+| **Regeln** | "Nutze keine Fachbegriffe ohne sie zu erklaeren." | Einschraenkungen |
 | **Output-Format** | "Antworte immer mit einem Codebeispiel." | Struktur der Antwort |
 
 Du musst nicht alle vier verwenden — aber je mehr Du definierst, desto konsistenter wird das Verhalten.
@@ -82,7 +82,7 @@ Antworte immer mit: Definition, Beispiel, Zusammenfassung.`,
 ```typescript
 const result2 = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  system: `Du erklaerst Technik wie fÃ¼r ein 5-jaehriges Kind.
+  system: `Du erklaerst Technik wie fuer ein 5-jaehriges Kind.
 Nutze einfache Woerter und Vergleiche aus dem Alltag.
 Maximal 3 Saetze.
 Keine Codebeispiele.`,
@@ -110,12 +110,12 @@ Selbe Frage, drei Welten. Der System Prompt bestimmt nicht nur den Stil, sondern
 :::caution[System Prompts sind keine Security-Boundary]
 System Prompts steuern das Verhalten des LLMs — aber sie schuetzen nicht vor boesartigen Eingaben. Ein User kann versuchen, den System Prompt zu umgehen ("Ignoriere alle vorherigen Anweisungen..."). Das nennt sich **Prompt Injection**.
 
-System Prompts sind Verhaltensanweisungen, keine Sicherheitsmechanismen. FÃ¼r echten Schutz brauchst Du separate Input-Validation und Guardrails — das lernst Du in [Level 9: Guardrails](../../level-9-advanced/02-guardrails/).
+System Prompts sind Verhaltensanweisungen, keine Sicherheitsmechanismen. Fuer echten Schutz brauchst Du separate Input-Validation und Guardrails — das lernst Du in [Level 9: Guardrails](../../level-9-advanced/02-guardrails/).
 :::
 
 ## TRY
 
-**Aufgabe:** Erstelle 3 verschiedene System Prompts fÃ¼r 3 verschiedene Rollen. Rufe `generateText` mit demselben User Prompt aber unterschiedlichen System Prompts auf. Vergleiche die Outputs.
+**Aufgabe:** Erstelle 3 verschiedene System Prompts fuer 3 verschiedene Rollen. Rufe `generateText` mit demselben User Prompt aber unterschiedlichen System Prompts auf. Vergleiche die Outputs.
 
 ```typescript
 import { generateText } from 'ai';
@@ -131,7 +131,7 @@ const prompt = 'Erklaere, was eine REST API ist.';
 //   '???',  // Rolle 3: z.B. Interviewer — mit definiertem Output-Format
 // ];
 
-// TODO 2: Rufe generateText fÃ¼r jeden System Prompt auf
+// TODO 2: Rufe generateText fuer jeden System Prompt auf
 // for (const system of systemPrompts) {
 //   const result = await generateText({ model, system, prompt });
 //   console.log(`\n--- ${system.slice(0, 40)}... ---`);
@@ -146,7 +146,7 @@ const prompt = 'Erklaere, was eine REST API ist.';
 - [ ] Mindestens ein System Prompt definiert ein Output-Format
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -158,7 +158,7 @@ const prompt = 'Erklaere, was eine REST API ist.';
 const systemPrompts = [
   // Rolle 1: Geduldiger Dozent
   `Du bist ein geduldiger Informatik-Dozent.
-Erklaere Konzepte Schritt fÃ¼r Schritt.
+Erklaere Konzepte Schritt fuer Schritt.
 Nutze eine Analogie aus dem Alltag, um das Konzept greifbar zu machen.`,
 
   // Rolle 2: Sarkastischer Senior-Entwickler
@@ -186,7 +186,7 @@ for (const system of systemPrompts) {
 }
 ```
 
-**ErklÃ¤rung:** Alle drei Calls nutzen exakt denselben `prompt`. Der Unterschied liegt ausschliesslich im `system`-Parameter. Der Dozent erklÃ¤rt ausfÃ¼hrlich mit Analogie, der Senior-Entwickler ist knapp und sarkastisch, der Journalist folgt einem festen Format. Besonders der dritte System Prompt zeigt, wie Du das Output-Format Ã¼ber den System Prompt erzwingen kannst.
+**Erklaerung:** Alle drei Calls nutzen exakt denselben `prompt`. Der Unterschied liegt ausschliesslich im `system`-Parameter. Der Dozent erklaert ausfuehrlich mit Analogie, der Senior-Entwickler ist knapp und sarkastisch, der Journalist folgt einem festen Format. Besonders der dritte System Prompt zeigt, wie Du das Output-Format ueber den System Prompt erzwingen kannst.
 
 **Ausfuehren:**
 
@@ -194,7 +194,7 @@ for (const system of systemPrompts) {
 npx tsx challenge-1-6.ts
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 
 ```
 ========================================
@@ -220,7 +220,7 @@ Eine REST API ist ein architektonisches Muster...
 
 <Image src={combineDiagram} alt="System Prompt und User Input fliessen in generateText, dann Output.object zu strukturiertem Feedback mit score, issues, suggestions" />
 
-**Uebung:** Kombiniere System Prompts mit Structured Output (Challenge 1.5). Erstelle einen System Prompt der eine bestimmte Rolle definiert UND nutze `Output.object` fÃ¼r die Ausgabe.
+**Uebung:** Kombiniere System Prompts mit Structured Output (Challenge 1.5). Erstelle einen System Prompt der eine bestimmte Rolle definiert UND nutze `Output.object` fuer die Ausgabe.
 
 Beispiel-Szenario: Ein "Code Reviewer" der strukturiertes Feedback gibt:
 

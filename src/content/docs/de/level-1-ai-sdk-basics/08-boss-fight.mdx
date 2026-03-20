@@ -33,7 +33,7 @@ Ich bin Dein AI-Assistent. Ich kann Dir bei Fragen helfen...
 
 > **Erwartete Dauer:** 30-45 Minuten. Erstelle eine Datei `chat.ts` und starte mit `npx tsx chat.ts`.
 
-> **Wichtig:** Jeder `generateText`/`streamText` Call ist **zustandslos** — das LLM erinnert sich nicht an vorherige Nachrichten. Wenn Du einen Chat bauen willst, musst Du den gesamten Nachrichtenverlauf bei jedem Call als `messages` Array mitschicken. Ohne das antwortet das LLM auf jede Nachricht, als wÃ¤re es die erste.
+> **Wichtig:** Jeder `generateText`/`streamText` Call ist **zustandslos** — das LLM erinnert sich nicht an vorherige Nachrichten. Wenn Du einen Chat bauen willst, musst Du den gesamten Nachrichtenverlauf bei jedem Call als `messages` Array mitschicken. Ohne das antwortet das LLM auf jede Nachricht, als waere es die erste.
 
 Dieses Projekt verbindet alle sechs Bausteine:
 
@@ -43,7 +43,7 @@ Dieses Projekt verbindet alle sechs Bausteine:
 
 1. **Interaktive Eingabe** — Der User kann wiederholt Nachrichten eingeben (readline oder `process.stdin`). Das Programm laeuft bis der User "exit" tippt.
 2. **System Prompt** (Challenge 1.6) — Der Chat hat eine definierte Rolle mit Regeln und Stil. Der System Prompt wird bei jedem Call mitgegeben.
-3. **streamText fÃ¼r normale Antworten** (Challenge 1.4) — Normale Nachrichten werden mit `streamText` beantwortet. Text erscheint Token fÃ¼r Token im Terminal.
+3. **streamText fuer normale Antworten** (Challenge 1.4) — Normale Nachrichten werden mit `streamText` beantwortet. Text erscheint Token fuer Token im Terminal.
 4. **Output.object + Zod Schema bei "/json"** (Challenge 1.5) — Wenn der User eine Nachricht mit `/json` beginnt, wird die Antwort als strukturiertes JSON-Objekt generiert (`generateText` + `Output.object`).
 5. **selectModel basierend auf Nachrichtenlaenge** (Challenge 1.2) — Kurze Nachrichten (unter 50 Zeichen) nutzen ein guenstiges Flash-Modell. Lange Nachrichten nutzen ein Pro-Modell.
 6. **Usage-Tracking** (Challenge 1.3) — Nach jeder Antwort werden die verbrauchten Tokens angezeigt. Ein Gesamtzaehler trackt die Session.
@@ -57,11 +57,11 @@ import * as readline from 'readline';
 // TODO: Importiere zod (z aus 'zod')
 // Tipp: Wenn Du nur einen Provider hast, nutze verschiedene Modelle
 // desselben Providers -- z.B. anthropic('claude-haiku-3-5-20241022')
-// fÃ¼r kurze und anthropic('claude-sonnet-4-5-20250514') fÃ¼r lange Nachrichten.
+// fuer kurze und anthropic('claude-sonnet-4-5-20250514') fuer lange Nachrichten.
 
 // TODO: Definiere einen System Prompt mit Rolle und Regeln
 
-// TODO: Definiere ein Zod Schema fÃ¼r den /json Modus
+// TODO: Definiere ein Zod Schema fuer den /json Modus
 
 // TODO: Implementiere selectModel(message: string)
 
@@ -98,7 +98,7 @@ function askQuestion(): void {
 }
 
 console.log('CLI Chat gestartet. Tippe "exit" zum Beenden.');
-console.log('Starte eine Nachricht mit /json fÃ¼r strukturierte Ausgabe.\n');
+console.log('Starte eine Nachricht mit /json fuer strukturierte Ausgabe.\n');
 askQuestion();
 ```
 
@@ -108,7 +108,7 @@ Dein Boss Fight ist bestanden, wenn:
 
 - [ ] Der Chat laeuft interaktiv im Terminal und reagiert auf User-Eingaben
 - [ ] Ein System Prompt definiert Rolle und Verhalten des Assistenten
-- [ ] Normale Nachrichten werden mit `streamText` Token fÃ¼r Token ausgegeben
+- [ ] Normale Nachrichten werden mit `streamText` Token fuer Token ausgegeben
 - [ ] Nachrichten mit `/json` erzeugen strukturierten Output mit `Output.object` und Zod Schema
 - [ ] `selectModel` waehlt das Modell basierend auf der Nachrichtenlaenge
 - [ ] Nach jeder Antwort wird der Token-Verbrauch angezeigt
@@ -127,14 +127,14 @@ Das `readline`-Callback ist nicht direkt `async`. Du kannst den Callback aber al
 <details>
 <summary>Hinweis 2: Stream-Output ins Terminal schreiben</summary>
 
-FÃ¼r `streamText` nutze `process.stdout.write(chunk)` statt `console.log(chunk)`, damit der Text ohne Zeilenumbrueche Wort fÃ¼r Wort erscheint. Nach dem Stream einen `console.log()` fÃ¼r den finalen Zeilenumbruch. Den Token-Verbrauch bekommst Du aus `fullStream` (Event-Typ `finish`) oder Ã¼ber `result.usage` (ein Promise, das Du nach dem Stream awaiten kannst).
+Fuer `streamText` nutze `process.stdout.write(chunk)` statt `console.log(chunk)`, damit der Text ohne Zeilenumbrueche Wort fuer Wort erscheint. Nach dem Stream einen `console.log()` fuer den finalen Zeilenumbruch. Den Token-Verbrauch bekommst Du aus `fullStream` (Event-Typ `finish`) oder ueber `result.usage` (ein Promise, das Du nach dem Stream awaiten kannst).
 
 </details>
 
 <details>
 <summary>Hinweis 3: /json-Erkennung und Prompt-Extraktion</summary>
 
-Pruefe mit `message.startsWith('/json')` ob der JSON-Modus aktiviert werden soll. Der eigentliche Prompt ist dann `message.slice(5).trim()` — alles nach "/json". FÃ¼r den JSON-Modus nutze `generateText` (nicht `streamText`), weil `Output.object` ein vollstaendiges Objekt braucht, kein Stream.
+Pruefe mit `message.startsWith('/json')` ob der JSON-Modus aktiviert werden soll. Der eigentliche Prompt ist dann `message.slice(5).trim()` — alles nach "/json". Fuer den JSON-Modus nutze `generateText` (nicht `streamText`), weil `Output.object` ein vollstaendiges Objekt braucht, kein Stream.
 
 </details>
 

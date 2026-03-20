@@ -16,13 +16,13 @@ Nicht jede Bewertung braucht ein LLM — manchmal reicht ein String-Vergleich. W
 
 <Image src={overviewDiagram} alt="Entscheidungsbaum: Exakte Antwort erwartet? Ja fuehrt zu Deterministic Scorer (Inline Scorer, createScorer, Autoevals), Nein fuehrt zu LLM-as-a-Judge (Challenge 6.3)" />
 
-Die Entscheidung ist einfach: Gibt es eine eindeutig richtige Antwort? Dann deterministic. Ist die Antwort offen formuliert? Dann LLM-as-Judge (nÃ¤chste Challenge).
+Die Entscheidung ist einfach: Gibt es eine eindeutig richtige Antwort? Dann deterministic. Ist die Antwort offen formuliert? Dann LLM-as-Judge (naechste Challenge).
 
 ## WHY
 
-**Ohne deterministische Evals:** Du benutzt ein LLM, um zu prÃ¼fen, ob die Antwort das Wort "Paris" enthaelt. Das kostet Tokens, dauert Sekunden und liefert bei jedem Lauf leicht andere Ergebnisse. FÃ¼r triviale Checks ist das Verschwendung.
+**Ohne deterministische Evals:** Du benutzt ein LLM, um zu pruefen, ob die Antwort das Wort "Paris" enthaelt. Das kostet Tokens, dauert Sekunden und liefert bei jedem Lauf leicht andere Ergebnisse. Fuer triviale Checks ist das Verschwendung.
 
-**Mit deterministischen Evals:** Ein `output.includes('Paris')` laeuft in Mikrosekunden, kostet nichts und gibt bei jedem Lauf dasselbe Ergebnis. Schnell, guenstig, reproduzierbar — perfekt fÃ¼r alles, was sich als String-Operation ausdruecken laesst.
+**Mit deterministischen Evals:** Ein `output.includes('Paris')` laeuft in Mikrosekunden, kostet nichts und gibt bei jedem Lauf dasselbe Ergebnis. Schnell, guenstig, reproduzierbar — perfekt fuer alles, was sich als String-Operation ausdruecken laesst.
 
 ## WALKTHROUGH
 
@@ -56,7 +56,7 @@ Der Scorer bekommt ein Objekt mit `output` (was die `task` zurueckgegeben hat), 
 
 ### Schicht 2: Dynamischer Inline Scorer mit expected
 
-Statt einen festen String zu prÃ¼fen, nutze den `expected`-Wert aus den Daten:
+Statt einen festen String zu pruefen, nutze den `expected`-Wert aus den Daten:
 
 ```typescript
 scorers: [{
@@ -69,7 +69,7 @@ scorers: [{
 }]
 ```
 
-Jetzt funktioniert der Scorer fÃ¼r alle Test-Cases — nicht nur fÃ¼r "Paris". Die Normalisierung auf Kleinbuchstaben macht den Check robuster.
+Jetzt funktioniert der Scorer fuer alle Test-Cases — nicht nur fuer "Paris". Die Normalisierung auf Kleinbuchstaben macht den Check robuster.
 
 ### Schicht 3: createScorer — Wiederverwendbare Scorer
 
@@ -103,7 +103,7 @@ evalite('Cities', {
 
 ### Schicht 4: Abgestufte Scores
 
-Scores mÃ¼ssen nicht binaer (0 oder 1) sein. Du kannst Abstufungen verwenden:
+Scores muessen nicht binaer (0 oder 1) sein. Du kannst Abstufungen verwenden:
 
 ```typescript
 const titleLength = createScorer<string, string, string>({
@@ -134,11 +134,11 @@ evalite('Exact Match', {
 });
 ```
 
-`Levenshtein` misst die Edit-Distanz — wie viele Zeichen mÃ¼ssen geaendert werden, um vom Output zum Expected zu kommen. Score 1.0 bedeutet identisch, Score 0.0 bedeutet komplett verschieden.
+`Levenshtein` misst die Edit-Distanz — wie viele Zeichen muessen geaendert werden, um vom Output zum Expected zu kommen. Score 1.0 bedeutet identisch, Score 0.0 bedeutet komplett verschieden.
 
 ### Schicht 6: Mehrere Scorer kombinieren
 
-Du kannst mehrere Scorer in einem `scorers`-Array kombinieren. Jeder bewertet unabhÃ¤ngig:
+Du kannst mehrere Scorer in einem `scorers`-Array kombinieren. Jeder bewertet unabhaengig:
 
 ```typescript
 evalite('Multi-Scorer', {
@@ -175,12 +175,12 @@ import { Levenshtein } from 'autoevals';
 
 // TODO 1: Erstelle einen createScorer namens 'containsKeyword'
 //   - Prueft ob output.toLowerCase() den expected-Wert enthaelt
-//   - Gibt 1 zurÃ¼ck wenn ja, 0 wenn nein
+//   - Gibt 1 zurueck wenn ja, 0 wenn nein
 
 // TODO 2: Erstelle eine evalite() mit dem Namen 'Capital Cities'
 //   - data: 5 Hauptstadt-Fragen (input: Frage, expected: Stadtname)
-//   - task: Gibt eine Antwort im Format "The capital is [Stadt]." zurÃ¼ck
-//     (simuliere erstmal ohne LLM — gib feste Antworten zurÃ¼ck)
+//   - task: Gibt eine Antwort im Format "The capital is [Stadt]." zurueck
+//     (simuliere erstmal ohne LLM — gib feste Antworten zurueck)
 //   - scorers: [containsKeyword, Levenshtein]
 
 // TODO 3: Vergleiche die Scores beider Scorer im Dashboard
@@ -190,12 +190,12 @@ import { Levenshtein } from 'autoevals';
 **Checkliste:**
 - [ ] `createScorer` mit `containsKeyword` implementiert
 - [ ] `data` mit 5 Test-Cases
-- [ ] `task` gibt Antworten zurÃ¼ck
+- [ ] `task` gibt Antworten zurueck
 - [ ] Beide Scorer (`containsKeyword` und `Levenshtein`) im Array
-- [ ] Dashboard zeigt unterschiedliche Scores fÃ¼r beide Scorer
+- [ ] Dashboard zeigt unterschiedliche Scores fuer beide Scorer
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 // capitals.eval.ts
@@ -222,7 +222,7 @@ evalite('Capital Cities', {
     { input: 'What is the capital of Spain?', expected: 'Madrid' },
   ],
   task: async (input) => {
-    // Simulierte Antworten — spÃ¤ter durch LLM ersetzen
+    // Simulierte Antworten — spaeter durch LLM ersetzen
     const answers: Record<string, string> = {
       'What is the capital of France?': 'The capital of France is Paris.',
       'What is the capital of Germany?': 'The capital of Germany is Berlin.',
@@ -236,9 +236,9 @@ evalite('Capital Cities', {
 });
 ```
 
-**Erwarteter Output:** `containsKeyword` gibt 1.0 fÃ¼r alle 5 Test-Cases. `Levenshtein` gibt niedrigere Scores (~0.2-0.4) weil "The capital of France is Paris." viel laenger ist als "Paris".
+**Erwarteter Output:** `containsKeyword` gibt 1.0 fuer alle 5 Test-Cases. `Levenshtein` gibt niedrigere Scores (~0.2-0.4) weil "The capital of France is Paris." viel laenger ist als "Paris".
 
-**ErklÃ¤rung:** `containsKeyword` gibt 1.0 fÃ¼r alle Test-Cases zurÃ¼ck — "Paris" kommt in "The capital of France is Paris." vor. `Levenshtein` gibt niedrigere Scores, weil der Output viel laenger ist als der erwartete Wert "Paris". Beide Perspektiven sind nuetzlich: Enthaelt die Antwort das Richtige? UND: Wie knapp ist die Antwort?
+**Erklaerung:** `containsKeyword` gibt 1.0 fuer alle Test-Cases zurueck — "Paris" kommt in "The capital of France is Paris." vor. `Levenshtein` gibt niedrigere Scores, weil der Output viel laenger ist als der erwartete Wert "Paris". Beide Perspektiven sind nuetzlich: Enthaelt die Antwort das Richtige? UND: Wie knapp ist die Antwort?
 
 </details>
 
@@ -253,7 +253,7 @@ evalite('Capital Cities', {
 3. Scorer: `containsKeyword` UND `Levenshtein`
 4. Vergleiche: Welcher Scorer ist strenger? Welcher ist informativer?
 
-**Optional Stretch Goal:** Baue einen `startsWithCapital` Scorer, der prÃ¼ft, ob die Antwort mit einem Grossbuchstaben beginnt. Simpel, aber ein guter Formatierungs-Check.
+**Optional Stretch Goal:** Baue einen `startsWithCapital` Scorer, der prueft, ob die Antwort mit einem Grossbuchstaben beginnt. Simpel, aber ein guter Formatierungs-Check.
 
 ## Quellen
 

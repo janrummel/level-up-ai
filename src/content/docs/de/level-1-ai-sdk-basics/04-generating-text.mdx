@@ -10,19 +10,19 @@ import combineDiagram from '../../../../assets/diagrams/l1-c3-combine.svg';
 
 ## THINK
 
-Was bekommst Du zurÃ¼ck, wenn Du ein LLM um Text bittest — nur den Text, oder mehr?
+Was bekommst Du zurueck, wenn Du ein LLM um Text bittest — nur den Text, oder mehr?
 
 ## OVERVIEW
 
 <Image src={overviewDiagram} alt="prompt und system fliessen in generateText, das result.text, result.usage, result.finishReason, result.steps und result.response zurueckgibt" />
 
-`generateText` nimmt `model` + `prompt` als Input und gibt ein reichhaltiges Result-Objekt zurÃ¼ck. Neben dem Text bekommst Du Token-Verbrauch, den Grund fÃ¼r das Stoppen, einzelne Schritte und die rohe Response.
+`generateText` nimmt `model` + `prompt` als Input und gibt ein reichhaltiges Result-Objekt zurueck. Neben dem Text bekommst Du Token-Verbrauch, den Grund fuer das Stoppen, einzelne Schritte und die rohe Response.
 
 ## WHY
 
-**Ohne VerstÃ¤ndnis des Result-Objekts:** Du nutzt nur `result.text` und verpasst alles andere. Du hast keine Kontrolle Ã¼ber Kosten (Token-Tracking), kein Debugging (Finish Reason), kein VerstÃ¤ndnis fÃ¼r Multi-Step-Verarbeitung (Steps). Wenn etwas schiefgeht, tappst Du im Dunkeln.
+**Ohne Verstaendnis des Result-Objekts:** Du nutzt nur `result.text` und verpasst alles andere. Du hast keine Kontrolle ueber Kosten (Token-Tracking), kein Debugging (Finish Reason), kein Verstaendnis fuer Multi-Step-Verarbeitung (Steps). Wenn etwas schiefgeht, tappst Du im Dunkeln.
 
-**Mit VerstÃ¤ndnis des Result-Objekts:** Du trackst Token-Verbrauch fÃ¼r Kostenoptimierung, erkennst Ã¼ber `finishReason`, warum eine Antwort abgeschnitten wurde, und nutzt Callbacks fÃ¼r Logging und Monitoring. Volle Kontrolle statt Blackbox.
+**Mit Verstaendnis des Result-Objekts:** Du trackst Token-Verbrauch fuer Kostenoptimierung, erkennst ueber `finishReason`, warum eine Antwort abgeschnitten wurde, und nutzt Callbacks fuer Logging und Monitoring. Volle Kontrolle statt Blackbox.
 
 ## WALKTHROUGH
 
@@ -40,7 +40,7 @@ const result = await generateText({
 });
 ```
 
-`generateText` ist eine async Funktion. Sie wartet, bis das LLM die komplette Antwort generiert hat, und gibt dann das Result-Objekt zurÃ¼ck. Kein Streaming — alles auf einmal.
+`generateText` ist eine async Funktion. Sie wartet, bis das LLM die komplette Antwort generiert hat, und gibt dann das Result-Objekt zurueck. Kein Streaming — alles auf einmal.
 
 ### Schicht 2: Das Result-Objekt im Detail
 
@@ -51,7 +51,7 @@ Das Result-Objekt hat fuenf wichtige Properties:
 result.text
 // → "Promises in JavaScript sind Objekte, die einen..."
 
-// Token-Verbrauch — wichtig fÃ¼r Kostenberechnung
+// Token-Verbrauch — wichtig fuer Kostenberechnung
 result.usage
 // → { promptTokens: 12, completionTokens: 150, totalTokens: 162 }
 
@@ -70,7 +70,7 @@ result.response
 // → { headers, messages, body }
 ```
 
-Besonders wichtig: Wenn `finishReason` den Wert `'length'` hat, wurde die Antwort abgeschnitten. Das bedeutet, das Token-Limit wurde erreicht, bevor das LLM fertig war. Du siehst dann eine unvollstaendige Antwort. In dem Fall kannst Du `maxTokens` erhÃ¶hen:
+Besonders wichtig: Wenn `finishReason` den Wert `'length'` hat, wurde die Antwort abgeschnitten. Das bedeutet, das Token-Limit wurde erreicht, bevor das LLM fertig war. Du siehst dann eine unvollstaendige Antwort. In dem Fall kannst Du `maxTokens` erhoehen:
 
 ```typescript
 const result = await generateText({
@@ -92,11 +92,11 @@ const result = await generateText({
 });
 ```
 
-`system` beeinflusst, WIE das LLM antwortet (Stil, Ton, Perspektive). `prompt` bestimmt, WORUEBER es antwortet (Inhalt). Die Trennung ist wichtig — `system` bleibt oft gleich, waehrend `prompt` sich Ã¤ndert.
+`system` beeinflusst, WIE das LLM antwortet (Stil, Ton, Perspektive). `prompt` bestimmt, WORUEBER es antwortet (Inhalt). Die Trennung ist wichtig — `system` bleibt oft gleich, waehrend `prompt` sich aendert.
 
 ### Schicht 4: Callbacks — onFinish und onStepFinish
 
-Callbacks werden aufgerufen, wenn die Generierung abgeschlossen ist. Nuetzlich fÃ¼r Logging, Kosten-Tracking oder Analytics:
+Callbacks werden aufgerufen, wenn die Generierung abgeschlossen ist. Nuetzlich fuer Logging, Kosten-Tracking oder Analytics:
 
 ```typescript
 const result = await generateText({
@@ -116,7 +116,7 @@ const result = await generateText({
 `onFinish` wird einmal am Ende aufgerufen. `onStepFinish` wird nach jedem einzelnen Schritt aufgerufen — relevant bei Tool Calls, wenn mehrere LLM-Aufrufe hintereinander passieren (das lernst Du in Level 3).
 
 :::note[Error Handling bei generateText]
-API-Calls kÃ¶nnen fehlschlagen — Netzwerkfehler, ungueltige API Keys, Rate Limits. Wrappe `generateText` immer in einen `try/catch`:
+API-Calls koennen fehlschlagen — Netzwerkfehler, ungueltige API Keys, Rate Limits. Wrappe `generateText` immer in einen `try/catch`:
 
 ```typescript
 import { generateText, APICallError } from 'ai';
@@ -140,12 +140,12 @@ try {
 }
 ```
 
-`APICallError` ist die AI SDK Fehlerklasse fÃ¼r fehlgeschlagene Provider-Calls. Ãber `statusCode` erkennst Du den Typ: `401` = falscher API Key, `429` = Rate Limit, `500` = Server-Fehler. Bei Rate Limits hilft ein kurzes Warten vor dem Retry.
+`APICallError` ist die AI SDK Fehlerklasse fuer fehlgeschlagene Provider-Calls. Ueber `statusCode` erkennst Du den Typ: `401` = falscher API Key, `429` = Rate Limit, `500` = Server-Fehler. Bei Rate Limits hilft ein kurzes Warten vor dem Retry.
 :::
 
 ## TRY
 
-**Aufgabe:** Generiere Text mit `system` + `prompt`, logge das vollstÃ¤ndige Result-Objekt und implementiere einen `onFinish` Callback.
+**Aufgabe:** Generiere Text mit `system` + `prompt`, logge das vollstaendige Result-Objekt und implementiere einen `onFinish` Callback.
 
 ```typescript
 import { generateText } from 'ai';
@@ -170,7 +170,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] `onFinish` Callback implementiert
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -197,7 +197,7 @@ console.log('Completion Tokens:', result.usage.completionTokens);
 console.log('Finish Reason:', result.finishReason);
 ```
 
-**ErklÃ¤rung:** Der `onFinish` Callback wird aufgerufen, sobald die Generierung abgeschlossen ist — noch bevor Du `result.text` loggst. Das macht ihn ideal fÃ¼r Logging und Monitoring, weil er garantiert ausgefuehrt wird, egal was danach im Code passiert.
+**Erklaerung:** Der `onFinish` Callback wird aufgerufen, sobald die Generierung abgeschlossen ist — noch bevor Du `result.text` loggst. Das macht ihn ideal fuer Logging und Monitoring, weil er garantiert ausgefuehrt wird, egal was danach im Code passiert.
 
 **Ausfuehren:**
 
@@ -205,7 +205,7 @@ console.log('Finish Reason:', result.finishReason);
 npx tsx challenge-1-3.ts
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 
 ```
 --- onFinish Callback ---
@@ -228,12 +228,12 @@ Finish Reason: stop
 
 **Uebung:** Kombiniere `generateText` mit der `selectModel`-Funktion aus Challenge 1.2. Generiere Text mit verschiedenen Modellen und vergleiche `usage.totalTokens`.
 
-1. Nutze `selectModel('zusammenfassen')` fÃ¼r ein Flash-Modell
-2. Nutze `selectModel('analysieren')` fÃ¼r ein Pro-Modell
+1. Nutze `selectModel('zusammenfassen')` fuer ein Flash-Modell
+2. Nutze `selectModel('analysieren')` fuer ein Pro-Modell
 3. Stelle denselben `prompt` an beide Modelle
 4. Vergleiche: Welches Modell verbraucht mehr Tokens? Welches antwortet besser?
 
-**Optional Stretch Goal:** Baue eine `trackCost`-Funktion, die `usage.totalTokens` in geschaetzte Kosten umrechnet (z.B. 1 Token = $0.000003 fÃ¼r Claude Sonnet). Nutze den `onFinish` Callback, um die Kosten zu loggen.
+**Optional Stretch Goal:** Baue eine `trackCost`-Funktion, die `usage.totalTokens` in geschaetzte Kosten umrechnet (z.B. 1 Token = $0.000003 fuer Claude Sonnet). Nutze den `onFinish` Callback, um die Kosten zu loggen.
 
 ## Quellen
 

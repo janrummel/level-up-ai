@@ -12,7 +12,7 @@ import overviewDiagram from '../../../../assets/diagrams/l5-boss-overview.svg';
 
 ## Das Szenario
 
-Du baust einen **Documentation Assistant** — ein AI-System, das technische Dokumentation analysiert und Entwickler-Fragen beantwortet. Der Assistant muss zuverlÃ¤ssig arbeiten: quellenbasierte Antworten, konsistentes Format, nachvollziehbarer Denkprozess. Keine Halluzinationen.
+Du baust einen **Documentation Assistant** — ein AI-System, das technische Dokumentation analysiert und Entwickler-Fragen beantwortet. Der Assistant muss zuverlaessig arbeiten: quellenbasierte Antworten, konsistentes Format, nachvollziehbarer Denkprozess. Keine Halluzinationen.
 
 Dieses Projekt kombiniert alle fuenf Bausteine aus Level 5:
 
@@ -25,7 +25,7 @@ Dieses Projekt kombiniert alle fuenf Bausteine aus Level 5:
 3. Mindestens 2 Exemplars im `<examples>`-Abschnitt, die das gewuenschte Antwort-Format demonstrieren
 4. `<thinking-instructions>` die das LLM bei komplexen Fragen zum strukturierten Denken bringen
 5. `<rules>` die Halluzinationen verhindern: nur bereitgestellte Daten verwenden, ehrlich bei Wissensluecken
-6. `streamText` fÃ¼r die Ausgabe ins Terminal
+6. `streamText` fuer die Ausgabe ins Terminal
 
 ## Starter-Code
 
@@ -85,7 +85,7 @@ const question = 'How do I protect a route that only admins can access?';
 
 // 1. buildDocAssistantPrompt() — wiederverwendbare Template-Funktion
 // 2. XML Tags — strukturierter Prompt
-// 3. Exemplars — mindestens 2 Beispiele fÃ¼r das Antwort-Format
+// 3. Exemplars — mindestens 2 Beispiele fuer das Antwort-Format
 // 4. background-data — die Dokumentation als Kontext
 // 5. thinking-instructions — Denkprozess vor der Antwort
 // 6. streamText — Ausgabe ins Terminal
@@ -118,14 +118,14 @@ Dein Boss Fight ist bestanden, wenn:
 <details>
 <summary>Hinweis 1: Die Funktion strukturieren</summary>
 
-Deine `buildDocAssistantPrompt`-Funktion braucht ein Config-Objekt mit mindestens diesen Feldern: `docUrl`, `docContent`, `question`, `exemplars`. Die Funktion gibt einen String zurÃ¼ck, der alle XML Tags in der richtigen Reihenfolge enthaelt. Schau Dir die `buildSystemPrompt`-Funktion aus Challenge 5.1 an — dieselbe Idee, nur mit mehr Tags.
+Deine `buildDocAssistantPrompt`-Funktion braucht ein Config-Objekt mit mindestens diesen Feldern: `docUrl`, `docContent`, `question`, `exemplars`. Die Funktion gibt einen String zurueck, der alle XML Tags in der richtigen Reihenfolge enthaelt. Schau Dir die `buildSystemPrompt`-Funktion aus Challenge 5.1 an — dieselbe Idee, nur mit mehr Tags.
 
 </details>
 
 <details>
-<summary>Hinweis 2: Exemplars fÃ¼r den Documentation Assistant</summary>
+<summary>Hinweis 2: Exemplars fuer den Documentation Assistant</summary>
 
-Deine Exemplars sollten das vollstÃ¤ndige Antwort-Format zeigen: erst ein `<thinking>` Block mit dem Suchprozess in der Doku, dann die strukturierte Antwort mit Zitaten. Zeige mindestens einen Fall, in dem die Frage beantwortbar ist, und einen Fall, in dem die Doku keine Antwort hat. So lernt das LLM beide Pfade.
+Deine Exemplars sollten das vollstaendige Antwort-Format zeigen: erst ein `<thinking>` Block mit dem Suchprozess in der Doku, dann die strukturierte Antwort mit Zitaten. Zeige mindestens einen Fall, in dem die Frage beantwortbar ist, und einen Fall, in dem die Doku keine Antwort hat. So lernt das LLM beide Pfade.
 
 </details>
 

@@ -15,14 +15,14 @@ Du orchestrierst jetzt Production-grade AI Workflows — sequentielle Pipelines 
 
 ## Was Du gelernt hast
 
-- **Workflows:** Mehrere `generateText`-Calls sequentiell verketten — Output von Step N wird Input von Step N+1. Jeder Step hat seinen eigenen System Prompt, seine eigene Rolle. Einzeln testbar, einzeln debuggbar. Token-Tracking Ã¼ber die gesamte Pipeline.
-- **Streaming to Frontend:** Workflow-Fortschritt in Echtzeit ans Frontend streamen mit `createDataStream` und `writeData`. Custom Data Parts fÃ¼r Step-Updates, `mergeIntoDataStream` fÃ¼r den finalen Text-Stream. Ein Kanal fÃ¼r Fortschritt und Text — synchron und in der richtigen Reihenfolge.
-- **Custom Loop:** Eigene Agent-Loops mit while-Loop und Messages-Array. `result.response.messages` zurueckpushen fÃ¼r Kontext-Kontinuitaet. State-Tracking (Tool Call Count, genutzte Tools), Abbruch basierend auf spezifischen Tool-Ergebnissen statt nur Step Count.
-- **Breaking the Loop:** Vier Safeguards gegen unkontrolliertes Verhalten — Max Iterations, Timeout mit `AbortController`, Cost Guard (Token-Budget) und Quality Check. Partial Results statt leerer Ergebnisse bei Abbruch. `breakReason` fÃ¼r Monitoring und Debugging.
+- **Workflows:** Mehrere `generateText`-Calls sequentiell verketten — Output von Step N wird Input von Step N+1. Jeder Step hat seinen eigenen System Prompt, seine eigene Rolle. Einzeln testbar, einzeln debuggbar. Token-Tracking ueber die gesamte Pipeline.
+- **Streaming to Frontend:** Workflow-Fortschritt in Echtzeit ans Frontend streamen mit `createDataStream` und `writeData`. Custom Data Parts fuer Step-Updates, `mergeIntoDataStream` fuer den finalen Text-Stream. Ein Kanal fuer Fortschritt und Text — synchron und in der richtigen Reihenfolge.
+- **Custom Loop:** Eigene Agent-Loops mit while-Loop und Messages-Array. `result.response.messages` zurueckpushen fuer Kontext-Kontinuitaet. State-Tracking (Tool Call Count, genutzte Tools), Abbruch basierend auf spezifischen Tool-Ergebnissen statt nur Step Count.
+- **Breaking the Loop:** Vier Safeguards gegen unkontrolliertes Verhalten — Max Iterations, Timeout mit `AbortController`, Cost Guard (Token-Budget) und Quality Check. Partial Results statt leerer Ergebnisse bei Abbruch. `breakReason` fuer Monitoring und Debugging.
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 8 Workflows abgeschlossen, Level 9 Advanced ist das nÃ¤chste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 8 Workflows abgeschlossen, Level 9 Advanced ist das naechste Level" />
 
 ## Boss Fight Rueckblick
 
@@ -30,4 +30,4 @@ In der Boss Fight hast Du eine **Multi-Step Research Pipeline** gebaut — ein S
 
 ## Naechstes Level
 
-**Level 9: Advanced Patterns** — Das Finale. Guardrails schuetzen Deine App vor schaedlichen Inputs und Outputs. Model Routing waehlt automatisch das richtige Modell fÃ¼r jede Aufgabe. Multi-Output vergleicht Ergebnisse verschiedener Modelle. Production-Ready Patterns, die den Unterschied zwischen Prototyp und robuster AI-Anwendung machen.
+**Level 9: Advanced Patterns** — Das Finale. Guardrails schuetzen Deine App vor schaedlichen Inputs und Outputs. Model Routing waehlt automatisch das richtige Modell fuer jede Aufgabe. Multi-Output vergleicht Ergebnisse verschiedener Modelle. Production-Ready Patterns, die den Unterschied zwischen Prototyp und robuster AI-Anwendung machen.

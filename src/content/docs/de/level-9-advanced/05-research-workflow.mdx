@@ -29,19 +29,19 @@ Drei Phasen: Research (Agent Loop mit Tools und Break Conditions), Processing (W
 
 ### Schicht 1: Die Pipeline-Architektur
 
-Diese Pipeline verbindet Konzepte aus dem gesamten Lernpfad. Hier ist die Ãbersicht, welches Level wo zum Einsatz kommt:
+Diese Pipeline verbindet Konzepte aus dem gesamten Lernpfad. Hier ist die Uebersicht, welches Level wo zum Einsatz kommt:
 
 | Phase | Konzept | Level | Funktion |
 |-------|---------|-------|----------|
-| Research | Tool Calling | 3.1 | `search`-Tool fÃ¼r Datensammlung |
+| Research | Tool Calling | 3.1 | `search`-Tool fuer Datensammlung |
 | Research | Custom Loop | 8.3 | Agent entscheidet selbst wann genug recherchiert ist |
 | Research | Break Conditions | 8.4 | Max Iterations, Timeout, Cost Guard |
 | Processing | Workflow | 8.1 | Sequentielle Steps: Zusammenfassen, Strukturieren |
-| Processing | Context Engineering | 5.x | XML-strukturierte Prompts fÃ¼r praezise Outputs |
-| Processing | Structured Output | 1.5 | Zod Schema fÃ¼r typisierte Metadaten |
+| Processing | Context Engineering | 5.x | XML-strukturierte Prompts fuer praezise Outputs |
+| Processing | Structured Output | 1.5 | Zod Schema fuer typisierte Metadaten |
 | Quality | Guardrails | 9.1 | Input/Output-Validierung |
 | Quality | Model Router | 9.2 | Optimales Modell pro Phase |
-| Quality | Usage Tracking | 2.2 | Token-Kosten Ã¼ber die gesamte Pipeline |
+| Quality | Usage Tracking | 2.2 | Token-Kosten ueber die gesamte Pipeline |
 
 ### Schicht 2: Research-Phase
 
@@ -62,7 +62,7 @@ const searchTool = tool({
   execute: async ({ query }) => {
     console.log(`  Suche: "${query}"`);
     // In Production: Web Search API, Datenbank, etc.
-    return `Ergebnisse fÃ¼r "${query}": [Hier wÃ¼rden echte Suchergebnisse stehen]`;
+    return `Ergebnisse fuer "${query}": [Hier wuerden echte Suchergebnisse stehen]`;
   },
 });
 
@@ -100,7 +100,7 @@ Wenn Du genug Informationen hast, fasse die Ergebnisse zusammen.`,
 
       iterations++;
       const result = await generateText({
-        model: google('gemini-2.5-flash'),              // ← Guenstiges Modell fÃ¼r Research
+        model: google('gemini-2.5-flash'),              // ← Guenstiges Modell fuer Research
         tools: { search: searchTool },
         messages,
         abortSignal: controller.signal,
@@ -263,7 +263,7 @@ for (const finding of result.report.keyFindings) {
 console.log(`Fazit: ${result.report.conclusion}`);
 ```
 
-Die Quality-Phase ist die letzte Verteidigungslinie. Guardrails prÃ¼fen den finalen Output auf Laenge, Inhalt und QualitÃ¤t. Die gesamte Pipeline trackt Tokens und Dauer — wichtig fÃ¼r Production Monitoring.
+Die Quality-Phase ist die letzte Verteidigungslinie. Guardrails pruefen den finalen Output auf Laenge, Inhalt und Qualitaet. Die gesamte Pipeline trackt Tokens und Dauer — wichtig fuer Production Monitoring.
 
 ## TRY
 
@@ -278,7 +278,7 @@ import { z } from 'zod';
 
 const model = anthropic('claude-sonnet-4-5-20250514');
 
-// TODO 1: Definiere ein search-Tool (simuliert, gibt festen Text zurÃ¼ck)
+// TODO 1: Definiere ein search-Tool (simuliert, gibt festen Text zurueck)
 
 // TODO 2: Baue Phase 1 — Research
 //   - generateText mit search-Tool
@@ -298,11 +298,11 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 - [ ] search-Tool definiert und genutzt
 - [ ] Research-Phase mit Iterations-Limit
 - [ ] Zusammenfassung nutzt Research-Output als Input
-- [ ] Output-Guardrails prÃ¼fen den finalen Report
+- [ ] Output-Guardrails pruefen den finalen Report
 - [ ] Token-Verbrauch wird pro Phase und gesamt geloggt
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText, tool } from 'ai';
@@ -317,7 +317,7 @@ const searchTool = tool({
   parameters: z.object({ query: z.string() }),
   execute: async ({ query }) => {
     console.log(`  Suche: "${query}"`);
-    return `Suchergebnisse fÃ¼r "${query}": AI wird in der Medizin fÃ¼r Diagnostik, Medikamentenentwicklung und personalisierte Therapie eingesetzt. Aktuelle Studien zeigen 30% schnellere Diagnosen durch AI-Unterstuetzung.`;
+    return `Suchergebnisse fuer "${query}": AI wird in der Medizin fuer Diagnostik, Medikamentenentwicklung und personalisierte Therapie eingesetzt. Aktuelle Studien zeigen 30% schnellere Diagnosen durch AI-Unterstuetzung.`;
   },
 });
 
@@ -384,10 +384,10 @@ async function miniResearchPipeline(topic: string) {
 await miniResearchPipeline('AI in der Medizin');
 ```
 
-**ErklÃ¤rung:** Drei Phasen — Research mit Tool-Loop (max 3 Iterationen), Summarize mit eigenem System Prompt, Format mit Guardrails. Token-Verbrauch wird Ã¼ber alle Phasen kumuliert. Die Pipeline laeuft von Anfang bis Ende durch, auch wenn der Research-Loop frueh abbricht.
+**Erklaerung:** Drei Phasen — Research mit Tool-Loop (max 3 Iterationen), Summarize mit eigenem System Prompt, Format mit Guardrails. Token-Verbrauch wird ueber alle Phasen kumuliert. Die Pipeline laeuft von Anfang bis Ende durch, auch wenn der Research-Loop frueh abbricht.
 
 ```
-Erwarteter Output (ungefÃ¤hr):
+Erwarteter Output (ungefaehr):
 === Mini Research Pipeline: "AI in der Medizin" ===
 
 [Phase 1: Research]
@@ -418,7 +418,7 @@ Das ist das grosse Bild. Du hast jetzt alle Bausteine, um Production-Ready AI-Sy
 - **Level 2:** Token-Verbrauch verstehen und tracken — Kosten im Griff
 - **Level 3:** Tools und Agents — AI die handeln kann
 - **Level 5:** Context Engineering — praezise Prompts die konsistente Ergebnisse liefern
-- **Level 6:** Evals — QualitÃ¤t messen statt raten
+- **Level 6:** Evals — Qualitaet messen statt raten
 - **Level 8:** Workflows — komplexe Aufgaben orchestrieren
 - **Level 9:** Guardrails, Routing, Comparing — Production-Patterns
 

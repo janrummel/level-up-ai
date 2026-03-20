@@ -1,6 +1,6 @@
 ---
 title: "Challenge 6.3: LLM-as-a-Judge"
-description: "Baue einen Factuality Scorer, bei dem ein LLM die Ausgabe eines anderen LLM bewertet — fÃ¼r offene Antworten ohne eindeutig richtige LÃ¶sung."
+description: "Baue einen Factuality Scorer, bei dem ein LLM die Ausgabe eines anderen LLM bewertet — fuer offene Antworten ohne eindeutig richtige Loesung."
 sidebar:
   order: 4
 ---
@@ -10,7 +10,7 @@ import combineDiagram from '../../../../assets/diagrams/l6-c3-combine.svg';
 
 ## THINK
 
-Wie bewertest Du, ob eine Zusammenfassung "gut" ist — wenn es keine eindeutig richtige Antwort gibt? "Paris" als Hauptstadt von Frankreich laesst sich mit `includes()` prÃ¼fen. Aber "Erklaere Machine Learning" hat tausend gueltige Antworten.
+Wie bewertest Du, ob eine Zusammenfassung "gut" ist — wenn es keine eindeutig richtige Antwort gibt? "Paris" als Hauptstadt von Frankreich laesst sich mit `includes()` pruefen. Aber "Erklaere Machine Learning" hat tausend gueltige Antworten.
 
 ## OVERVIEW
 
@@ -37,29 +37,29 @@ Betrachte diesen Test-Case:
 }
 ```
 
-Eine gueltige Antwort kÃ¶nnte sein:
+Eine gueltige Antwort koennte sein:
 - "ML ist ein Bereich der kuenstlichen Intelligenz, der statistische Methoden nutzt, um Muster in Daten zu erkennen."
 - "Machine Learning ermoeglicht es Computern, aus Erfahrung zu lernen, ohne explizit programmiert zu werden."
 
-Beide sind korrekt, aber keiner matcht den `expected`-Wert exakt. `Levenshtein` wÃ¼rde niedrige Scores geben. Ein LLM kann bewerten: "Inhaltlich deckungsgleich, nur anders formuliert."
+Beide sind korrekt, aber keiner matcht den `expected`-Wert exakt. `Levenshtein` wuerde niedrige Scores geben. Ein LLM kann bewerten: "Inhaltlich deckungsgleich, nur anders formuliert."
 
 ### Schicht 2: Die Score-Skala
 
-Der Factuality Scorer nutzt eine 5-stufige Skala von A bis E. **Achtung:** Das sind keine Schulnoten! Im deutschen Schulsystem wÃ¤re A = 1 = sehr gut. Hier beschreiben die Buchstaben verschiedene *Verhaeltnisse* zwischen Antwort und Referenz — A ist nicht die beste Note, C (Identical) hat den hoechsten Score:
+Der Factuality Scorer nutzt eine 5-stufige Skala von A bis E. **Achtung:** Das sind keine Schulnoten! Im deutschen Schulsystem waere A = 1 = sehr gut. Hier beschreiben die Buchstaben verschiedene *Verhaeltnisse* zwischen Antwort und Referenz — A ist nicht die beste Note, C (Identical) hat den hoechsten Score:
 
 | Grade | Bedeutung | Score | Beschreibung |
 |-------|-----------|-------|-------------|
 | **A** | Subset | 0.4 | Antwort ist eine Teilmenge der Expertenmeinung — korrekt, aber unvollstaendig |
-| **B** | Superset | 0.6 | Antwort enthaelt alles aus der Expertenmeinung plus Zusaetzliches — korrekt und ausfÃ¼hrlicher |
+| **B** | Superset | 0.6 | Antwort enthaelt alles aus der Expertenmeinung plus Zusaetzliches — korrekt und ausfuehrlicher |
 | **C** | Identical | 1.0 | Antwort und Expertenmeinung sind inhaltlich identisch |
 | **D** | Conflict | 0.0 | Antwort widerspricht der Expertenmeinung — faktisch falsch |
-| **E** | Irrelevant Diff | 1.0 | Antworten unterscheiden sich, aber die Unterschiede sind fÃ¼r die Faktizitaet nicht relevant |
+| **E** | Irrelevant Diff | 1.0 | Antworten unterscheiden sich, aber die Unterschiede sind fuer die Faktizitaet nicht relevant |
 
 Die Skala erlaubt Abstufungen: Eine unvollstaendige Antwort (A: 0.4) ist besser als eine falsche (D: 0.0), aber schlechter als eine perfekte (C: 1.0).
 
-### Schicht 3: Der Factuality Scorer — Schritt fÃ¼r Schritt
+### Schicht 3: Der Factuality Scorer — Schritt fuer Schritt
 
-Wir nutzen `gpt-4o` als Judge-Modell — es eignet sich besonders gut fÃ¼r nuancierte inhaltliche Bewertungen. Der Scorer nutzt `generateObject` aus dem AI SDK, um eine strukturierte Bewertung vom Judge-LLM zu bekommen:
+Wir nutzen `gpt-4o` als Judge-Modell — es eignet sich besonders gut fuer nuancierte inhaltliche Bewertungen. Der Scorer nutzt `generateObject` aus dem AI SDK, um eine strukturierte Bewertung vom Judge-LLM zu bekommen:
 
 ```typescript
 import { createScorer } from 'evalite';
@@ -99,7 +99,7 @@ Select one:
     // 2. Grade in numerischen Score umrechnen
     const scores: Record<string, number> = {
       A: 0.4,  // Subset — korrekt, aber unvollstaendig
-      B: 0.6,  // Superset — korrekt und ausfÃ¼hrlicher
+      B: 0.6,  // Superset — korrekt und ausfuehrlicher
       C: 1.0,  // Identical — perfekt
       D: 0.0,  // Conflict — falsch
       E: 1.0,  // Irrelevant diff — Unterschiede egal
@@ -196,7 +196,7 @@ import { z } from 'zod';
 //   - Nutze generateObject mit dem Prompt aus dem Walkthrough
 //   - Schema: { answer: z.enum(['A','B','C','D','E']), rationale: z.string() }
 //   - Mappe die Grades auf Scores: A→0.4, B→0.6, C→1.0, D→0.0, E→1.0
-//   - Gib { score, metadata: { rationale, grade } } zurÃ¼ck
+//   - Gib { score, metadata: { rationale, grade } } zurueck
 
 // TODO 2: Erstelle eine evalite() mit dem Namen 'Factuality Test'
 //   - data: 3 Test-Cases — eine korrekte, eine teilweise richtige,
@@ -209,13 +209,13 @@ import { z } from 'zod';
 
 **Checkliste:**
 - [ ] Factuality Scorer mit `createScorer` implementiert
-- [ ] `generateObject` mit Zod Schema fÃ¼r strukturierte Bewertung
+- [ ] `generateObject` mit Zod Schema fuer strukturierte Bewertung
 - [ ] Score-Mapping (A-E → 0-1) implementiert
 - [ ] `metadata` mit `rationale` zurueckgegeben
-- [ ] Mindestens 3 Test-Cases mit unterschiedlicher QualitÃ¤t
+- [ ] Mindestens 3 Test-Cases mit unterschiedlicher Qualitaet
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 // factuality.eval.ts
@@ -278,7 +278,7 @@ evalite('Factuality Test', {
     },
   ],
   task: async (input) => {
-    // Simulierte Antworten mit unterschiedlicher QualitÃ¤t
+    // Simulierte Antworten mit unterschiedlicher Qualitaet
     const answers: Record<string, string> = {
       'What is the capital of France?': 'The capital of France is Paris.',         // ← Korrekt (C)
       'What is TypeScript?': 'TypeScript adds types to JavaScript.',               // ← Teilweise (A)
@@ -290,12 +290,12 @@ evalite('Factuality Test', {
 });
 ```
 
-**ErklÃ¤rung:** Die drei Test-Cases decken verschiedene Qualitaetsstufen ab:
+**Erklaerung:** Die drei Test-Cases decken verschiedene Qualitaetsstufen ab:
 - "The capital of France is Paris." → Grade C (1.0) — inhaltlich identisch
 - "TypeScript adds types to JavaScript." → Grade A (0.4) — korrekt, aber unvollstaendig (fehlt "compiles to plain JavaScript")
 - "The speed of light is 500,000 km/s." → Grade D (0.0) — faktisch falsch
 
-Im Dashboard siehst Du die Rationale, die erklÃ¤rt, warum der Judge so entschieden hat.
+Im Dashboard siehst Du die Rationale, die erklaert, warum der Judge so entschieden hat.
 
 </details>
 

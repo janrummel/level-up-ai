@@ -1,6 +1,6 @@
 ---
 title: "Challenge 6.5: Langfuse Basics"
-description: "Verstehe Production-Observability fÃ¼r LLM-Anwendungen — Traces, Generations, Scores und Echtzeit-Monitoring mit Langfuse."
+description: "Verstehe Production-Observability fuer LLM-Anwendungen — Traces, Generations, Scores und Echtzeit-Monitoring mit Langfuse."
 sidebar:
   order: 6
 ---
@@ -12,13 +12,13 @@ import combineDiagram from '../../../../assets/diagrams/l6-c5-combine.svg';
 
 ## THINK
 
-Deine Evals laufen lokal — aber was passiert mit LLM-Calls in Production? Wie merkst Du, dass Dein System langsamer wird, die Kosten explodieren oder die QualitÃ¤t sinkt — bevor ein User sich beschwert?
+Deine Evals laufen lokal — aber was passiert mit LLM-Calls in Production? Wie merkst Du, dass Dein System langsamer wird, die Kosten explodieren oder die Qualitaet sinkt — bevor ein User sich beschwert?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Production App sendet LLM Call, der in einem Langfuse Trace erfasst wird, der im Dashboard Latenz, Kosten und QualitÃ¤t anzeigt" />
+<Image src={overviewDiagram} alt="Production App sendet LLM Call, der in einem Langfuse Trace erfasst wird, der im Dashboard Latenz, Kosten und Qualitaet anzeigt" />
 
-Langfuse ist ein Open-Source Observability-Tool fÃ¼r LLM-Anwendungen. Es erfasst jeden LLM-Call in Production und zeigt Dir Latenz, Token-Kosten und QualitÃ¤t in einem Dashboard. Wie Datadog oder Sentry — aber speziell fÃ¼r LLMs.
+Langfuse ist ein Open-Source Observability-Tool fuer LLM-Anwendungen. Es erfasst jeden LLM-Call in Production und zeigt Dir Latenz, Token-Kosten und Qualitaet in einem Dashboard. Wie Datadog oder Sentry — aber speziell fuer LLMs.
 
 ## WHY
 
@@ -105,7 +105,7 @@ const generation = trace.generation({
 
 // 4. Nach dem LLM-Call: Output und Metriken loggen
 generation.end({
-  output: 'TypeScript Generics erklÃ¤rt',
+  output: 'TypeScript Generics erklaert',
   usage: { promptTokens: 42, completionTokens: 8 },
 });
 
@@ -128,9 +128,9 @@ Das Langfuse Dashboard bietet:
 
 | Feature | Was Du siehst |
 |---------|--------------|
-| **Traces** | Alle Requests mit Timeline — klicke rein fÃ¼r Details |
+| **Traces** | Alle Requests mit Timeline — klicke rein fuer Details |
 | **Generations** | Jeder LLM-Call mit Input, Output, Tokens, Latenz |
-| **Scores** | Durchschnittliche QualitÃ¤t Ã¼ber die Zeit |
+| **Scores** | Durchschnittliche Qualitaet ueber die Zeit |
 | **Cost Analytics** | Token-Verbrauch und Kosten pro Tag, Modell, Feature |
 | **Latency Distribution** | P50, P95, P99 Latenzen — wo sind Deine Bottlenecks? |
 | **User Analytics** | Welche User generieren die meisten Costs? |
@@ -139,7 +139,7 @@ Das Langfuse Dashboard bietet:
 
 Evalite und Langfuse sind komplementaer — sie decken verschiedene Phasen ab:
 
-<Image src={workflowDiagram} alt="Development-Loop: Code Ã¤ndern, Evalite (Lokale Evals), Score vergleichen, zurÃ¼ck zu Code. Production-Loop: App, Langfuse Monitoring, Alerts bei Score-Drop, die Code-Aenderungen ausloesen" />
+<Image src={workflowDiagram} alt="Development-Loop: Code aendern, Evalite (Lokale Evals), Score vergleichen, zurueck zu Code. Production-Loop: App, Langfuse Monitoring, Alerts bei Score-Drop, die Code-Aenderungen ausloesen" />
 
 | Aspekt | Evalite | Langfuse |
 |--------|---------|---------|
@@ -149,7 +149,7 @@ Evalite und Langfuse sind komplementaer — sie decken verschiedene Phasen ab:
 | **Zweck** | Prompt-Iteration, Regression-Detection | Monitoring, Debugging, Kosten-Kontrolle |
 | **Daten** | Dein Dataset | Echte Production-Daten |
 
-**Der Workflow:** Du iterierst mit Evalite (lokal), bis der Score gut genug ist. Dann deployest Du. Langfuse ueberwacht in Production. Wenn die Scores dort sinken, gehst Du zurÃ¼ck zu Evalite und fixst das Problem.
+**Der Workflow:** Du iterierst mit Evalite (lokal), bis der Score gut genug ist. Dann deployest Du. Langfuse ueberwacht in Production. Wenn die Scores dort sinken, gehst Du zurueck zu Evalite und fixst das Problem.
 
 ## TRY
 
@@ -160,7 +160,7 @@ Evalite und Langfuse sind komplementaer — sie decken verschiedene Phasen ab:
    - Oeffne einen Trace und folge dem Request-Lifecycle
    - Schau Dir die Generation-Details an: Input, Output, Tokens, Latenz
    - Finde die Cost Analytics: Welches Modell kostet am meisten?
-3. Beantworte fÃ¼r Dich:
+3. Beantworte fuer Dich:
    - Was ist der Unterschied zwischen einem Trace und einer Generation?
    - Wo wuerdest Du einen Score hinzufuegen — am Trace oder an der Generation?
    - Wann wuerdest Du einen Alert einrichten?
@@ -168,14 +168,14 @@ Evalite und Langfuse sind komplementaer — sie decken verschiedene Phasen ab:
 **Checkliste:**
 - [ ] Langfuse Account erstellt (oder Demo-Projekt angeschaut)
 - [ ] Einen Trace im Dashboard geoeffnet und verstanden
-- [ ] Unterschied Trace vs. Generation erklÃ¤rt
+- [ ] Unterschied Trace vs. Generation erklaert
 - [ ] Cost Analytics gefunden und interpretiert
 - [ ] Eigene Notizen: Wo wuerdest Du Langfuse in Deinem Projekt einsetzen?
 
 <details>
 <summary>Hinweis: Kein Coding in dieser Challenge</summary>
 
-Diese Challenge ist bewusst konzeptuell. Die Integration von Langfuse mit dem AI SDK erfordert OpenTelemetry-Setup, das je nach Hosting-Environment (Node.js, Vercel, Cloudflare) unterschiedlich ist. Der Fokus liegt hier auf dem VerstÃ¤ndnis der Konzepte — die praktische Integration kommt, wenn Du Dein erstes Projekt in Production deployest.
+Diese Challenge ist bewusst konzeptuell. Die Integration von Langfuse mit dem AI SDK erfordert OpenTelemetry-Setup, das je nach Hosting-Environment (Node.js, Vercel, Cloudflare) unterschiedlich ist. Der Fokus liegt hier auf dem Verstaendnis der Konzepte — die praktische Integration kommt, wenn Du Dein erstes Projekt in Production deployest.
 
 Falls Du trotzdem hands-on arbeiten willst: Langfuse bietet ein [Quickstart-Guide](https://langfuse.com/docs/get-started) mit dem Du einen lokalen Trace in unter 5 Minuten erstellen kannst.
 
@@ -183,9 +183,9 @@ Falls Du trotzdem hands-on arbeiten willst: Langfuse bietet ein [Quickstart-Guid
 
 ## COMBINE
 
-<Image src={combineDiagram} alt="Development fuehrt zu Evalite (6.1-6.4), dann Prompt verbessern, Deploy, Langfuse (6.5), Monitoring — bei sinkendem Score fuehrt der Weg zurÃ¼ck zu Development" />
+<Image src={combineDiagram} alt="Development fuehrt zu Evalite (6.1-6.4), dann Prompt verbessern, Deploy, Langfuse (6.5), Monitoring — bei sinkendem Score fuehrt der Weg zurueck zu Development" />
 
-**Uebung:** Zeichne fÃ¼r Dich den Eval-Driven Development Workflow auf:
+**Uebung:** Zeichne fuer Dich den Eval-Driven Development Workflow auf:
 
 1. Du hast einen Chat-Title-Generator (aus den vorherigen Challenges)
 2. Wie wuerdest Du den Evalite-Langfuse Workflow aufsetzen?
@@ -193,12 +193,12 @@ Falls Du trotzdem hands-on arbeiten willst: Langfuse bietet ein [Quickstart-Guid
    - Wann laeuft Langfuse? (Production)
    - Was passiert, wenn ein Langfuse-Alert feuert?
 3. Ueberlege: Welche Scores wuerdest Du in Production tracken?
-   - Latenz? Kosten pro Request? Titel-QualitÃ¤t?
+   - Latenz? Kosten pro Request? Titel-Qualitaet?
 
-**Frage zum Nachdenken:** Langfuse erfasst echte User-Requests. KÃ¶nnte man diese Daten automatisch in das Evalite-Dataset zurueckfuehren, um die Test-Daten zu verbessern?
+**Frage zum Nachdenken:** Langfuse erfasst echte User-Requests. Koennte man diese Daten automatisch in das Evalite-Dataset zurueckfuehren, um die Test-Daten zu verbessern?
 
 :::note[Alternativen zu Langfuse]
-Neben Langfuse gibt es weitere Observability-Tools fÃ¼r LLM-Anwendungen, z.B. [Braintrust](https://braintrust.dev), [LangSmith](https://smith.langchain.com) oder [Weights & Biases Weave](https://wandb.ai/site/weave). Die Konzepte (Traces, Spans, Scores) sind aehnlich — wenn Du eines verstehst, findest Du Dich in den anderen schnell zurecht.
+Neben Langfuse gibt es weitere Observability-Tools fuer LLM-Anwendungen, z.B. [Braintrust](https://braintrust.dev), [LangSmith](https://smith.langchain.com) oder [Weights & Biases Weave](https://wandb.ai/site/weave). Die Konzepte (Traces, Spans, Scores) sind aehnlich — wenn Du eines verstehst, findest Du Dich in den anderen schnell zurecht.
 :::
 
 ## Quellen

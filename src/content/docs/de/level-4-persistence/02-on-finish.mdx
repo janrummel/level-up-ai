@@ -18,13 +18,13 @@ Wie speicherst Du das Ergebnis eines LLM-Calls — NACHDEM er fertig ist, aber B
 
 <Image src={overviewDiagram} alt="prompt fliesst in generateText, onFinish Callback sendet an DB/Logging und Response" />
 
-`generateText` ruft nach der vollstaendigen Completion einen `onFinish` Callback auf. In diesem Callback hast Du Zugriff auf `text`, `usage`, `finishReason` und die vollstÃ¤ndige `response` — der perfekte Ort, um Ergebnisse zu speichern, Tokens zu tracken oder Logs zu schreiben.
+`generateText` ruft nach der vollstaendigen Completion einen `onFinish` Callback auf. In diesem Callback hast Du Zugriff auf `text`, `usage`, `finishReason` und die vollstaendige `response` — der perfekte Ort, um Ergebnisse zu speichern, Tokens zu tracken oder Logs zu schreiben.
 
 ## WHY
 
 **Ohne `onFinish`:** Du musst Ergebnisse manuell nach dem `await` speichern. Das funktioniert, aber wenn zwischen `generateText` und Deinem Speicher-Code ein Fehler passiert, sind die Daten weg. Kein automatisches Logging, kein Audit Trail, kein Token-Tracking "out of the box".
 
-**Mit `onFinish`:** Das Speichern passiert automatisch, direkt nachdem das LLM fertig ist. Der Callback wird nach erfolgreicher Completion aufgerufen. Du hast einen zentralen Ort fÃ¼r Logging, Analytics und Persistence.
+**Mit `onFinish`:** Das Speichern passiert automatisch, direkt nachdem das LLM fertig ist. Der Callback wird nach erfolgreicher Completion aufgerufen. Du hast einen zentralen Ort fuer Logging, Analytics und Persistence.
 
 ## WALKTHROUGH
 
@@ -47,7 +47,7 @@ const result = await generateText({
 });
 ```
 
-Der Callback bekommt ein Objekt mit den wichtigsten Properties (die vollstÃ¤ndige Liste findest Du in der [generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)):
+Der Callback bekommt ein Objekt mit den wichtigsten Properties (die vollstaendige Liste findest Du in der [generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)):
 
 | Property | Typ | Beschreibung |
 |----------|-----|-------------|
@@ -66,7 +66,7 @@ Der Timing ist entscheidend:
 
 ### Schicht 3: Typische Einsaetze
 
-**Token-Tracking fÃ¼r Kostenberechnung:**
+**Token-Tracking fuer Kostenberechnung:**
 
 ```typescript
 let sessionTokens = 0;
@@ -143,7 +143,7 @@ for await (const chunk of result.textStream) {
 }
 ```
 
-Bei `streamText` feuert `onFinish` erst, wenn der letzte Chunk gestreamt wurde. Der vollstÃ¤ndige `text` ist dann im Callback verfÃ¼gbar.
+Bei `streamText` feuert `onFinish` erst, wenn der letzte Chunk gestreamt wurde. Der vollstaendige `text` ist dann im Callback verfuegbar.
 
 ## TRY
 
@@ -185,7 +185,7 @@ const auditLog: Array<{
 **Ausfuehren mit:** `npx tsx challenge-4-1.ts`
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -222,7 +222,7 @@ console.log(`\n--- Audit Log ---`);
 console.log(JSON.stringify(auditLog, null, 2));
 ```
 
-**Erwarteter Output (ungefÃ¤hr — LLM-Antworten variieren):**
+**Erwarteter Output (ungefaehr — LLM-Antworten variieren):**
 
 ```
 --- onFinish ---
@@ -243,7 +243,7 @@ Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit...
 ]
 ```
 
-**ErklÃ¤rung:** Der `onFinish` Callback wird automatisch nach der Completion aufgerufen. Er loggt die Token-Nutzung und den Finish Reason und speichert einen Audit-Eintrag. Das `auditLog` ist nach dem `await` befuellt, weil `onFinish` vor dem Resolve laeuft.
+**Erklaerung:** Der `onFinish` Callback wird automatisch nach der Completion aufgerufen. Er loggt die Token-Nutzung und den Finish Reason und speichert einen Audit-Eintrag. Das `auditLog` ist nach dem `await` befuellt, weil `onFinish` vor dem Resolve laeuft.
 
 </details>
 
@@ -253,7 +253,7 @@ Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit...
 
 **Uebung:** Verbinde `onFinish` mit dem Usage Tracking aus Level 2. Baue einen einfachen Cost Tracker, der im `onFinish` Callback die Kosten pro Request berechnet und kumuliert.
 
-1. Erstelle eine Variable `totalCost` die Ã¼ber mehrere Calls hinweg addiert
+1. Erstelle eine Variable `totalCost` die ueber mehrere Calls hinweg addiert
 2. Im `onFinish` Callback: Berechne die Kosten pro Request (`usage.promptTokens * inputRate + usage.completionTokens * outputRate`)
 3. Fuehre 2-3 verschiedene `generateText`-Calls aus
 4. Logge nach jedem Call: Kosten des Requests + Gesamtkosten
@@ -262,7 +262,7 @@ Der Hauptunterschied zwischen let und const liegt in der Zuweisbarkeit...
 - Input: $3 / 1M Tokens → `0.000003` pro Token
 - Output: $15 / 1M Tokens → `0.000015` pro Token
 
-**Optional Stretch Goal:** Baue eine `withCostTracking`-Wrapper-Funktion, die `generateText`-Optionen entgegennimmt und automatisch einen `onFinish` Callback fÃ¼r Cost-Tracking injiziert.
+**Optional Stretch Goal:** Baue eine `withCostTracking`-Wrapper-Funktion, die `generateText`-Optionen entgegennimmt und automatisch einen `onFinish` Callback fuer Cost-Tracking injiziert.
 
 ## Quellen
 

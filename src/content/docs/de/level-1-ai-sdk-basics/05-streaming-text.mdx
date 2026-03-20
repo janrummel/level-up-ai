@@ -1,6 +1,6 @@
 ---
 title: "Challenge 1.4: Text streamen"
-description: "Lerne, wie Du mit streamText Echtzeit-Feedback erzeugst — Token fÃ¼r Token statt alles auf einmal."
+description: "Lerne, wie Du mit streamText Echtzeit-Feedback erzeugst — Token fuer Token statt alles auf einmal."
 sidebar:
   order: 5
 ---
@@ -10,13 +10,13 @@ import combineDiagram from '../../../../assets/diagrams/l1-c4-combine.svg';
 
 ## THINK
 
-Warum siehst Du in ChatGPT die Antwort Wort fÃ¼r Wort statt alles auf einmal? Und was passiert unter der Haube, damit das funktioniert?
+Warum siehst Du in ChatGPT die Antwort Wort fuer Wort statt alles auf einmal? Und was passiert unter der Haube, damit das funktioniert?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="streamText sendet Prompt an LLM, LLM streamt text-delta Chunks zurÃ¼ck an den Code" />
+<Image src={overviewDiagram} alt="streamText sendet Prompt an LLM, LLM streamt text-delta Chunks zurueck an den Code" />
 
-Das LLM generiert Token fÃ¼r Token. Mit `streamText` bekommst Du jeden Token sofort, statt auf die komplette Antwort zu warten. Die gestrichelten Pfeile zeigen: Daten fliessen stueckweise zurÃ¼ck.
+Das LLM generiert Token fuer Token. Mit `streamText` bekommst Du jeden Token sofort, statt auf die komplette Antwort zu warten. Die gestrichelten Pfeile zeigen: Daten fliessen stueckweise zurueck.
 
 ## WHY
 
@@ -28,7 +28,7 @@ Das LLM generiert Token fÃ¼r Token. Mit `streamText` bekommst Du jeden Token s
 
 ### Schicht 1: streamText Basics
 
-`streamText` funktioniert wie `generateText` — selbe Parameter, selbes Interface. Der Unterschied: Es gibt sofort ein Stream-Objekt zurÃ¼ck, statt auf die komplette Antwort zu warten.
+`streamText` funktioniert wie `generateText` — selbe Parameter, selbes Interface. Der Unterschied: Es gibt sofort ein Stream-Objekt zurueck, statt auf die komplette Antwort zu warten.
 
 ```typescript
 import { streamText } from 'ai';
@@ -40,9 +40,9 @@ const result = streamText({                          // ← Kein await noetig!
 });
 ```
 
-Wichtig: `streamText` wird **nicht** mit `await` aufgerufen. Die Funktion gibt synchron ein Result-Objekt zurÃ¼ck, das mehrere Streams enthaelt. Das eigentliche Warten passiert beim Konsumieren der Streams.
+Wichtig: `streamText` wird **nicht** mit `await` aufgerufen. Die Funktion gibt synchron ein Result-Objekt zurueck, das mehrere Streams enthaelt. Das eigentliche Warten passiert beim Konsumieren der Streams.
 
-### Schicht 2: textStream — AsyncIterable fÃ¼r Text-Chunks
+### Schicht 2: textStream — AsyncIterable fuer Text-Chunks
 
 `result.textStream` ist ein `AsyncIterable`, das Dir jeden Text-Chunk einzeln liefert. Du konsumierst es mit `for await...of`:
 
@@ -52,7 +52,7 @@ for await (const chunk of result.textStream) {
 }
 ```
 
-Warum `process.stdout.write` statt `console.log`? Weil `console.log` nach jedem Aufruf einen Zeilenumbruch einfuegt. `process.stdout.write` schreibt den Text genau so, wie er ankommt — Wort fÃ¼r Wort in derselben Zeile.
+Warum `process.stdout.write` statt `console.log`? Weil `console.log` nach jedem Aufruf einen Zeilenumbruch einfuegt. `process.stdout.write` schreibt den Text genau so, wie er ankommt — Wort fuer Wort in derselben Zeile.
 
 ### Schicht 3: fullStream — Alle Events, nicht nur Text
 
@@ -84,11 +84,11 @@ Die wichtigsten Event-Typen:
 | `error` | Bei einem Fehler | `part.error` |
 | `tool-call` | LLM ruft ein Tool auf | `part.toolName`, `part.args` (Level 3) |
 
-> **`finishReason`:** Die moeglichen Werte sind `stop` (Modell ist fertig), `length` (max. Tokens erreicht), `content-filter`, `tool-calls`, `error` und `other`. Die vollstÃ¤ndige Liste findest du in der [AI SDK Dokumentation](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text#finish-reason).
+> **`finishReason`:** Die moeglichen Werte sind `stop` (Modell ist fertig), `length` (max. Tokens erreicht), `content-filter`, `tool-calls`, `error` und `other`. Die vollstaendige Liste findest du in der [AI SDK Dokumentation](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text#finish-reason).
 
 ### Schicht 4: toUIMessageStreamResponse — Vorschau auf spaetere Levels
 
-FÃ¼r Web-APIs (z.B. Next.js) gibt es `toUIMessageStreamResponse()`. Damit wird der Stream direkt in eine HTTP Response umgewandelt:
+Fuer Web-APIs (z.B. Next.js) gibt es `toUIMessageStreamResponse()`. Damit wird der Stream direkt in eine HTTP Response umgewandelt:
 
 ```typescript
 // In einer Next.js API Route (spaetere Levels):
@@ -129,11 +129,11 @@ import { anthropic } from '@ai-sdk/anthropic';
 **Checkliste:**
 - [ ] `streamText` importiert und aufgerufen (ohne `await`)
 - [ ] `textStream` mit `for await...of` konsumiert
-- [ ] Text wird Chunk fÃ¼r Chunk ins Terminal geschrieben (mit `process.stdout.write`)
+- [ ] Text wird Chunk fuer Chunk ins Terminal geschrieben (mit `process.stdout.write`)
 - [ ] Bonus: `fullStream` Events geloggt (text-delta + finish)
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 **Variante 1: textStream**
 
@@ -177,7 +177,7 @@ for await (const part of result.fullStream) {
 }
 ```
 
-**ErklÃ¤rung:** `streamText` gibt synchron ein Result-Objekt zurÃ¼ck. Der eigentliche API-Call startet erst, wenn Du den Stream konsumierst (mit `for await`). `textStream` liefert nur Text-Chunks, `fullStream` liefert alle Event-Typen inklusive Metadaten wie Token-Verbrauch.
+**Erklaerung:** `streamText` gibt synchron ein Result-Objekt zurueck. Der eigentliche API-Call startet erst, wenn Du den Stream konsumierst (mit `for await`). `textStream` liefert nur Text-Chunks, `fullStream` liefert alle Event-Typen inklusive Metadaten wie Token-Verbrauch.
 
 > **Tipp:** Alternativ zu `fullStream` kannst Du nach dem Stream auch `await result.usage` nutzen — das Result-Objekt hat `usage` als Promise, das aufloest sobald der Stream fertig ist.
 
@@ -187,11 +187,11 @@ for await (const part of result.fullStream) {
 npx tsx challenge-1-4.ts
 ```
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 
 ```
 TypeScript ist besser als JavaScript weil es statische Typen...
-(Text erscheint Wort fÃ¼r Wort im Terminal)
+(Text erscheint Wort fuer Wort im Terminal)
 
 --- Stream beendet ---
 Tokens: 78

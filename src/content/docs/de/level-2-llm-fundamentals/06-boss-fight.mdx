@@ -13,7 +13,7 @@ import overviewDiagram from '../../../../assets/diagrams/l2-boss-overview.svg';
 
 ## Das Szenario
 
-Du baust einen **Token-Budget-Rechner** — ein Tool, das vor jedem LLM-Call prÃ¼ft, ob der Request ins Budget passt. Der Rechner kombiniert alle vier Bausteine aus Level 2: Token-Counting, Kostenberechnung, Context-Window-Check und Cache-Tracking.
+Du baust einen **Token-Budget-Rechner** — ein Tool, das vor jedem LLM-Call prueft, ob der Request ins Budget passt. Der Rechner kombiniert alle vier Bausteine aus Level 2: Token-Counting, Kostenberechnung, Context-Window-Check und Cache-Tracking.
 
 Dein Tool soll sich so anfuehlen:
 
@@ -41,7 +41,7 @@ Dieses Projekt verbindet alle vier Bausteine:
 
 3. **Kostenberechnung** (Challenge 2.2) — Nach jedem Call: Lies `result.usage` aus und berechne die Kosten basierend auf der Modell-Preisliste. Tracke Input- und Output-Kosten separat.
 
-4. **Cache-Tracking** (Challenge 2.4) — Tracke Ã¼ber mehrere Calls, ob der System Prompt gecacht wird. Berechne die Cache-Hit-Rate und die theoretische Ersparnis gegenueber "kein Caching".
+4. **Cache-Tracking** (Challenge 2.4) — Tracke ueber mehrere Calls, ob der System Prompt gecacht wird. Berechne die Cache-Hit-Rate und die theoretische Ersparnis gegenueber "kein Caching".
 
 5. **Session Report** — Nach allen Calls: Zeige eine Zusammenfassung mit Gesamtzahl der Calls, Token-Verbrauch, Kosten und Cache-Hit-Rate.
 
@@ -58,7 +58,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 // TODO: Implementiere estimateTokens(text: string): number
 
 // TODO: Implementiere checkContextWindow(systemPrompt, userPrompt, modelContextWindow, outputReserve)
-//   - Berechne geschaetzte Tokens fÃ¼r System + User + Reserve
+//   - Berechne geschaetzte Tokens fuer System + User + Reserve
 //   - Return: { totalEstimate, utilization, status: 'ok' | 'warning' | 'error' }
 
 // TODO: Implementiere calculateCost(usage, modelId)
@@ -99,15 +99,15 @@ Dein Boss Fight ist bestanden, wenn:
 - [ ] Kosten werden nach jedem Call basierend auf `result.usage` berechnet
 - [ ] Input- und Output-Kosten werden separat ausgewiesen
 - [ ] Cache-Hit/Miss wird pro Call geloggt
-- [ ] Die Cache-Hit-Rate wird Ã¼ber die Session berechnet
+- [ ] Die Cache-Hit-Rate wird ueber die Session berechnet
 - [ ] Ein finaler Session Report zeigt: Calls, Tokens, Kosten, Cache-Hit-Rate
 
 ## Hinweise
 
 <details>
-<summary>Hinweis 1: Token-SchÃ¤tzung verbessern</summary>
+<summary>Hinweis 1: Token-Schaetzung verbessern</summary>
 
-Die einfachste Variante ist `Math.ceil(text.length / 3.5)`. FÃ¼r bessere Genauigkeit kannst Du unterschiedliche Faktoren fÃ¼r verschiedene Textarten verwenden: Code hat mehr Sonderzeichen (eigene Tokens), deutscher Text braucht mehr Tokens als englischer. Eine gewichtete SchÃ¤tzung kÃ¶nnte Woerter zaehlen und pro Wort 1.3 Tokens annehmen.
+Die einfachste Variante ist `Math.ceil(text.length / 3.5)`. Fuer bessere Genauigkeit kannst Du unterschiedliche Faktoren fuer verschiedene Textarten verwenden: Code hat mehr Sonderzeichen (eigene Tokens), deutscher Text braucht mehr Tokens als englischer. Eine gewichtete Schaetzung koennte Woerter zaehlen und pro Wort 1.3 Tokens annehmen.
 
 </details>
 
@@ -121,7 +121,7 @@ Anthropic unterstuetzt automatisches Prompt Caching. Der Cache-Status laesst sic
 <details>
 <summary>Hinweis 3: Session-Tracking-Struktur</summary>
 
-Ein einfaches Objekt reicht fÃ¼r das Session-Tracking:
+Ein einfaches Objekt reicht fuer das Session-Tracking:
 
 ```typescript
 interface SessionStats {
@@ -133,7 +133,7 @@ interface SessionStats {
 }
 ```
 
-Aktualisiere es nach jedem `generateText`-Call (bei `generateText` ist `result.usage` direkt nach dem `await` verfÃ¼gbar). Die Cache-Hit-Rate ist `cacheHits / (cacheHits + cacheMisses) * 100`.
+Aktualisiere es nach jedem `generateText`-Call (bei `generateText` ist `result.usage` direkt nach dem `await` verfuegbar). Die Cache-Hit-Rate ist `cacheHits / (cacheHits + cacheMisses) * 100`.
 
 </details>
 

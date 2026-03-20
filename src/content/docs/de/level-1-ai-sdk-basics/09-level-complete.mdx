@@ -11,21 +11,21 @@ import { Image } from 'astro:assets';
 import skillTree from '../../../../assets/diagrams/skill-tree-l1-complete.svg';
 
 
-Du hast einen interaktiven CLI-Chat gebaut, der Text streamt, strukturierte JSON-Ausgabe liefert und das Modell dynamisch waehlt. Diese sechs Bausteine bilden das Fundament fÃ¼r alles, was folgt.
+Du hast einen interaktiven CLI-Chat gebaut, der Text streamt, strukturierte JSON-Ausgabe liefert und das Modell dynamisch waehlt. Diese sechs Bausteine bilden das Fundament fuer alles, was folgt.
 
 ## Was Du gelernt hast
 
-- **AI SDK:** TypeScript-Toolkit mit einheitlicher API fÃ¼r alle LLM-Provider — drei Bibliotheken (Core, UI, RSC), ein Interface
-- **Provider-System:** Ein Import, ein Modell-Name — Provider wechseln ohne Code-Aenderung. `selectModel` fÃ¼r aufgabenbasierte Modellwahl
-- **generateText:** Text generieren mit vollem Result-Objekt — `result.text`, `result.usage`, `result.finishReason` und Callbacks fÃ¼r Monitoring
-- **streamText:** Echtzeit-Feedback durch Token-fÃ¼r-Token Streaming — `textStream` fÃ¼r Text, `fullStream` fÃ¼r alle Events
+- **AI SDK:** TypeScript-Toolkit mit einheitlicher API fuer alle LLM-Provider — drei Bibliotheken (Core, UI, RSC), ein Interface
+- **Provider-System:** Ein Import, ein Modell-Name — Provider wechseln ohne Code-Aenderung. `selectModel` fuer aufgabenbasierte Modellwahl
+- **generateText:** Text generieren mit vollem Result-Objekt — `result.text`, `result.usage`, `result.finishReason` und Callbacks fuer Monitoring
+- **streamText:** Echtzeit-Feedback durch Token-fuer-Token Streaming — `textStream` fuer Text, `fullStream` fuer alle Events
 - **Structured Output:** Typisierte JSON-Objekte statt Freitext — Zod Schemas mit `Output.object`, `Output.array` und `Output.choice`
-- **System Prompts:** Konsistentes LLM-Verhalten durch Rollendefinition — `system` fÃ¼r Persoenlichkeit, `prompt` fÃ¼r die Aufgabe
+- **System Prompts:** Konsistentes LLM-Verhalten durch Rollendefinition — `system` fuer Persoenlichkeit, `prompt` fuer die Aufgabe
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 1 AI SDK Basics abgeschlossen, Level 2 LLM Fundamentals ist das nÃ¤chste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 1 AI SDK Basics abgeschlossen, Level 2 LLM Fundamentals ist das naechste Level" />
 
 ## Naechstes Level
 
-**Level 2: LLM Fundamentals** — Was passiert eigentlich INNERHALB des LLM? Tokens, Context Windows und warum Deine Kosten explodieren kÃ¶nnen. Du lernst die technischen Grundlagen, die Du brauchst, um AI-Anwendungen effizient und kostenoptimiert zu bauen.
+**Level 2: LLM Fundamentals** — Was passiert eigentlich INNERHALB des LLM? Tokens, Context Windows und warum Deine Kosten explodieren koennen. Du lernst die technischen Grundlagen, die Du brauchst, um AI-Anwendungen effizient und kostenoptimiert zu bauen.

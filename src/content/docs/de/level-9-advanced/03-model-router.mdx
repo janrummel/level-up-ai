@@ -1,13 +1,13 @@
 ---
 title: "Challenge 9.2: Model Router"
-description: "Waehle automatisch das richtige Modell fÃ¼r jede Aufgabe — guenstig fÃ¼r Einfaches, stark fÃ¼r Komplexes, spezialisiert fÃ¼r Code."
+description: "Waehle automatisch das richtige Modell fuer jede Aufgabe — guenstig fuer Einfaches, stark fuer Komplexes, spezialisiert fuer Code."
 sidebar:
   order: 3
 ---
 
 ## THINK
 
-Wuerdest Du fÃ¼r die Frage "Wie spaet ist es?" dasselbe Modell nutzen wie fÃ¼r "Analysiere diesen 500-Zeilen Code und finde den Performance-Bug"? Was kostet es, wenn Du immer das teuerste Modell nimmst?
+Wuerdest Du fuer die Frage "Wie spaet ist es?" dasselbe Modell nutzen wie fuer "Analysiere diesen 500-Zeilen Code und finde den Performance-Bug"? Was kostet es, wenn Du immer das teuerste Modell nimmst?
 
 ## OVERVIEW
 
@@ -21,9 +21,9 @@ Der Input wird analysiert und klassifiziert. Einfache Aufgaben gehen an ein schn
 
 ## WHY
 
-**Ohne Model Routing:** Du nutzt ein teures Modell fÃ¼r alles. Einfache Fragen wie "Was ist TypeScript?" kosten genauso viel wie komplexe Analysen. Bei 10.000 Requests pro Tag summieren sich die Kosten schnell. Oder Du nutzt ein billiges Modell fÃ¼r alles — dann leidet die QualitÃ¤t bei komplexen Aufgaben.
+**Ohne Model Routing:** Du nutzt ein teures Modell fuer alles. Einfache Fragen wie "Was ist TypeScript?" kosten genauso viel wie komplexe Analysen. Bei 10.000 Requests pro Tag summieren sich die Kosten schnell. Oder Du nutzt ein billiges Modell fuer alles — dann leidet die Qualitaet bei komplexen Aufgaben.
 
-**Mit Model Routing:** Jede Aufgabe bekommt das passende Modell. 80% der Anfragen sind einfach und gehen an das Flash-Modell (Faktor 10-50x guenstiger). 20% sind komplex und bekommen das Pro-Modell. Ergebnis: gleiche QualitÃ¤t, drastisch niedrigere Kosten.
+**Mit Model Routing:** Jede Aufgabe bekommt das passende Modell. 80% der Anfragen sind einfach und gehen an das Flash-Modell (Faktor 10-50x guenstiger). 20% sind komplex und bekommen das Pro-Modell. Ergebnis: gleiche Qualitaet, drastisch niedrigere Kosten.
 
 ## WALKTHROUGH
 
@@ -43,7 +43,7 @@ function selectModel(task: 'simple' | 'complex' | 'code') {
     case 'complex':
       return anthropic('claude-opus-4-6');              // ← Teuer + stark
     case 'code':
-      return anthropic('claude-sonnet-4-5-20250514');   // ← Gutes Preis-Leistungs-Verhaeltnis fÃ¼r Code
+      return anthropic('claude-sonnet-4-5-20250514');   // ← Gutes Preis-Leistungs-Verhaeltnis fuer Code
   }
 }
 
@@ -67,7 +67,7 @@ import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
 function estimateTokens(text: string): number {
-  return Math.ceil(text.split(/\s+/).length * 1.3);    // ← Grobe SchÃ¤tzung: Woerter * 1.3
+  return Math.ceil(text.split(/\s+/).length * 1.3);    // ← Grobe Schaetzung: Woerter * 1.3
 }
 
 function selectByComplexity(input: string) {
@@ -94,7 +94,7 @@ const simpleResult = await generateText({
 console.log(simpleResult.text);
 ```
 
-Token-basiertes Routing ist ein guter erster Schritt — lange Prompts deuten oft auf komplexe Aufgaben hin. Aber Laenge allein ist kein perfekter Proxy fÃ¼r KomplexitÃ¤t.
+Token-basiertes Routing ist ein guter erster Schritt — lange Prompts deuten oft auf komplexe Aufgaben hin. Aber Laenge allein ist kein perfekter Proxy fuer Komplexitaet.
 
 ### Schicht 3: LLM-basiertes Routing
 
@@ -109,11 +109,11 @@ import { z } from 'zod';
 // Schritt 1: Klassifikation mit einem kleinen Modell
 async function classifyTask(input: string) {
   const result = await generateText({
-    model: google('gemini-2.5-flash-lite'),             // ← Kleines Modell fÃ¼r Klassifikation
+    model: google('gemini-2.5-flash-lite'),             // ← Kleines Modell fuer Klassifikation
     system: `Klassifiziere die folgende Aufgabe in eine Kategorie.
 - "simple": Einfache Fragen, Definitionen, kurze Antworten
 - "complex": Analyse, Vergleich, Argumentation, kreatives Schreiben
-- "code": Code schreiben, debuggen, reviewen, erklÃ¤ren`,
+- "code": Code schreiben, debuggen, reviewen, erklaeren`,
     prompt: input,
     output: Output.enum(['simple', 'complex', 'code']),  // ← Aus Level 1.5
   });
@@ -143,22 +143,22 @@ async function routedGenerate(input: string) {
 
 // Test
 const answer = await routedGenerate(
-  'Vergleiche die Vor- und Nachteile von REST vs. GraphQL fÃ¼r eine Microservices-Architektur.',
+  'Vergleiche die Vor- und Nachteile von REST vs. GraphQL fuer eine Microservices-Architektur.',
 );
 console.log(answer);
 ```
 
-Zwei LLM-Calls statt einem — aber der erste (Klassifikation) ist extrem guenstig und schnell. Die Kosten fÃ¼r die Klassifikation sind vernachlaessigbar im Vergleich zur Ersparnis, wenn 80% der Anfragen ans Flash-Modell gehen.
+Zwei LLM-Calls statt einem — aber der erste (Klassifikation) ist extrem guenstig und schnell. Die Kosten fuer die Klassifikation sind vernachlaessigbar im Vergleich zur Ersparnis, wenn 80% der Anfragen ans Flash-Modell gehen.
 
 ### Schicht 4: Kostenvergleich
 
-Was bringt Model Routing konkret? Eine Ãbersicht der Modellkosten:
+Was bringt Model Routing konkret? Eine Uebersicht der Modellkosten:
 
 :::note[Preise Stand: Maerz 2025]
-Modellpreise Ã¤ndern sich regelmÃ¤Ãig — prÃ¼fe die aktuellen Preise auf den jeweiligen Provider-Seiten ([Anthropic](https://docs.anthropic.com/en/docs/about-claude/models), [Google AI](https://ai.google.dev/gemini-api/docs/models)) bevor Du Kosten kalkulierst.
+Modellpreise aendern sich regelmaessig — pruefe die aktuellen Preise auf den jeweiligen Provider-Seiten ([Anthropic](https://docs.anthropic.com/en/docs/about-claude/models), [Google AI](https://ai.google.dev/gemini-api/docs/models)) bevor Du Kosten kalkulierst.
 :::
 
-| Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) | StÃ¤rke |
+| Modell | Input (pro 1M Tokens) | Output (pro 1M Tokens) | Staerke |
 |--------|----------------------|------------------------|---------|
 | Gemini 2.5 Flash Lite | ~$0.075 | ~$0.30 | Einfache Aufgaben |
 | Claude Sonnet 4.5 | ~$3.00 | ~$15.00 | Allround |
@@ -169,7 +169,7 @@ Modellpreise Ã¤ndern sich regelmÃ¤Ãig — prÃ¼fe die aktuellen Preise a
 - **Ohne Routing** (alles Opus): ~$900/Tag
 - **Mit Routing** (80% Flash, 15% Sonnet, 5% Opus): ~$55/Tag
 
-Das ist eine Ersparnis von Ã¼ber 90% — bei vergleichbarer QualitÃ¤t, weil die einfachen Anfragen kein Opus brauchen.
+Das ist eine Ersparnis von ueber 90% — bei vergleichbarer Qualitaet, weil die einfachen Anfragen kein Opus brauchen.
 
 ## TRY
 
@@ -186,7 +186,7 @@ import { z } from 'zod';
 // TODO 1: Implementiere classifyTask(input: string)
 //   - Nutze ein kleines Modell (gemini-2.5-flash-lite)
 //   - Klassifiziere in 'simple', 'complex' oder 'code'
-//   - Nutze Output.enum fÃ¼r typsichere Ausgabe
+//   - Nutze Output.enum fuer typsichere Ausgabe
 
 // TODO 2: Implementiere selectModel(classification)
 //   - 'simple'  → google('gemini-2.5-flash-lite')
@@ -206,13 +206,13 @@ import { z } from 'zod';
 
 **Checkliste:**
 - [ ] Klassifikation mit kleinem Modell implementiert
-- [ ] `Output.enum` fÃ¼r typsichere Klassifikation genutzt
+- [ ] `Output.enum` fuer typsichere Klassifikation genutzt
 - [ ] Drei verschiedene Modelle je nach Aufgabentyp
 - [ ] Token-Verbrauch wird geloggt
 - [ ] Korrekte Zuordnung bei den drei Test-Inputs
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { anthropic } from '@ai-sdk/anthropic';
@@ -226,7 +226,7 @@ async function classifyTask(input: string) {
     system: `Klassifiziere die Aufgabe:
 - "simple": Definitionen, kurze Fragen, Fakten
 - "complex": Analyse, Vergleich, Argumentation
-- "code": Code schreiben, debuggen, erklÃ¤ren`,
+- "code": Code schreiben, debuggen, erklaeren`,
     prompt: input,
     output: Output.enum(['simple', 'complex', 'code']),
   });
@@ -258,7 +258,7 @@ async function routedGenerate(input: string) {
 // Tests
 const testInputs = [
   'Was ist eine Variable?',
-  'Vergleiche SQL vs. NoSQL Datenbanken fÃ¼r eine E-Commerce-Plattform',
+  'Vergleiche SQL vs. NoSQL Datenbanken fuer eine E-Commerce-Plattform',
   'Schreibe eine TypeScript-Funktion die ein Array von Zahlen sortiert',
 ];
 
@@ -269,16 +269,16 @@ for (const input of testInputs) {
 }
 ```
 
-**ErklÃ¤rung:** Zwei LLM-Calls pro Anfrage — der erste (Klassifikation) kostet nahezu nichts mit Flash Lite. Der zweite Call geht an das passende Modell. Die `Output.enum`-Funktion aus Level 1.5 garantiert, dass die Klassifikation immer einer der drei erlaubten Werte ist.
+**Erklaerung:** Zwei LLM-Calls pro Anfrage — der erste (Klassifikation) kostet nahezu nichts mit Flash Lite. Der zweite Call geht an das passende Modell. Die `Output.enum`-Funktion aus Level 1.5 garantiert, dass die Klassifikation immer einer der drei erlaubten Werte ist.
 
 ```
-Erwarteter Output (ungefÃ¤hr):
+Erwarteter Output (ungefaehr):
 --- Input: "Was ist eine Variable?" ---
 Klassifikation: simple
 Tokens: 127
 Antwort: Eine Variable ist ein benannter Speicherplatz...
 
---- Input: "Vergleiche SQL vs. NoSQL Datenbanken fÃ¼r eine E-Commerce-Plattform" ---
+--- Input: "Vergleiche SQL vs. NoSQL Datenbanken fuer eine E-Commerce-Plattform" ---
 Klassifikation: complex
 Tokens: 891
 Antwort: SQL-Datenbanken bieten ACID-Garantien...

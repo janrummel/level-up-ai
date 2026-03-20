@@ -11,13 +11,13 @@ import combineDiagram from '../../../../assets/diagrams/l3-c1-combine.svg';
 
 ## THINK
 
-Was wenn ein LLM nicht nur Text generieren, sondern auch Aktionen ausfÃ¼hren kÃ¶nnte — z.B. das Wetter abfragen, eine Berechnung durchfÃ¼hren oder eine Datenbank abfragen?
+Was wenn ein LLM nicht nur Text generieren, sondern auch Aktionen ausfuehren koennte — z.B. das Wetter abfragen, eine Berechnung durchfuehren oder eine Datenbank abfragen?
 
 ## OVERVIEW
 
 <Image src={overviewDiagram} alt="User fragt LLM, LLM ruft Weather API auf, API antwortet, LLM formuliert Antwort" />
 
-Das LLM erkennt, dass es das Wetter nicht aus eigenem Wissen beantworten kann. Es generiert einen **Tool Call** — eine strukturierte Anfrage an eine Funktion. Die Funktion wird ausgefuehrt, das Ergebnis geht zurÃ¼ck ans LLM, und das LLM formuliert daraus eine natuerliche Antwort.
+Das LLM erkennt, dass es das Wetter nicht aus eigenem Wissen beantworten kann. Es generiert einen **Tool Call** — eine strukturierte Anfrage an eine Funktion. Die Funktion wird ausgefuehrt, das Ergebnis geht zurueck ans LLM, und das LLM formuliert daraus eine natuerliche Antwort.
 
 ## WHY
 
@@ -50,8 +50,8 @@ const weatherTool = tool({
 
 Drei kritische Details:
 - **`description`** beeinflusst, ob das LLM das Tool waehlt. Je praeziser, desto besser.
-- **`.describe()`** an Zod-Feldern erklÃ¤rt dem LLM, was der Parameter bedeutet.
-- **`execute`** ist async — Du kannst echte API-Calls, Datenbankabfragen oder beliebigen Code ausfÃ¼hren.
+- **`.describe()`** an Zod-Feldern erklaert dem LLM, was der Parameter bedeutet.
+- **`execute`** ist async — Du kannst echte API-Calls, Datenbankabfragen oder beliebigen Code ausfuehren.
 
 ### Schicht 2: Tool mit generateText nutzen
 
@@ -64,7 +64,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
   tools: {                                                // ← Tools als Objekt
-    weather: weatherTool,                                 // ← Key = Tool-Name fÃ¼r das LLM
+    weather: weatherTool,                                 // ← Key = Tool-Name fuer das LLM
   },
   prompt: 'Wie ist das Wetter in Berlin?',
 });
@@ -75,7 +75,7 @@ console.log(result.text);
 
 > **Achtung:** `result.text` kann leer sein, wenn das LLM nur einen Tool Call macht und danach keinen Text generiert. Das passiert, wenn `maxSteps` nicht gesetzt ist (Default: 1) — dann stoppt der Call nach dem ersten Tool-Ergebnis, ohne dass das LLM eine Antwort formuliert. Setze `maxSteps: 2` oder hoeher, damit das LLM nach dem Tool Call noch antworten kann.
 
-Das LLM entscheidet selbststaendig, ob es ein Tool nutzt. Bei der Frage "Wie ist das Wetter?" erkennt es, dass es `weather` aufrufen muss. Bei "Was ist TypeScript?" wÃ¼rde es direkt antworten.
+Das LLM entscheidet selbststaendig, ob es ein Tool nutzt. Bei der Frage "Wie ist das Wetter?" erkennt es, dass es `weather` aufrufen muss. Bei "Was ist TypeScript?" wuerde es direkt antworten.
 
 ### Schicht 3: Tool Choice — Steuerung der Tool-Nutzung
 
@@ -120,7 +120,7 @@ for (const toolResult of result.toolResults) {
 }
 ```
 
-`result.toolCalls` und `result.toolResults` enthalten die Daten des letzten Schritts. FÃ¼r Multi-Step Szenarien (kommt in Challenge 3.3) nutzt Du `result.steps`.
+`result.toolCalls` und `result.toolResults` enthalten die Daten des letzten Schritts. Fuer Multi-Step Szenarien (kommt in Challenge 3.3) nutzt Du `result.steps`.
 
 ## TRY
 
@@ -134,12 +134,12 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
 // TODO 1: Definiere ein Calculator-Tool
-// - description: Beschreibung die dem LLM erklÃ¤rt, wann es den Rechner nutzen soll
+// - description: Beschreibung die dem LLM erklaert, wann es den Rechner nutzen soll
 // - inputSchema mit:
 //   - operation: z.enum(['add', 'subtract', 'multiply']).describe(...)
 //   - a: z.number().describe('First number')
 //   - b: z.number().describe('Second number')
-// - execute: Fuehrt die Berechnung aus und gibt das Ergebnis zurÃ¼ck
+// - execute: Fuehrt die Berechnung aus und gibt das Ergebnis zurueck
 
 // TODO 2: Nutze das Tool mit generateText
 // - model: anthropic('claude-sonnet-4-5-20250514')
@@ -158,7 +158,7 @@ import { z } from 'zod';
 - [ ] `result.toolCalls` zeigt den Tool-Aufruf
 
 <details>
-<summary>LÃ¶sung anzeigen</summary>
+<summary>Loesung anzeigen</summary>
 
 ```typescript
 import { generateText, tool } from 'ai';
@@ -195,11 +195,11 @@ console.log('Tool Calls:', result.toolCalls);
 console.log('Tool Results:', result.toolResults);
 ```
 
-**ErklÃ¤rung:** Das LLM erkennt die Rechenaufgabe, ruft `calculator` mit `{ operation: 'multiply', a: 42, b: 17 }` auf, bekommt `{ result: 714 }` zurÃ¼ck und formuliert daraus eine natuerliche Antwort wie "42 mal 17 ist 714."
+**Erklaerung:** Das LLM erkennt die Rechenaufgabe, ruft `calculator` mit `{ operation: 'multiply', a: 42, b: 17 }` auf, bekommt `{ result: 714 }` zurueck und formuliert daraus eine natuerliche Antwort wie "42 mal 17 ist 714."
 
 **Ausfuehren:** `npx tsx challenge-3-1.ts`
 
-**Erwarteter Output (ungefÃ¤hr):**
+**Erwarteter Output (ungefaehr):**
 ```
 Antwort: 42 mal 17 ist 714.
 Tool Calls: [{ toolName: 'calculator', args: { operation: 'multiply', a: 42, b: 17 } }]
@@ -210,14 +210,14 @@ Tool Results: [{ result: { operation: 'multiply', a: 42, b: 17, result: 714 } }]
 
 ## COMBINE
 
-<Image src={combineDiagram} alt="System Prompt und User Prompt fliessen in generateText, Tool Call Entscheidung, execute gibt Tool Result zurÃ¼ck, oder direkt result.text" />
+<Image src={combineDiagram} alt="System Prompt und User Prompt fliessen in generateText, Tool Call Entscheidung, execute gibt Tool Result zurueck, oder direkt result.text" />
 
 **Uebung:** Kombiniere ein Tool mit einem System Prompt aus Challenge 1.6. Gib dem LLM eine Rolle und ein Tool gleichzeitig.
 
-1. Definiere einen System Prompt: "Du bist ein freundlicher Mathe-Tutor. Erklaere jeden Rechenweg Schritt fÃ¼r Schritt."
+1. Definiere einen System Prompt: "Du bist ein freundlicher Mathe-Tutor. Erklaere jeden Rechenweg Schritt fuer Schritt."
 2. Nutze das Calculator-Tool aus der TRY-Uebung
-3. Stelle eine Rechenaufgabe — das LLM soll das Tool nutzen UND den Rechenweg erklÃ¤ren
-4. Vergleiche: Wie Ã¤ndert sich die Antwort mit vs. ohne System Prompt?
+3. Stelle eine Rechenaufgabe — das LLM soll das Tool nutzen UND den Rechenweg erklaeren
+4. Vergleiche: Wie aendert sich die Antwort mit vs. ohne System Prompt?
 
 **Optional Stretch Goal:** Definiere ein zweites Tool (`unitConverter`), das Einheiten umrechnet (z.B. km in Meilen). Gib dem LLM beide Tools und stelle eine Frage, die beides erfordert: "Ich fahre 100 km — wie viele Meilen sind das und wie lange dauert es bei 60 km/h?"
 
