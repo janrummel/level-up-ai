@@ -31,8 +31,8 @@ Left: Without chain of thought the LLM answers immediately — error-prone for c
 Chain of Thought (CoT) means: The LLM should write down its thoughts before answering. Instead of outputting the result directly, it first goes through a visible reasoning process.
 
 ```
-Without CoT:  "What is 17 * 24?"  →  "408"  (guessed, wrong)
-With CoT:     "What is 17 * 24?"  →  "17 * 20 = 340, 17 * 4 = 68, 340 + 68 = 408"  →  "408"
+Without CoT:  "What is 37 * 28?"  →  "1024"  (guessed, wrong — actual: 1036)
+With CoT:     "What is 37 * 28?"  →  "37 * 30 = 1110, 37 * 2 = 74, 1110 - 74 = 1036"  →  "1036"
 ```
 
 The tokens the LLM generates while thinking influence the quality of the actual answer. The plan is in context — and context controls what comes next.

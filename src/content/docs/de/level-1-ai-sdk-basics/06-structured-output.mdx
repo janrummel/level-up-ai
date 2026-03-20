@@ -10,7 +10,7 @@ import combineDiagram from '../../../../assets/diagrams/l1-c5-combine.svg';
 
 ## THINK
 
-Wie bringst Du ein LLM dazu, JSON statt Freitext zurueckzugeben — zuverlaessig, jedes Mal? Und wie stellst Du sicher, dass das JSON genau die Felder und Typen hat, die Du brauchst?
+Wie bringst Du ein LLM dazu, JSON statt Freitext zurueckzugeben — zuverlässig, jedes Mal? Und wie stellst Du sicher, dass das JSON genau die Felder und Typen hat, die Du brauchst?
 
 ## OVERVIEW
 
@@ -20,7 +20,7 @@ Oben: Mit Zod Schema und `Output.object` bekommst Du ein typisiertes Objekt. Unt
 
 ## WHY
 
-**Ohne Structured Output:** Du bittest das LLM um JSON, bekommst manchmal valides JSON, manchmal Freitext mit Markdown-Codeblock drumherum. `JSON.parse` bricht, Du baust Regex-Hacks, die Extraktion ist fragil. Jede Aenderung im Prompt kann das Format brechen.
+**Ohne Structured Output:** Du bittest das LLM um JSON, bekommst manchmal valides JSON, manchmal Freitext mit Markdown-Codeblock drumherum. `JSON.parse` bricht, Du baust Regex-Hacks, die Extraktion ist fragil. Jede Änderung im Prompt kann das Format brechen.
 
 **Mit Output API:** Das AI SDK sorgt in der Regel dafuer, dass Du ein valides, typisiertes Objekt bekommst. Kein Parsing, kein Regex, kein `any`. Du definierst ein Zod Schema, und `result.output` hat genau die Typen, die Du definiert hast.
 
@@ -28,7 +28,7 @@ Oben: Mit Zod Schema und `Output.object` bekommst Du ein typisiertes Objekt. Unt
 
 ### Schicht 1: Zod Schema definiert die Erwartung
 
-> Falls noch nicht installiert: `npm install zod`. Zod ist eine TypeScript-first Schema-Validierungs-Library — Du definierst die erwartete Struktur, und Zod sorgt fuer Typensicherheit zur Compile- und Laufzeit.
+> Falls noch nicht installiert: `npm install zod`. Zod ist eine TypeScript-first Schema-Validierungs-Library — Du definierst die erwartete Struktur, und Zod sorgt für Typensicherheit zur Compile- und Laufzeit.
 
 Ein Zod Schema beschreibt die Struktur, die Du vom LLM erwartest. Es definiert Felder, Typen und optionale Beschreibungen:
 
@@ -56,7 +56,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 const { output } = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
   output: Output.object({ schema: recipeSchema }),  // ← Schema verbinden
-  prompt: 'Erstelle ein Rezept fuer Pasta Carbonara.',
+  prompt: 'Erstelle ein Rezept für Pasta Carbonara.',
 });
 
 console.log(output.name);         // ← string — typisiert!
@@ -93,7 +93,7 @@ for (const city of output) {
 
 ### Schicht 4: Output.choice — Auswahl aus Optionen
 
-Fuer Klassifikation oder einfache Entscheidungen gibt es `Output.choice`:
+Für Klassifikation oder einfache Entscheidungen gibt es `Output.choice`:
 
 ```typescript
 const { output } = await generateText({
@@ -107,7 +107,7 @@ const { output } = await generateText({
 console.log(output);  // → 'positive'
 ```
 
-`Output.choice` ist ideal fuer Routing-Entscheidungen: Das LLM waehlt eine Option, und Du reagierst basierend auf der Wahl. Kein Freitext-Parsing, keine unsicheren `includes()`-Checks.
+`Output.choice` ist ideal für Routing-Entscheidungen: Das LLM waehlt eine Option, und Du reagierst basierend auf der Wahl. Kein Freitext-Parsing, keine unsicheren `includes()`-Checks.
 
 > **Tipp:** `z.describe()` funktioniert auf jeder Ebene — Felder, verschachtelte Objekte, Arrays. Je besser Deine Beschreibungen, desto praeziser das Ergebnis. Beschreibe nicht nur WAS ein Feld ist, sondern auch in welchem FORMAT oder BEREICH Du den Wert erwartest.
 
@@ -120,7 +120,7 @@ import { z } from 'zod';
 import { Output, generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-// TODO 1: Definiere ein Zod Schema fuer eine Produktbewertung
+// TODO 1: Definiere ein Zod Schema für eine Produktbewertung
 // const reviewSchema = z.object({
 //   name: ???,                    // Produktname
 //   rating: ???,                  // Bewertung 1-5
@@ -148,10 +148,10 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] Zod Schema mit mindestens 4 Feldern definiert
 - [ ] `Output.object` mit dem Schema verwendet
 - [ ] Ergebnis ist typisiert (kein `any`)
-- [ ] `z.describe()` fuer mindestens ein Feld genutzt
+- [ ] `z.describe()` für mindestens ein Feld genutzt
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { z } from 'zod';
@@ -179,7 +179,7 @@ console.log('Nachteile:', output.cons);
 console.log('Fazit:', output.summary);
 ```
 
-**Erklaerung:** Das Zod Schema definiert exakt, welche Felder und Typen Du erwartest. `Output.object` sorgt dafuer, dass das LLM ein valides Objekt generiert, das diesem Schema entspricht. `z.describe()` gibt dem LLM zusaetzlichen Kontext — besonders bei `rating` hilft es, den erwarteten Wertebereich zu kommunizieren.
+**Erklärung:** Das Zod Schema definiert exakt, welche Felder und Typen Du erwartest. `Output.object` sorgt dafuer, dass das LLM ein valides Objekt generiert, das diesem Schema entspricht. `z.describe()` gibt dem LLM zusaetzlichen Kontext — besonders bei `rating` hilft es, den erwarteten Wertebereich zu kommunizieren.
 
 **Ausfuehren:**
 
@@ -193,7 +193,7 @@ npx tsx challenge-1-5.ts
 Produkt: iPhone 16 Pro
 Bewertung: 4 / 5
 Vorteile: [ 'Hervorragende Kamera', 'Starke Performance', 'Titan-Design' ]
-Nachteile: [ 'Hoher Preis', 'Wenig Design-Aenderung zum Vorgaenger' ]
+Nachteile: [ 'Hoher Preis', 'Wenig Design-Änderung zum Vorgaenger' ]
 Fazit: Das iPhone 16 Pro ueberzeugt mit Top-Kamera und Performance...
 ```
 
@@ -209,7 +209,7 @@ Fazit: Das iPhone 16 Pro ueberzeugt mit Top-Kamera und Performance...
 2. Zweiter Call: `Output.object` mit einem Schema, das zur erkannten Kategorie passt
 3. Der Prompt des zweiten Calls enthaelt die Kategorie aus dem ersten Call
 
-**Optional Stretch Goal:** Nutze die `selectModel`-Funktion aus Challenge 1.2, um fuer den Klassifikations-Call ein guenstiges Flash-Modell und fuer die Detail-Extraktion ein Pro-Modell zu waehlen.
+**Optional Stretch Goal:** Nutze die `selectModel`-Funktion aus Challenge 1.2, um für den Klassifikations-Call ein guenstiges Flash-Modell und für die Detail-Extraktion ein Pro-Modell zu waehlen.
 
 ## Quellen
 

@@ -5,11 +5,11 @@ sidebar:
   order: 9
 ---
 
-## Ueberblick
+## Überblick
 
 In einem Multi-Step-Szenario (z.B. Tool-Call-Loop mit `maxSteps`) durchlaeuft `streamText` mehrere Generierungsschritte. Jeder Schritt wird durch **`step-start`** und **`step-finish`** Stream Parts begrenzt. Der `step-start` Part liefert die `messageId`, Request-Metadaten und Warnings. Der `step-finish` Part liefert `finishReason`, `usage` (Token-Verbrauch), `isContinued`, Response-Metadaten und optional Log Probabilities.
 
-Zusaetzlich gibt es zwei Callbacks: `onStepFinish` feuert nach jedem einzelnen Schritt und liefert per-Step-Daten. `onFinish` feuert einmalig nach Abschluss aller Schritte und liefert aggregierte Daten wie `totalUsage` und das `steps`-Array.
+Zusätzlich gibt es zwei Callbacks: `onStepFinish` feuert nach jedem einzelnen Schritt und liefert per-Step-Daten. `onFinish` feuert einmalig nach Abschluss aller Schritte und liefert aggregierte Daten wie `totalUsage` und das `steps`-Array.
 
 **Hinweis zur Benennung:** Im `fullStream` heissen die Part-Types `step-start` und `step-finish` (TextStreamPart). Im Stream-Protokoll (Data Stream Protocol) werden sie als `f:` (Start Step) und `e:` (Finish Step) Zeilen uebertragen. In der `UIMessage` existiert nur ein `StepStartUIPart` mit `type: 'step-start'` — ein entsprechendes `step-finish` Part gibt es in UIMessage nicht, da die UI nur die Schritt-Grenzen markiert, nicht deren Abschluss.
 
@@ -82,10 +82,10 @@ for await (const part of result.fullStream) {
 |-------------|---------------|------------|
 | Wann | Nach jedem Schritt | Nach allen Schritten |
 | `usage` | Token-Verbrauch dieses Schritts | Token-Verbrauch des letzten Schritts |
-| `totalUsage` | Nicht verfuegbar | Aggregiert ueber alle Schritte |
-| `steps` | Nicht verfuegbar | Array aller Schritte |
-| `stepType` | `'initial'`, `'continue'`, `'tool-result'` | Nicht verfuegbar |
-| `isContinued` | `true` wenn der naechste Schritt folgt | Nicht verfuegbar |
+| `totalUsage` | Nicht verfügbar | Aggregiert über alle Schritte |
+| `steps` | Nicht verfügbar | Array aller Schritte |
+| `stepType` | `'initial'`, `'continue'`, `'tool-result'` | Nicht verfügbar |
+| `isContinued` | `true` wenn der nächste Schritt folgt | Nicht verfügbar |
 
 ## StepStartUIPart
 

@@ -26,19 +26,19 @@ import illustration from '../../../../assets/illustrations/l4-persistence.svg';
 ## Was Du lernst
 
 - **On Finish Callback** — Ergebnisse eines LLM-Calls automatisch abfangen und speichern, bevor die Response zurueckgeht
-- **Chat ID** — Sessions identifizieren, damit Dein Backend weiss, zu welchem Chat eine Nachricht gehoert
+- **Chat ID** — Sessions identifizieren, damit Dein Backend weiss, zu welchem Chat eine Nachricht gehört
 - **Persistence** — Messages in einer Datenbank speichern und bei Reload wieder laden
 - **Message Validation** — Eingehende Nachrichten gegen ein Schema validieren, bevor sie gespeichert oder ans LLM geschickt werden
 
 ## Warum das wichtig ist
 
-Jedes Chatbot-Projekt laeuft am Anfang im Speicher — und das fuehlt sich gut an. Bis jemand die Seite neu laedt und der gesamte Verlauf weg ist. Oder bis Du keinen Ueberblick hast, welche Chats laufen und was sie kosten. Oder bis kaputte Messages Deine Datenbank verseuchen.
+Jedes Chatbot-Projekt laeuft am Anfang im Speicher — und das fuehlt sich gut an. Bis jemand die Seite neu laedt und der gesamte Verlauf weg ist. Oder bis Du keinen Überblick hast, welche Chats laufen und was sie kosten. Oder bis kaputte Messages Deine Datenbank verseuchen.
 
-Das konkrete Problem: Ohne Persistence ist Dein Chat ein Goldfish — kein Gedaechtnis ueber den aktuellen Request hinaus. Nutzer verlieren ihren Verlauf, Du verlierst Insights ueber Token-Verbrauch, und Dein System hat keine Grundlage fuer Features wie Chat-History, Analytics oder Debugging.
+Das konkrete Problem: Ohne Persistence ist Dein Chat ein Goldfish — kein Gedaechtnis über den aktuellen Request hinaus. Nutzer verlieren ihren Verlauf, Du verlierst Insights über Token-Verbrauch, und Dein System hat keine Grundlage für Features wie Chat-History, Analytics oder Debugging.
 
 ## Voraussetzungen
 
-- **Level 1: AI SDK Basics** — `generateText`, `streamText`, Result-Objekt und Callbacks muessen sitzen
+- **Level 1: AI SDK Basics** — `generateText`, `streamText`, Result-Objekt und Callbacks müssen sitzen
 - **TypeScript Grundkenntnisse** — async/await, Interfaces, Map/Object
 - **Grundverstaendnis von APIs** — Request/Response, JSON Body
 - **Projektverzeichnis:** Arbeite im selben Projektverzeichnis wie in Level 1 weiter (dort sind `ai`, `@ai-sdk/anthropic` und `zod` bereits installiert)
@@ -58,7 +58,7 @@ Das konkrete Problem: Ohne Persistence ist Dein Chat ein Goldfish — kein Gedae
 
 Baue einen **persistenten Chat mit Reload**: Ein System, das eine Chat-ID generiert, Messages speichert, nach einem simulierten Reload den Verlauf laedt und das Gespraech nahtlos fortsetzt. Du kombinierst alle vier Bausteine dieses Levels in einem Projekt.
 
-## Quellen fuer dieses Level
+## Quellen für dieses Level
 
 - [Vercel AI SDK: Chatbot Persistence](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-persistence)
 - [Vercel AI SDK: generateText API Reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)

@@ -1,6 +1,6 @@
 ---
 title: "Challenge 8.4: Breaking the Loop"
-description: "Verhindere Endlosschleifen in Agent-Loops — Max-Iterations, Timeout, Cost Guard und Quality Check fuer kontrollierten Abbruch."
+description: "Verhindere Endlosschleifen in Agent-Loops — Max-Iterations, Timeout, Cost Guard und Quality Check für kontrollierten Abbruch."
 sidebar:
   order: 5
 ---
@@ -21,7 +21,7 @@ Vier Break Conditions schuetzen Deinen Agent-Loop vor unkontrolliertem Verhalten
 
 ## WHY
 
-**Ohne Break Conditions:** Endlosschleifen, explodierende Kosten, haengende App. Das LLM ruft immer wieder dasselbe Tool auf, verbraucht hunderte Tokens pro Iteration und laeuft Minuten lang — waehrend der User wartet. Im schlimmsten Fall: eine API-Rechnung ueber hunderte Dollar fuer einen einzigen fehlgelaufenen Loop.
+**Ohne Break Conditions:** Endlosschleifen, explodierende Kosten, haengende App. Das LLM ruft immer wieder dasselbe Tool auf, verbraucht hunderte Tokens pro Iteration und laeuft Minuten lang — waehrend der User wartet. Im schlimmsten Fall: eine API-Rechnung über hunderte Dollar für einen einzigen fehlgelaufenen Loop.
 
 **Mit Break Conditions:** Kontrollierter Abbruch. Nach maximal 50 Messages, 30 Sekunden oder 10.000 Tokens ist Schluss — egal was das LLM macht. Du bekommst das beste bisherige Ergebnis (Partial Result) statt gar nichts. Und Dein Budget ist geschuetzt.
 
@@ -44,7 +44,7 @@ const searchTool = tool({
   description: 'Search for information',
   inputSchema: z.object({ query: z.string() }),
   execute: async ({ query }) => ({
-    results: [`Ergebnisse fuer "${query}"...`],
+    results: [`Ergebnisse für "${query}"...`],
   }),
 });
 
@@ -102,7 +102,7 @@ Wichtig: `bestResult` speichert das beste bisherige Ergebnis. Wenn der Loop wege
 
 ### Schicht 2: Timeout mit AbortController
 
-Fuer zeitkritische Anwendungen — der Loop muss innerhalb einer bestimmten Zeit fertig werden:
+Für zeitkritische Anwendungen — der Loop muss innerhalb einer bestimmten Zeit fertig werden:
 
 ```typescript
 import { generateText, tool } from 'ai';
@@ -116,7 +116,7 @@ const searchTool = tool({
   description: 'Search for information',
   inputSchema: z.object({ query: z.string() }),
   execute: async ({ query }) => ({
-    results: [`Ergebnisse fuer "${query}"...`],
+    results: [`Ergebnisse für "${query}"...`],
   }),
 });
 
@@ -128,7 +128,7 @@ let done = false;
 let bestResult = '';
 const startTime = Date.now();
 
-// AbortController fuer sauberen Abbruch
+// AbortController für sauberen Abbruch
 const controller = new AbortController();
 const timeout = setTimeout(() => {
   controller.abort();
@@ -136,7 +136,7 @@ const timeout = setTimeout(() => {
 
 try {
   while (!done) {
-    // Timeout pruefen vor jedem Call
+    // Timeout prüfen vor jedem Call
     if (Date.now() - startTime > TIMEOUT_MS) {
       console.log(`Timeout (${TIMEOUT_MS}ms) erreicht. Abbruch.`);
       break;
@@ -192,7 +192,7 @@ const searchTool = tool({
   description: 'Search for information',
   inputSchema: z.object({ query: z.string() }),
   execute: async ({ query }) => ({
-    results: [`Ergebnisse fuer "${query}"...`],
+    results: [`Ergebnisse für "${query}"...`],
   }),
 });
 
@@ -218,7 +218,7 @@ while (!done) {
     bestResult = result.text;
   }
 
-  // Cost Guard: Token-Budget pruefen
+  // Cost Guard: Token-Budget prüfen
   if (totalTokens > MAX_TOKENS) {
     console.log(`Token-Budget (${MAX_TOKENS}) ueberschritten: ${totalTokens} Tokens. Abbruch.`);
     done = true;
@@ -261,7 +261,7 @@ const searchTool = tool({
   description: 'Search for information',
   inputSchema: z.object({ query: z.string() }),
   execute: async ({ query }) => ({
-    results: [`Ergebnisse fuer "${query}"...`],
+    results: [`Ergebnisse für "${query}"...`],
   }),
 });
 
@@ -282,7 +282,7 @@ async function robustAgentLoop(prompt: string) {
     while (true) {
       iterations++;
 
-      // Pre-Check: Limits pruefen BEVOR der naechste Call startet
+      // Pre-Check: Limits prüfen BEVOR der nächste Call startet
       if (iterations > LIMITS.maxIterations) {
         breakReason = 'max-iterations';
         break;
@@ -354,7 +354,7 @@ console.log('\n--- Statistik ---');
 console.log(JSON.stringify(output.stats, null, 2));
 ```
 
-Die Funktion gibt immer ein Ergebnis zurueck — inklusive `breakReason`. Der Caller weiss, ob der Agent fertig wurde (`complete`) oder ob ein Limit gegriffen hat. Das ist wichtig fuer Monitoring und Debugging.
+Die Funktion gibt immer ein Ergebnis zurück — inklusive `breakReason`. Der Caller weiss, ob der Agent fertig wurde (`complete`) oder ob ein Limit gegriffen hat. Das ist wichtig für Monitoring und Debugging.
 
 ## TRY
 
@@ -376,13 +376,13 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 // TODO 3: Initialisiere messages, state, startTime, AbortController
 
 // TODO 4: Implementiere den Loop mit ALLEN Safeguards:
-//   - Max Iterations pruefen
-//   - Timeout pruefen
+//   - Max Iterations prüfen
+//   - Timeout prüfen
 //   - abortSignal an generateText uebergeben
-//   - try/catch fuer AbortError
+//   - try/catch für AbortError
 //   - bestResult speichern
 
-// TODO 5: Gib das Ergebnis mit breakReason und Statistik zurueck
+// TODO 5: Gib das Ergebnis mit breakReason und Statistik zurück
 ```
 
 **Checkliste:**
@@ -394,7 +394,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 - [ ] `breakReason` gibt an, warum der Loop beendet wurde
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText, tool } from 'ai';
@@ -446,7 +446,7 @@ async function guardedLoop(prompt: string) {
         break;
       }
 
-      // Guard: Timeout (zusaetzlich zum AbortController)
+      // Guard: Timeout (zusätzlich zum AbortController)
       if (Date.now() - startTime > LIMITS.timeoutMs) {
         breakReason = 'timeout';
         console.log(`Timeout (${LIMITS.timeoutMs}ms) erreicht.`);
@@ -509,7 +509,7 @@ async function guardedLoop(prompt: string) {
 }
 
 const output = await guardedLoop(
-  'Recherchiere Edge Computing. Nutze search fuer Recherche, dann save um das Ergebnis zu speichern.',
+  'Recherchiere Edge Computing. Nutze search für Recherche, dann save um das Ergebnis zu speichern.',
 );
 
 console.log('\n--- Ergebnis ---');
@@ -530,7 +530,7 @@ Abbruchgrund: save-complete
 Stats: {"iterations":2,"totalTokens":974,"durationMs":4521}
 ```
 
-**Erklaerung:** Zwei Safeguards schuetzen den Loop: Max Iterations (pre-check vor jedem Call) und Timeout (via `AbortController` + manueller Check). Der Loop gibt immer ein Ergebnis zurueck — auch bei Abbruch. Der `breakReason` zeigt an, ob der Agent fertig wurde oder ein Limit gegriffen hat.
+**Erklärung:** Zwei Safeguards schuetzen den Loop: Max Iterations (pre-check vor jedem Call) und Timeout (via `AbortController` + manueller Check). Der Loop gibt immer ein Ergebnis zurück — auch bei Abbruch. Der `breakReason` zeigt an, ob der Agent fertig wurde oder ein Limit gegriffen hat.
 
 </details>
 
@@ -546,7 +546,7 @@ Stats: {"iterations":2,"totalTokens":974,"durationMs":4521}
 4. **Quality Check** (8.3) — ein `checkQuality`-Tool, das den Loop beendet wenn `score >= 70`
 5. **Progress Streaming** (8.2) — nach jeder Iteration ein Data Part mit Iteration, Tokens und aktuellem Guard-Status
 
-Der Agent soll recherchieren, die Qualitaet pruefen und abbrechen, sobald eine der fuenf Bedingungen erfuellt ist. Das Ergebnis enthaelt immer `breakReason` und `stats`.
+Der Agent soll recherchieren, die Qualität prüfen und abbrechen, sobald eine der fuenf Bedingungen erfuellt ist. Das Ergebnis enthaelt immer `breakReason` und `stats`.
 
 **Optional Stretch Goal:** Fuege ein "Budget Warning" Data Part hinzu, das gesendet wird, wenn 80% des Token-Budgets verbraucht sind. Das Frontend kann dann eine gelbe Warnung anzeigen, bevor der Cost Guard greift.
 

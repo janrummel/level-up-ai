@@ -17,12 +17,12 @@ Level 2 abgeschlossen! Du verstehst jetzt die Mechanik hinter LLM-Kosten und wei
 
 - **Tokens:** LLMs lesen keinen Text — sie arbeiten mit Subword Units (Token IDs). 1 Token ≈ 4 Zeichen (EN) / 3 Zeichen (DE). Verschiedene Sprachen und Textarten verbrauchen unterschiedlich viele Tokens.
 - **Usage Tracking:** Jeder `generateText`-Call liefert `result.usage` mit `promptTokens`, `completionTokens` und `totalTokens`. Kosten berechnen: Tokens / 1M * Preis. Output-Tokens sind 3-5x teurer als Input-Tokens.
-- **Context Window:** Alles was zum LLM geht — System Prompt, Messages, Tool-Definitionen UND Platz fuer Output — muss ins Context Window passen. Bei Ueberschreitung: Fehler oder stille Truncation. Strategien: Message-Truncation, Token-Budget, Summarization.
-- **Prompt Caching:** Identische Prompt-Prefixe werden nach dem ersten Request aus dem Cache gelesen — bei Anthropic zu 10% der normalen Input-Kosten. Cache-Hit-Rate tracken fuer Kostenoptimierung.
+- **Context Window:** Alles was zum LLM geht — System Prompt, Messages, Tool-Definitionen UND Platz für Output — muss ins Context Window passen. Bei Ueberschreitung: Fehler oder stille Truncation. Strategien: Message-Truncation, Token-Budget, Summarization.
+- **Prompt Caching:** Identische Prompt-Prefixe werden nach dem ersten Request aus dem Cache gelesen — bei Anthropic zu 10% der normalen Input-Kosten. Cache-Hit-Rate tracken für Kostenoptimierung.
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 2 LLM Fundamentals abgeschlossen, Level 3 Agents & MCP ist das naechste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 2 LLM Fundamentals abgeschlossen, Level 3 Agents & MCP ist das nächste Level" />
 
 ## Naechstes Level
 

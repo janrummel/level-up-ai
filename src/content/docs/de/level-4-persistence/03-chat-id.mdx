@@ -1,6 +1,6 @@
 ---
 title: "Challenge 4.2: Chat ID"
-description: "Wie Dein Backend weiss, zu welchem Chat eine neue Nachricht gehoert — Session-Management mit Chat IDs."
+description: "Wie Dein Backend weiss, zu welchem Chat eine neue Nachricht gehört — Session-Management mit Chat IDs."
 sidebar:
   order: 3
 ---
@@ -11,19 +11,19 @@ import combineDiagram from '../../../../assets/diagrams/l4-c2-combine.svg';
 
 ## THINK
 
-Wie weiss Dein Backend, zu welchem Chat eine neue Nachricht gehoert?
+Wie weiss Dein Backend, zu welchem Chat eine neue Nachricht gehört?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="Frontend sendet chatId an API Handler, messages gehen auch an API Handler, generateText gibt Response zurueck" />
+<Image src={overviewDiagram} alt="Frontend sendet chatId an API Handler, messages gehen auch an API Handler, generateText gibt Response zurück" />
 
 Jeder Chat braucht eine eindeutige ID. Das Frontend generiert sie beim Start eines neuen Chats und schickt sie mit jedem Request mit. Das Backend nutzt die ID, um Messages zuzuordnen, Verlaeufe zu laden und Sessions zu verwalten.
 
 ## WHY
 
-**Ohne Chat ID:** Jede Nachricht ist fuer Dein Backend ein neuer, anonymer Request. Es gibt keinen Zusammenhang zwischen "Hallo" und der Folgefrage "Was meinst Du damit?". Du kannst keinen Verlauf laden, keine Session fortsetzen, kein Chat-Management bauen.
+**Ohne Chat ID:** Jede Nachricht ist für Dein Backend ein neuer, anonymer Request. Es gibt keinen Zusammenhang zwischen "Hallo" und der Folgefrage "Was meinst Du damit?". Du kannst keinen Verlauf laden, keine Session fortsetzen, kein Chat-Management bauen.
 
-**Mit Chat ID:** Jede Nachricht gehoert zu einem identifizierbaren Chat. Du kannst den Verlauf laden, neue Messages anhaengen, mehrere parallele Chats verwalten und dem User eine Chat-History anbieten.
+**Mit Chat ID:** Jede Nachricht gehört zu einem identifizierbaren Chat. Du kannst den Verlauf laden, neue Messages anhaengen, mehrere parallele Chats verwalten und dem User eine Chat-History anbieten.
 
 ## WALKTHROUGH
 
@@ -37,7 +37,7 @@ const chatId = crypto.randomUUID();
 // → "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 ```
 
-`crypto.randomUUID()` ist in Node.js (ab v19) und allen modernen Browsern verfuegbar. Die Wahrscheinlichkeit einer Kollision ist praktisch null (2^122 moegliche Werte).
+`crypto.randomUUID()` ist in Node.js (ab v19) und allen modernen Browsern verfügbar. Die Wahrscheinlichkeit einer Kollision ist praktisch null (2^122 moegliche Werte).
 
 ### Schicht 2: Chat ID im Request mitschicken
 
@@ -57,11 +57,11 @@ const response = await fetch('/api/chat', {
 });
 ```
 
-Die Chat ID bleibt fuer die gesamte Konversation gleich. Neue Nachrichten werden mit derselben ID geschickt. Ein neuer Chat bekommt eine neue ID.
+Die Chat ID bleibt für die gesamte Konversation gleich. Neue Nachrichten werden mit derselben ID geschickt. Ein neuer Chat bekommt eine neue ID.
 
 ### Schicht 3: Chat ID im Backend lesen
 
-Das Backend extrahiert die Chat ID aus dem Request und nutzt sie fuer die Zuordnung:
+Das Backend extrahiert die Chat ID aus dem Request und nutzt sie für die Zuordnung:
 
 ```typescript
 // Backend: API Handler (z.B. Express, Next.js Route Handler)
@@ -142,7 +142,7 @@ const chatStore = new Map<string, Array<{ role: string; content: string }>>();
 **Ausfuehren mit:** `npx tsx challenge-4-2.ts`
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 const chatStore = new Map<string, Array<{ role: string; content: string }>>();
@@ -197,7 +197,7 @@ Chat a1b2c3d4...: 2 Messages
 Chat e5f6a7b8...: 1 Messages
 ```
 
-**Erklaerung:** `crypto.randomUUID()` generiert eindeutige IDs. Die `Map` speichert Messages gruppiert nach Chat ID. Durch das Kuerzen der ID im Log bleibt die Ausgabe lesbar. Chat A hat zwei Messages, Chat B eine — sauber getrennt.
+**Erklärung:** `crypto.randomUUID()` generiert eindeutige IDs. Die `Map` speichert Messages gruppiert nach Chat ID. Durch das Kuerzen der ID im Log bleibt die Ausgabe lesbar. Chat A hat zwei Messages, Chat B eine — sauber getrennt.
 
 </details>
 

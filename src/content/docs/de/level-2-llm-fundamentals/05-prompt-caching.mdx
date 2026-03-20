@@ -1,6 +1,6 @@
 ---
 title: "Challenge 2.4: Prompt Caching"
-description: "Spare bis zu 90% Kosten fuer wiederkehrende Prompt-Teile — wie Prompt Caching funktioniert und wie Du es im AI SDK nutzt."
+description: "Spare bis zu 90% Kosten für wiederkehrende Prompt-Teile — wie Prompt Caching funktioniert und wie Du es im AI SDK nutzt."
 sidebar:
   order: 5
 ---
@@ -21,7 +21,7 @@ Beim ersten Request wird der System Prompt normal berechnet und im Cache gespeic
 
 ## WHY
 
-**Ohne Prompt Caching:** Du schickst denselben 2.000-Token System Prompt bei jedem Request. Bei 100 Requests pro Stunde zahlst Du 100x den vollen Preis fuer identischen Text. Das summiert sich schnell.
+**Ohne Prompt Caching:** Du schickst denselben 2.000-Token System Prompt bei jedem Request. Bei 100 Requests pro Stunde zahlst Du 100x den vollen Preis für identischen Text. Das summiert sich schnell.
 
 **Mit Prompt Caching:** Der System Prompt wird einmal berechnet, dann aus dem Cache gelesen. Bei Anthropic kostet ein Cache-Read nur 10% des normalen Input-Preises. Bei 100 Requests sparst Du 90% der System-Prompt-Kosten.
 
@@ -45,7 +45,7 @@ Request 3:  [Anderer System Prompt] + [User: "Was ist TypeScript?"]
             Cache Miss — Prefix hat sich geaendert.
 ```
 
-Wichtig: Der Cache funktioniert nur fuer den **Anfang** (Prefix) des Requests. Sobald sich auch nur ein Zeichen im System Prompt aendert, ist der gesamte Cache ungueltig. Deshalb: System Prompt stabil halten, dynamische Teile ans Ende.
+Wichtig: Der Cache funktioniert nur für den **Anfang** (Prefix) des Requests. Sobald sich auch nur ein Zeichen im System Prompt ändert, ist der gesamte Cache ungueltig. Deshalb: System Prompt stabil halten, dynamische Teile ans Ende.
 
 ### Schicht 2: Provider-Unterstuetzung
 
@@ -57,24 +57,24 @@ Nicht alle Provider unterstuetzen Prompt Caching:
 | Google (Gemini) | Ja | variabel | variabel | variabel |
 | OpenAI | Automatisch | 1.024 Tokens | bis zu 1 Stunde | 50% guenstiger |
 
-Anthropic hat eine Mindestlaenge fuer den Cache-Prefix. Kurze System Prompts unter 1.024 Tokens werden nicht gecacht. Das ist ein bewusster Tradeoff — der Overhead fuer das Caching lohnt sich nur bei laengeren Prefixes.
+Anthropic hat eine Mindestlaenge für den Cache-Prefix. Kurze System Prompts unter 1.024 Tokens werden nicht gecacht. Das ist ein bewusster Tradeoff — der Overhead für das Caching lohnt sich nur bei laengeren Prefixes.
 
 ### Schicht 3: Cache-Tokens im Usage-Objekt
 
-Das AI SDK gibt Dir Cache-Informationen im `usage`-Objekt zurueck:
+Das AI SDK gibt Dir Cache-Informationen im `usage`-Objekt zurück:
 
 ```typescript
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-// Ein langer System Prompt (>1024 Tokens fuer Cache-Eligibility)
+// Ein langer System Prompt (>1024 Tokens für Cache-Eligibility)
 const longSystemPrompt = `
 Du bist ein erfahrener Code-Review-Assistent.
 
 <rules>
 - Pruefe jeden Code auf: Sicherheit, Performance, Lesbarkeit, Best Practices
 - Kategorisiere Findings als: KRITISCH, WARNUNG, HINWEIS
-- Gib fuer jedes Finding: Zeile, Problem, Loesung an
+- Gib für jedes Finding: Zeile, Problem, Lösung an
 - Nutze die OWASP Top 10 als Sicherheits-Referenz
 - Beachte TypeScript-spezifische Patterns und Anti-Patterns
 - Pruefe auf proper Error Handling und Edge Cases
@@ -84,20 +84,20 @@ Du bist ein erfahrener Code-Review-Assistent.
 ## Review: [Dateiname]
 
 ### KRITISCH
-- **Zeile X:** [Problem] → [Loesung]
+- **Zeile X:** [Problem] → [Lösung]
 
 ### WARNUNG
-- **Zeile X:** [Problem] → [Loesung]
+- **Zeile X:** [Problem] → [Lösung]
 
 ### HINWEIS
-- **Zeile X:** [Problem] → [Loesung]
+- **Zeile X:** [Problem] → [Lösung]
 
 ### Zusammenfassung
 [1-2 Saetze Gesamtbewertung]
 </output-format>
 `.trim();
-// Dieser System Prompt hat ca. 150 Woerter ≈ 200-250 Tokens (unter dem 1024-Token-Minimum fuer Caching).
-// Fuer die Demonstration der Mechanik reicht das — fuer echtes Caching muss der Prompt laenger sein (siehe TRY-Aufgabe).
+// Dieser System Prompt hat ca. 150 Woerter ≈ 200-250 Tokens (unter dem 1024-Token-Minimum für Caching).
+// Für die Demonstration der Mechanik reicht das — für echtes Caching muss der Prompt laenger sein (siehe TRY-Aufgabe).
 
 // Erster Request — Cache wird erstellt
 const result1 = await generateText({
@@ -135,7 +135,7 @@ console.log('Cache Read Tokens:', cacheMetrics?.cacheReadInputTokens ?? 0);
 ```
 
 :::note[Cache-TTL-Erneuerung]
-Die TTL (Time To Live) wird bei jedem Cache-Hit erneuert. Solange regelmaessig Requests mit demselben Prefix kommen, bleibt der Cache aktiv. Erst wenn 5 Minuten (Anthropic) ohne Cache-Hit vergehen, verfaellt der Cache.
+Die TTL (Time To Live) wird bei jedem Cache-Hit erneuert. Solange regelmäßig Requests mit demselben Prefix kommen, bleibt der Cache aktiv. Erst wenn 5 Minuten (Anthropic) ohne Cache-Hit vergehen, verfaellt der Cache.
 :::
 
 ### Schicht 4: Cache-Kosten berechnen
@@ -170,7 +170,7 @@ console.log(`Ersparnis: ${((1 - withCache / withoutCache) * 100).toFixed(0)}%`);
 // → Ersparnis: 79%
 ```
 
-Ab 2 Requests mit demselben Prefix lohnt sich Caching. Je mehr Requests, desto groesser die Ersparnis — asymptotisch gegen 90%.
+Ab 2 Requests mit demselben Prefix lohnt sich Caching. Je mehr Requests, desto größer die Ersparnis — asymptotisch gegen 90%.
 
 ## TRY
 
@@ -211,13 +211,13 @@ import { anthropic } from '@ai-sdk/anthropic';
 ```
 
 **Checkliste:**
-- [ ] System Prompt ist lang genug fuer Caching (>1024 Tokens)
+- [ ] System Prompt ist lang genug für Caching (>1024 Tokens)
 - [ ] Zwei Calls mit identischem System Prompt
 - [ ] Usage-Vergleich geloggt
 - [ ] Unterschied zwischen erstem und zweitem Call beobachtet
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -226,53 +226,53 @@ import { anthropic } from '@ai-sdk/anthropic';
 const systemPrompt = `
 <task-context>
 Du bist ein erfahrener Software-Architekt mit 15 Jahren Erfahrung in TypeScript,
-Node.js und Cloud-Architekturen. Du reviewst Code und Architekturen fuer
+Node.js und Cloud-Architekturen. Du reviewst Code und Architekturen für
 Enterprise-Anwendungen.
 </task-context>
 
 <rules>
 - Pruefe jeden Code auf: Sicherheit, Performance, Lesbarkeit, Wartbarkeit
 - Kategorisiere Findings als: KRITISCH, WARNUNG, HINWEIS, POSITIV
-- Gib fuer jedes Finding an: Betroffene Stelle, Problem, Empfohlene Loesung
+- Gib für jedes Finding an: Betroffene Stelle, Problem, Empfohlene Lösung
 - Nutze die OWASP Top 10 als Sicherheits-Referenz
 - Beachte TypeScript-spezifische Patterns: strict mode, type safety, generics
 - Pruefe auf Error Handling, Edge Cases und Race Conditions
 - Bewerte die Testbarkeit des Codes
 - Achte auf SOLID-Prinzipien und Clean Architecture
 - Pruefe Dependencies auf bekannte Vulnerabilities
-- Bewerte die API-Design-Qualitaet (REST Best Practices)
+- Bewerte die API-Design-Qualität (REST Best Practices)
 - Achte auf proper Logging und Monitoring-Hooks
 - Pruefe auf Memory Leaks und Resource Cleanup
 </rules>
 
 <examples>
-Beispiel fuer ein KRITISCH-Finding:
+Beispiel für ein KRITISCH-Finding:
 - Stelle: Zeile 42, db.query()
 - Problem: SQL Injection durch String-Concatenation
-- Loesung: Parametrisierte Query verwenden
+- Lösung: Parametrisierte Query verwenden
 
-Beispiel fuer ein WARNUNG-Finding:
+Beispiel für ein WARNUNG-Finding:
 - Stelle: Zeile 15, catch(e) {}
 - Problem: Leerer Catch-Block verschluckt Fehler
-- Loesung: Error loggen und ggf. re-throwen
+- Lösung: Error loggen und ggf. re-throwen
 
-Beispiel fuer ein POSITIV-Finding:
+Beispiel für ein POSITIV-Finding:
 - Stelle: Zeile 8, zod.parse()
 - Problem: -
-- Loesung: Gute Input-Validierung mit Zod
+- Lösung: Gute Input-Validierung mit Zod
 </examples>
 
 <output-format>
 ## Code Review: [Kontext]
 
 ### KRITISCH
-- **[Stelle]:** [Problem] → [Loesung]
+- **[Stelle]:** [Problem] → [Lösung]
 
 ### WARNUNG
-- **[Stelle]:** [Problem] → [Loesung]
+- **[Stelle]:** [Problem] → [Lösung]
 
 ### HINWEIS
-- **[Stelle]:** [Problem] → [Loesung]
+- **[Stelle]:** [Problem] → [Lösung]
 
 ### POSITIV
 - **[Stelle]:** [Was gut ist]
@@ -326,9 +326,9 @@ Completion Tokens: 180
 Total: 555
 ```
 
-Die `promptTokens`-Zahlen sind aehnlich, weil die Tokens trotzdem gezaehlt werden. Den Cache-Hit erkennst Du an den erweiterten Usage-Feldern: Pruefe `providerMetadata` fuer `cacheReadTokens` > 0 beim zweiten Call.
+Die `promptTokens`-Zahlen sind aehnlich, weil die Tokens trotzdem gezaehlt werden. Den Cache-Hit erkennst Du an den erweiterten Usage-Feldern: Pruefe `providerMetadata` für `cacheReadTokens` > 0 beim zweiten Call.
 
-**Erklaerung:** Beide Requests nutzen denselben System Prompt. Beim zweiten Request liest der Provider den System Prompt aus dem Cache. Die effektiven Kosten sind niedriger, auch wenn die Token-Zahlen aehnlich aussehen.
+**Erklärung:** Beide Requests nutzen denselben System Prompt. Beim zweiten Request liest der Provider den System Prompt aus dem Cache. Die effektiven Kosten sind niedriger, auch wenn die Token-Zahlen aehnlich aussehen.
 
 </details>
 

@@ -16,17 +16,17 @@ Wenn Du einen System Prompt schreibst — wie stellst Du sicher, dass er bei 20 
 
 <Image src={overviewDiagram} alt="Variables (role, audience, tone) fliessen in ein Prompt Template mit XML Tags (task-context, background-data, examples, rules, conversation-history, the-ask, output-format), das dann generateText und LLM zu konsistentem Output fuehrt" />
 
-Das Diagramm zeigt die Kernidee: Ein Prompt Template definiert eine feste Struktur mit XML Tags. Variablen werden dynamisch injiziert. Das Ergebnis ist ein konsistenter, wiederverwendbarer Prompt fuer beliebig viele API-Calls.
+Das Diagramm zeigt die Kernidee: Ein Prompt Template definiert eine feste Struktur mit XML Tags. Variablen werden dynamisch injiziert. Das Ergebnis ist ein konsistenter, wiederverwendbarer Prompt für beliebig viele API-Calls.
 
 ## WHY
 
-**Ohne Template:** Du kopierst Prompts per Copy-Paste in jede Datei. Jeder Prompt sieht leicht anders aus. Aenderungen am Ton oder Format muessen an 20 Stellen gleichzeitig gemacht werden. Das Ergebnis ist inkonsistent und nicht testbar.
+**Ohne Template:** Du kopierst Prompts per Copy-Paste in jede Datei. Jeder Prompt sieht leicht anders aus. Aenderungen am Ton oder Format müssen an 20 Stellen gleichzeitig gemacht werden. Das Ergebnis ist inkonsistent und nicht testbar.
 
 **Mit Template:** Ein Prompt, eine Stelle, viele Aufgaben. Du aenderst die Variablen — der Rest bleibt gleich. DRY (Don't Repeat Yourself), testbar, wartbar.
 
 ## WALKTHROUGH
 
-### Schicht 1: Die Grundstruktur (XML Tags fuer Sections)
+### Schicht 1: Die Grundstruktur (XML Tags für Sections)
 
 Anthropic empfiehlt, Prompts mit XML Tags zu strukturieren. Jeder Tag hat eine bestimmte Funktion und Position — die Reihenfolge folgt der Aufmerksamkeitsverteilung von LLMs:
 
@@ -81,7 +81,7 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklaeren
+- Fachbegriffe beim ersten Auftreten erklären
 - Keine Annahmen ohne Kennzeichnung
 </rules>
 
@@ -91,7 +91,7 @@ Formatiere Deine Antwort als: ${config.outputFormat}
 `;
 ```
 
-Jede Variable macht den Prompt flexibel, ohne die Struktur zu veraendern. Derselbe Prompt funktioniert fuer einen "technischen Redakteur" genauso wie fuer einen "Marketing-Texter" — nur die Variablen aendern sich.
+Jede Variable macht den Prompt flexibel, ohne die Struktur zu veraendern. Derselbe Prompt funktioniert für einen "technischen Redakteur" genauso wie für einen "Marketing-Texter" — nur die Variablen ändern sich.
 
 ### Schicht 3: Die buildSystemPrompt Funktion
 
@@ -117,9 +117,9 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklaeren
+- Fachbegriffe beim ersten Auftreten erklären
 - Keine Annahmen ohne Kennzeichnung
-- Codebeispiele muessen lauffaehig sein
+- Codebeispiele müssen lauffaehig sein
 </rules>
 
 <output-format>
@@ -143,7 +143,7 @@ const result = await generateText({
 console.log(result.text);
 ```
 
-Die Funktion nimmt ein `PromptConfig`-Objekt und gibt einen vollstaendigen System Prompt als String zurueck. Du kannst sie in Tests mocken, in verschiedenen Kontexten wiederverwenden und an einer Stelle aendern.
+Die Funktion nimmt ein `PromptConfig`-Objekt und gibt einen vollstaendigen System Prompt als String zurück. Du kannst sie in Tests mocken, in verschiedenen Kontexten wiederverwenden und an einer Stelle ändern.
 
 ## TRY
 
@@ -164,10 +164,10 @@ interface PromptConfig {
 
 // TODO: Implementiere buildSystemPrompt
 // 1. Nutze Template Literals (Backticks)
-// 2. Setze XML Tags fuer die Struktur ein:
-//    - <task-context> fuer Rolle und Zielgruppe
-//    - <rules> fuer Tonalitaet und Einschraenkungen
-//    - <output-format> fuer das gewuenschte Format
+// 2. Setze XML Tags für die Struktur ein:
+//    - <task-context> für Rolle und Zielgruppe
+//    - <rules> für Tonalitaet und Einschraenkungen
+//    - <output-format> für das gewuenschte Format
 // 3. Injiziere die config-Variablen an den richtigen Stellen
 function buildSystemPrompt(config: PromptConfig): string {
   // Dein Code hier
@@ -189,13 +189,13 @@ console.log(result.text);
 ```
 
 **Checkliste:**
-- [ ] Template nutzt XML Tags fuer Struktur
+- [ ] Template nutzt XML Tags für Struktur
 - [ ] Mindestens 4 Sektionen (role, audience, tone, format)
-- [ ] Funktion gibt einen String zurueck
+- [ ] Funktion gibt einen String zurück
 - [ ] Code laeuft mit `generateText`
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -217,9 +217,9 @@ Deine Zielgruppe: ${config.audience}.
 
 <rules>
 - Schreibe ${config.tone}
-- Fachbegriffe beim ersten Auftreten erklaeren
+- Fachbegriffe beim ersten Auftreten erklären
 - Keine Annahmen ohne Kennzeichnung
-- Codebeispiele muessen lauffaehig sein
+- Codebeispiele müssen lauffaehig sein
 </rules>
 
 <output-format>
@@ -242,7 +242,7 @@ const result = await generateText({
 console.log(result.text);
 ```
 
-**Erklaerung:** Die Funktion nutzt `<task-context>` am Anfang fuer maximalen Einfluss auf die Rolle und `<output-format>` am Ende fuer maximale Kontrolle ueber das Format. Die `<rules>` stehen in der Mitte. Alle vier `config`-Variablen werden dynamisch injiziert.
+**Erklärung:** Die Funktion nutzt `<task-context>` am Anfang für maximalen Einfluss auf die Rolle und `<output-format>` am Ende für maximale Kontrolle über das Format. Die `<rules>` stehen in der Mitte. Alle vier `config`-Variablen werden dynamisch injiziert.
 
 **Erwarteter Output (ungefaehr — LLM-Ausgaben variieren):**
 ```
@@ -259,7 +259,7 @@ Context Engineering ist die systematische Gestaltung des Inputs...
 
 Du brauchst:
 1. Ersetze `generateText` durch `streamText`
-2. Iteriere ueber `result.textStream` mit `for await...of`
+2. Iteriere über `result.textStream` mit `for await...of`
 3. Gib jeden Chunk mit `process.stdout.write(chunk)` aus
 
 **Optional Stretch Goal:** Fuege einen zweiten Aufruf hinzu, der dasselbe Template mit einer anderen Konfiguration nutzt (z.B. `role: 'Marketing-Texter'`). Vergleiche die Outputs.

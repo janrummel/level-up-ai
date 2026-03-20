@@ -5,11 +5,11 @@ sidebar:
   order: 3
 ---
 
-## Ueberblick
+## Überblick
 
-`streamText` gibt ein Result-Objekt zurueck, das zwei AsyncIterables bereitstellt: `textStream` liefert nur Text-Chunks als Strings — ideal fuer einfache Ausgaben. `fullStream` liefert alle Stream Part Types inklusive Tool-Calls, Reasoning, Sources und Step-Grenzen.
+`streamText` gibt ein Result-Objekt zurück, das zwei AsyncIterables bereitstellt: `textStream` liefert nur Text-Chunks als Strings — ideal für einfache Ausgaben. `fullStream` liefert alle Stream Part Types inklusive Tool-Calls, Reasoning, Sources und Step-Grenzen.
 
-Zusaetzlich bietet das Result aggregierte Promises wie `text`, `usage`, `totalUsage`, `finishReason`, `steps`, `toolCalls` und `toolResults`. Diese kannst Du awaiten, um die Gesamtdaten nach Abschluss des Streams zu erhalten.
+Zusätzlich bietet das Result aggregierte Promises wie `text`, `usage`, `totalUsage`, `finishReason`, `steps`, `toolCalls` und `toolResults`. Diese kannst Du awaiten, um die Gesamtdaten nach Abschluss des Streams zu erhalten.
 
 ## textStream — nur Text
 
@@ -84,7 +84,7 @@ for await (const part of fullStream) {
 | `text` | `Promise<string>` | Vollstaendiger generierter Text |
 | `usage` | `Promise<Usage>` | Token-Verbrauch des letzten Schritts |
 | `totalUsage` | `Promise<Usage>` | Token-Verbrauch aller Schritte |
-| `finishReason` | `Promise<FinishReason>` | Grund fuer das Stoppen |
+| `finishReason` | `Promise<FinishReason>` | Grund für das Stoppen |
 | `steps` | `Promise<StepResult[]>` | Array aller Schritte |
 | `toolCalls` | `Promise<ToolCall[]>` | Alle Tool-Calls des letzten Schritts |
 | `toolResults` | `Promise<ToolResult[]>` | Alle Tool-Ergebnisse des letzten Schritts |

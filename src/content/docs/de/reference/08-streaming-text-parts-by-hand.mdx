@@ -1,19 +1,19 @@
 ---
 title: "Text Parts manuell streamen"
-description: "Text Parts von Hand in einen UI Message Stream schreiben — fuer kombinierte LLM-Outputs und Custom Text."
+description: "Text Parts von Hand in einen UI Message Stream schreiben — für kombinierte LLM-Outputs und Custom Text."
 sidebar:
   order: 8
 ---
 
-## Ueberblick
+## Überblick
 
-Normalerweise uebernimmt `streamText` das Schreiben von Text Parts automatisch. Aber manchmal brauchst Du mehr Kontrolle: mehrere LLM-Outputs kombinieren, eigenen Text einfuegen oder Text aus Nicht-LLM-Quellen streamen. In diesen Faellen schreibst Du Text Parts manuell ueber `writer.write()`.
+Normalerweise uebernimmt `streamText` das Schreiben von Text Parts automatisch. Aber manchmal brauchst Du mehr Kontrolle: mehrere LLM-Outputs kombinieren, eigenen Text einfuegen oder Text aus Nicht-LLM-Quellen streamen. In diesen Faellen schreibst Du Text Parts manuell über `writer.write()`.
 
-Ein Text-Part in der UI durchlaeuft einen Lifecycle: `text-start` oeffnet einen neuen Text-Part, dann folgen beliebig viele `text-delta` Parts mit den eigentlichen Text-Fragmenten, und `text-end` schliesst den Text-Part ab. Wenn Du `writer.merge()` verwendest, sendet `streamText` diese Lifecycle-Events automatisch. Bei rein manuellem Schreiben ueber `writer.write()` genuegt es, `text-delta` Parts zu senden — der Stream kuemmert sich um Start und Ende.
+Ein Text-Part in der UI durchlaeuft einen Lifecycle: `text-start` oeffnet einen neuen Text-Part, dann folgen beliebig viele `text-delta` Parts mit den eigentlichen Text-Fragmenten, und `text-end` schliesst den Text-Part ab. Wenn Du `writer.merge()` verwendest, sendet `streamText` diese Lifecycle-Events automatisch. Bei rein manuellem Schreiben über `writer.write()` genuegt es, `text-delta` Parts zu senden — der Stream kuemmert sich um Start und Ende.
 
 Du kannst manuelle Text-Deltas mit `writer.merge()` kombinieren — eigener Text vor, nach oder zwischen LLM-Streams.
 
-Dieses Pattern ist besonders nuetzlich fuer Workflow-Szenarien, in denen mehrere LLM-Calls nacheinander ausgefuehrt werden und Du Ueberschriften oder Trennzeichen dazwischen einfuegen willst.
+Dieses Pattern ist besonders nuetzlich für Workflow-Szenarien, in denen mehrere LLM-Calls nacheinander ausgefuehrt werden und Du Ueberschriften oder Trennzeichen dazwischen einfuegen willst.
 
 ## Einfaches Beispiel
 
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
 
 ## Text-Part Lifecycle
 
-Wenn `streamText` ueber `writer.merge()` eingebunden wird, sendet es automatisch die vollstaendige Sequenz:
+Wenn `streamText` über `writer.merge()` eingebunden wird, sendet es automatisch die vollständige Sequenz:
 
 1. **`text-start`** — Oeffnet einen neuen Text-Part
 2. **`text-delta`** (n-mal) — Sendet Text-Fragmente inkrementell

@@ -17,19 +17,19 @@ Liest ein LLM Woerter wie Du — oder sieht es etwas ganz anderes?
 
 <Image src={overviewDiagram} alt="Text wird tokenisiert zu IDs, LLM verarbeitet sie, Detokenizer erzeugt Output-Text" />
 
-Ein LLM liest keinen Text. Es arbeitet mit Token IDs — Zahlen, die fuer Textfragmente (Subword Units) stehen. Der Tokenizer zerlegt Deinen Input in diese Fragmente, das LLM verarbeitet die IDs und der Detokenizer setzt die Ausgabe-IDs wieder zu lesbarem Text zusammen.
+Ein LLM liest keinen Text. Es arbeitet mit Token IDs — Zahlen, die für Textfragmente (Subword Units) stehen. Der Tokenizer zerlegt Deinen Input in diese Fragmente, das LLM verarbeitet die IDs und der Detokenizer setzt die Ausgabe-IDs wieder zu lesbarem Text zusammen.
 
 ## WHY
 
-**Ohne Token-Verstaendnis:** Deine Kosten sind unvorhersehbar. Du wunderst Dich, warum ein deutscher Prompt 40% mehr kostet als ein englischer. Du ueberschreitest das Context Window und bekommst kryptische Fehler. Du kannst nicht einschaetzen, ob Dein Prompt noch ins Budget passt.
+**Ohne Token-Verständnis:** Deine Kosten sind unvorhersehbar. Du wunderst Dich, warum ein deutscher Prompt 40% mehr kostet als ein englischer. Du ueberschreitest das Context Window und bekommst kryptische Fehler. Du kannst nicht einschaetzen, ob Dein Prompt noch ins Budget passt.
 
-**Mit Token-Verstaendnis:** Du kannst Kosten vorhersagen, bevor Du den API-Call machst. Du verstehst, warum Sprachen unterschiedlich viele Tokens brauchen. Du kannst Deine Prompts optimieren und weisst genau, wie viel Platz im Context Window noch frei ist.
+**Mit Token-Verständnis:** Du kannst Kosten vorhersagen, bevor Du den API-Call machst. Du verstehst, warum Sprachen unterschiedlich viele Tokens brauchen. Du kannst Deine Prompts optimieren und weisst genau, wie viel Platz im Context Window noch frei ist.
 
 ## WALKTHROUGH
 
 ### Schicht 1: Was sind Tokens?
 
-Tokens sind keine Woerter und keine Buchstaben — sie sind **Subword Units**. Der Tokenizer zerlegt Text in die haeufigsten Zeichenkombinationen seiner Trainingsdaten:
+Tokens sind keine Woerter und keine Buchstaben — sie sind **Subword Units**. Der Tokenizer zerlegt Text in die häufigsten Zeichenkombinationen seiner Trainingsdaten:
 
 ```
 Eingabe:  "JavaScript ist fantastisch"
@@ -41,7 +41,7 @@ Haeufige Woerter wie "the" oder "ist" sind oft ein einzelner Token. Seltene Woer
 
 ### Schicht 2: Die Faustregel — 1 Token in Zahlen
 
-Fuer schnelle Schaetzungen:
+Für schnelle Schaetzungen:
 
 | Sprache | Faustregel | Beispiel |
 |---------|-----------|----------|
@@ -53,7 +53,7 @@ Warum braucht Deutsch mehr Tokens? Deutsche Woerter sind im Durchschnitt laenger
 
 ### Schicht 3: Token-Counting mit dem AI SDK
 
-Das AI SDK gibt Dir Token-Zahlen ueber `result.usage` zurueck — automatisch bei jedem Call:
+Das AI SDK gibt Dir Token-Zahlen über `result.usage` zurück — automatisch bei jedem Call:
 
 ```typescript
 import { generateText } from 'ai';
@@ -101,7 +101,7 @@ Output-Tokens sind 3-5x teurer als Input-Tokens. Das bedeutet: Ein Prompt, der d
 
 ## TRY
 
-**Aufgabe:** Zaehle Tokens fuer verschiedene Texte und vergleiche Deutsch vs. Englisch.
+**Aufgabe:** Zaehle Tokens für verschiedene Texte und vergleiche Deutsch vs. Englisch.
 
 Erstelle eine Datei `challenge-2-1.ts`:
 
@@ -139,12 +139,12 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 **Checkliste:**
 - [ ] Deutscher und englischer Prompt mit gleichem Inhalt
-- [ ] `result.usage` fuer beide geloggt
+- [ ] `result.usage` für beide geloggt
 - [ ] Token-Zahlen verglichen (promptTokens und completionTokens)
 - [ ] Prozentualer Unterschied berechnet
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -196,22 +196,22 @@ Deutsch braucht 28.3% mehr Tokens als Englisch
 
 Die genauen Zahlen variieren bei jedem Aufruf (LLM-Output ist nicht deterministisch), aber der deutsche Prompt sollte konsistent 20-40% mehr Tokens verbrauchen.
 
-**Erklaerung:** Das liegt an der Tokenizer-Verteilung — englische Woerter kommen haeufiger in den Trainingsdaten vor und werden effizienter kodiert.
+**Erklärung:** Das liegt an der Tokenizer-Verteilung — englische Woerter kommen haeufiger in den Trainingsdaten vor und werden effizienter kodiert.
 
 </details>
 
 ## COMBINE
 
-<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurueck, Token-Vergleich" />
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurück, Token-Vergleich" />
 
 **Uebung:** Kombiniere Token-Counting mit der Modell-Auswahl aus Level 1. Stelle denselben Prompt an zwei verschiedene Modelle und vergleiche den Token-Verbrauch.
 
-1. Nutze `selectModel('zusammenfassen')` fuer ein Flash-Modell (z.B. Gemini Flash)
-2. Nutze `selectModel('analysieren')` fuer ein Pro-Modell (z.B. Claude Sonnet)
+1. Nutze `selectModel('zusammenfassen')` für ein Flash-Modell (z.B. Gemini Flash)
+2. Nutze `selectModel('analysieren')` für ein Pro-Modell (z.B. Claude Sonnet)
 3. Stelle denselben Prompt an beide Modelle
 4. Vergleiche `promptTokens` und `completionTokens` — unterschiedliche Tokenizer ergeben unterschiedliche Zahlen
 
-**Optional Stretch Goal:** Berechne die geschaetzten Kosten fuer beide Modelle basierend auf der Preistabelle aus Schicht 4. Welches Modell ist guenstiger — und um wie viel?
+**Optional Stretch Goal:** Berechne die geschaetzten Kosten für beide Modelle basierend auf der Preistabelle aus Schicht 4. Welches Modell ist guenstiger — und um wie viel?
 
 ## Quellen
 

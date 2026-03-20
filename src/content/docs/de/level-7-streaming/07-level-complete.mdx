@@ -15,14 +15,14 @@ Du beherrschst jetzt Production-Streaming. Deine Apps liefern nicht mehr nur roh
 
 ## Was Du gelernt hast
 
-- **Custom Data Parts:** Strukturierte Daten parallel zum Text im Stream transportieren — `createDataStream`, `writeData`, `mergeIntoDataStream`. Ein Kanal fuer Text und Metadaten, synchron und typisiert.
-- **Message Metadata:** Zusaetzliche Informationen an Messages anhaengen, die das LLM nicht sieht — userId, Timestamps, Session-Daten. Saubere Trennung von Content und App-Daten, ideal fuer Persistence und Analytics.
-- **Stream Transforms:** Stotternde Streams mit `smoothStream()` glaetten und eigene `TransformStream`-Pipelines bauen — filtern, transformieren, anreichern. `experimental_transform` als Array fuer verkettete Verarbeitung.
+- **Custom Data Parts:** Strukturierte Daten parallel zum Text im Stream transportieren — `createDataStream`, `writeData`, `mergeIntoDataStream`. Ein Kanal für Text und Metadaten, synchron und typisiert.
+- **Message Metadata:** Zusaetzliche Informationen an Messages anhaengen, die das LLM nicht sieht — userId, Timestamps, Session-Daten. Saubere Trennung von Content und App-Daten, ideal für Persistence und Analytics.
+- **Stream Transforms:** Stotternde Streams mit `smoothStream()` glaetten und eigene `TransformStream`-Pipelines bauen — filtern, transformieren, anreichern. `experimental_transform` als Array für verkettete Verarbeitung.
 - **Error Handling:** Fehler im Stream abfangen mit `onError` in `streamText` (Server-Logging) und `toUIMessageStreamResponse` (User-Meldung). Typisierte Error-Klassen wie `NoSuchToolError`, Retry mit Exponential Backoff, try/catch als letzter Fallback.
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 7 Streaming abgeschlossen, Level 8 Workflows ist das naechste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 7 Streaming abgeschlossen, Level 8 Workflows ist das nächste Level" />
 
 ## Naechstes Level
 

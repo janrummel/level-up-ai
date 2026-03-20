@@ -5,13 +5,13 @@ sidebar:
   order: 5
 ---
 
-## Ueberblick
+## Überblick
 
-Persistent Data Parts landen in `message.parts` und koennen ueber den Part-Typ gefiltert werden. Du iterierst ueber die Parts einer Message und renderst je nach `type` unterschiedliche Komponenten — Text als Paragraph, Data Parts als spezialisierte UI-Elemente.
+Persistent Data Parts landen in `message.parts` und können über den Part-Typ gefiltert werden. Du iterierst über die Parts einer Message und renderst je nach `type` unterschiedliche Komponenten — Text als Paragraph, Data Parts als spezialisierte UI-Elemente.
 
-Transient Data Parts sind nicht in `message.parts` enthalten. Sie werden ueber den `onData`-Callback in `useChat` empfangen und eignen sich fuer fluechtige Informationen wie Ladefortschritt oder temporaere Statusmeldungen, die nicht in der Chat-Historie erscheinen sollen.
+Transient Data Parts sind nicht in `message.parts` enthalten. Sie werden über den `onData`-Callback in `useChat` empfangen und eignen sich für fluechtige Informationen wie Ladefortschritt oder temporaere Statusmeldungen, die nicht in der Chat-Historie erscheinen sollen.
 
-Progressive Updates funktionieren ueber IDs: Wenn der Server ein Data Part mit derselben ID erneut sendet, wird das bestehende Part aktualisiert statt ein neues hinzugefuegt (siehe [ID Reconciliation](../06-custom-data-parts-id-reconciliation/)).
+Progressive Updates funktionieren über IDs: Wenn der Server ein Data Part mit derselben ID erneut sendet, wird das bestehende Part aktualisiert statt ein neues hinzugefuegt (siehe [ID Reconciliation](../06-custom-data-parts-id-reconciliation/)).
 
 ## Frontend-Beispiel
 

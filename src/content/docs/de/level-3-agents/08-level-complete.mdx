@@ -17,15 +17,15 @@ Du hast Deinen ersten autonomen Agenten gebaut — einen Research Agent, der sel
 
 ## Was Du gelernt hast
 
-- **Tool Calling:** Tools mit `tool()` definieren — Zod inputSchema, `.describe()` fuer Parameter, `execute` fuer die Ausfuehrung. Das LLM entscheidet autonom, wann und mit welchen Parametern ein Tool aufgerufen wird.
-- **Tools im Frontend:** Message Parts (`text`, `tool-call`, `tool-result`) fuer transparente UIs. `fullStream` liefert alle Events fuer Loading States und Tool-spezifische Darstellung.
+- **Tool Calling:** Tools mit `tool()` definieren — Zod inputSchema, `.describe()` für Parameter, `execute` für die Ausfuehrung. Das LLM entscheidet autonom, wann und mit welchen Parametern ein Tool aufgerufen wird.
+- **Tools im Frontend:** Message Parts (`text`, `tool-call`, `tool-result`) für transparente UIs. `fullStream` liefert alle Events für Loading States und Tool-spezifische Darstellung.
 - **Tool Loop Agent:** Multi-Step Agents mit `stopWhen: stepCountIs(n)`. Das LLM iteriert autonom durch den Agentic Loop — Tool Call, Execute, Result, naechster Schritt — bis die Aufgabe erledigt ist.
-- **MCP (Model Context Protocol):** Standardisiertes Protokoll fuer externe Tool-Server. `createMCPClient` mit HTTP oder stdio Transport, `client.tools()` laedt alle verfuegbaren Tools automatisch.
-- **Tool Approval:** Human-in-the-Loop mit `needsApproval`. Statisch (`true`) oder dynamisch (async Funktion). Message-basiertes 2-Call Pattern mit `tool-approval-request` und `tool-approval-response` fuer kontrollierte Ausfuehrung kritischer Operationen.
+- **MCP (Model Context Protocol):** Standardisiertes Protokoll für externe Tool-Server. `createMCPClient` mit HTTP oder stdio Transport, `client.tools()` laedt alle verfügbaren Tools automatisch.
+- **Tool Approval:** Human-in-the-Loop mit `needsApproval`. Statisch (`true`) oder dynamisch (async Funktion). Message-basiertes 2-Call Pattern mit `tool-approval-request` und `tool-approval-response` für kontrollierte Ausfuehrung kritischer Operationen.
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 3 Agents & MCP abgeschlossen, Level 4 Persistence ist das naechste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 3 Agents & MCP abgeschlossen, Level 4 Persistence ist das nächste Level" />
 
 ## Naechstes Level
 

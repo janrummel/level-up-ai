@@ -1,6 +1,6 @@
 ---
 title: "Level 5: Context Engineering — Briefing"
-description: "Lerne, wie Du den Kontext fuer ein LLM optimal gestaltest — von Prompt Templates ueber Few-Shot Learning bis zu RAG und Chain of Thought."
+description: "Lerne, wie Du den Kontext für ein LLM optimal gestaltest — von Prompt Templates über Few-Shot Learning bis zu RAG und Chain of Thought."
 sidebar:
   order: 1
   badge:
@@ -13,7 +13,7 @@ import skillTree from '../../../../assets/diagrams/skill-tree-l5-briefing.svg';
 import LessonIllustration from '../../../../components/LessonIllustration.astro';
 import illustration from '../../../../assets/illustrations/l5-context-engineering.svg';
 
-<LessonIllustration src={illustration} alt="Level 5: Context Engineering — den Kontext fuer ein LLM optimal gestalten" />
+<LessonIllustration src={illustration} alt="Level 5: Context Engineering — den Kontext für ein LLM optimal gestalten" />
 
 ## TL;DR
 
@@ -36,18 +36,18 @@ import illustration from '../../../../assets/illustrations/l5-context-engineerin
 > "The hottest new programming skill is not prompting, it's context engineering."
 > — Simon Willison
 
-Ein LLM weiss nur, was Du ihm gibst. Zu wenig Kontext bedeutet Halluzinationen. Zu viel Kontext bedeutet Rauschen, hohe Kosten und verlorener Fokus. Context Engineering ist der Unterschied zwischen einem Chatbot, der ratet, und einem AI-System, das zuverlaessig arbeitet.
+Ein LLM weiss nur, was Du ihm gibst. Zu wenig Kontext bedeutet Halluzinationen. Zu viel Kontext bedeutet Rauschen, hohe Kosten und verlorener Fokus. Context Engineering ist der Unterschied zwischen einem Chatbot, der ratet, und einem AI-System, das zuverlässig arbeitet.
 
-Das konkrete Problem: Ohne strukturierte Prompts schreibst Du fuer jeden API-Call einen neuen Prompt per Copy-Paste. Die Ergebnisse sind inkonsistent, nicht testbar und schwer zu warten. Mit Context Engineering baust Du ein System, das bei 20 verschiedenen Calls konsistente, reproduzierbare Ergebnisse liefert.
+Das konkrete Problem: Ohne strukturierte Prompts schreibst Du für jeden API-Call einen neuen Prompt per Copy-Paste. Die Ergebnisse sind inkonsistent, nicht testbar und schwer zu warten. Mit Context Engineering baust Du ein System, das bei 20 verschiedenen Calls konsistente, reproduzierbare Ergebnisse liefert.
 
 ## Voraussetzungen
 
-- **Level 1: AI SDK Basics** — `generateText` und `streamText` muessen sitzen
+- **Level 1: AI SDK Basics** — `generateText` und `streamText` müssen sitzen
 - **Grundverstaendnis was ein LLM ist** — Du weisst, dass ein LLM Text basierend auf Input generiert
 
 > **Skip-Hinweis:** Du arbeitest bereits mit strukturierten System Prompts, nutzt XML Tags und hast Erfahrung mit Few-Shot Prompting? Dann spring direkt zur [Boss Fight](../07-boss-fight/) und pruefe, ob Du alle Konzepte kombinieren kannst.
 
-> **Projektverzeichnis:** Du arbeitest weiterhin im Projektverzeichnis aus Level 1. Erstelle fuer jede Challenge eine eigene TypeScript-Datei (z.B. `challenge-5-1.ts`).
+> **Projektverzeichnis:** Du arbeitest weiterhin im Projektverzeichnis aus Level 1. Erstelle für jede Challenge eine eigene TypeScript-Datei (z.B. `challenge-5-1.ts`).
 
 ## Challenges
 
@@ -61,9 +61,9 @@ Das konkrete Problem: Ohne strukturierte Prompts schreibst Du fuer jeden API-Cal
 
 ## Boss Fight
 
-Baue einen **Documentation Assistant**: Ein System, das Dokumente aus einer lokalen Quelle laedt (RAG), mit einem strukturierten Prompt Template arbeitet, Exemplars fuer konsistente Antworten nutzt und Chain of Thought fuer komplexe Fragen einsetzt. Alle fuenf Bausteine in einem System.
+Baue einen **Documentation Assistant**: Ein System, das Dokumente aus einer lokalen Quelle laedt (RAG), mit einem strukturierten Prompt Template arbeitet, Exemplars für konsistente Antworten nutzt und Chain of Thought für komplexe Fragen einsetzt. Alle fuenf Bausteine in einem System.
 
-## Quellen fuer dieses Level
+## Quellen für dieses Level
 
 - [Anthropic: Prompt Engineering Overview](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)
 - [Vercel AI SDK: Prompts](https://ai-sdk.dev/docs/foundations/prompts)

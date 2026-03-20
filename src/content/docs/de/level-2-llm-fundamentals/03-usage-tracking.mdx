@@ -15,9 +15,9 @@ Was kostet ein einzelner LLM-Call — und wie findest Du das heraus?
 
 ## OVERVIEW
 
-<Image src={overviewDiagram} alt="generateText gibt result mit usage-Objekt zurueck: promptTokens, completionTokens, totalTokens fliessen in Kostenberechnung" />
+<Image src={overviewDiagram} alt="generateText gibt result mit usage-Objekt zurück: promptTokens, completionTokens, totalTokens fliessen in Kostenberechnung" />
 
-Jeder `generateText`-Call gibt ein `usage`-Objekt zurueck, das Dir genau sagt, wie viele Tokens verbraucht wurden. Mit den Preisen des Providers rechnest Du daraus die Kosten pro Call.
+Jeder `generateText`-Call gibt ein `usage`-Objekt zurück, das Dir genau sagt, wie viele Tokens verbraucht wurden. Mit den Preisen des Providers rechnest Du daraus die Kosten pro Call.
 
 ## WHY
 
@@ -98,11 +98,11 @@ Ab AI SDK v6 liefern manche Provider erweiterte Token-Details. Diese findest Du 
 ```typescript
 const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
-  system: 'Du bist ein hilfreicher Assistent fuer TypeScript-Fragen.',
+  system: 'Du bist ein hilfreicher Assistent für TypeScript-Fragen.',
   prompt: 'Erklaere Generics in TypeScript.',
 });
 
-// Standard-Usage (immer verfuegbar)
+// Standard-Usage (immer verfügbar)
 console.log('Prompt Tokens:', result.usage.promptTokens);
 console.log('Completion Tokens:', result.usage.completionTokens);
 
@@ -111,14 +111,14 @@ console.log('Completion Tokens:', result.usage.completionTokens);
 // - cacheReadTokens: Tokens aus dem Cache gelesen (guenstiger!)
 // - cacheCreationTokens: Tokens in den Cache geschrieben
 // Bei OpenAI mit Reasoning-Modellen:
-// - reasoningTokens: Tokens fuer internes Nachdenken
+// - reasoningTokens: Tokens für internes Nachdenken
 ```
 
-Diese erweiterten Details sind wichtig fuer die Kostenoptimierung. Wenn `cacheReadTokens` > 0, zahlst Du weniger fuer diese Tokens — das lernst Du in Challenge 2.4 (Prompt Caching).
+Diese erweiterten Details sind wichtig für die Kostenoptimierung. Wenn `cacheReadTokens` > 0, zahlst Du weniger für diese Tokens — das lernst Du in Challenge 2.4 (Prompt Caching).
 
-### Schicht 4: Session-Tracking ueber mehrere Calls
+### Schicht 4: Session-Tracking über mehrere Calls
 
-Fuer eine Anwendung mit mehreren Calls brauchst Du einen Gesamtzaehler. Bei `generateText` ist das Ergebnis nach dem `await` direkt verfuegbar — Du greifst einfach auf `result.usage` zu:
+Für eine Anwendung mit mehreren Calls brauchst Du einen Gesamtzaehler. Bei `generateText` ist das Ergebnis nach dem `await` direkt verfügbar — Du greifst einfach auf `result.usage` zu:
 
 ```typescript
 import { generateText } from 'ai';
@@ -157,7 +157,7 @@ await trackedGenerate('Was sind Generics?');
 console.log(`\nSession gesamt: ${sessionTokens.total} Tokens, ${sessionCost.toFixed(6)} USD`);
 ```
 
-> **Hinweis:** Bei `streamText` gibt es einen `onFinish`-Callback, der aufgerufen wird wenn der Stream endet. Bei `generateText` brauchst Du keinen Callback — das Ergebnis ist nach dem `await` sofort verfuegbar.
+> **Hinweis:** Bei `streamText` gibt es einen `onFinish`-Callback, der aufgerufen wird wenn der Stream endet. Bei `generateText` brauchst Du keinen Callback — das Ergebnis ist nach dem `await` sofort verfügbar.
 
 ## TRY
 
@@ -193,10 +193,10 @@ import { anthropic } from '@ai-sdk/anthropic';
 - [ ] PRICING-Tabelle mit mindestens 2 Modellen
 - [ ] `calculateCost` berechnet Input- und Output-Kosten separat
 - [ ] `result.usage` wird korrekt an `calculateCost` uebergeben
-- [ ] Kosten werden mit 6 Dezimalstellen geloggt (USD-Bereich fuer einzelne Calls)
+- [ ] Kosten werden mit 6 Dezimalstellen geloggt (USD-Bereich für einzelne Calls)
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -252,13 +252,13 @@ Output-Kosten: 0.001170 USD
 Gesamt: 0.001230 USD
 ```
 
-**Erklaerung:** Die Funktion trennt Input- und Output-Kosten, weil sie unterschiedlich bepreist sind. Bei Claude Sonnet kostet Output 5x mehr als Input — deshalb lohnt es sich, die Antwortlaenge zu kontrollieren (z.B. "Antworte in maximal 3 Saetzen").
+**Erklärung:** Die Funktion trennt Input- und Output-Kosten, weil sie unterschiedlich bepreist sind. Bei Claude Sonnet kostet Output 5x mehr als Input — deshalb lohnt es sich, die Antwortlaenge zu kontrollieren (z.B. "Antworte in maximal 3 Saetzen").
 
 </details>
 
 ## COMBINE
 
-<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurueck, calculateCost berechnet Kosten-Log" />
+<Image src={combineDiagram} alt="Aufgabe fliesst in selectModel zum Modell, generateText gibt result.usage zurück, calculateCost berechnet Kosten-Log" />
 
 **Uebung:** Erweitere die `selectModel`-Funktion aus Level 1.2 um automatisches Cost-Tracking. Jeder Call soll seine Kosten loggen.
 
@@ -267,7 +267,7 @@ Gesamt: 0.001230 USD
 3. Lies nach jedem `await generateText(...)` die Kosten aus `result.usage` und logge sie
 4. Teste mit verschiedenen Aufgaben — vergleiche die Kosten zwischen Flash- und Pro-Modell
 
-**Optional Stretch Goal:** Baue ein Session-Tracking, das die kumulierten Kosten ueber mehrere Calls summiert und am Ende eine Zusammenfassung ausgibt ("3 Calls, 450 Tokens, $0.003420 USD").
+**Optional Stretch Goal:** Baue ein Session-Tracking, das die kumulierten Kosten über mehrere Calls summiert und am Ende eine Zusammenfassung ausgibt ("3 Calls, 450 Tokens, $0.003420 USD").
 
 ## Quellen
 

@@ -1,6 +1,6 @@
 ---
 title: "Level 6 Complete"
-description: "Zusammenfassung aller Konzepte aus Level 6: Evals — von Evalite Basics ueber Scorer bis zu Production-Monitoring."
+description: "Zusammenfassung aller Konzepte aus Level 6: Evals — von Evalite Basics über Scorer bis zu Production-Monitoring."
 sidebar:
   order: 8
   badge:
@@ -11,20 +11,20 @@ import { Image } from 'astro:assets';
 import skillTree from '../../../../assets/diagrams/skill-tree-l6-complete.svg';
 
 
-> **Level 6 abgeschlossen!** Du hast eine komplette Eval-Pipeline gebaut — von der ersten Evalite-Eval ueber deterministische Scorer bis zu LLM-as-Judge und Production-Monitoring mit Langfuse. Du kannst jetzt LLM-Ausgaben systematisch messen, vergleichen und verbessern. Das ist Eval-Driven Development — ein Skill, den die meisten AI Engineers erst spaet lernen.
+> **Level 6 abgeschlossen!** Du hast eine komplette Eval-Pipeline gebaut — von der ersten Evalite-Eval über deterministische Scorer bis zu LLM-as-Judge und Production-Monitoring mit Langfuse. Du kannst jetzt LLM-Ausgaben systematisch messen, vergleichen und verbessern. Das ist Eval-Driven Development — ein Skill, den die meisten AI Engineers erst spaet lernen.
 
 ## Was Du gelernt hast
 
-- **Evalite Basics:** Das TypeScript-native Eval-Framework mit `data`, `task` und `scorers` — `.eval.ts` Dateien, `traceAISDKModel` fuer AI SDK Integration, Dashboard unter localhost:3006
-- **Deterministic Eval:** Schnelle, guenstige Scorer ohne LLM — Inline Scorer, `createScorer` fuer Wiederverwendbarkeit, Levenshtein aus der Autoevals Library, abgestufte Scores (0-1)
-- **LLM-as-a-Judge:** Ein LLM bewertet die Ausgabe eines anderen — Factuality Scorer mit `generateObject` und Zod Schema, Score-Skala (A-E), Rationale fuer Nachvollziehbarkeit
-- **Dataset Management:** Repraesentative, diverse Test-Daten mit 20-50 Cases fuer die Entwicklung — Kategorien systematisch abdecken, Edge Cases einbeziehen, Dataset Critiquing mit LLM
-- **Langfuse:** Production-Observability fuer LLM-Anwendungen — Traces, Generations, Scores, Kosten-Monitoring. Evalite fuer Development, Langfuse fuer Production
+- **Evalite Basics:** Das TypeScript-native Eval-Framework mit `data`, `task` und `scorers` — `.eval.ts` Dateien, `traceAISDKModel` für AI SDK Integration, Dashboard unter localhost:3006
+- **Deterministic Eval:** Schnelle, guenstige Scorer ohne LLM — Inline Scorer, `createScorer` für Wiederverwendbarkeit, Levenshtein aus der Autoevals Library, abgestufte Scores (0-1)
+- **LLM-as-a-Judge:** Ein LLM bewertet die Ausgabe eines anderen — Factuality Scorer mit `generateObject` und Zod Schema, Score-Skala (A-E), Rationale für Nachvollziehbarkeit
+- **Dataset Management:** Repraesentative, diverse Test-Daten mit 20-50 Cases für die Entwicklung — Kategorien systematisch abdecken, Edge Cases einbeziehen, Dataset Critiquing mit LLM
+- **Langfuse:** Production-Observability für LLM-Anwendungen — Traces, Generations, Scores, Kosten-Monitoring. Evalite für Development, Langfuse für Production
 
 ## Aktualisierter Skill Tree
 
-<Image src={skillTree} alt="Skill Tree — Level 6 Evals abgeschlossen, Level 7 Streaming ist das naechste Level" />
+<Image src={skillTree} alt="Skill Tree — Level 6 Evals abgeschlossen, Level 7 Streaming ist das nächste Level" />
 
 ## Naechstes Level
 
-**Level 7: Streaming** — Wie lieferst Du LLM-Antworten in Echtzeit an den User? Du lernst Stream Events, partielle Updates und wie Du Streaming-UIs baust, die sich anfuehlen, als wuerde das LLM live tippen.
+**Level 7: Streaming** — Wie lieferst Du LLM-Antworten in Echtzeit an den User? Du lernst Stream Events, partielle Updates und wie Du Streaming-UIs baust, die sich anfuehlen, als würde das LLM live tippen.

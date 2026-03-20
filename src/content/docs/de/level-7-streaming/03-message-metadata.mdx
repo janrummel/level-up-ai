@@ -7,7 +7,7 @@ sidebar:
 
 ## THINK
 
-Wie haengst Du zusaetzliche Infos an eine Message an, die NICHT zum LLM gehen sollen — z.B. einen Timestamp, die User-ID oder die IP-Adresse? Alles in den Message-Content zu packen waere Verschwendung von Tokens und koennte das LLM verwirren.
+Wie haengst Du zusaetzliche Infos an eine Message an, die NICHT zum LLM gehen sollen — z.B. einen Timestamp, die User-ID oder die IP-Adresse? Alles in den Message-Content zu packen wäre Verschwendung von Tokens und könnte das LLM verwirren.
 
 ## OVERVIEW
 
@@ -17,11 +17,11 @@ import { Image } from 'astro:assets';
 
 <Image src={l7C2Overview} alt="Overview: Message Content geht zum LLM Provider, Metadata geht zur Datenbank/Analytics — Routing über die API Route" />
 
-Message Metadata lebt neben dem Content, wird aber NICHT an das LLM gesendet. Der Content geht zum LLM, die Metadata bleibt in Deiner App — fuer Logging, Persistence, Analytics.
+Message Metadata lebt neben dem Content, wird aber NICHT an das LLM gesendet. Der Content geht zum LLM, die Metadata bleibt in Deiner App — für Logging, Persistence, Analytics.
 
 ## WHY
 
-**Ohne Metadata:** Du packst alles in den Message-Content. Das LLM sieht irrelevante Informationen ("userId: abc123, timestamp: 1709..."), verschwendet Tokens und wird moeglicherweise verwirrt. Oder Du speicherst Metadaten in einer separaten Datenstruktur und musst sie manuell mit den Messages synchron halten — fehleranfaellig und umstaendlich.
+**Ohne Metadata:** Du packst alles in den Message-Content. Das LLM sieht irrelevante Informationen ("userId: abc123, timestamp: 1709..."), verschwendet Tokens und wird möglicherweise verwirrt. Oder Du speicherst Metadaten in einer separaten Datenstruktur und musst sie manuell mit den Messages synchron halten — fehleranfaellig und umstaendlich.
 
 **Mit Metadata:** Saubere Trennung. Der Content enthaelt nur, was das LLM sehen soll. Die Metadata enthaelt alles, was Deine App braucht — Timestamps, User-IDs, Session-Daten, Bewertungen. Beides reist zusammen in einer Message, aber nur der Content geht ans LLM.
 
@@ -48,7 +48,7 @@ const message: UIMessage = {
 };
 ```
 
-Die `metadata`-Property wird vom AI SDK beim Senden an den LLM-Provider automatisch ignoriert. Sie ist ausschliesslich fuer Deine Anwendungslogik.
+Die `metadata`-Property wird vom AI SDK beim Senden an den LLM-Provider automatisch ignoriert. Sie ist ausschliesslich für Deine Anwendungslogik.
 
 ### Schicht 2: Metadata auf der Server-Seite nutzen
 
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
   const lastMessage = messages.at(-1);
   const metadata = lastMessage?.metadata ?? {};
 
-  // Fuer Logging / Analytics
+  // Für Logging / Analytics
   console.log(`User ${metadata.userId} fragt:`, lastMessage?.content);
   console.log(`Session: ${metadata.sessionId}`);
   console.log(`Timestamp: ${new Date(metadata.timestamp).toISOString()}`);
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
 
 ### Schicht 3: Metadata in der Antwort setzen
 
-Du kannst auch Metadata an die Antwort-Messages haengen. Das passiert ueber `messageMetadata` in `toUIMessageStreamResponse`:
+Du kannst auch Metadata an die Antwort-Messages haengen. Das passiert über `messageMetadata` in `toUIMessageStreamResponse`:
 
 ```typescript
 const result = streamText({
@@ -105,7 +105,7 @@ return result.toUIMessageStreamResponse({
 });
 ```
 
-Im Frontend ist die Metadata dann auf der Assistant-Message verfuegbar:
+Im Frontend ist die Metadata dann auf der Assistant-Message verfügbar:
 
 ```typescript
 const { messages } = useChat();
@@ -118,7 +118,7 @@ messages.map((m) => {
 });
 ```
 
-### Schicht 4: Metadata fuer Persistence
+### Schicht 4: Metadata für Persistence
 
 Metadata ist besonders wertvoll in Kombination mit Persistence (Level 4). Du kannst Timestamps, Versionen und User-Daten direkt an der Message speichern:
 
@@ -204,7 +204,7 @@ import type { UIMessage } from 'ai';
 Fuehre aus: `npx tsx message-metadata.ts`
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { streamText } from 'ai';
@@ -250,7 +250,7 @@ console.log('\n');
 // NICHT userId, sessionId oder timestamp.
 ```
 
-**Erklaerung:** Das LLM sieht nur den `content` der Message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." Die Metadata (`userId`, `timestamp`, `sessionId`) wird vom AI SDK herausgefiltert und erscheint nicht in der LLM-Antwort. Damit kannst Du Metadaten sicher transportieren, ohne Tokens zu verschwenden oder das LLM zu verwirren.
+**Erklärung:** Das LLM sieht nur den `content` der Message: "Was siehst Du in dieser Nachricht? Liste ALLES auf, was Du sehen kannst." Die Metadata (`userId`, `timestamp`, `sessionId`) wird vom AI SDK herausgefiltert und erscheint nicht in der LLM-Antwort. Damit kannst Du Metadaten sicher transportieren, ohne Tokens zu verschwenden oder das LLM zu verwirren.
 
 **Erwarteter Output (ungefaehr):**
 

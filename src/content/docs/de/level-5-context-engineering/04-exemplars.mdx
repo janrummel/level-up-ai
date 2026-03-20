@@ -10,7 +10,7 @@ import combineDiagram from '../../../../assets/diagrams/l5-c3-combine.svg';
 
 ## THINK
 
-Wie wuerdest Du einem neuen Mitarbeiter einen bestimmten Schreibstil erklaeren — mit Regeln oder mit Beispielen?
+Wie wuerdest Du einem neuen Mitarbeiter einen bestimmten Schreibstil erklären — mit Regeln oder mit Beispielen?
 
 ## OVERVIEW
 
@@ -30,7 +30,7 @@ Der `<examples>`-Tag ist der Baustein, der in dieser Challenge hinzukommt. Er en
 
 Few-Shot Learning bedeutet: Du gibst dem LLM ein paar Beispiele (shots) und es lernt daraus das Muster. Statt Regeln zu formulieren, zeigst Du dem LLM 2-5 konkrete Input-Output-Paare.
 
-Das Prinzip ist einfach: Wenn Du einem neuen Mitarbeiter zeigst, wie drei fertige E-Mails aussehen, versteht er den gewuenschten Stil sofort — ohne 20 Regeln lesen zu muessen. Genauso funktioniert es mit LLMs.
+Das Prinzip ist einfach: Wenn Du einem neuen Mitarbeiter zeigst, wie drei fertige E-Mails aussehen, versteht er den gewuenschten Stil sofort — ohne 20 Regeln lesen zu müssen. Genauso funktioniert es mit LLMs.
 
 ### Schicht 2: Die examples XML Tag Struktur
 
@@ -56,15 +56,15 @@ Anthropic empfiehlt, Exemplars in einer klaren XML-Struktur zu verpacken:
 Jedes `<example>` hat ein `<input>` (was reingeht) und ein `<output>` (was rauskommen soll). Das LLM erkennt aus den Beispielen implizit:
 - Die gewuenschte Laenge (3-4 Woerter)
 - Das Format (Title Case)
-- Den Stil (keine Satzzeichen, keine Erklaerung)
+- Den Stil (keine Satzzeichen, keine Erklärung)
 
 ### Schicht 3: Wie viele Exemplars braucht man?
 
 Die Faustregel: **2-5 Exemplars sind optimal.**
 
-- **1 Exemplar:** Reicht fuer einfache Formate, aber das LLM koennte es als Einzelfall interpretieren
-- **2-3 Exemplars:** Gut fuer die meisten Faelle — das Muster wird klar
-- **4-5 Exemplars:** Ideal fuer komplexe Formate oder wenn Randfaelle abgedeckt werden muessen
+- **1 Exemplar:** Reicht für einfache Formate, aber das LLM könnte es als Einzelfall interpretieren
+- **2-3 Exemplars:** Gut für die meisten Faelle — das Muster wird klar
+- **4-5 Exemplars:** Ideal für komplexe Formate oder wenn Randfaelle abgedeckt werden müssen
 - **Mehr als 5:** Sinkender Ertrag — mehr Tokens, kaum bessere Ergebnisse
 
 Wichtig: Die Exemplars sollten **verschiedene Faelle** abdecken. Wenn alle Beispiele aehnlich sind, lernt das LLM nur diesen einen Fall.
@@ -116,7 +116,7 @@ Generate a title for the conversation.
 `;
 ```
 
-Beachte: Gute Exemplars koennen `<rules>` und `<output-format>` ergaenzen und in manchen Faellen sogar effektiver sein. Die Beispiele transportieren Format, Laenge und Stil implizit — fuer komplexe Logik oder Randfaelle sind explizite Rules aber weiterhin sinnvoll.
+Beachte: Gute Exemplars können `<rules>` und `<output-format>` ergaenzen und in manchen Faellen sogar effektiver sein. Die Beispiele transportieren Format, Laenge und Stil implizit — für komplexe Logik oder Randfaelle sind explizite Rules aber weiterhin sinnvoll.
 
 ## TRY
 
@@ -156,7 +156,7 @@ console.log(result.text);
 - [ ] LLM-Ausgabe folgt dem Muster der Exemplars
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -164,11 +164,11 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 const exemplars = [
   {
-    input: 'Das neue Update ist fantastisch! Endlich funktioniert alles schnell und zuverlaessig.',
+    input: 'Das neue Update ist fantastisch! Endlich funktioniert alles schnell und zuverlässig.',
     output: 'positiv',
   },
   {
-    input: 'Der Kundenservice war eine Katastrophe. Drei Stunden Wartezeit und keine Loesung.',
+    input: 'Der Kundenservice war eine Katastrophe. Drei Stunden Wartezeit und keine Lösung.',
     output: 'negativ',
   },
   {
@@ -208,7 +208,7 @@ Klassifiziere den folgenden Text: ${NEW_INPUT}
 console.log(result.text); // Erwartete Ausgabe: "neutral"
 ```
 
-**Erklaerung:** Die drei Exemplars decken alle drei Kategorien ab. Das LLM erkennt aus den Beispielen, dass die Ausgabe genau ein Wort sein soll (`positiv`, `negativ` oder `neutral`). Der Text "okay, nichts Besonderes aber auch nicht schlecht" wird korrekt als `neutral` klassifiziert — ohne dass wir explizite Regeln dafuer definieren mussten.
+**Erklärung:** Die drei Exemplars decken alle drei Kategorien ab. Das LLM erkennt aus den Beispielen, dass die Ausgabe genau ein Wort sein soll (`positiv`, `negativ` oder `neutral`). Der Text "okay, nichts Besonderes aber auch nicht schlecht" wird korrekt als `neutral` klassifiziert — ohne dass wir explizite Regeln dafuer definieren mussten.
 
 </details>
 

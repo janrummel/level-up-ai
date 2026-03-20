@@ -20,7 +20,7 @@ Links: Ein vager Prompt fuehrt zu unvorhersehbaren Ergebnissen. Rechts: Ein stru
 
 ## WHY
 
-**Ohne Struktur:** Jedes Mal eine andere Qualitaet. Das LLM weiss nicht, welches Format Du willst, wie lang die Antwort sein soll oder welche Rolle es hat. Mal bekommst Du eine Liste mit 10 Punkten, mal einen Absatz, mal eine Frage zurueck. Keine Kontrolle, keine Reproduzierbarkeit.
+**Ohne Struktur:** Jedes Mal eine andere Qualität. Das LLM weiss nicht, welches Format Du willst, wie lang die Antwort sein soll oder welche Rolle es hat. Mal bekommst Du eine Liste mit 10 Punkten, mal einen Absatz, mal eine Frage zurück. Keine Kontrolle, keine Reproduzierbarkeit.
 
 **Mit XML Tags:** Der Prompt wird in klar getrennte Abschnitte unterteilt. Das LLM weiss genau, was seine Aufgabe ist, welche Regeln gelten und wie die Ausgabe aussehen soll. Die Ergebnisse sind reproduzierbar, messbar und iterierbar.
 
@@ -57,9 +57,9 @@ Steht am ENDE — kontrolliert die Ausgabe.
 </output-format>
 ```
 
-Warum diese Reihenfolge? LLMs gewichten den Anfang und das Ende eines Prompts staerker als die Mitte. Kritische Anweisungen gehoeren deshalb an die Raender.
+Warum diese Reihenfolge? LLMs gewichten den Anfang und das Ende eines Prompts staerker als die Mitte. Kritische Anweisungen gehören deshalb an die Raender.
 
-### Schicht 2: Jedes Tag erklaert mit Beispiel
+### Schicht 2: Jedes Tag erklärt mit Beispiel
 
 Nehmen wir ein konkretes Szenario: Du willst einen **Chat Title Generator** bauen. Gegeben eine Konversation, soll das LLM einen kurzen Titel erzeugen.
 
@@ -110,7 +110,7 @@ const INPUT = `Do some research on induction hobs and how I can replace
 a 100cm wide AGA cooker with an induction range cooker.
 Which is the cheapest, which is the best?`;
 
-// Schlecht: Das LLM weiss nicht, was fuer ein Titel, wie lang, welches Format
+// Schlecht: Das LLM weiss nicht, was für ein Titel, wie lang, welches Format
 const result = await streamText({
   model: anthropic('claude-sonnet-4-5-20250514'),
   prompt: `Generate me a title: ${INPUT}`,
@@ -205,7 +205,7 @@ console.log(result.text);
 - [ ] `<output-format>` definiert das erwartete Format
 
 <details>
-<summary>Loesung anzeigen</summary>
+<summary>Lösung anzeigen</summary>
 
 ```typescript
 import { generateText } from 'ai';
@@ -223,7 +223,7 @@ const result = await generateText({
   model: anthropic('claude-sonnet-4-5-20250514'),
   prompt: `
 <task-context>
-Du bist ein technischer Redakteur, der Artikel fuer Entwickler zusammenfasst.
+Du bist ein technischer Redakteur, der Artikel für Entwickler zusammenfasst.
 </task-context>
 
 <background-data>
@@ -242,8 +242,8 @@ Fasse den obenstehenden Artikel zusammen.
 </the-ask>
 
 <output-format>
-Gib nur die Zusammenfassung zurueck. Keine Ueberschrift, keine Einleitung,
-keine zusaetzliche Erklaerung.
+Gib nur die Zusammenfassung zurück. Keine Ueberschrift, keine Einleitung,
+keine zusaetzliche Erklärung.
 </output-format>
   `.trim(),
 });
@@ -251,11 +251,11 @@ keine zusaetzliche Erklaerung.
 console.log(result.text);
 ```
 
-**Erklaerung:** Der Prompt definiert eine klare Rolle (`technischer Redakteur`), stellt den Artikel als `<background-data>` bereit, setzt konkrete Regeln (3 Saetze, Deutsch, sachlich) und kontrolliert das Ausgabeformat. Das LLM weiss genau, was erwartet wird.
+**Erklärung:** Der Prompt definiert eine klare Rolle (`technischer Redakteur`), stellt den Artikel als `<background-data>` bereit, setzt konkrete Regeln (3 Saetze, Deutsch, sachlich) und kontrolliert das Ausgabeformat. Das LLM weiss genau, was erwartet wird.
 
 **Erwarteter Output (ungefaehr):**
 ```
-TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Version unterstuetzt granulare Pruefungen bei Return-Ausdruecken. Zusaetzlich wird der --isolatedDeclarations-Flag eingefuehrt.
+TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Version unterstuetzt granulare Pruefungen bei Return-Ausdruecken. Zusätzlich wird der --isolatedDeclarations-Flag eingefuehrt.
 ```
 
 </details>
@@ -266,7 +266,7 @@ TypeScript 5.8 verbessert die Typinferenz und Kontrollflusanalyse. Die neue Vers
 
 **Uebung:** Kombiniere den strukturierten Prompt mit dem Template aus Challenge 5.1. Baue eine `buildPrompt`-Funktion, die beides vereint:
 
-1. Nutze `buildSystemPrompt()` aus Challenge 5.1 fuer den `system`-Parameter
+1. Nutze `buildSystemPrompt()` aus Challenge 5.1 für den `system`-Parameter
 2. Baue eine `buildUserPrompt(input: string): string`-Funktion, die den User-Input in XML Tags verpackt (`<background-data>`, `<the-ask>`, `<output-format>`)
 3. Rufe `generateText` mit beiden zusammen auf
 
