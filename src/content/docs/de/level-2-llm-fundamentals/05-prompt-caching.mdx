@@ -53,9 +53,9 @@ Nicht alle Provider unterstuetzen Prompt Caching:
 
 | Provider | Caching | Min. Prefix-Laenge | Cache-Dauer | Cache-Read-Rabatt |
 |----------|---------|-------------------|-------------|-------------------|
-| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) | 5 Minuten (TTL — Time To Live, danach verfaellt der Cache) | 90% guenstiger |
+| Anthropic | Ja | 1.024 Tokens (Sonnet), 2.048 (Haiku) (Stand: Maerz 2026) | 5 Minuten (TTL — Time To Live, danach verfaellt der Cache) | 90% guenstiger |
 | Google (Gemini) | Ja | variabel | variabel | variabel |
-| OpenAI | Automatisch | 1.024 Tokens | bis zu 1 Stunde | 50% guenstiger |
+| OpenAI | Automatisch | 1.024 Tokens (Stand: Maerz 2026) | bis zu 1 Stunde | 50% guenstiger |
 
 Anthropic hat eine Mindestlaenge für den Cache-Prefix. Kurze System Prompts unter 1.024 Tokens werden nicht gecacht. Das ist ein bewusster Tradeoff — der Overhead für das Caching lohnt sich nur bei laengeren Prefixes.
 

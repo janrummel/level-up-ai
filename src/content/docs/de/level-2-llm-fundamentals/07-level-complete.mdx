@@ -13,7 +13,7 @@ import skillTree from '../../../../assets/diagrams/skill-tree-l2-complete.svg';
 
 Level 2 abgeschlossen! Du verstehst jetzt die Mechanik hinter LLM-Kosten und weisst, wie Du sie kontrollierst. In der Boss Fight hast Du alle vier Bausteine zu einem Token-Budget-Rechner kombiniert — das ist echtes Production-Wissen.
 
-## Was Du gelernt hast
+## Was Du Gelernt Hast
 
 - **Tokens:** LLMs lesen keinen Text — sie arbeiten mit Subword Units (Token IDs). 1 Token ≈ 4 Zeichen (EN) / 3 Zeichen (DE). Verschiedene Sprachen und Textarten verbrauchen unterschiedlich viele Tokens.
 - **Usage Tracking:** Jeder `generateText`-Call liefert `result.usage` mit `promptTokens`, `completionTokens` und `totalTokens`. Kosten berechnen: Tokens / 1M * Preis. Output-Tokens sind 3-5x teurer als Input-Tokens.

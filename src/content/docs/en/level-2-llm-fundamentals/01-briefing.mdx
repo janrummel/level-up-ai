@@ -23,14 +23,14 @@ import illustration from '../../../../assets/illustrations/l2-llm-fundamentals.s
 
 <Image src={skillTree} alt="Skill Tree — Level 2 LLM Fundamentals is the current level" />
 
-## What you'll learn
+## What You'll Learn
 
 - **What tokens are and how tokenization works** — Subword Units, Token IDs, why German requires more tokens than English
 - **How to track token usage and calculate costs** — `result.usage`, price per 1M tokens, cost formulas
 - **Why Context Windows are limited** — what counts toward it, what happens when exceeded, strategies for a full window
 - **How Prompt Caching can drastically reduce costs** — Prefix Matching, Cache Tokens, provider support
 
-## Why this matters
+## Why This Matters
 
 In Level 1 you learned how to generate text with the AI SDK. But you only saw `result.usage` as a number — without understanding what a token is, why the numbers are what they are, and how to control them.
 
@@ -57,7 +57,7 @@ The concrete problem: Without understanding tokens you can't predict costs. With
 
 Build a **Token Budget Calculator**: A tool that counts tokens in the System Prompt, User Message, and expected output, checks whether everything fits into the Context Window, calculates the expected costs, and tracks the cache hit rate across multiple calls. All four building blocks from this level in one project.
 
-## Sources for this level
+## Sources for This Level
 
 - [Vercel AI SDK: Generating Text](https://ai-sdk.dev/docs/ai-sdk-core/generating-text)
 - [Anthropic: Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting)

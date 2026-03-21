@@ -53,9 +53,9 @@ Not all providers support Prompt Caching:
 
 | Provider | Caching | Min. prefix length | Cache duration |
 |----------|---------|-------------------|----------------|
-| Anthropic | Yes | 1,024 tokens (Sonnet), 2,048 (Haiku) | 5 minutes (TTL — Time To Live, cache expires after this) |
+| Anthropic | Yes | 1,024 tokens (Sonnet), 2,048 (Haiku) (as of March 2026) | 5 minutes (TTL — Time To Live, cache expires after this) |
 | Google (Gemini) | Yes | variable | variable |
-| OpenAI | Automatic | 1,024 tokens | up to 1 hour |
+| OpenAI | Automatic | 1,024 tokens (as of March 2026) | up to 1 hour |
 
 Anthropic has a minimum length for the cache prefix. Short System Prompts under 1,024 tokens are not cached. This is a deliberate tradeoff — the overhead of caching only pays off for longer prefixes.
 

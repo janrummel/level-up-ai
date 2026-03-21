@@ -27,14 +27,14 @@ import illustration from '../../../../assets/illustrations/l8-workflows.svg';
 Workflows bedeuten mehrere LLM-Calls pro Aufgabe — die Kosten steigen schnell. Behalte Dein [Anthropic Dashboard](https://console.anthropic.com) im Blick und setze Budget-Limits, bevor Du loslegst.
 :::
 
-## Was Du lernst
+## Was Du Lernst
 
 - **Workflows** — mehrere `generateText`-Calls sequentiell verketten, wobei der Output von Step N zum Input von Step N+1 wird
 - **Streaming to Frontend** — Workflow-Fortschritt in Echtzeit ans Frontend streamen mit `createDataStream` und Custom Data Parts
 - **Custom Loop** — eigene Agent-Loops bauen mit voller Kontrolle über Abbruchbedingungen, State-Tracking und Messages-Array
 - **Breaking the Loop** — Endlosschleifen verhindern mit Max-Iterations, Timeout, Cost Guard und Quality Checks
 
-## Warum das wichtig ist
+## Warum Das Wichtig Ist
 
 In Level 3 hast Du Agents kennengelernt, die Tools autonom nutzen. Aber was, wenn die Aufgabe nicht nur ein Tool braucht, sondern eine ganze Pipeline — erst recherchieren, dann zusammenfassen, dann formatieren? Ein einzelner riesiger Prompt wird schnell unzuverlaessig. Workflows zerlegen komplexe Aufgaben in spezialisierte Schritte, die Du einzeln testen, debuggen und optimieren kannst.
 
