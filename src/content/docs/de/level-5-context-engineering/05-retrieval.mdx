@@ -89,8 +89,8 @@ Die Daten für RAG können aus verschiedenen Quellen kommen:
 
 | Quelle | Beispiel | Typischer Einsatz |
 |--------|----------|-------------------|
-| Web Scraping | Tavily, Firecrawl | Aktuelle Webinhalte |
-| Vector Database | Pinecone, Chroma, pgvector | Eigene Dokumente (Embeddings) |
+| Web Scraping | [Tavily](https://tavily.com), [Firecrawl](https://firecrawl.dev) | Aktuelle Webinhalte |
+| Vector Database | [Pinecone](https://www.pinecone.io), [Chroma](https://www.trychroma.com), [pgvector](https://github.com/pgvector/pgvector) | Eigene Dokumente (Embeddings) |
 | SQL/API | Eigene DB, REST API | Strukturierte Unternehmensdaten |
 | Dateisystem | `fs.readFileSync()` | Lokale Dateien, Konfigurationen |
 
@@ -308,8 +308,8 @@ Konkret:
 
 Diese Challenge nutzt statischen Content. In Production wuerdest Du:
 1. **Dokumente in Chunks aufteilen** (z.B. 500 Tokens pro Chunk)
-2. **Embeddings erstellen** (z.B. mit `text-embedding-3-small`)
-3. **In einer Vector DB speichern** (Pinecone, Chroma, pgvector)
+2. **Embeddings erstellen** (z.B. mit [`text-embedding-3-small`](https://platform.openai.com/docs/guides/embeddings))
+3. **In einer Vector DB speichern** ([Pinecone](https://www.pinecone.io), [Chroma](https://www.trychroma.com), [pgvector](https://github.com/pgvector/pgvector))
 4. **Zur Laufzeit die relevantesten Chunks suchen** und in den Prompt einfuegen
 
 Das Prompt-Pattern bleibt dasselbe — nur der Retrieve-Schritt wird komplexer.

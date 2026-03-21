@@ -89,8 +89,8 @@ The data for RAG can come from various sources:
 
 | Source | Example | Typical Use Case |
 |--------|---------|------------------|
-| Web Scraping | Tavily, Firecrawl | Current web content |
-| Vector Database | Pinecone, Chroma, pgvector | Own documents (embeddings) |
+| Web Scraping | [Tavily](https://tavily.com), [Firecrawl](https://firecrawl.dev) | Current web content |
+| Vector Database | [Pinecone](https://www.pinecone.io), [Chroma](https://www.trychroma.com), [pgvector](https://github.com/pgvector/pgvector) | Own documents (embeddings) |
 | SQL/API | Own DB, REST API | Structured enterprise data |
 | File System | `fs.readFileSync()` | Local files, configurations |
 
@@ -308,8 +308,8 @@ Specifically:
 
 This challenge uses static content. In production you would:
 1. **Split documents into chunks** (e.g. 500 tokens per chunk)
-2. **Create embeddings** (e.g. with `text-embedding-3-small`)
-3. **Store them in a vector DB** (Pinecone, Chroma, pgvector)
+2. **Create embeddings** (e.g. with [`text-embedding-3-small`](https://platform.openai.com/docs/guides/embeddings))
+3. **Store them in a vector DB** ([Pinecone](https://www.pinecone.io), [Chroma](https://www.trychroma.com), [pgvector](https://github.com/pgvector/pgvector))
 4. **At runtime, search for the most relevant chunks** and insert them into the prompt
 
 The prompt pattern stays the same — only the retrieve step becomes more complex.
