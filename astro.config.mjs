@@ -32,6 +32,9 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { name: 'twitter:description', content: 'Free AI Engineering learning path. 9 levels, 41+ challenges, built on official sources.' } },
 			],
 			customCss: ['/src/custom-styles.css'],
+			components: {
+				Footer: './src/components/Footer.astro',
+			},
 			sidebar: [
 				{
 					label: 'Start',
