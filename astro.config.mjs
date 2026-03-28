@@ -33,6 +33,7 @@ export default defineConfig({
 			],
 			customCss: ['/src/custom-styles.css'],
 			components: {
+				Head: './src/components/Head.astro',
 				Footer: './src/components/Footer.astro',
 			},
 			sidebar: [
