@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 5.2: Basic Prompting"
 description: "Turn vague prompts into clear, structured instructions using a prompt template based on Anthropic best practices."
 sidebar:
@@ -112,7 +114,7 @@ Which is the cheapest, which is the best?`;
 
 // Schlecht: Das LLM weiss nicht, was fuer ein Titel, wie lang, welches Format
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `Generate me a title: ${INPUT}`,
 });
 ```
@@ -128,7 +130,7 @@ a 100cm wide AGA cooker with an induction range cooker.
 Which is the cheapest, which is the best?`;
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 You are a helpful assistant that generates titles for conversations.
@@ -185,7 +187,7 @@ without type-checking.`;
 // TODO: Strukturiere diesen Prompt mit XML Tags
 // Der schlechte Prompt:
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `Fasse den Text zusammen: ${ARTICLE}`,
 });
 
@@ -220,7 +222,7 @@ flag, making it easier to generate declaration files from source code
 without type-checking.`;
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 Du bist ein technischer Redakteur, der Artikel fuer Entwickler zusammenfasst.

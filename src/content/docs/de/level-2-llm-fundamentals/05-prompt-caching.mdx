@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 2.4: Prompt Caching"
 description: "Spare bis zu 90% Kosten für wiederkehrende Prompt-Teile — wie Prompt Caching funktioniert und wie Du es im AI SDK nutzt."
 sidebar:
@@ -101,7 +103,7 @@ Du bist ein erfahrener Code-Review-Assistent.
 
 // Erster Request — Cache wird erstellt
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: longSystemPrompt,
   prompt: 'Review: const x = eval(userInput);',
 });
@@ -112,7 +114,7 @@ console.log('Completion Tokens:', result1.usage.completionTokens);
 
 // Zweiter Request — selber System Prompt, Cache Hit erwartet
 const result2 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: longSystemPrompt,                                   // ← Identisch!
   prompt: 'Review: app.get("/api", (req, res) => res.send(db.query(req.body.sql)));',
 });
@@ -190,14 +192,14 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO 2: Erster Call — Cache wird erstellt
 // const result1 = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   system: systemPrompt,
 //   prompt: 'Erste Frage...',
 // });
 
 // TODO 3: Zweiter Call — gleicher System Prompt, andere Frage
 // const result2 = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   system: systemPrompt,
 //   prompt: 'Zweite Frage...',
 // });
@@ -286,7 +288,7 @@ Beispiel für ein POSITIV-Finding:
 
 // Request 1 — Cache Creation
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: systemPrompt,
   prompt: 'Review: const secret = "sk-1234"; app.post("/login", (req, res) => { if (req.body.pw === secret) res.json({token: jwt.sign({}, secret)}); });',
 });
@@ -298,7 +300,7 @@ console.log('Total:', result1.usage.totalTokens);
 
 // Request 2 — Cache Hit erwartet
 const result2 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: systemPrompt,
   prompt: 'Review: app.get("/users/:id", async (req, res) => { const user = await User.findById(req.params.id); res.json(user); });',
 });

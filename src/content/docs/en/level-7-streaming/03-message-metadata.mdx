@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 7.2: Message Metadata"
 description: "Attach additional information to messages that don't go to the LLM — timestamps, user info, session data."
 sidebar:
@@ -74,7 +76,7 @@ export async function POST(req: Request) {
 
   // Only the content goes to the LLM — metadata stays here
   const result = streamText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,                                         // ← SDK filters out metadata
   });
 
@@ -88,7 +90,7 @@ You can also attach metadata to the response messages. This happens via `message
 
 ```typescript
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   messages,
 });
 
@@ -97,7 +99,7 @@ return result.toUIMessageStreamResponse({
     if (part.type === 'start') {
       return {
         generatedAt: Date.now(),
-        modelId: 'claude-sonnet-4-5-20250514',
+        modelId: 'claude-sonnet-5-5',
         cached: false,
       };
     }
@@ -185,7 +187,7 @@ import type { UIMessage } from 'ai';
 
 // TODO 3: Sende an streamText und pruefe ob das LLM die Metadata erwaehnt
 // const result = streamText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   messages,
 // });
 
@@ -236,7 +238,7 @@ console.log('');
 
 // LLM-Call — Metadata wird NICHT mitgesendet
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   messages,
 });
 

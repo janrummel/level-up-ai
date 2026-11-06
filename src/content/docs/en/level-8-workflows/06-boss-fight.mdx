@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Boss Fight: Multi-Step Research Pipeline"
 description: "Combine workflows, streaming, custom loops, and break conditions into a production-ready research pipeline."
 sidebar:
@@ -63,7 +65,7 @@ import { createDataStream, generateText, streamText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 const LIMITS = {
   maxIterations: 5,

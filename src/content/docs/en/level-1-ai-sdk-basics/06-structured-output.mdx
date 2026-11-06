@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 1.5: Structured output"
 description: "Learn how to get typed JSON objects instead of free text from the LLM using Zod schemas and the Output API."
 sidebar:
@@ -54,7 +56,7 @@ import { Output, generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const { output } = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   output: Output.object({ schema: recipeSchema }),  // ← Schema verbinden
   prompt: 'Erstelle ein Rezept fuer Pasta Carbonara.',
 });
@@ -72,7 +74,7 @@ When you need multiple objects of the same type, use `Output.array`:
 
 ```typescript
 const { output } = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   output: Output.array({
     element: z.object({
       city: z.string(),
@@ -97,7 +99,7 @@ For classification or simple decisions there's `Output.choice`:
 
 ```typescript
 const { output } = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   output: Output.choice({
     options: ['positive', 'negative', 'neutral'],  // ← Erlaubte Werte
   }),
@@ -167,7 +169,7 @@ const reviewSchema = z.object({
 });
 
 const { output } = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   output: Output.object({ schema: reviewSchema }),
   prompt: 'Bewerte das iPhone 16 Pro. Sei ehrlich und nenne Vor- und Nachteile.',
 });

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 8.1: Workflow"
 description: "Verkette mehrere generateText-Calls zu einer Pipeline — jeder Schritt spezialisiert, jeder testbar, jeder debuggbar."
 sidebar:
@@ -35,7 +37,7 @@ Drei `generateText`-Calls hintereinander. Der Output von Step N wird zum Input v
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // Step 1: Recherchieren
 const research = await generateText({
@@ -78,7 +80,7 @@ Damit der Workflow wiederverwendbar wird, kapseln wir ihn in eine Funktion:
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 async function contentPipeline(topic: string) {
   // Step 1: Research
@@ -185,7 +187,7 @@ Erstelle die Datei `workflow.ts` und fuehre sie aus mit `npx tsx workflow.ts`.
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // TODO 1: Definiere eine async Funktion contentPipeline(topic: string)
 
@@ -221,7 +223,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 async function contentPipeline(topic: string) {
   const steps: Array<{ name: string; tokens: number }> = [];

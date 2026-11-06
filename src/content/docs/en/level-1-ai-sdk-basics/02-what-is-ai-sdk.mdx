@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 1.1: What is the AI SDK?"
 description: "Understand the architecture of the AI SDK and execute your first generateText call."
 sidebar:
@@ -66,7 +68,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),  // ← Provider + model
+  model: anthropic('claude-sonnet-5-5'),  // ← Provider + model
   prompt: 'Was ist TypeScript in einem Satz?',
 });
 
@@ -123,7 +125,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Was ist TypeScript in einem Satz?',
 });
 
@@ -132,7 +134,7 @@ console.log('Usage:', result.usage);
 console.log('Finish Reason:', result.finishReason);
 ```
 
-**Explanation:** `generateText` is an async function that returns a result object. The `model` argument creates an Anthropic model instance with the model name `claude-sonnet-4-5-20250514`. The `prompt` is the user input. The three logged properties give you the generated text, the token usage and the reason for stopping.
+**Explanation:** `generateText` is an async function that returns a result object. The `model` argument creates an Anthropic model instance with the model name `claude-sonnet-5-5`. The `prompt` is the user input. The three logged properties give you the generated text, the token usage and the reason for stopping.
 
 **Run it:**
 

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Boss Fight: Documentation Assistant"
 description: "Combine all five concepts from Level 5 in a realistic scenario: An AI system that analyses technical documentation and answers developer questions."
 sidebar:
@@ -91,7 +93,7 @@ const question = 'How do I protect a route that only admins can access?';
 // 6. streamText — Ausgabe ins Terminal
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: '// Dein Prompt hier',
 });
 

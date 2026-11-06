@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 8.2: Streaming to Frontend"
 description: "Stream workflow progress to the frontend in real time — Custom Data Parts for step updates, combined with the LLM text stream."
 sidebar:
@@ -33,7 +35,7 @@ In Level 7.1 you learned about `createDataStream` and `writeData`. Now we use th
 import { createDataStream, generateText, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 export async function POST(req: Request) {
   const { topic } = await req.json();
@@ -148,7 +150,7 @@ For CLI tests without Next.js you can consume the Data Stream directly:
 import { createDataStream, generateText, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 const dataStream = createDataStream({
   async execute(dataStream) {
@@ -207,7 +209,7 @@ Create the file `streaming-pipeline.ts` and run it with `npx tsx streaming-pipel
 import { createDataStream, generateText, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // TODO 1: Create a dataStream with createDataStream
 
@@ -239,7 +241,7 @@ const model = anthropic('claude-sonnet-4-5-20250514');
 import { createDataStream, generateText, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 const topic = 'Kuenstliche Intelligenz in der Medizin';
 
 const dataStream = createDataStream({

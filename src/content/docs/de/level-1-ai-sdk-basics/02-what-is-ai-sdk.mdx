@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 1.1: Was ist das AI SDK?"
 description: "Verstehe die Architektur des AI SDK und fuehre Deinen ersten generateText Call aus."
 sidebar:
@@ -66,7 +68,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),  // ← Provider + Modell
+  model: anthropic('claude-sonnet-5-5'),  // ← Provider + Modell
   prompt: 'Was ist TypeScript in einem Satz?',
 });
 
@@ -123,7 +125,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Was ist TypeScript in einem Satz?',
 });
 
@@ -132,7 +134,7 @@ console.log('Usage:', result.usage);
 console.log('Finish Reason:', result.finishReason);
 ```
 
-**Erklärung:** `generateText` ist eine async Funktion, die ein Result-Objekt zurueckgibt. Das `model`-Argument erstellt eine Anthropic-Modell-Instanz mit dem Modell-Namen `claude-sonnet-4-5-20250514`. Der `prompt` ist der User-Input. Die drei geloggten Properties geben Dir den generierten Text, den Token-Verbrauch und den Grund für das Stoppen.
+**Erklärung:** `generateText` ist eine async Funktion, die ein Result-Objekt zurueckgibt. Das `model`-Argument erstellt eine Anthropic-Modell-Instanz mit dem Modell-Namen `claude-sonnet-5-5`. Der `prompt` ist der User-Input. Die drei geloggten Properties geben Dir den generierten Text, den Token-Verbrauch und den Grund für das Stoppen.
 
 **Ausfuehren:**
 

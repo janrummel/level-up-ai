@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 3.1: Tool Calling"
 description: "Give your LLM tools — with tool(), Zod schemas and execute you turn a chatbot into an agent that can take action."
 sidebar:
@@ -62,7 +64,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: {                                                // ← Tools as an object
     weather: weatherTool,                                 // ← Key = tool name for the LLM
   },
@@ -81,7 +83,7 @@ With `toolChoice` you control how the LLM handles tools:
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   toolChoice: 'auto',                                    // ← LLM decides (default)
   prompt: 'What is the weather in Berlin?',
@@ -101,7 +103,7 @@ After execution you'll find all tool calls and their results in the result objec
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   prompt: 'What is the weather in Berlin?',
 });
@@ -140,7 +142,7 @@ import { z } from 'zod';
 // - execute: Performs the calculation and returns the result
 
 // TODO 2: Use the tool with generateText
-// - model: anthropic('claude-sonnet-4-5-20250514')
+// - model: anthropic('claude-sonnet-5-5')
 // - tools: { calculator: calculatorTool }
 // - prompt: 'What is 42 times 17?'
 
@@ -183,7 +185,7 @@ const calculatorTool = tool({
 });
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { calculator: calculatorTool },
   prompt: 'What is 42 times 17?',
 });

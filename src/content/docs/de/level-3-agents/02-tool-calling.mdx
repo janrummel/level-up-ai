@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 3.1: Tool Calling"
 description: "Gib Deinem LLM Werkzeuge — mit tool(), Zod Schemas und execute verwandelst Du einen Chatbot in einen Agenten, der handeln kann."
 sidebar:
@@ -62,7 +64,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: {                                                // ← Tools als Objekt
     weather: weatherTool,                                 // ← Key = Tool-Name für das LLM
   },
@@ -83,7 +85,7 @@ Mit `toolChoice` steuerst Du, wie das LLM mit Tools umgeht:
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   toolChoice: 'auto',                                    // ← LLM entscheidet (default)
   prompt: 'Wie ist das Wetter in Berlin?',
@@ -103,7 +105,7 @@ Nach der Ausfuehrung findest Du alle Tool Calls und ihre Ergebnisse im Result-Ob
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   prompt: 'Wie ist das Wetter in Berlin?',
 });
@@ -142,7 +144,7 @@ import { z } from 'zod';
 // - execute: Fuehrt die Berechnung aus und gibt das Ergebnis zurück
 
 // TODO 2: Nutze das Tool mit generateText
-// - model: anthropic('claude-sonnet-4-5-20250514')
+// - model: anthropic('claude-sonnet-5-5')
 // - tools: { calculator: calculatorTool }
 // - prompt: 'Was ist 42 mal 17?'
 
@@ -185,7 +187,7 @@ const calculatorTool = tool({
 });
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { calculator: calculatorTool },
   prompt: 'Was ist 42 mal 17?',
 });

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Streaming Text Parts by Hand"
 description: "Manually writing text-delta parts to a UI message stream for full control over streamed content."
 sidebar:
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
 
       // LLM-generated content
       const result = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         messages,
       });
 
@@ -68,7 +70,7 @@ export async function POST(req: Request) {
       // First LLM call
       writer.write({ type: 'text-delta', textDelta: '## Summary\n\n' });
       const summary = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         prompt: 'Summarize AI SDK streaming in 2 sentences.',
       });
       summary.mergeIntoDataStream(writer);
@@ -79,7 +81,7 @@ export async function POST(req: Request) {
 
       // Second LLM call
       const details = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         prompt: 'Explain AI SDK streaming in detail.',
       });
       details.mergeIntoDataStream(writer);

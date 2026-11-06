@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 3.5: Tool Approval"
 description: "Human-in-the-loop for critical operations — with needsApproval, dynamic approval logic, and safe agents."
 sidebar:
@@ -118,7 +120,7 @@ function askUser(question: string): Promise<boolean> {
 }
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { readFile: readFileTool, deleteFile: deleteFileTool },
   stopWhen: stepCountIs(5),
   prompt: 'Read the file /tmp/test.txt and delete it afterwards.',
@@ -290,7 +292,7 @@ function askUser(question: string): Promise<boolean> {
 }
 
 const { text, steps } = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { readFile: readFileTool, deleteFile: deleteFileTool },
   stopWhen: stepCountIs(5),
   prompt: 'Read the file /tmp/notes.txt and delete it afterwards.',

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 4.3: Persistence"
 description: "Save messages to a database and reload them — so your chat keeps its memory."
 sidebar:
@@ -66,7 +68,7 @@ const messages: Array<{ role: string; content: string }> = [
 ];
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   messages,
   onFinish({ text }) {
     messages.push({ role: 'assistant', content: text });         // ← Append assistant response
@@ -106,7 +108,7 @@ async function continueChat(chatId: string, userMessage: string) {
 
   // 3. Generate: Call LLM with complete history
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,
     onFinish({ text }) {
       // 4. Save: Save complete history
@@ -228,7 +230,7 @@ async function continueChat(chatId: string, userMessage: string) {
   ];
 
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,
     onFinish({ text }) {
       messages.push({ role: 'assistant', content: text });

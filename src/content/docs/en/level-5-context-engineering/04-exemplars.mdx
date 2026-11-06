@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 5.3: Exemplars (Few-Shot Learning)"
 description: "Use concrete input-output examples to show the LLM what you expect."
 sidebar:
@@ -142,7 +144,7 @@ const NEW_INPUT = 'Das Produkt ist okay, nichts Besonderes aber auch nicht schle
 // Nutze .map() um die Exemplars in XML zu verwandeln
 // Verwende <task-context>, <examples> und <the-ask>
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: '', // TODO: Dein strukturierter Prompt hier
 });
 
@@ -189,7 +191,7 @@ const exemplarsXml = exemplars
 const NEW_INPUT = 'Das Produkt ist okay, nichts Besonderes aber auch nicht schlecht.';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 Du bist ein Sentiment Classifier. Du ordnest Texte in genau eine Kategorie ein.

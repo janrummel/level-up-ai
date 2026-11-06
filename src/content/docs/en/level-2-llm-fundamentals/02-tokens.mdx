@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 2.1: Tokens"
 description: "Understand how LLMs break text into tokens — Subword Units, Token IDs, and why German requires more tokens than English."
 sidebar:
@@ -60,7 +62,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere was Tokens sind — in einem Satz.',
 });
 
@@ -100,13 +102,13 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO 1: Generate a short response to a German prompt
 // const resultDE = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   prompt: 'Erklaere in 2 Saetzen, was eine Datenbank ist.',
 // });
 
 // TODO 2: Generate a short response to the same prompt in English
 // const resultEN = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   prompt: 'Explain in 2 sentences what a database is.',
 // });
 
@@ -140,12 +142,12 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const resultDE = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere in 2 Saetzen, was eine Datenbank ist.',
 });
 
 const resultEN = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Explain in 2 sentences what a database is.',
 });
 

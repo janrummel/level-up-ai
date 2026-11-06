@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 1.4: Streaming text"
 description: "Learn how to create real-time feedback with streamText — token by token instead of all at once."
 sidebar:
@@ -35,7 +37,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({                          // ← Kein await noetig!
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erzaehle eine kurze Geschichte.',
 });
 ```
@@ -92,7 +94,7 @@ For web APIs (e.g. Next.js) there's `toUIMessageStreamResponse()`. It converts t
 // In einer Next.js API Route (spaetere Levels):
 export async function POST(req: Request) {
   const result = streamText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     prompt: 'Hallo!',
   });
   return result.toUIMessageStreamResponse();  // ← Stream als HTTP Response
@@ -140,7 +142,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere in 3 Saetzen, warum TypeScript besser als JavaScript ist.',
 });
 
@@ -157,7 +159,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere in 3 Saetzen, warum TypeScript besser als JavaScript ist.',
 });
 

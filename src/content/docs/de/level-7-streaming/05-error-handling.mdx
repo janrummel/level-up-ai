@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 7.4: Error Handling"
 description: "Fange Fehler im Stream ab — von Provider-Ausfaellen bis zu unbekannten Tools. Graceful Degradation statt weisse Seite."
 sidebar:
@@ -36,7 +38,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Error Handling.',
   onError({ error }) {                                // ← Wird bei jedem Fehler aufgerufen
     console.error('Stream-Fehler:', error);
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,
     onError({ error }) {
       // Server-seitiges Logging
@@ -93,7 +95,7 @@ Das AI SDK exportiert typisierte Error-Klassen. Du kannst Fehler gezielt untersc
 import { streamText, NoSuchToolError } from 'ai';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   messages,
   tools: { /* ... */ },
   onError({ error }) {
@@ -173,7 +175,7 @@ Vergiss nicht: Fehler können auch beim Konsumieren des Streams auftreten. Wrap 
 
 ```typescript
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Error Handling.',
 });
 

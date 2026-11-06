@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 5.5: Chain of Thought"
 description: "Make the LLM reason step by step — for traceable, less error-prone answers."
 sidebar:
@@ -125,7 +127,7 @@ function processUsers(users: any[]) {
 `;
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 You are a senior TypeScript engineer performing a code review.
@@ -197,7 +199,7 @@ function processUsers(users: any[]) {
 `;
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 You are a senior TypeScript engineer performing a code review.

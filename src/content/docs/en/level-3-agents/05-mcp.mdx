@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 3.4: MCP"
 description: "Connect your LLM to external services via a standardized protocol — MCP client, transport types, and tool integration."
 sidebar:
@@ -114,7 +116,7 @@ console.log('Available tools:', Object.keys(tools));
 
 // Use tools directly with generateText
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools,                                                 // ← Use MCP tools like local tools
   prompt: 'What is the weather in Berlin?',
 });
@@ -173,7 +175,7 @@ const client = await createMCPClient({
 try {
   const tools = await client.tools();
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     tools,
     prompt: 'Hello!',
   });
@@ -187,7 +189,7 @@ Alternatively in `onFinish` when streaming:
 
 ```typescript
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: await client.tools(),
   prompt: 'Hello!',
   onFinish: async () => {
@@ -217,7 +219,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 // TODO 3: Log the tool names: Object.keys(tools)
 
 // TODO 4: Use the tools with generateText
-// - model: anthropic('claude-sonnet-4-5-20250514')
+// - model: anthropic('claude-sonnet-5-5')
 // - tools: the loaded MCP tools
 // - prompt: A question that fits the available tools
 
@@ -253,7 +255,7 @@ try {
   console.log('Available tools:', Object.keys(tools));
 
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     tools,
     prompt: 'Use the echo tool to say "Hello from MCP!"',
   });

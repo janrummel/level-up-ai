@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 2.3: Context Window"
 description: "Understand the limits of the LLM — Context Window sizes, what counts toward it, and strategies for a full window."
 sidebar:
@@ -49,7 +51,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
 
   // 1. System Prompt — ALWAYS counts
   system: `Du bist ein Code-Review-Assistent.
@@ -149,7 +151,7 @@ async function summarizeOldMessages(
   const text = oldMessages.map(m => `${m.role}: ${m.content}`).join('\n');
 
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     prompt: `Summarize this conversation in 3-5 sentences:\n\n${text}`,
   });
 
