@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 8.3: Custom Loop"
 description: "Build your own agent loops with full control — messages array, state tracking, and custom termination conditions instead of ToolLoopAgent."
 sidebar:
@@ -37,7 +39,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { tool } from 'ai';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // A simple tool
 const searchTool = tool({
@@ -87,7 +89,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 const searchTool = tool({
   description: 'Search for information',
@@ -165,7 +167,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 const checkQualityTool = tool({
   description: 'Check if the research quality is sufficient',
@@ -238,7 +240,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // TODO 1: Define a search tool
 // const searchTool = tool({ ... });
@@ -276,7 +278,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 const searchTool = tool({
   description: 'Search for information on a topic',

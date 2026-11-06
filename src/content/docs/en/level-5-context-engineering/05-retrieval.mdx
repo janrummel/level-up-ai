@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 5.4: Retrieval (RAG)"
 description: "Dynamically load external knowledge into the prompt to prevent hallucinations and enable source-based answers."
 sidebar:
@@ -76,7 +78,7 @@ const prompt = `
 
 // Schritt 3: GENERATE — LLM antwortet mit Kontext
 const result = await generateText({                            // ← Generate
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt,
 });
 ```
@@ -178,7 +180,7 @@ const question = 'What did Guillermo Rauch say about Matt Pocock?';
 const sourceUrl = 'https://www.aihero.dev/';
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 You are a helpful assistant that answers questions about website content.
@@ -238,7 +240,7 @@ const question = 'What did Guillermo Rauch say about Matt Pocock?';
 const sourceUrl = 'https://www.aihero.dev/';
 
 const result = await streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: `
 <task-context>
 You are a helpful assistant that answers questions about website content.

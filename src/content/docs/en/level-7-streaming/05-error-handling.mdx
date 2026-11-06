@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 7.4: Error Handling"
 description: "Catch errors in the stream — from provider outages to unknown tools. Graceful degradation instead of a blank page."
 sidebar:
@@ -36,7 +38,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Error Handling.',
   onError({ error }) {                                // ← Called on every error
     console.error('Stream-Fehler:', error);
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,
     onError({ error }) {
       // Server-seitiges Logging
@@ -93,7 +95,7 @@ The AI SDK exports typed error classes. You can distinguish errors specifically:
 import { streamText, NoSuchToolError } from 'ai';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   messages,
   tools: { /* ... */ },
   onError({ error }) {
@@ -173,7 +175,7 @@ Don't forget: errors can also occur when consuming the stream. Wrap the `for awa
 
 ```typescript
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Error Handling.',
 });
 

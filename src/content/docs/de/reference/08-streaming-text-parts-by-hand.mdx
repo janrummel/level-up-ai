@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Text Parts manuell streamen"
 description: "Text Parts von Hand in einen UI Message Stream schreiben — für kombinierte LLM-Outputs und Custom Text."
 sidebar:
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
       writer.write({ type: 'text-delta', textDelta: '## Antwort\n\n' });
 
       const result = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         messages,
       });
 
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
       writer.write({ type: 'text-delta', textDelta: '## Zusammenfassung\n\n' });
 
       const summary = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         prompt: 'Fasse zusammen: ...',
       });
       writer.merge(summary.toUIMessageStream());
@@ -86,7 +88,7 @@ export async function POST(req: Request) {
       writer.write({ type: 'text-delta', textDelta: '\n\n## Analyse\n\n' });
 
       const analysis = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         prompt: 'Analysiere: ...',
       });
       writer.merge(analysis.toUIMessageStream());

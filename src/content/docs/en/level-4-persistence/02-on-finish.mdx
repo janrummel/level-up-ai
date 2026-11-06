@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 4.1: On Finish"
 description: "How to automatically capture the result of an LLM call — using the onFinish callback."
 sidebar:
@@ -37,7 +39,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Was ist TypeScript?',
   onFinish({ text, usage, finishReason, response }) {  // ← Called after completion
     console.log('Text:', text.substring(0, 50) + '...');
@@ -72,7 +74,7 @@ The timing is critical:
 let sessionTokens = 0;
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Promises.',
   onFinish({ usage }) {
     sessionTokens += usage.totalTokens;                          // ← Session counter
@@ -86,7 +88,7 @@ const result = await generateText({
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Promises.',
   onFinish({ text, usage, finishReason }) {
     const logEntry = {
@@ -109,7 +111,7 @@ const result = await generateText({
 const chatLog: Array<{ role: string; content: string; tokens: number }> = [];
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Was ist TypeScript?',
   onFinish({ text, usage }) {
     chatLog.push({                                               // ← Save to "DB"
@@ -131,7 +133,7 @@ import { streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Promises.',
   onFinish({ text, usage, finishReason }) {                      // ← After stream ends
     console.log(`Stream fertig. ${usage.totalTokens} Tokens.`);
@@ -164,7 +166,7 @@ const auditLog: Array<{
 }> = [];
 
 // TODO 1: Call generateText with:
-//   - model: anthropic('claude-sonnet-4-5-20250514')
+//   - model: anthropic('claude-sonnet-5-5')
 //   - prompt: A question of your choice
 //   - onFinish: Callback that:
 //     a) logs usage.totalTokens
@@ -199,7 +201,7 @@ const auditLog: Array<{
 }> = [];
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere den Unterschied zwischen let und const in JavaScript.',
   onFinish({ text, usage, finishReason }) {
     console.log(`--- onFinish ---`);

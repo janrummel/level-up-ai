@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 1.2: Dein erstes Modell"
 description: "Lerne, wie das Provider-System funktioniert und wie Du das richtige Modell für Deine Aufgabe waehlst."
 sidebar:
@@ -55,7 +57,7 @@ Jeder Import gibt Dir eine Funktion, die Modell-Instanzen erzeugt. Die Funktion 
 Die Provider-Funktion nimmt einen Modell-Namen als String und gibt eine Modell-Instanz zurück:
 
 ```typescript
-const model1 = anthropic('claude-sonnet-4-5-20250514');  // ← Anthropic Claude Sonnet
+const model1 = anthropic('claude-sonnet-5-5');  // ← Anthropic Claude Sonnet
 const model2 = openai('gpt-4o');                          // ← OpenAI GPT-4o
 const model3 = google('gemini-2.5-flash');                // ← Google Gemini Flash
 ```
@@ -73,7 +75,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';       // ← Import: Anthropic
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),     // ← Modell: Claude Sonnet
+  model: anthropic('claude-sonnet-5-5'),     // ← Modell: Claude Sonnet
   prompt: 'Erklaere Promises in JavaScript.',
 });
 
@@ -147,7 +149,7 @@ import { openai } from '@ai-sdk/openai';
 const prompt = 'Was ist der Unterschied zwischen let und const in JavaScript?';
 
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt,
 });
 
@@ -167,7 +169,7 @@ console.log('Tokens:', result2.usage.totalTokens);
 
 **Erklärung:** Beide Calls nutzen exakt denselben `prompt`. Nur `model` unterscheidet sich. Die Outputs zeigen Dir, wie unterschiedlich (oder aehnlich) verschiedene Modelle dieselbe Frage beantworten — und wie viele Tokens sie dafuer verbrauchen.
 
-> **Nur einen API-Key?** Kein Problem — nutze zwei Modelle desselben Providers, z.B. `anthropic('claude-haiku-3-5-20241022')` und `anthropic('claude-sonnet-4-5-20250514')`.
+> **Nur einen API-Key?** Kein Problem — nutze zwei Modelle desselben Providers, z.B. `anthropic('claude-haiku-5-5')` und `anthropic('claude-sonnet-5-5')`.
 
 **Ausfuehren:**
 
@@ -206,7 +208,7 @@ function selectModel(task: string): LanguageModel {
     return google('gemini-2.5-flash');
   }
   // Standard-Aufgaben: Balanced-Modell (Qualität + Speed)
-  return anthropic('claude-sonnet-4-5-20250514');
+  return anthropic('claude-sonnet-5-5');
 }
 ```
 

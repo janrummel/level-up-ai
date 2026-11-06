@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 3.2: Tools in the Frontend"
 description: "When an LLM calls a tool — how do you show that to the user? Learn message parts, tool-call events and transparent UIs."
 sidebar:
@@ -65,7 +67,7 @@ const weatherTool = tool({
 });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   prompt: 'What is the weather in Berlin?',
 });
@@ -134,7 +136,7 @@ const weatherTool = tool({
 });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   prompt: 'What is the weather in Berlin and Munich?',
 });
@@ -229,7 +231,7 @@ const weatherTool = tool({
 });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   tools: { weather: weatherTool },
   prompt: 'What is the weather in Berlin and Munich?',
 });

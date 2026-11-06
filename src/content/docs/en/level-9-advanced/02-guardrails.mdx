@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 9.1: Guardrails"
 description: "Protect your AI application with input and output guardrails against prompt injection, PII leaks, and toxic outputs."
 sidebar:
@@ -120,7 +122,7 @@ Now we bring input and output guardrails together in a `generateText` call:
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 async function safeGenerate(userMessage: string) {
   // --- Input Guardrails ---
@@ -215,7 +217,7 @@ async function safeGenerateV2(userMessage: string) {
   runGuardrails(userMessage, inputGuardrails);   // ← Check input
 
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     prompt: userMessage,
   });
 
@@ -271,7 +273,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 function checkInput(input: string): { ok: boolean; reason?: string } {
   const lower = input.toLowerCase();

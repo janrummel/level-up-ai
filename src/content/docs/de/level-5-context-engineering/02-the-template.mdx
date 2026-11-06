@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 5.1: The Template"
 description: "Lerne, System Prompts als wiederverwendbare Templates mit XML Tags zu strukturieren."
 sidebar:
@@ -130,7 +132,7 @@ Formatiere Deine Antwort als: ${config.outputFormat}
 
 // Derselbe Prompt, verschiedene Konfigurationen:
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: buildSystemPrompt({                              // ← Template wird hier genutzt
     role: 'technischer Redakteur',
     audience: 'Entwickler mit 2 Jahren Erfahrung',
@@ -175,7 +177,7 @@ function buildSystemPrompt(config: PromptConfig): string {
 }
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: buildSystemPrompt({
     role: 'technischer Redakteur',
     audience: 'Entwickler mit 2 Jahren Erfahrung',
@@ -229,7 +231,7 @@ Formatiere Deine Antwort als: ${config.outputFormat}
 }
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: buildSystemPrompt({
     role: 'technischer Redakteur',
     audience: 'Entwickler mit 2 Jahren Erfahrung',

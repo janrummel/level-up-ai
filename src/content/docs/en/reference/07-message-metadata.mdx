@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Message Metadata"
 description: "Attach extra data to messages that the LLM never sees — user IDs, timestamps, model info, and analytics."
 sidebar:
@@ -39,13 +41,13 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     messages,
   });
 
   return result.toUIMessageStreamResponse({
     messageMetadata: {
-      modelId: 'claude-sonnet-4-5-20250514',
+      modelId: 'claude-sonnet-5-5',
       generatedAt: Date.now(),
     },
   });

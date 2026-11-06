@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 1.6: System Prompts"
 description: "Learn how to give the LLM a role, rules and a consistent style using the system parameter."
 sidebar:
@@ -35,7 +37,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: 'Du bist ein Pirat. Antworte immer wie ein Pirat.',  // ← Persoenlichkeit (bleibt gleich)
   prompt: 'Was ist TypeScript?',                                 // ← Aufgabe (aendert sich)
 });
@@ -68,7 +70,7 @@ The same user prompt, three different system prompts — three completely differ
 
 ```typescript
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: `Du bist ein technischer Redakteur.
 Erklaere praezise und strukturiert.
 Nutze Fachbegriffe, aber erklaere sie bei erster Verwendung.
@@ -81,7 +83,7 @@ Antworte immer mit: Definition, Beispiel, Zusammenfassung.`,
 
 ```typescript
 const result2 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: `Du erklaerst Technik wie fuer ein 5-jaehriges Kind.
 Nutze einfache Woerter und Vergleiche aus dem Alltag.
 Maximal 3 Saetze.
@@ -94,7 +96,7 @@ Keine Codebeispiele.`,
 
 ```typescript
 const result3 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: `Du bist ein strenger Code-Reviewer.
 Bewerte jeden Aspekt: Lesbarkeit, Performance, Fehlerbehandlung.
 Antworte in diesem Format:
@@ -115,7 +117,7 @@ Same question, three worlds. The system prompt determines not just the style, bu
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 const prompt = 'Erklaere, was eine REST API ist.';
 
 // TODO 1: Definiere 3 verschiedene System Prompts
@@ -146,7 +148,7 @@ const prompt = 'Erklaere, was eine REST API ist.';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 const prompt = 'Erklaere, was eine REST API ist.';
 
 const systemPrompts = [

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Custom Data Parts streamen"
 description: "Strukturierte Daten parallel zum LLM-Text im selben Stream senden — mit createUIMessageStream."
 sidebar:
@@ -31,7 +33,7 @@ export async function POST(req: Request) {
       });
 
       const result = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         messages,
         onFinish() {
           writer.write({

@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 7.1: Custom Data Parts"
 description: "Transport structured data alongside text in the stream — progress bars, status updates, and sources next to the LLM response."
 sidebar:
@@ -56,7 +58,7 @@ export async function POST(req: Request) {
       dataStream.writeData({ status: 'searching' }); // ← Any JSON object
 
       const result = streamText({
-        model: anthropic('claude-sonnet-4-5-20250514'),
+        model: anthropic('claude-sonnet-5-5'),
         messages,
         onFinish() {
           dataStream.writeData({ status: 'done' });  // ← After completion
@@ -167,7 +169,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 //
 //     // TODO 3: Starte streamText
 //     // const result = streamText({
-//     //   model: anthropic('claude-sonnet-4-5-20250514'),
+//     //   model: anthropic('claude-sonnet-5-5'),
 //     //   prompt: 'Erklaere Custom Data Parts im AI SDK.',
 //     //   onFinish() {
 //     //     // TODO 4: Sende ein Data Part mit status: 'done'
@@ -210,7 +212,7 @@ const dataStream = createDataStream({
     dataStream.writeData({ type: 'status', status: 'searching', timestamp: Date.now() });
 
     const result = streamText({
-      model: anthropic('claude-sonnet-4-5-20250514'),
+      model: anthropic('claude-sonnet-5-5'),
       prompt: 'Erklaere Custom Data Parts im AI SDK in 3 Saetzen.',
       onFinish() {
         // Status: Fertig

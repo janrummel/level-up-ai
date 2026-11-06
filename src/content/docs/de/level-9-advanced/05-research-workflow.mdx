@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 9.4: Research Workflow"
 description: "Baue eine End-to-End AI-Pipeline die selbststaendig recherchiert, zusammenfasst und einen qualitaetsgesicherten Report erstellt."
 sidebar:
@@ -153,7 +155,7 @@ const ReportSchema = z.object({
 async function processingPhase(researchResult: string, topic: string) {
   // Step 1: Zusammenfassen (Context Engineering — XML-strukturierter Prompt)
   const summary = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     system: `<role>Du bist ein Research-Analyst.</role>
 <task>Fasse die Recherche-Ergebnisse in 5-7 Kernaussagen zusammen.</task>
 <rules>
@@ -168,7 +170,7 @@ async function processingPhase(researchResult: string, topic: string) {
 
   // Step 2: Strukturieren (Structured Output — Zod Schema)
   const structured = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250514'),
+    model: anthropic('claude-sonnet-5-5'),
     system: `Erstelle einen strukturierten Report aus der folgenden Zusammenfassung.`,
     prompt: summary.text,
     output: Output.object({ schema: ReportSchema }),
@@ -276,7 +278,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // TODO 1: Definiere ein search-Tool (simuliert, gibt festen Text zurück)
 
@@ -309,7 +311,7 @@ import { generateText, tool } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
-const model = anthropic('claude-sonnet-4-5-20250514');
+const model = anthropic('claude-sonnet-5-5');
 
 // search-Tool (simuliert)
 const searchTool = tool({

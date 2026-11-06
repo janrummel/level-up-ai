@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>From Vibe Coder to AI Engineer.</strong><br>
-  9 levels. 41 challenges. 9 boss fights. Built on official sources and tested code.
+  9 levels. 41 challenges. 9 boss fights. Built on official sources.
 </p>
 
 <p align="center">
@@ -26,6 +26,8 @@
 </p>
 
 ---
+
+> **Status: frozen (as of March 2026, AI SDK v6).** Code examples are no longer maintained; the current major version is AI SDK v7 ([ai-sdk.dev](https://ai-sdk.dev/docs)). Model IDs were updated in November 2026 but not tested.
 
 ## Why?
 

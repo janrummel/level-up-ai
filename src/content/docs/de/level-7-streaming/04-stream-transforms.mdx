@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Eingefrorener Kurs: Inhalt Stand März 2026 (AI SDK v6). Die Codebeispiele werden nicht mehr gepflegt; aktuell ist AI SDK v7, siehe <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Modell-IDs im November 2026 aktualisiert, ungetestet.'
 title: "Challenge 7.3: Stream Transforms"
 description: "Glaette stotternde LLM-Streams mit smoothStream und baue eigene TransformStreams für Custom-Verarbeitung."
 sidebar:
@@ -36,7 +38,7 @@ import { smoothStream, streamText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Stream Transforms.',
   experimental_transform: smoothStream(),             // ← Eine Zeile, grosser Effekt
 });
@@ -111,7 +113,7 @@ const filterInternal = () => (options: { tools: Record<string, unknown> }) =>
   });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere Streaming.',
   experimental_transform: [                           // ← Array = Pipeline
     smoothStream(),                                   // ← Erst glaetten
@@ -143,7 +145,7 @@ const redactEmails = () => (options: { tools: Record<string, unknown> }) =>
   });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Nenne mir Kontaktdaten von Vercel.',
   experimental_transform: [
     smoothStream(),
@@ -174,7 +176,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO 2: Nutze experimental_transform mit smoothStream UND upperCase
 // const result = streamText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   prompt: 'Erklaere in 2 Saetzen, was Stream Transforms sind.',
 //   experimental_transform: [???],
 // });
@@ -217,7 +219,7 @@ const upperCase = () => (options: { tools: Record<string, unknown> }) =>
   });
 
 const result = streamText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere in 2 Saetzen, was Stream Transforms sind.',
   experimental_transform: [
     smoothStream(),   // Erst glaetten

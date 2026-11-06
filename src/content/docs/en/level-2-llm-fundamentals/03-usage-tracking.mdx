@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 2.2: Usage Tracking"
 description: "Track token usage and calculate costs per LLM call — with result.usage and extended Usage Details."
 sidebar:
@@ -36,7 +38,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: 'Du bist ein hilfreicher Assistent.',
   prompt: 'Was ist TypeScript?',
 });
@@ -63,7 +65,7 @@ interface ModelPricing {
 
 // Prices of common models (as of March 2026)
 const PRICING: Record<string, ModelPricing> = {
-  'claude-sonnet-4-5-20250514': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
+  'claude-sonnet-5-5': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
   'gpt-4o':                      { inputPerMillion: 2.5, outputPerMillion: 10.0 },
   'gemini-2.5-flash':            { inputPerMillion: 0.15, outputPerMillion: 0.60 },
 };
@@ -97,7 +99,7 @@ Starting with AI SDK v6, some providers return extended token details. You'll fi
 
 ```typescript
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: 'Du bist ein hilfreicher Assistent fuer TypeScript-Fragen.',
   prompt: 'Erklaere Generics in TypeScript.',
 });
@@ -128,7 +130,7 @@ let sessionTokens = { prompt: 0, completion: 0, total: 0 };
 let sessionCost = 0;
 
 async function trackedGenerate(prompt: string) {
-  const modelId = 'claude-sonnet-4-5-20250514';
+  const modelId = 'claude-sonnet-5-5';
 
   const result = await generateText({
     model: anthropic(modelId),
@@ -177,13 +179,13 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO 3: Make a generateText call
 // const result = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   prompt: 'Erklaere in 3 Saetzen, was Machine Learning ist.',
 // });
 
 // TODO 4: Calculate and log the costs
 // console.log('Usage:', result.usage);
-// const cost = calculateCost(result.usage, 'claude-sonnet-4-5-20250514');
+// const cost = calculateCost(result.usage, 'claude-sonnet-5-5');
 // console.log('Input cost:', cost.inputCost.toFixed(6), 'USD');
 // console.log('Output cost:', cost.outputCost.toFixed(6), 'USD');
 // console.log('Total:', cost.totalCost.toFixed(6), 'USD');
@@ -208,7 +210,7 @@ interface ModelPricing {
 }
 
 const PRICING: Record<string, ModelPricing> = {
-  'claude-sonnet-4-5-20250514': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
+  'claude-sonnet-5-5': { inputPerMillion: 3.0, outputPerMillion: 15.0 },
   'gpt-4o': { inputPerMillion: 2.5, outputPerMillion: 10.0 },
 };
 
@@ -226,13 +228,13 @@ function calculateCost(
 }
 
 const result = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   prompt: 'Erklaere in 3 Saetzen, was Machine Learning ist.',
 });
 
 console.log('Usage:', result.usage);
 
-const cost = calculateCost(result.usage, 'claude-sonnet-4-5-20250514');
+const cost = calculateCost(result.usage, 'claude-sonnet-5-5');
 console.log('Input cost:', cost.inputCost.toFixed(6), 'USD');
 console.log('Output cost:', cost.outputCost.toFixed(6), 'USD');
 console.log('Total:', cost.totalCost.toFixed(6), 'USD');

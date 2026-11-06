@@ -1,4 +1,6 @@
 ---
+banner:
+  content: 'Frozen course: content as of March 2026 (AI SDK v6). Code examples are no longer maintained; the current major version is AI SDK v7, see <a href="https://ai-sdk.dev/docs">ai-sdk.dev</a>. Model IDs updated in November 2026, untested.'
 title: "Challenge 2.4: Prompt Caching"
 description: "Save up to 90% on recurring prompt parts — how Prompt Caching works and how to use it with the AI SDK."
 sidebar:
@@ -101,7 +103,7 @@ Du bist ein erfahrener Code-Review-Assistent.
 
 // First request — cache is created
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: longSystemPrompt,
   prompt: 'Review: const x = eval(userInput);',
 });
@@ -112,7 +114,7 @@ console.log('Completion Tokens:', result1.usage.completionTokens);
 
 // Second request — same System Prompt, cache hit expected
 const result2 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: longSystemPrompt,                                   // ← Identical!
   prompt: 'Review: app.get("/api", (req, res) => res.send(db.query(req.body.sql)));',
 });
@@ -176,14 +178,14 @@ import { anthropic } from '@ai-sdk/anthropic';
 
 // TODO 2: First call — cache is created
 // const result1 = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   system: systemPrompt,
 //   prompt: 'First question...',
 // });
 
 // TODO 3: Second call — same System Prompt, different question
 // const result2 = await generateText({
-//   model: anthropic('claude-sonnet-4-5-20250514'),
+//   model: anthropic('claude-sonnet-5-5'),
 //   system: systemPrompt,
 //   prompt: 'Second question...',
 // });
@@ -272,7 +274,7 @@ Beispiel fuer ein POSITIV-Finding:
 
 // Request 1 — Cache Creation
 const result1 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: systemPrompt,
   prompt: 'Review: const secret = "sk-1234"; app.post("/login", (req, res) => { if (req.body.pw === secret) res.json({token: jwt.sign({}, secret)}); });',
 });
@@ -284,7 +286,7 @@ console.log('Total:', result1.usage.totalTokens);
 
 // Request 2 — Cache Hit expected
 const result2 = await generateText({
-  model: anthropic('claude-sonnet-4-5-20250514'),
+  model: anthropic('claude-sonnet-5-5'),
   system: systemPrompt,
   prompt: 'Review: app.get("/users/:id", async (req, res) => { const user = await User.findById(req.params.id); res.json(user); });',
 });
