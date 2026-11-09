@@ -65,7 +65,7 @@ Each level ends with a **Boss Fight** — a project that combines all building b
 
 ## Built on
 
-Based on the [Vercel AI SDK v6.x](https://ai-sdk.dev) (as of March 2026). 50+ generated SVG diagrams. Every code example tested. All concepts linked to official documentation.
+Based on the [Vercel AI SDK v6.x](https://ai-sdk.dev) (as of March 2026). 50+ generated SVG diagrams. All concepts linked to official documentation.
 
 ## Run locally
 
@@ -90,6 +90,10 @@ Built on the open-source curriculum from [ai-hero-dev/ai-sdk-v6-crash-course](ht
 ## Contributing
 
 Found an error? Have a suggestion? Issues and pull requests are welcome — whether it's a typo, a broken code example, a translation improvement, or a content correction.
+
+## Publishing
+
+https://janrummel.github.io/level-up-ai/ is built by GitHub Actions (`.github/workflows/deploy.yml`, `npm run build` = `astro build`) on every push to `main` and served by GitHub Pages.
 
 ## License
 
