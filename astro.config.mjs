@@ -21,6 +21,7 @@ export default defineConfig({
 			plugins: [],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/janrummel/level-up-ai' }],
 			head: [
+				{ tag: 'link', attrs: { rel: 'stylesheet', href: 'https://janrummel.github.io/ai-learning/jr.css' } },
 				{ tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
 				{ tag: 'meta', attrs: { property: 'og:site_name', content: 'Level Up AI' } },
 				{ tag: 'meta', attrs: { property: 'og:title', content: 'Level Up AI — From Vibe Coder to AI Engineer' } },
