@@ -258,7 +258,7 @@ Create a reference file that serves as the canonical example for all future chal
 **Step 1:** Create `docs/templates/` directory
 
 ```bash
-mkdir -p /Users/janrummel/Projects/level-up-ai/docs/templates
+mkdir -p level-up-ai/docs/templates
 ```
 
 **Step 2:** Write `challenge-template.mdx` using the template from the Conventions section above. Include placeholder comments explaining what goes where.
@@ -268,7 +268,7 @@ mkdir -p /Users/janrummel/Projects/level-up-ai/docs/templates
 **Step 4:** Verify the site still builds
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 ```
 
 **Step 5:** Commit
@@ -375,7 +375,7 @@ Create `08-level-complete.mdx`:
 ### Step 9: Build and verify
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 ```
 
 Open in browser, check all pages render, Mermaid diagrams display correctly.
@@ -466,7 +466,7 @@ The entry point. Most important level — first impression.
 ### Step 10: Build, verify, commit
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 git add src/content/docs/de/level-1-ai-sdk-basics/
 git commit -m "feat(level-1): AI SDK Basics — 6 challenges, boss fight, complete"
 ```
@@ -713,7 +713,7 @@ After all levels are built, update the welcome and roadmap pages.
 ### Step 3: Build, verify, commit
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 git add src/content/docs/de/start/
 git commit -m "docs: update welcome and roadmap for all 9 levels"
 ```
@@ -758,7 +758,7 @@ git commit -m "feat(i18n): translate Level N to English"
 ### Step 1: Full site build
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 ```
 
 ### Step 2: Link check
