@@ -31,9 +31,9 @@
 
 [data-theme='light'] {
   --sl-color-accent-low: #fef0db;
-  --sl-color-accent: #d35400;
+  --sl-color-accent: #b34700;
   --sl-color-accent-high: var(--lua-bg-deep);
-  --sl-color-text-accent: #d35400;
+  --sl-color-text-accent: #b34700; /* #d35400 erreichte auf Weiss nur 4,17:1 */
   --sl-color-bg-sidebar: rgba(254, 240, 219, 0.3);
   --sl-color-bg-inline-code: rgba(211, 84, 0, 0.08);
 }
@@ -172,7 +172,9 @@ nav .top-level > li:nth-child(10) summary { /* L9 */
 [data-theme='light'] .sl-markdown-content h2#overview { color: #2e6da4; }
 [data-theme='light'] .sl-markdown-content h2#why { color: #c0392b; }
 [data-theme='light'] .sl-markdown-content h2#walkthrough { color: #1e8449; }
-[data-theme='light'] .sl-markdown-content h2#try { color: #d35400; }
+[data-theme='light'] .sl-markdown-content h2#try { color: #b34700; }
+[data-theme='light'] .sl-markdown-content h2#bewertungskriterien,
+[data-theme='light'] .sl-markdown-content h2#evaluation-criteria { color: #b34700; }
 [data-theme='light'] .sl-markdown-content h2#combine { color: #117a65; }
 
 /* ============================================
