@@ -224,7 +224,7 @@ git commit -m "docs: level 1 quality review — expert + user walkthrough findin
 **Step 3:** Commit + Projekt-State aktualisieren.
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 ```
 
 ---
@@ -371,7 +371,7 @@ git commit -m "docs: add reference pages R1-R3 (UI Messages, Defining Tools, Con
 **Step 3:** Projekt-State aktualisieren: Quality Pass als erledigt markieren.
 
 ```bash
-cd /Users/janrummel/Projects/level-up-ai && npm run build
+cd level-up-ai && npm run build
 ```
 
 ---
